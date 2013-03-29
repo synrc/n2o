@@ -1,0 +1,1 @@
+-record('ContactRecord', {cn, givenName, mail}).

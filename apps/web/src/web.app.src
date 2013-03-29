@@ -1,0 +1,12 @@
+{application, web,
+ [
+  {description, "Synrc Web Site"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib, cowboy, gproc, nprocreg, ranch, crypto, sync
+                 ]},
+  {mod, { web_app, []}},
+  {env, []}
+ ]}.

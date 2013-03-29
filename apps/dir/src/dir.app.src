@@ -1,0 +1,12 @@
+{application, dir,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { dir_app, []}},
+  {env, []}
+ ]}.
