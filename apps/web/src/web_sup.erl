@@ -1,7 +1,3 @@
-% Nitrogen Elements Examples
-% Copyright (c) 2013 Roman Shestakov (romanshestakov@yahoo.co.uk)
-% See MIT-LICENSE for licensing information.
-
 -module(web_sup).
 -behaviour(supervisor).
 -export([

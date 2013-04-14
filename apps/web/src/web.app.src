@@ -5,7 +5,7 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib, cowboy, gproc, nprocreg, ranch, crypto, sync
+                  stdlib, cowboy, gproc, nprocreg, ranch, crypto
                  ]},
   {mod, { web_app, []}},
   {env, []}

@@ -20,4 +20,3 @@ else
    release_node $NODE
 fi
 
-./release_sync.sh
