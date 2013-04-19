@@ -1,36 +1,13 @@
 <html>
-<title>[[[page:title()]]]</title>
 <head>
-<script type="text/javascript">
-var ws;
-function addStatus(text){
-    var date = new Date();
-    document.getElementById('status').innerHTML =
-    document.getElementById('status').innerHTML + "E> " + text + "<br/>";
-}
-function ready(){
-    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
-    if ("WebSocket" in window) {
-        ws = new WebSocket("ws://localhost:8000/websocket");
-        ws.onopen = function() {
-            addStatus("websocket connected!");
-            ws.send("hello server!");
-            addStatus("sent message to server: 'hello server'!");
-        };
-        ws.onmessage = function (evt) {
-            var receivedMsg = evt.data;
-            addStatus("server sent the following: '" + receivedMsg + "'");
-        };
-        ws.onclose = function() {
-            addStatus("websocket was closed");
-        };
-    } else {
-        addStatus("sorry, your browser does not support websockets.");
-    }
-}
-</script>
+<title>[[[page:title()]]]</title>
+    <script src='/static/nitrogen/jquery.js' type='text/javascript' charset='utf-8'></script>
+    <script src='/static/nitrogen/livevalidation.js' type='text/javascript' charset='utf-8'></script>
+    <script src='/static/nitrogen/nitrogen.js' type='text/javascript' charset='utf-8'></script>
+    <script src='/static/nitrogen/bert.js' type='text/javascript' charset='utf-8'></script>
 </head>
-<body onload="ready();">
+<body>
 [[[page:body()]]]
+<script>[[[script]]]</script>
 </body>
 </html>

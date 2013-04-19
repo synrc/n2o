@@ -1,6 +1,6 @@
 -module(nitrogen_cowboy).
 -behaviour(cowboy_http_handler).
--include_lib("nitrogen_core/include/wf.hrl").
+-include_lib("n2o/include/wf.hrl").
 -export([init/3, handle/2, terminate/3]).
 
 -record(state, {headers, body}).

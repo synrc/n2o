@@ -1,7 +1,7 @@
 #!/bin/bash
 
 wd=`pwd`
-appss=( "rels/web/node/lib/web-1" )
+appss=( "rels/web/node/lib/web-1" "rels/web/node/lib/n2o-3.0" "rels/web/node/lib/dir-1")
 
 declare -A sources
 declare -A apps

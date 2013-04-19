@@ -10,7 +10,7 @@
 	]).
 
 -compile(export_all).
--include_lib ("nitrogen_core/include/wf.hrl").
+-include_lib ("n2o/include/wf.hrl").
 -define(APP, web).
 
 %% ===================================================================
@@ -32,9 +32,9 @@ init([]) ->
 
 dispatch_rules() ->
     cowboy_router:compile(
-	[{'_', [
-	    {["/static/[...]"], cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
-		{mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
-	    {["/websocket"], ws_chat, []},
-	    {'_', nitrogen_cowboy, []}
+       [{'_', [
+            {["/static/[...]"], cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
+                    {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]}, 
+            {["/websocket/[...]"], ws_chat, []},
+            {'_', nitrogen_cowboy, []}
     ]}]).
