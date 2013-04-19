@@ -692,7 +692,7 @@ function addStatus(text){
 function WSI(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
-        ws = new WebSocket("ws://192.168.1.104:8000/websocket");
+        ws = new WebSocket("ws://192.168.1.103:8000/websocket");
         ws.onopen = function() {
             addStatus("websocket connected!");
 //            ws.send("hello server!"); 

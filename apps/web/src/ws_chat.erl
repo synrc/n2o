@@ -18,3 +18,4 @@ websocket_info(X, Req, State) ->
    error_logger:info_msg("~p",[Data1]),
    {reply, {text,lists:flatten(io_lib:format("~p",[Data1]))}, Req, State}.
 websocket_terminate(_Reason, _Req, _State) -> ok.
+lhdaahdbahdcaj
