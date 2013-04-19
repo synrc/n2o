@@ -6,7 +6,7 @@ Nitrogen 2 Optimized
 
 * Page construction from binaries
 * Push on bi-directional TCP WebSocket channel
-* One process for page and one process for async handler
+* Use only Cowboy processes, no own processes
 
 Credits
 -------
