@@ -1,5 +1,10 @@
-<html><body style="padding: 0; margin: 0;">   
-<canvas valign=top id="mandala" width="600" height="600"></canvas>
+<html>
+<LINK REL=STYLESHEET type="text/css" HREF="synrc.css">
+<title>Mandala</title><body style="padding: 0; margin: 20;">
+<center><h1>SNMP Mandala</h1></center><br>
+ <div align=center valign=top>
+<canvas id="mandala" width="600" height="400"></canvas>
+</div>
 <script>
 
      function drawSector(x,y,inner_radius,outer_radius,startAngle,endAngle,max) { 
@@ -16,7 +21,7 @@
               context.fill();
               context.stroke(); }
 
-     function drawBus(start,end,max) { 
+     function drawBus(start,end,max,inner_radius_bus,outer_radius_bus) { 
               startAngle = Math.PI*2/max*end;
               endAngle = Math.PI*2/max*start;
               context.beginPath();
@@ -29,31 +34,28 @@
       var y = canvas.height / 2;
       var outer_radius = x / 4;
       var inner_radius = x / 2;
-      var outer_radius_bus = x/6;
-      var inner_radius_bus = outer_radius;
-      context.strokeStyle = 'black';
+      context.strokeStyle = "#362638";
       context.lineWidth = 3;
-      var startAngle = 0;
-      var endAngle = 0;
-      var cloud = [{n:3, color:"#647231",name:"game"},
-                   {n:2, color:"#345690",name:"mq"},
-                   {n:4, color:"#c82124",name:"app"},
-                   {n:1, color:"#3370d4",name:"monitor"},
-                   {n:10,color:"#452309",name:"web"}];
-      var i = 0; 
+      var palette = ["#362698","#8080FF","#F0C80E","#8080FF","#ED7651","#7E7EB8"];
+      var cloud = [{n:3, color:1,name:"game"},
+                   {n:2, color:2,name:"mq"},
+                   {n:4, color:3,name:"app"},
+                   {n:1, color:4,name:"monitor"},
+                   {n:1, color:5,name:"backup-stream"},
+                   {n:10,color:6,name:"web"}
+                   ];
+      var i = 0;
       var color = 0;
       var max = 0;
       cloud.map(function(item) { max += item.n; });
       cloud.map(function(item) { left = i; right = i + item.n; 
-           for (var x = left+1; x <= right; x++) drawServer(x,item.color,max);
-           drawBus(left,right,max);
+           for (var k = left+1; k <= right; k++) drawServer(k,palette[item.color],max);
+           drawBus(left,right,max,outer_radius,x/6);
+           drawBus(left,right,max,inner_radius,x*0.58);
            i = right;
            color++;
       });
     </script>
 
-
-
 </body>
-
 </html>
