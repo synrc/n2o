@@ -16,7 +16,7 @@
               context.fill();
               context.stroke(); }
 
-     function drawFrontline(start,end,max) { 
+     function drawBus(start,end,max) { 
               startAngle = Math.PI*2/max*end;
               endAngle = Math.PI*2/max*start;
               context.beginPath();
@@ -35,14 +35,18 @@
       context.lineWidth = 3;
       var startAngle = 0;
       var endAngle = 0;
-      var cloud = [3,2,4,1,10];
-      var colors = ["#647231","#c82124","#3370d4","#452309","#345690"];
-      var i = 0; color = 0;
+      var cloud = [{n:3, color:"#647231",name:"game"},
+                   {n:2, color:"#345690",name:"mq"},
+                   {n:4, color:"#c82124",name:"app"},
+                   {n:1, color:"#3370d4",name:"monitor"},
+                   {n:10,color:"#452309",name:"web"}];
+      var i = 0; 
+      var color = 0;
       var max = 0;
-      cloud.map(function(item) { max += item; });
-      cloud.map(function(item) { left = i; right = i + item; 
-           for (var x = left+1; x <= right; x++) drawServer(x,colors[color],max);
-           drawFrontline(left,right,max);
+      cloud.map(function(item) { max += item.n; });
+      cloud.map(function(item) { left = i; right = i + item.n; 
+           for (var x = left+1; x <= right; x++) drawServer(x,item.color,max);
+           drawBus(left,right,max);
            i = right;
            color++;
       });
