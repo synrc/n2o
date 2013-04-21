@@ -1,0 +1,55 @@
+<html><body style="padding: 0; margin: 0;">   
+<canvas valign=top id="mandala" width="600" height="600"></canvas>
+<script>
+
+     function drawSector(x,y,inner_radius,outer_radius,startAngle,endAngle,max) { 
+              context.arc(x, y, inner_radius, endAngle, startAngle, false);
+              context.arc(x, y, outer_radius, startAngle, endAngle, true);
+              context.arc(x, y, inner_radius, endAngle, startAngle, false); }
+
+     function drawServer(pos,color,max) {
+              context.beginPath();      
+              startAngle = Math.PI*2/max*pos;
+              endAngle = Math.PI*2/max*(pos-1);
+              context.fillStyle = color;
+              drawSector(x,y,inner_radius,outer_radius,startAngle,endAngle,max);
+              context.fill();
+              context.stroke(); }
+
+     function drawFrontline(start,end,max) { 
+              startAngle = Math.PI*2/max*end;
+              endAngle = Math.PI*2/max*start;
+              context.beginPath();
+              drawSector(x,y,inner_radius_bus,outer_radius_bus,startAngle,endAngle,max);
+              context.stroke(); }
+
+      var canvas = document.getElementById('mandala');
+      var context = canvas.getContext('2d');
+      var x = canvas.width / 2;
+      var y = canvas.height / 2;
+      var outer_radius = x / 4;
+      var inner_radius = x / 2;
+      var outer_radius_bus = x/6;
+      var inner_radius_bus = outer_radius;
+      context.strokeStyle = 'black';
+      context.lineWidth = 3;
+      var startAngle = 0;
+      var endAngle = 0;
+      var cloud = [3,2,4,1,10];
+      var colors = ["#647231","#c82124","#3370d4","#452309","#345690"];
+      var i = 0; color = 0;
+      var max = 0;
+      cloud.map(function(item) { max += item; });
+      cloud.map(function(item) { left = i; right = i + item; 
+           for (var x = left+1; x <= right; x++) drawServer(x,colors[color],max);
+           drawFrontline(left,right,max);
+           i = right;
+           color++;
+      });
+    </script>
+
+
+
+</body>
+
+</html>
