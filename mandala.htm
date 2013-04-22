@@ -3,57 +3,54 @@
 <title>Mandala</title><body style="padding: 0; margin: 20;">
 <center><h1>SNMP Mandala</h1></center><br>
  <div align=center valign=top>
-<canvas id="mandala" width="600" height="400"></canvas>
+<canvas id="mandala" width="800" height="600"></canvas>
 </div>
 <script>
 
      function drawSector(x,y,inner_radius,outer_radius,startAngle,endAngle,max) { 
-              context.arc(x, y, inner_radius, endAngle, startAngle, false);
-              context.arc(x, y, outer_radius, startAngle, endAngle, true);
-              context.arc(x, y, inner_radius, endAngle, startAngle, false); }
+              context.arc(x, y, inner_radius, startAngle, endAngle, true);
+              context.arc(x, y, outer_radius, endAngle, startAngle, false); }
 
      function drawServer(pos,color,max) {
-              context.beginPath();      
-              startAngle = Math.PI*2/max*pos;
-              endAngle = Math.PI*2/max*(pos-1);
+              context.beginPath();
+              context.lineWidth = 3;
+              startAngle = -Math.PI*2/max*(pos-1);
+              endAngle = -Math.PI*2/max*(pos);
               context.fillStyle = color;
               drawSector(x,y,inner_radius,outer_radius,startAngle,endAngle,max);
               context.fill();
               context.stroke(); }
 
      function drawBus(start,end,max,inner_radius_bus,outer_radius_bus) { 
-              startAngle = Math.PI*2/max*end;
-              endAngle = Math.PI*2/max*start;
               context.beginPath();
+              context.lineWidth = 1;
+              startAngle = -Math.PI*2/max*start;
+              endAngle = -Math.PI*2/max*end;
               drawSector(x,y,inner_radius_bus,outer_radius_bus,startAngle,endAngle,max);
               context.stroke(); }
 
       var canvas = document.getElementById('mandala');
       var context = canvas.getContext('2d');
+      context.strokeStyle = "#362638";
       var x = canvas.width / 2;
       var y = canvas.height / 2;
-      var outer_radius = x / 4;
-      var inner_radius = x / 2;
-      context.strokeStyle = "#362638";
-      context.lineWidth = 3;
-      var palette = ["#362698","#8080FF","#F0C80E","#8080FF","#ED7651","#7E7EB8"];
-      var cloud = [{n:3, color:1,name:"game"},
-                   {n:2, color:2,name:"mq"},
-                   {n:4, color:3,name:"app"},
-                   {n:1, color:4,name:"monitor"},
-                   {n:1, color:5,name:"backup-stream"},
-                   {n:10,color:6,name:"web"}
+      var inner_radius = x / 4;
+      var outer_radius = x / 2;
+      var palette = ["#362698","#8080FF","#F0C80E","#3F807F","#ED7651","#7E7EB8"];
+      var cloud = [{n:3, color:0,name:"game"},
+                   {n:12, color:1,name:"mq"},
+                   {n:24, color:2,name:"app"},
+                   {n:1, color:3,name:"monitor"},
+                   {n:1, color:4,name:"backup-stream"},
+                   {n:27, color:5,name:"web"}
                    ];
       var i = 0;
-      var color = 0;
       var max = 0;
       cloud.map(function(item) { max += item.n; });
-      cloud.map(function(item) { left = i; right = i + item.n; 
+      cloud.map(function(item) { left = i; right = i + item.n; i = right;
            for (var k = left+1; k <= right; k++) drawServer(k,palette[item.color],max);
-           drawBus(left,right,max,outer_radius,x/6);
-           drawBus(left,right,max,inner_radius,x*0.58);
-           i = right;
-           color++;
+           drawBus(left,right,max,inner_radius,x/6);
+           drawBus(left,right,max,outer_radius,x*0.58);
       });
     </script>
 
