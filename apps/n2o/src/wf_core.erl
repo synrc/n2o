@@ -5,6 +5,9 @@
 run() ->
     Request = wf_context:request_bridge(),
     Response = wf_context:response_bridge(),
+    error_logger:info_msg("Request: ~p",[Request]),
+    error_logger:info_msg("Response: ~p",[Response]),
+    error_logger:info_msg("Context: ~p",[wf_context:context()]),
 %    deserialize_context(),
     call_init_on_handlers(),
     wf_event:update_context_with_event(),

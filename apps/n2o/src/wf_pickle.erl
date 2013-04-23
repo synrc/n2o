@@ -1,15 +1,6 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
 -module (wf_pickle).
--export ([
-    pickle/1,
-    depickle/1, 
-    depickle/2
-]).
--include_lib ("wf.hrl").
+-compile(export_all).
+-include("wf.hrl").
 
 % Does a plain old term_to_binary...
 pickle(Data) ->
@@ -42,7 +33,7 @@ depickle(PickledData, TTLSeconds) ->
 
 signkey() ->
     % Read the signkey from config.
-    SignKey = config_handler:get_value(signkey),
+    SignKey = "1",%config_handler:get_value(signkey),
 
     % Return the signkey, or if it's not found, log an error and then
     % use a signkey based on the cookie.

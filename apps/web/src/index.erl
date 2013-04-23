@@ -29,10 +29,16 @@ api_event(history_back, tabs_example_tag, Data) -> error_logger:info_msg("API: ~
 
 event(chat) ->
     error_logger:info_msg("Button Pressed"),
-    Username = wf:q(userNameTextBox),
-    Message = wf:q(messageTextBox),
-    wf:push({message, Username, Message}),
-    wf:wire("obj('messageTextBox').focus(); obj('messageTextBox').select();");
+%    Username = wf:q(userNameTextBox),
+%    Message = wf:q(messageTextBox),
+%    wf:push({message, Username, Message}),
+            Terms = [
+                #p{},
+                #span { text="You are the only person in the chat room.", class=message }
+            ],
+    wf:insert_bottom(chatHistory, Terms),
+    wf:wire("obj('messageTextBox').focus(); obj('messageTextBox').select();"),
+    wf:flush();
 
 event(Event) -> error_logger:info_msg("Event: ~p", [Event]).
 
