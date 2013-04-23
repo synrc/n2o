@@ -7,17 +7,15 @@ title() -> "Demo Page".
 headline() -> "Demo Page".
 
 body() ->
-%  wf:comet_global(fun() -> chat_loop() end, chatroom),
+  error_logger:info_msg("Page Pid: ~p",[process_info(self())]),
   [
-     #span { text="Your chatroom name: " }, 
-     #textbox { id=userNameTextBox, text="Anonymous", style="width: 100px;", next=messageTextBox },
-
-     #p{},
-     #panel { id=chatHistory, class=chat_history },
-
-     #p{},
-     #textbox { id=messageTextBox, style="width: 70%;", next=sendButton },
-     #button { id=sendButton, text="Send", postback=chat },
+    #span { text="Your chatroom name: " }, 
+    #textbox { id=userNameTextBox, text="Anonymous", style="width: 100px;", next=messageTextBox },
+    #p{},
+    #panel { id=chatHistory, class=chat_history },
+    #p{},
+    #textbox { id=messageTextBox, style="width: 70%;", next=sendButton },
+    #button { id=sendButton, text="Send", postback=chat },
 
   "<form name='chat' onsubmit='ws.send(document.chat.msg.value); return false;'>
   <input name='msg' type='text'/>

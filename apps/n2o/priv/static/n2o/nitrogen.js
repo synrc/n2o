@@ -682,6 +682,7 @@ NitrogenClass.prototype.$from_alien = function(nativeID) {
 };
 
 var Nitrogen = new NitrogenClass();
+var receivedMsg = 0;
 
 var ws;
 function addStatus(text){
@@ -695,13 +696,11 @@ function WSI(){
         ws = new WebSocket("ws://192.168.1.108:8000/websocket");
         ws.binaryType = 'arraybuffer';
         ws.onopen = function() {
-            addStatus("websocket connected!");
-//            ws.send("hello server!"); 
-            addStatus("sent message to server: 'hello server'!");
+            ws.send("Hello"); 
         };
         ws.onmessage = function (evt) { // EVENT DISPATCHER
-            var receivedMsg = evt.data;
-            addStatus("server sent the following: '" + receivedMsg + "'");
+            receivedMsg = evt.data;
+            addStatus("server sent the following: '" + Bert.pp_term(Bert.decode(Bert.bytes_to_string(new Uint8Array(receivedMsg)))) + "'");
         };
         ws.onclose = function() {
             addStatus("websocket was closed");

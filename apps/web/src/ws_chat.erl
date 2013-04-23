@@ -18,13 +18,15 @@ websocket_handle({binary,Info}, Req, State) ->
     case Depickled of
          {event_context,Module,Parameter,_,_,_} -> 
               error_logger:info_msg("Before Dispatch"),
-              A = Module:event(Parameter), 
+              A = 1,%Module:event(Parameter), 
               error_logger:info_msg("After ~p~n",[A]);
          _ -> error_logger:info_msg("Unknown Event") end,
    gproc:send({p,l,main_room},Pro),
-   {ok, Req,State};
+    {reply,{binary,term_to_binary({a,100})}, Req, State};
 websocket_handle(_Any, Req, State) -> {ok, Req, State}.
 websocket_info(Pro, Req, State) -> 
-   {reply, {text,lists:flatten(io_lib:format("~p",[Pro]))}, Req, State}.
+   {reply, {binary,[term_to_binary(Pro)]}, Req, State}.
 
-websocket_terminate(_Reason, _Req, _State) -> ok.
+websocket_terminate(_Reason, _Req, _State) -> 
+    error_logger:info_msg("Terminate WS ~p~n",[_Reason]),
+   ok.
