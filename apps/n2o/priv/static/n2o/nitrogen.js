@@ -694,7 +694,7 @@ function addStatus(text){
 function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
-        ws = new WebSocket("ws://192.168.1.108:8000/websocket");
+        ws = new WebSocket("ws://localhost:8000/websocket");
         ws.binaryType = 'arraybuffer';
         ws.onopen = function() {
             ws.send("N2O HELO!"); 
