@@ -1,34 +1,13 @@
-% vim: sw=4 ts=4 et ft=erlang
-%% @copyright 2007 Mochi Media, Inc.
-%% @author Bob Ippolito <bob@mochimedia.com>
-
-%% @doc Useful numeric algorithms for floats that cover some deficiencies
-%% in the math module. More interesting is digits/1, which implements
-%% the algorithm from:
-%% http://www.cs.indiana.edu/~burger/fp/index.html
-%% See also "Printing Floating-Point Numbers Quickly and Accurately"
-%% in Proceedings of the SIGPLAN '96 Conference on Programming Language
-%% Design and Implementation.
-
 -module(nitro_mochinum).
--author("Bob Ippolito <bob@mochimedia.com>").
--export([digits/1, frexp/1, int_pow/2, int_ceil/1]).
+-author('Bob Ippolito <bob@mochimedia.com>').
+-compile(export_all).
 
-%% IEEE 754 Float exponent bias
 -define(FLOAT_BIAS, 1022).
 -define(MIN_EXP, -1074).
 -define(BIG_POW, 4503599627370496).
 
-%% External API
-
-%% @spec digits(number()) -> string()
-%% @doc  Returns a string that accurately represents the given integer or float
-%%       using a conservative amount of digits. Great for generating
-%%       human-readable output, or compact ASCII serializations for floats.
-digits(N) when is_integer(N) ->
-    integer_to_list(N);
-digits(0.0) ->
-    "0.0";
+digits(N) when is_integer(N) -> integer_to_list(N);
+digits(0.0) -> "0.0";
 digits(Float) ->
     {Frac, Exp} = frexp(Float),
     Exp1 = Exp - 53,
@@ -42,26 +21,10 @@ digits(Float) ->
             R
     end.
 
-%% @spec frexp(F::float()) -> {Frac::float(), Exp::float()}
-%% @doc  Return the fractional and exponent part of an IEEE 754 double,
-%%       equivalent to the libc function of the same name.
-%%       F = Frac * pow(2, Exp).
-frexp(F) ->
-    frexp1(unpack(F)).
+frexp(F) -> frexp1(unpack(F)).
+int_pow(_X, 0) -> 1;
+int_pow(X, N) when N > 0 -> int_pow(X, N, 1).
 
-%% @spec int_pow(X::integer(), N::integer()) -> Y::integer()
-%% @doc  Moderately efficient way to exponentiate integers.
-%%       int_pow(10, 2) = 100.
-int_pow(_X, 0) ->
-    1;
-int_pow(X, N) when N > 0 ->
-    int_pow(X, N, 1).
-
-%% @spec int_ceil(F::float()) -> integer()
-%% @doc  Return the ceiling of F as an integer. The ceiling is defined as
-%%       F when F == trunc(F);
-%%       trunc(F) when F &lt; 0;
-%%       trunc(F) + 1 when F &gt; 0.
 int_ceil(X) ->
     T = trunc(X),
     case (X - T) of
@@ -70,16 +33,10 @@ int_ceil(X) ->
         _ -> T
     end.
 
+int_pow(X, N, R) when N < 2 -> R * X;
+int_pow(X, N, R) -> int_pow(X * X, N bsr 1, case N band 1 of 1 -> R * X; 0 -> R end).
 
-%% Internal API
-
-int_pow(X, N, R) when N < 2 ->
-    R * X;
-int_pow(X, N, R) ->
-    int_pow(X * X, N bsr 1, case N band 1 of 1 -> R * X; 0 -> R end).
-
-insert_decimal(0, S) ->
-    "0." ++ S;
+insert_decimal(0, S) -> "0." ++ S;
 insert_decimal(Place, S) when Place > 0 ->
     L = length(S),
     case Place - L of
@@ -94,10 +51,8 @@ insert_decimal(Place, S) when Place > 0 ->
         _ ->
             insert_decimal_exp(Place, S)
     end;
-insert_decimal(Place, S) when Place > -6 ->
-    "0." ++ lists:duplicate(abs(Place), $0) ++ S;
-insert_decimal(Place, S) ->
-    insert_decimal_exp(Place, S).
+insert_decimal(Place, S) when Place > -6 -> "0." ++ lists:duplicate(abs(Place), $0) ++ S;
+insert_decimal(Place, S) -> insert_decimal_exp(Place, S).
 
 insert_decimal_exp(Place, S) ->
     [C | S0] = S,
