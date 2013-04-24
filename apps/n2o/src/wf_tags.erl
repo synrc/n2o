@@ -1,12 +1,7 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% Contributions from Tom McNulty (tom.mcnulty@cetiforge.com)
-% See MIT-LICENSE for licensing information.
+-module(wf_tags).
+-author('Maxim Sokhatsky'). % binary iolist
+-include_lib("n2o/include/wf.hrl").
 
--module (wf_tags).
--author('tom.mcnulty@cetiforge.com').
--include_lib ("wf.hrl").
 -define(NO_SHORT_TAGS(TagName),(
     TagName =/= 'div' andalso 
     TagName =/= 'span' andalso 
@@ -85,6 +80,9 @@ display_property({Prop}) when is_atom(Prop) ->
 display_property({data_fields,DataTags}) ->
 	[" ",data_tags(DataTags)];
 
+display_property({id, Value}) ->
+    [" id=\"", wf:to_list(Value) , "\""];
+
 display_property({Prop, V}) when is_atom(Prop) ->
     display_property({atom_to_list(Prop), V});
 
@@ -98,6 +96,7 @@ display_property({Prop, Value}) when is_integer(Value); is_atom(Value); is_float
 
 display_property({Prop, Value}) when is_binary(Value); ?IS_STRING(Value) ->
     [" ", Prop, "=\"", Value, "\""];
+
 
 display_property({Prop, Values}) ->
     StrValues = wf:to_string_list(Values),

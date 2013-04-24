@@ -1,5 +1,6 @@
--module (wf_event).
--include_lib ("wf.hrl").
+-module(wf_event).
+-author('Maxim Sokhatsky').
+-include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
 update_context_with_event() ->

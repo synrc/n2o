@@ -1,5 +1,6 @@
 -module(wf_context).
--include("wf.hrl").
+-author('Rusty Klophous').
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 request_bridge() ->
@@ -225,8 +226,6 @@ event_validation_group(ValidationGroup) ->
     Event = event_context(),
     event_context(Event#event_context { validation_group = ValidationGroup }).
 
-% Handlers
-
 handlers() ->
     Context = context(),
     Context#context.handler_list.
@@ -235,10 +234,7 @@ handlers(Handlers) ->
     Context = context(),
     context(Context#context { handler_list = Handlers }).
 
-% Context Construction 
-
 init_context(RequestBridge, ResponseBridge) ->
-    % Create the new context using the default handlers.
     Context = #context {
         request_bridge = RequestBridge,
         response_bridge = ResponseBridge,

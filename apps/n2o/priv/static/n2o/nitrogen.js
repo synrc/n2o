@@ -693,13 +693,24 @@ function addStatus(text){
 function WSI(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
-        ws = new WebSocket("ws://192.168.1.103:8000/websocket");
+        ws = new WebSocket("ws://192.168.1.108:8000/websocket");
         ws.binaryType = 'arraybuffer';
         ws.onopen = function() {
             ws.send("Hello"); 
         };
         ws.onmessage = function (evt) { // EVENT DISPATCHER
             receivedMsg = evt.data;
+            var operation;
+            var type;
+            var anchor;
+            var trigger;
+            var target;
+            var actions;
+            switch (operation) {
+                 case 'update': { $(target).update(html); }
+                 case 'wire': { for (var i=0;i<actions.length;i++) actions[i]; }
+            }
+
             addStatus("server sent the following: '" + Bert.pp_term(Bert.decode(Bert.bytes_to_string(new Uint8Array(receivedMsg)))) + "'");
         };
         ws.onclose = function() {

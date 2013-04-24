@@ -1,5 +1,6 @@
 -module (wf_core).
--include_lib ("wf.hrl").
+-author('Maxim Sokhatsky').
+-include_lib("n2o/include/wf.hrl").
 -compile (export_all).
 
 run() ->
@@ -21,11 +22,11 @@ run() ->
     wf_context:clear_data(),
     Actions = wf_context:actions(),
     wf_context:clear_actions(),
-    {ok, Html1, Javascript1} = wf_render:render(Elements, Actions, undefined, undefined, undefined),
+    {ok, Html1, Javascript1} = wf_render:render(Elements, Actions, undefined, undefined),
     element_flash:update(),
     ActionsFlash = wf_context:actions(),
     wf_context:clear_actions(),
-    {ok, Html2, Javascript2} = wf_render:render([], ActionsFlash, undefined, undefined, undefined),
+    {ok, Html2, Javascript2} = wf_render:render([], ActionsFlash, undefined, undefined),
     call_finish_on_handlers(),
     Html = replace_script([Javascript1 ++ Javascript2], Html1 ++ Html2),
     Response2 = wf_context:response_bridge(), 
