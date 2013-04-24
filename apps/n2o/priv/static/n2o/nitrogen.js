@@ -690,7 +690,8 @@ function addStatus(text){
     document.getElementById('status').innerHTML =
     document.getElementById('status').innerHTML + "E> " + text + "<br/>";
 }
-function WSI(){
+
+function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
         ws = new WebSocket("ws://192.168.1.108:8000/websocket");
@@ -722,5 +723,5 @@ function WSI(){
 }
 
 var page = document;
-WSI();
-Nitrogen.$event_loop();
+
+WebSocketsInit();
