@@ -9,12 +9,20 @@ run() ->
     Module = wf_context:event_module(),
     Elements = Module:main(),
     Actions = wf_context:actions(),
-    {ok, Html, JavaScript} = wf_render:render(Elements, Actions, undefined, undefined),
+    {ok, Html, JavaScript} = render(Elements, Actions, undefined, undefined),
     call_finish_on_handlers(),
     HtmlJS = replace_script([JavaScript], Html),
     ResponseBridge = wf_context:response_bridge(), 
     Response = ResponseBridge:data(HtmlJS),
     Response:build_response().
+
+render(Elements, Actions, Trigger, Target) ->
+    {ok, Html}    = wf_render_elements:render_elements(Elements),
+    {ok, Script1} = wf_render_actions:render_actions(Actions, Trigger, Target),
+    QueuedActions = wf_context:actions(),
+    {ok, Script2} = wf_render_actions:render_actions(QueuedActions, Trigger, Target),
+    Script= [Script1, Script2],
+    {ok, Html, Script}.
 
 call_init_on_handlers() -> [wf_handler:call(X#handler_context.name, init) || X <- wf_context:handlers()].
 call_finish_on_handlers() -> [wf_handler:call(X#handler_context.name, finish) || X <- wf_context:handlers()].
