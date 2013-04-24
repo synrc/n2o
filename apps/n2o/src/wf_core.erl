@@ -4,28 +4,17 @@
 -compile (export_all).
 
 run() ->
-    Request = wf_context:request_bridge(),
-    Response = wf_context:response_bridge(),
     call_init_on_handlers(),
     wf_event:update_context_with_event(),
     Module = wf_context:event_module(),
-    {module, Module} = code:ensure_loaded(Module),
-    Data = Module:main(),                             % call page constructor
-    wf_context:data(Data),
-    Elements = wf_context:data(),
-    wf_context:clear_data(),
+    Elements = Module:main(),
     Actions = wf_context:actions(),
-    wf_context:clear_actions(),
-    {ok, Html1, Javascript1} = wf_render:render(Elements, Actions, undefined, undefined),
-    element_flash:update(),
-    ActionsFlash = wf_context:actions(),
-    wf_context:clear_actions(),
-    {ok, Html2, Javascript2} = wf_render:render([], ActionsFlash, undefined, undefined),
+    {ok, Html, JavaScript} = wf_render:render(Elements, Actions, undefined, undefined),
     call_finish_on_handlers(),
-    Html = replace_script([Javascript1 ++ Javascript2], Html1 ++ Html2),
-    Response2 = wf_context:response_bridge(), 
-    Response1 = Response2:data(Html),
-    Response1:build_response().
+    HtmlJS = replace_script([JavaScript], Html),
+    ResponseBridge = wf_context:response_bridge(), 
+    Response = ResponseBridge:data(HtmlJS),
+    Response:build_response().
 
 call_init_on_handlers() -> [wf_handler:call(X#handler_context.name, init) || X <- wf_context:handlers()].
 call_finish_on_handlers() -> [wf_handler:call(X#handler_context.name, finish) || X <- wf_context:handlers()].
