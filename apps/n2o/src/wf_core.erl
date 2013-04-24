@@ -6,17 +6,11 @@
 run() ->
     Request = wf_context:request_bridge(),
     Response = wf_context:response_bridge(),
-    error_logger:info_msg("Request: ~p",[Request]),
-    error_logger:info_msg("Response: ~p",[Response]),
-    error_logger:info_msg("Context: ~p",[wf_context:context()]),
-%    deserialize_context(),
     call_init_on_handlers(),
     wf_event:update_context_with_event(),
     Module = wf_context:event_module(),
-    error_logger:info_msg("Module: ~p~n",[Module]),
     {module, Module} = code:ensure_loaded(Module),
     Data = Module:main(),                             % call page constructor
-    error_logger:info_msg("Data: ~p~n",[Data]),
     wf_context:data(Data),
     Elements = wf_context:data(),
     wf_context:clear_data(),
@@ -31,7 +25,6 @@ run() ->
     Html = replace_script([Javascript1 ++ Javascript2], Html1 ++ Html2),
     Response2 = wf_context:response_bridge(), 
     Response1 = Response2:data(Html),
-    error_logger:info_msg("Response: ~p~n",[Response1]),
     Response1:build_response().
 
 call_init_on_handlers() -> [wf_handler:call(X#handler_context.name, init) || X <- wf_context:handlers()].

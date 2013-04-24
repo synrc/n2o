@@ -17,7 +17,6 @@ update_context_for_first_request() ->
 generate_postback_script(undefined, _Anchor, _ValidationGroup, _Delegate, _ExtraParam) -> [];
 generate_postback_script(Postback, Anchor, ValidationGroup, Delegate, ExtraParam) ->
     PickledPostbackInfo = serialize_event_context(Postback, Anchor, ValidationGroup, Delegate),
-    error_logger:info_msg("Postback: ~p~n",[{Postback, Anchor, ValidationGroup, Delegate, ExtraParam}]),
     wf:f("ori = Bert.encode({source: Bert.binary('~s'), pickle: Bert.binary('~s'), x: Bert.binary('~s'), module: Bert.atom('~s')});"
          "buf = new Uint8Array(new ArrayBuffer(ori.length));"
          "for (var i=0;i<buf.length;i++) { buf[i] = ori.charCodeAt(i); }"

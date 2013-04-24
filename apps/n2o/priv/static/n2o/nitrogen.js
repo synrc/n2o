@@ -696,7 +696,7 @@ function WSI(){
         ws = new WebSocket("ws://192.168.1.108:8000/websocket");
         ws.binaryType = 'arraybuffer';
         ws.onopen = function() {
-            ws.send("Hello"); 
+            ws.send("N2O HELO!"); 
         };
         ws.onmessage = function (evt) { // EVENT DISPATCHER
             receivedMsg = evt.data;
@@ -711,7 +711,7 @@ function WSI(){
                  case 'wire': { for (var i=0;i<actions.length;i++) actions[i]; }
             }
 
-            addStatus("server sent the following: '" + Bert.pp_term(Bert.decode(Bert.bytes_to_string(new Uint8Array(receivedMsg)))) + "'");
+            addStatus("Received: '" + Bert.pp_term(Bert.decode(Bert.bytes_to_string(new Uint8Array(receivedMsg)))) + "'");
         };
         ws.onclose = function() {
             addStatus("websocket was closed");

@@ -7,7 +7,6 @@ title() -> "Demo Page".
 headline() -> "Demo Page".
 
 body() ->
-  error_logger:info_msg("Page Pid: ~p",[process_info(self())]),
   [
     #span { text="Your chatroom name: " }, 
     #textbox { id=userNameTextBox, text="Anonymous", style="width: 100px;", next=messageTextBox },

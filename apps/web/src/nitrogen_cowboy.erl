@@ -9,7 +9,6 @@ init(_Transport, Req, Opts) -> {ok, Req, #state{}}.
 terminate(_Reason, _Req, _State) -> ok.
 
 handle(Req, State) ->
-    error_logger:info_msg("Req: ~p",[Req]),
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     nitrogen:init_request(RequestBridge, ResponseBridge),
