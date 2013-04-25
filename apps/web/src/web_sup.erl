@@ -1,10 +1,6 @@
 -module(web_sup).
 -behaviour(supervisor).
--export([
-	 start_link/0,
-	 init/1
-	]).
-
+-export([start_link/0, init/1]).
 -compile(export_all).
 -include_lib ("n2o/include/wf.hrl").
 -define(APP, web).
@@ -21,7 +17,7 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, _} = cowboy:start_http(http, 10000,
+    {ok, _} = cowboy:start_http(http, 100,
 				[{port, 8000}],
 				[{env, [{dispatch, dispatch_rules()}]}]),
     {ok, {{one_for_one, 5, 10}, []}}.

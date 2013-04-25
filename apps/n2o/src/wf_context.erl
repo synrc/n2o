@@ -125,9 +125,11 @@ clear_data() ->
 
 
 add_action(Action) ->
+    error_logger:info_msg("Add action: ~p, ~p",[actions(),self()]),
     Context = context(),
     Actions = Context#context.queued_actions,
-    context(Context#context { queued_actions=[Action|Actions] }).
+    context(Context#context { queued_actions=lists:flatten([Action|Actions]) }),
+    ok.
 
 actions() ->
     Context = context(),

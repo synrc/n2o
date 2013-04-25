@@ -6,7 +6,7 @@ main() -> #template { file= code:priv_dir(web) ++ "/templates/index.html" }.
 title() -> "Demo Page".
 headline() -> "Demo Page".
 
-body() ->
+body() -> %spawn(fun() -> chat_loop() end),
   [
     #span { text="Your chatroom name: " }, 
     #textbox { id=userNameTextBox, text="Anonymous", style="width: 100px;", next=messageTextBox },
@@ -34,8 +34,8 @@ event(chat) ->
                 #span { text="You are the only person in the chat room.", class=message }
             ],
     wf:insert_bottom(chatHistory, Terms),
-    wf:wire("obj('messageTextBox').focus(); obj('messageTextBox').select();"),
-    wf:flush();
+    wf:wire("$('#messageTextBox').focus(); $('#messageTextBox').select(); alert('OK');"),
+    ok;
 
 event(Event) -> error_logger:info_msg("Event: ~p", [Event]).
 

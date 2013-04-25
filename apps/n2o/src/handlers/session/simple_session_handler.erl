@@ -1,16 +1,5 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
-% This is a "simple as possible" session handler. Unfortunately,
-% due to time constraints, had to leave out some great code
-% contributed by Dave Peticolas that fit Nitrogen sessions
-% into a gen_server. My code below is far inferior. 
-% Someone please make it better! - Rusty
-
--module (simple_session_handler).
--include_lib ("wf.hrl").
+-module(simple_session_handler).
+-include_lib("n2o/include/wf.hrl").
 -behaviour (session_handler).
 -export ([
     init/2, 
@@ -39,6 +28,7 @@ finish(_Config, State) ->
 
 get_value(Key, DefaultValue, Config, State) -> 
     {ok, Pid} = get_session_pid(Config, State),
+    error_logger:info_msg("Session Pid: ~p",[Pid]),
     Ref = make_ref(),
     Pid!{get_value, Key, self(), Ref},
     Value = receive 

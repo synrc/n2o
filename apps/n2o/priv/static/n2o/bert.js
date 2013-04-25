@@ -87,19 +87,16 @@ BertClass.prototype.decode = function (S) {
 	return Obj.value;
 };
 
-BertClass.prototype.atom = function (Obj) {
-	return new BertAtom(Obj);
-};
+BertClass.prototype.decodebuf = function (S) { return Bert.decode(Bert.bytes_to_string(new Uint8Array(S))); };
+BertClass.prototype.encodebuf = function (S) { 
+    var ori = Bert.encode(S);
+    var buf = new Uint8Array(new ArrayBuffer(ori.length));
+    for (var i=0;i<buf.length;i++) { buf[i] = ori.charCodeAt(i); }
+    return buf };
 
-BertClass.prototype.binary = function (Obj) {
-	return new BertBinary(Obj);
-};
-
-BertClass.prototype.tuple = function () {
-	return new BertTuple(arguments);
-};
-
-
+BertClass.prototype.atom = function (Obj) { return new BertAtom(Obj); };
+BertClass.prototype.binary = function (Obj) { return new BertBinary(Obj); };
+BertClass.prototype.tuple = function () { return new BertTuple(arguments); };
 
 // - ENCODING -
 
