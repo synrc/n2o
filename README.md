@@ -9,7 +9,7 @@ Nitrogen 2 Optimized
 * Work within Cowboy processes
 * No JSON
 * No nitrogen.js
-* Compatible enought to transfer Nitrogen sites
+* Compatible enough to transfer Nitrogen sites
 
 Credits
 -------
