@@ -1,12 +1,15 @@
-Synrc N2O
-=========
+Synrc Web Framework for Erlang
+==============================
 
 Nitrogen 2 Optimized
 --------------------
 
 * Page construction from binaries
-* Push on bi-directional TCP WebSocket channel
-* Use only Cowboy processes, no own processes
+* Do all Actions through WebSocket channel
+* Work within Cowboy processes
+* No JSON
+* No nitrogen.js
+* Compatible enought to transfer Nitrogen sites
 
 Credits
 -------
@@ -14,8 +17,8 @@ Credits
     -- Maxim Sohatsky
     -- Andrew Zadorozhny
 
-Build
------
+Try Immediately
+---------------
 
     $ rebar get-deps
     $ rebar compile
