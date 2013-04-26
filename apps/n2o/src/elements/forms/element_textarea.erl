@@ -14,7 +14,7 @@ render_element(Record) ->
     Placeholder  = wf:html_encode(Record#textarea.placeholder, true),
     wf_tags:emit_tag(textarea, Text, [
         {class, [textarea, Record#textarea.class]},
-        {id, Record#textarea.html_id},
+        {id, Record#textarea.id},
         {style, Record#textarea.style},
         {name, Record#textarea.html_name},
         {placeholder, Placeholder}

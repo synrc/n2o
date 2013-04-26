@@ -1,9 +1,5 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% See MIT-LICENSE for licensing information.
-
--module (element_hgroup).
--include_lib ("wf.hrl").
+-module(element_hgroup).
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, hgroup).
@@ -31,7 +27,7 @@ render_element(Record) ->
     if
         Y ->
             wf_tags:emit_tag(hgroup, Record#hgroup.body, [
-                {id, Record#hgroup.html_id},
+                {id, Record#hgroup.id},
                 {class, ["hgroup", Record#hgroup.class]},
                 {style, Record#hgroup.style}
             ]);

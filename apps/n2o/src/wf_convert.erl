@@ -91,8 +91,8 @@ html_encode(L,EncType) when is_atom(L) -> html_encode(wf:to_list(L),EncType);
 html_encode(L,EncType) when is_integer(L) -> html_encode(integer_to_list(L),EncType);
 html_encode(L,EncType) when is_float(L) -> html_encode(nitro_mochinum:digits(L),EncType);
 
-html_encode(L, false) -> wf:to_list(lists:flatten([L]));
-html_encode(L, true) -> html_encode(wf:to_list(lists:flatten([L])));
+html_encode(L, false) -> L; %wf:to_list(lists:flatten([L]));
+html_encode(L, true) -> L; %html_encode(wf:to_list(lists:flatten([L])));
 html_encode(L, whites) -> html_encode_whites(wf:to_list(lists:flatten([L]))).
 
 html_encode([]) -> [];

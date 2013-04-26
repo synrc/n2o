@@ -1,10 +1,5 @@
-% vim: ts=4 sw=4 et
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (element_link).
--include_lib ("wf.hrl").
+-module(element_link).
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, link).
@@ -32,7 +27,7 @@ render_element(Record) ->
     DataFields2 = add_field(Record#link.mobile_dialog==true,{rel,dialog},DataFields1),
 
     wf_tags:emit_tag(a, Body, [
-        {id, Record#link.html_id},
+        {id, Record#link.id},
         {href, wf:to_list(Record#link.url)},
         {class, [link, Record#link.class]},
         {target, Target},

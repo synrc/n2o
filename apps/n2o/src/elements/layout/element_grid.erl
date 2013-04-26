@@ -1,18 +1,16 @@
-% vim: sw=4 ts=4 et ft=erlang
--module (element_grid).
+-module(element_grid).
 -compile(export_all).
--include_lib("wf.hrl").
+-include_lib("n2o/include/wf.hrl").
 
 reflect() -> record_info(fields, grid).
 
-render_element(#grid_clear {}) ->
-    "<div class='clear'></div>\n";
+render_element(#grid_clear {}) -> <<"<div class='clear'></div>\n">>;
 render_element(Record0)  ->
     Record = to_grid_record(Record0),
     Body = rewrite_body(lists:flatten([Record#grid.body])),
 
     element_panel:render_element(#panel {
-        html_id=Record#grid.html_id,
+        id=Record#grid.id,
         class=to_classes(Record),
         body=case Record#grid.type of
             clear ->
@@ -22,7 +20,6 @@ render_element(Record0)  ->
             grid ->
                 #panel { 
                     id=Record#grid.id,
-                    anchor=Record#grid.anchor,
                     class=[grid, Record#grid.class],
                     style=Record#grid.style,
                     body=Body

@@ -4,30 +4,24 @@
 -compile(export_all).
 
 render_action(Record) ->
-    DefaultAnchor = Record#wire.anchor,
     DefaultTrigger = Record#wire.trigger,
     DefaultTarget = Record#wire.target,
-    Actions = set_paths(DefaultAnchor, DefaultTrigger, DefaultTarget, Record#wire.actions),
-    error_logger:info_msg("After Set Path ~p~n",[1]), 
+    Actions = set_paths(DefaultTrigger, DefaultTarget, Record#wire.actions),
     Actions.
 
-set_paths(_DefaultAnchor, _DefaultTrigger, _DefaultTarget, []) -> [];
-set_paths(DefaultAnchor, DefaultTrigger, DefaultTarget, [H|T]) ->
-    [ set_paths(DefaultAnchor, DefaultTrigger, DefaultTarget, H)|
-      set_paths(DefaultAnchor, DefaultTarget, DefaultTarget, T) ];
+set_paths(_DefaultTrigger, _DefaultTarget, []) -> [];
+set_paths(DefaultTrigger, DefaultTarget, [H|T]) ->
+    [ set_paths(DefaultTrigger, DefaultTarget, H)|
+      set_paths(DefaultTarget, DefaultTarget, T) ];
 
-set_paths(DefaultAnchor, DefaultTrigger, DefaultTarget, Action) when is_tuple(Action) ->
-    Anchor  = wf:coalesce([get_anchor(Action), DefaultAnchor]),
-    Action1 = set_anchor(Action, Anchor),
-    Trigger = wf:coalesce([get_trigger(Action1), DefaultTrigger]),
-    Action2 = set_trigger(Action1, Trigger),
+set_paths(DefaultTrigger, DefaultTarget, Action) when is_tuple(Action) ->
+    Trigger = wf:coalesce([get_trigger(Action), DefaultTrigger]),
+    Action2 = set_trigger(Action, Trigger),
     Target = wf:coalesce([get_target(Action2), DefaultTarget]),
     set_target(Action2, Target);
 
-set_paths(_, _, _, Other) -> Other.
+set_paths(_, _, Other) -> Other.
 
-get_anchor(Action) -> element(4, Action).
-set_anchor(Action, Anchor) -> setelement(4, Action, Anchor).
 get_trigger(Action) -> element(5, Action).
 set_trigger(Action, Trigger) -> setelement(5, Action, Trigger).
 get_target(Action) -> element(6, Action).

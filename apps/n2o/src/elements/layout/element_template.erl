@@ -132,19 +132,16 @@ eval([H|T], Record) when H==script orelse H==mobile_script -> [H|eval(T, Record)
 eval([H|T], Record) when ?IS_STRING(H) orelse is_binary(H) -> [H|eval(T, Record)];
 eval([H|T], Record) -> [replace_callbacks(H, Record)|eval(T, Record)].
 
-% Turn callbacks into a reference to #function_el {}.
 replace_callbacks(CallbackTuples, Record) ->
     Bindings = Record#template.bindings,
     Functions = [convert_callback_tuple_to_function(M, F, ArgString, Bindings) || {M, F, ArgString} <- CallbackTuples],
     #function_el { anchor=page, function=Functions }.
 
 convert_callback_tuple_to_function(Module, Function, ArgString, Bindings) ->
-    % De-reference to page module...
     Module1 = case Module of
         page -> wf_context:page_module();
         _ -> Module
     end,
-	
     _F = fun() ->
         % Convert args to term...
         Args = to_term("[" ++ ArgString ++ "].", Bindings),

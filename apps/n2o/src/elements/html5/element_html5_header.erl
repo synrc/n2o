@@ -25,7 +25,7 @@ render_element(Record) ->
             "<b style=\"color: red;\">html5_header cannot have another html5_header or html5_footer as child element</b>";
         true ->
             wf_tags:emit_tag('header', Record#html5_header.body, [
-                {id, Record#html5_header.html_id},
+                {id, Record#html5_header.id},
                 {class, ["html5_header", Record#html5_header.class]},
                 {style, Record#html5_header.style}
             ])

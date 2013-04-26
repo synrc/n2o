@@ -7,15 +7,15 @@
 init({tcp,http}, _Req, _Opt) -> {upgrade, protocol, cowboy_websocket}.
 
 websocket_init(_Any, Req, _Opt) ->
-   RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),    
-   ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
-   wf_context:init_context(RequestBridge,ResponseBridge),
-   X = wf_context:context(),
-   gproc:reg({p,l, main_room}),
-   {ok, Req, undefined_state}.
+    RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),    
+    ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
+    wf_context:init_context(RequestBridge,ResponseBridge),
+    X = wf_context:context(),
+    gproc:reg({p,l, main_room}),
+    {ok, Req, undefined_state}.
 websocket_handle({text,Data}, Req, State) ->
-   gproc:send({p,l,main_room},Data),
-   {ok, Req,State};
+    gproc:send({p,l,main_room},Data),
+    {ok, Req,State};
 websocket_handle({binary,Info}, Req, State) -> 
     Pro = binary_to_term(Info),
     Pickled = proplists:get_value(pickle,Pro),

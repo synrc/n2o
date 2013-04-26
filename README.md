@@ -7,9 +7,10 @@ Nitrogen 2 Optimized
 * Page construction from binaries
 * Do all Actions through WebSocket channel
 * Work within Cowboy processes
-* No JSON
-* No nitrogen.js
+* Bert/jQuery only w/o JSON and nitrogen.js
 * Compatible enough to transfer Nitrogen sites
+* Clean codebase
+* Sepaparate Advanced Nitrogen elements
 
 Credits
 -------

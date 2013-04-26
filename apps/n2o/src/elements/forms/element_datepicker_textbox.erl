@@ -4,7 +4,7 @@
 %%% See MIT-LICENSE for the Nitrogen Web Framework for Erlang
 
 -module (element_datepicker_textbox).
--include_lib ("wf.hrl").
+-include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, datepicker_textbox).
@@ -14,7 +14,7 @@ render_element(Record) ->
     Options = action_jquery_effect:options_to_js(Record#datepicker_textbox.options),
 
     Textbox = #textbox {
-        html_id     = Record#datepicker_textbox.html_id,
+        id     = Record#datepicker_textbox.id,
         class       = [datepicker_textbox, Record#datepicker_textbox.class],
         style       = Record#datepicker_textbox.style,
         text        = Record#datepicker_textbox.text,

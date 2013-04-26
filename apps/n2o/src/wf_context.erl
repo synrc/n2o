@@ -103,14 +103,6 @@ delete_cookie(Cookie) ->
 
 % Transient Context
 
-anchor(Anchor) ->
-    Context = context(),
-    context(Context#context { anchor=Anchor }).
-
-anchor() ->
-    Context = context(),
-    Context#context.anchor.
-
 data() ->
     Context = context(),
     Context#context.data.
