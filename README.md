@@ -10,7 +10,7 @@ Nitrogen 2 Optimized
 * Bert/jQuery only w/o JSON and nitrogen.js
 * Compatible enough to transfer Nitrogen sites
 * Clean codebase
-* Sepaparate Advanced Nitrogen elements
+* Separate Advanced Nitrogen elements
 
 Credits
 -------
