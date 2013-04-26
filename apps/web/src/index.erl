@@ -3,24 +3,24 @@
 -include_lib("n2o/include/wf.hrl").
 
 main() -> #template { file= code:priv_dir(web) ++ "/templates/index.html" }.
-title() -> "Demo Page".
-headline() -> "Demo Page".
+title() -> <<"Demo Page">>.
+headline() -> <<"Demo Page">>.
 
 body() -> %spawn(fun() -> chat_loop() end),
   [
-    #span { text="Your chatroom name: " }, 
-    #textbox { id=userNameTextBox, text="Anonymous", style="width: 100px;", next=messageTextBox },
+    #span { text= <<"Your chatroom name: ">> }, 
+    #textbox { id=userNameTextBox, text= <<"Anonymous">>, style= <<"width: 100px;">>, next=messageTextBox },
     #p{},
     #panel { id=chatHistory, class=chat_history },
     #p{},
-    #textbox { id=messageTextBox, style="width: 70%;", next=sendButton },
-    #button { id=sendButton, text="Send", postback=chat },
+    #textbox { id=messageTextBox, style= <<"width: 70%;">>, next=sendButton },
+    #button { id=sendButton, text= <<"Send">>, postback=chat },
 
-  "<form name='chat' onsubmit='ws.send(document.chat.msg.value); return false;'>
+  <<"<form name='chat' onsubmit='ws.send(document.chat.msg.value); return false;'>
   <input name='msg' type='text'/>
   <input type='submit'/>
   </form>
-  <div id='status'></div>" ].
+  <div id='status'></div>">> ].
 
 api_event(history_back, tabs_example_tag, Data) -> error_logger:info_msg("API: ~p",[Data]).
 
@@ -34,7 +34,7 @@ event(chat) ->
                 #span { text="You are the only person in the chat room.", class=message }
             ],
     wf:insert_bottom(chatHistory, Terms),
-    wf:wire("$('#messageTextBox').focus(); $('#messageTextBox').select(); alert('OK');"),
+    wf:wire("$('#messageTextBox').focus(); $('#messageTextBox').select(); "),
     ok;
 
 event(Event) -> error_logger:info_msg("Event: ~p", [Event]).

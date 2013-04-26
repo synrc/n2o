@@ -27,6 +27,6 @@ dispatch_rules() ->
        [{'_', [
             {["/static/[...]"], cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
                     {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]}, 
-            {["/websocket/[...]"], ws_chat, []},
-            {'_', nitrogen_cowboy, []}
+            {["/websocket/[...]"], n2o_websocket, []},
+            {'_', n2o_cowboy, []}
     ]}]).

@@ -1,4 +1,4 @@
--module(nitrogen_cowboy).
+-module(n2o_cowboy).
 -behaviour(cowboy_http_handler).
 -include_lib("n2o/include/wf.hrl").
 -export([init/3, handle/2, terminate/3]).

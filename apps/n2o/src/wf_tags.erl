@@ -35,13 +35,11 @@ html_name(Id, Name) ->
 %%%  Empty tags %%%
 
 emit_tag(TagName, Props) ->
-    STagName = wf:to_list(TagName),
-    [
-        "<",
-        STagName,
-        write_props(Props),
-        "/>"
-    ].
+%    error_logger:info_msg("TagName: ~p",[TagName]),
+%    STagName = wf:to_list(TagName),
+    BinaryTag = list_to_binary(atom_to_list(TagName)),
+    BinaryProps = write_props(Props),
+    [<<"<">>,BinaryTag,BinaryProps,<<"/>">>].
 
 %%% Tags with child content %%%
 
@@ -55,15 +53,15 @@ emit_tag(TagName, [], Props) when ?NO_SHORT_TAGS(TagName) ->
 emit_tag(TagName, Content, Props) ->
     STagName = wf:to_list(TagName),
     [
-        "<", 
-        STagName, 
+        <<"<">>, 
+        list_to_binary(STagName),
         write_props(Props), 
-        ">", 
+        <<">">>,
         Content,
-        "</", 
-        STagName, 
-        ">"
-    ].    
+        <<"</">>,
+        list_to_binary(STagName),
+        <<">">>
+    ].
 
 %%% Property display functions %%%
 
@@ -71,7 +69,7 @@ write_props(Props) ->
     lists:map(fun display_property/1, Props).
 
 display_property({Prop}) when is_atom(Prop) ->
-    [" ", atom_to_list(Prop)];
+    [<<" ">>, list_to_binary(atom_to_list(Prop)) ];
 
 %% Data fields are special in HTML5.
 %% In this case, the DataTags value is expected to be a
@@ -81,7 +79,7 @@ display_property({data_fields,DataTags}) ->
 	[" ",data_tags(DataTags)];
 
 display_property({id, Value}) ->
-    [" id=\"", wf:to_list(Value) , "\""];
+    [<<" id=\"">>, list_to_binary(wf:to_list(Value)) , <<"\"">>];
 
 display_property({Prop, V}) when is_atom(Prop) ->
     display_property({atom_to_list(Prop), V});
@@ -92,11 +90,13 @@ display_property({Prop, V}) when is_atom(Prop) ->
 display_property({Prop, []}) when Prop =/= "value" -> "";    
 
 display_property({Prop, Value}) when is_integer(Value); is_atom(Value); is_float(Value) ->
-    [" ", Prop, "=\"", wf:to_list(Value), "\""];
+    [<<" ">>, list_to_binary(Prop), <<"=\"">>, list_to_binary(wf:to_list(Value)), <<"\"">>];
 
-display_property({Prop, Value}) when is_binary(Value); ?IS_STRING(Value) ->
-    [" ", Prop, "=\"", Value, "\""];
+display_property({Prop, Value}) when is_binary(Value) ->
+    [<<" ">>, list_to_binary(Prop), <<"=\"">>, Value, <<"\"">>];
 
+display_property({Prop, Value}) when ?IS_STRING(Value) ->
+    [<<" ">>, list_to_binary(Prop), <<"=\"">>, list_to_binary(Value), <<"\"">>];
 
 display_property({Prop, Values}) ->
     StrValues = wf:to_string_list(Values),
@@ -105,12 +105,11 @@ display_property({Prop, Values}) ->
         "class" -> wf_utils:replace(StrValues1, ".", "");
         _ -> StrValues1
     end,
-    [" ", Prop, "=\"", StrValues2, "\""].
+    [<<" ">>, list_to_binary(Prop), "=\"", list_to_binary(StrValues2), <<"\"">>].
 
-%% 
 data_tags(Data) ->
-	[display_property({data_tag(FieldName),Value}) || {FieldName,Value} <- Data].
+    [display_property({data_tag(FieldName),Value}) || {FieldName,Value} <- Data].
 
 data_tag(FieldName) ->
-	DataField = wf:to_binary(FieldName),
-	<<"data-",DataField/binary>>.
+    DataField = wf:to_binary(FieldName),
+    <<"data-",DataField/binary>>.

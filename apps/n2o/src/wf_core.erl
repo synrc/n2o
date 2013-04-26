@@ -11,9 +11,9 @@ run() ->
     Actions = wf_context:actions(),
     {ok, Html, JavaScript} = render(Elements, Actions, undefined, undefined),
     call_finish_on_handlers(),
-    HtmlJS = replace_script([JavaScript], Html),
+    BinaryPage = iolist_to_binary(replace_script([JavaScript], Html)),
     ResponseBridge = wf_context:response_bridge(), 
-    Response = ResponseBridge:data(HtmlJS),
+    Response = ResponseBridge:data(BinaryPage),
     Response:build_response().
 
 render(Elements, Actions, Trigger, Target) ->
