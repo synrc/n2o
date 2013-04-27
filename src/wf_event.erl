@@ -10,8 +10,8 @@ update_context_with_event() ->
 update_context_for_first_request() ->
     Module = wf_context:page_module(),
     wf_context:event_module(Module),
-    wf_context:type(first_request),
-    wf_context:anchor("page"),
+%    wf_context:type(first_request),
+%    wf_context:anchor("page"),
     ok.
 
 generate_postback_script(undefined, _Anchor, _ValidationGroup, _Delegate, _ExtraParam) -> [];

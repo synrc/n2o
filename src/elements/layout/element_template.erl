@@ -1,32 +1,12 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
 -module (element_template).
--include_lib ("wf.hrl").
+-include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
-
-% TODO - Revisit parsing in the to_module_callback. This
-% will currently fail if we encounter a string like:
-% "String with ) will fail"
-% or
-% "String with ]]] will fail"
-
 
 reflect() -> record_info(fields, template).
 
 render_element(Record) ->
-    % Parse the template file...
-
     File = wf:to_list(Record#template.file),
     Template = get_cached_template(File),
-
-    % Evaluate the template.
-
-    %% erl_eval:exprs/2 expects Bindings to be an orddict, but Nitrogen 
-    %% does not have this requirement, so let's fix that.
-    %% create the needed Ord-Dict just once instead for every eval call down the chain
     OrdDictBindings = orddict:from_list(Record#template.bindings),
     Fixed_bindings_record = Record#template{bindings=OrdDictBindings},
     Body = eval(Template, Fixed_bindings_record),
@@ -67,7 +47,13 @@ get_cached_template(File) ->
             Template;
         false ->
             %% Load template from cache...
-            nitro_mochiglobal:get(FileAtom)
+            Template = parse_template(File),
+            nitro_mochiglobal:put(FileAtom, Template),
+            nitro_mochiglobal:put(LastModAtom, filelib:last_modified(File)),
+            nitro_mochiglobal:put(CacheTimeAtom, now()),
+            Template 
+            % ;
+            %nitro_mochiglobal:get(FileAtom)
     end.
 
 parse_template(File) ->
@@ -101,7 +87,7 @@ parse(B, Callback) -> parse(B, Callback, []).
 parse(<<>>, _Callback, Acc) -> [lists:reverse(Acc)];
 parse(<<"[[[", Rest/binary>>, Callback, Acc) ->
     { Token, Rest1 } = get_token(Rest, <<>>),
-    [lists:reverse(Acc), Callback(Token)|parse(Rest1, Callback, [])];
+    [list_to_binary(lists:reverse(Acc)), Callback(Token)|parse(Rest1, Callback, [])];
 parse(<<C, Rest/binary>>, Callback, Acc) -> parse(Rest, Callback, [C|Acc]).
 
 get_token(<<"]]]", Rest/binary>>, Acc) -> { Acc, Rest };
@@ -143,22 +129,19 @@ to_term(X, Bindings) ->
 
 eval([], _) -> [];
 eval([H|T], Record) when H==script orelse H==mobile_script -> [H|eval(T, Record)];
-eval([H|T], Record) when ?IS_STRING(H) -> [H|eval(T, Record)];
+eval([H|T], Record) when ?IS_STRING(H) orelse is_binary(H) -> [H|eval(T, Record)];
 eval([H|T], Record) -> [replace_callbacks(H, Record)|eval(T, Record)].
 
-% Turn callbacks into a reference to #function_el {}.
 replace_callbacks(CallbackTuples, Record) ->
     Bindings = Record#template.bindings,
     Functions = [convert_callback_tuple_to_function(M, F, ArgString, Bindings) || {M, F, ArgString} <- CallbackTuples],
     #function_el { anchor=page, function=Functions }.
 
 convert_callback_tuple_to_function(Module, Function, ArgString, Bindings) ->
-    % De-reference to page module...
     Module1 = case Module of
         page -> wf_context:page_module();
         _ -> Module
     end,
-	
     _F = fun() ->
         % Convert args to term...
         Args = to_term("[" ++ ArgString ++ "].", Bindings),

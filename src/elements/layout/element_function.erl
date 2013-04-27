@@ -4,7 +4,7 @@
 % See MIT-LICENSE for licensing information.
 
 -module (element_function).
--include_lib ("wf.hrl").
+-include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
 % The 'function' attribute is an Erlang function of arity 0 that returns [Elements].

@@ -15,7 +15,7 @@ render_element(Record) ->
         {max, Record#range.max},
         {step, Record#range.step},
         {style, Record#range.style},
-        {id, Record#range.html_id},
+        {id, Record#range.id},
         {value, Record#range.value},
         {data_fields, Record#range.data_fields}
     ]).

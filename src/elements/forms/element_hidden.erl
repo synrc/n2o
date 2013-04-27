@@ -19,7 +19,7 @@ render_element(Record) ->
     end,
 
     wf_tags:emit_tag(input, Disabled ++ [
-        {id, Record#hidden.html_id},
+        {id, Record#hidden.id},
         {class, Record#hidden.class},
         {type, hidden},
         {name, Record#hidden.html_name},

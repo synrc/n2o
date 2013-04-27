@@ -4,7 +4,7 @@
 % See MIT-LICENSE for licensing information.
 
 -module (element_inplace_textarea).
--include_lib ("wf.hrl").
+-include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, inplace_textarea).
@@ -35,7 +35,7 @@ render_element(Record) ->
     % Create the view...
     Text = Record#inplace_textarea.text,
     Terms = #panel { 
-        html_id=Record#inplace_textarea.html_id,
+        id=Record#inplace_textarea.id,
         class=[inplace_textbox, Record#inplace_textarea.class],
         style=Record#inplace_textarea.style,
         body = [

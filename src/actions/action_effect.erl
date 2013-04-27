@@ -10,7 +10,6 @@
 render_action(Record) ->
     #jquery_effect {
         type=effect,
-        anchor = Record#effect.anchor,
         target = Record#effect.target,
         effect = Record#effect.effect,
         options = Record#effect.options,

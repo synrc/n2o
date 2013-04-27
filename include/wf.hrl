@@ -74,7 +74,7 @@
 %%% FRAMEWORK %%%
 
 %%% Elements %%%
--define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", html_id="").
+-define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="").
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
