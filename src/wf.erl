@@ -114,8 +114,5 @@ assert(false, Error) -> erlang:error(Error).
 reg_pool(Pool) -> 
     Ctx = get(pool),
     case Ctx of 
-         undefined -> gproc:reg({p,l,Pool}), 
-                      error_logger:info_msg("Pool Is Not Defined"),
-                      put(pool,Pool);
-         Defined -> error_logger:info_msg("Pool Defined"), skip
-    end.
+         undefined -> gproc:reg({p,l,Pool}), put(pool,Pool);
+         Defined -> skip end.
