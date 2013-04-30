@@ -4,7 +4,7 @@
 -compile(export_all).
 
 comet(Fun) ->
-    Pid = spawn(fun() -> spawn_closure(Fun) end),
+    Pid = spawn_link(fun() -> spawn_closure(Fun) end),
     {ok, Pid}.
 
 spawn_closure(Fun) ->
