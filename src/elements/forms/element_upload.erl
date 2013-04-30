@@ -3,8 +3,8 @@
 % See MIT-LICENSE for licensing information.
 
 -module (element_upload).
--include_lib ("wf.hrl").
--include_lib ("simple_bridge.hrl").
+-include_lib("n2o/include/wf.hrl").
+-include_lib("simple_bridge/include/simple_bridge.hrl").
 -compile(export_all).
 
 %% #upload allows a user to upload a file.

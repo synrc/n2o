@@ -19,6 +19,10 @@ websocket_handle({text,Data}, Req, State) ->
 websocket_handle({binary,Info}, Req, State) -> 
     Pro = binary_to_term(Info),
     Pickled = proplists:get_value(pickle,Pro),
+    Linked = proplists:get_value(linked,Pro),
+    lists:map(fun({K,V})->put(K,V)end,Linked),
+    [put(K,V) || {K,V} <- Linked],
+    error_logger:info_msg("Linked: ~p",[Linked]),
     Depickled = wf_pickle:depickle(Pickled),
     case Depickled of
          {event_context,Module,Parameter,_,_,_} ->

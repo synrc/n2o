@@ -1,8 +1,7 @@
 -module (wf_pickle).
 -compile(export_all).
--include("wf.hrl").
+-include_lib("n2o/include/wf.hrl").
 
-% Does a plain old term_to_binary...
 pickle(Data) ->
     B = term_to_binary({Data, now()}, [compressed]),
     <<Signature:4/binary, _/binary>> = erlang:md5([B, signkey()]),

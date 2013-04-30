@@ -12,19 +12,15 @@ update_context_for_first_request() ->
     wf_context:event_module(Module),
     ok.
 
-generate_postback_script(undefined, _Anchor, _ValidationGroup, _Delegate, _ExtraParam) -> [];
-generate_postback_script(Postback, Anchor, ValidationGroup, Delegate, ExtraParam) ->
-    PickledPostbackInfo = serialize_event_context(Postback, Anchor, ValidationGroup, Delegate),
+generate_postback_script(undefined, _Anchor, _ValidationGroup, _Delegate, _ExtraParam, Data) -> [];
+generate_postback_script(Tag, Anchor, ValidationGroup, Delegate, ExtraParam, Data) ->
+    Pickled = serialize_event_context(Tag, Anchor, ValidationGroup, Delegate),
     wf:f("ws.send(Bert.encodebuf({source: Bert.binary('~s'), "
-                                 "pickle: Bert.binary('~s'), "
-                                 "x: Bert.binary('~s')}));",[ValidationGroup,PickledPostbackInfo, ExtraParam]).
-
-generate_system_postback_script(undefined, _Anchor, _ValidationGroup, _Delegate) -> [];
-generate_system_postback_script(Postback, Anchor, ValidationGroup, Delegate) ->
-    PickledPostbackInfo = serialize_event_context(Postback, Anchor, ValidationGroup, Delegate),
-    wf:f("Nitrogen.$queue_system_event('~s');", [PickledPostbackInfo]).
+                                 "pickle: Bert.atom('~s'), "
+                                 "linked: ~s}));",[ValidationGroup,Pickled,Data]).
 
 serialize_event_context(Tag, Anchor, ValidationGroup, Delegate) ->
+    error_logger:info_msg("Serialized: ~p",[{Tag, Anchor, ValidationGroup, Delegate}]),
     PageModule = wf_context:page_module(),
     EventModule = wf:coalesce([Delegate, PageModule]),
     Event = #event_context {

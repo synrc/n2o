@@ -13,6 +13,7 @@ render_element(Record) ->
         Postback -> wf:wire(Anchor, #event { type=click, 
                                              validation_group=ID, 
                                              postback=Postback, 
+                                             source=Record#button.source,
                                              delegate=Record#button.delegate }) end,
 
     case Record#button.click of

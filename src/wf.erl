@@ -62,7 +62,7 @@ peer_ip() -> wf_context:peer_ip().
 peer_ip(Proxies) -> wf_context:peer_ip(Proxies).
 peer_ip(Proxies,ForwardedHeader) -> wf_context:peer_ip(Proxies,ForwardedHeader).
 request_body() -> wf_context:request_body().
-q(Key) -> _String = query_handler:get_value(Key).
+q(Key) -> get(Key).
 qs(Key) -> query_handler:get_values(Key).
 mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
 mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
