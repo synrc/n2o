@@ -10,7 +10,6 @@ websocket_init(_Any, Req, _Opt) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),    
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     wf_context:init_context(RequestBridge,ResponseBridge),
-    X = wf_context:context(),
     {ok, Req, undefined_state}.
 websocket_handle({text,Data}, Req, State) ->
     {ok, Req,State};
@@ -19,20 +18,19 @@ websocket_handle({binary,Info}, Req, State) ->
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
     lists:map(fun({K,V})->put(K,V)end,Linked),
-    error_logger:info_msg("Linked: ~p",[Linked]),
     Depickled = wf_pickle:depickle(Pickled),
     case Depickled of
          {event_context,Module,Parameter,_,_,_} ->
-              Res = Module:event(Parameter),
-              error_logger:info_msg("Event Result ~p~n",[Res]);
+              Res = Module:event(Parameter);
+%              error_logger:info_msg("Event Result ~p~n",[Res]);
          _ -> error_logger:info_msg("Unknown Event") end,
     {ok,Render} = wf_render_actions:render_actions(wf_context:actions()), 
     wf_context:clear_actions(),
-    error_logger:info_msg("Render: ~p~n",[Render]),
+%    error_logger:info_msg("Render: ~p~n",[Render]),
     {reply,{binary,term_to_binary(lists:flatten(Render))}, Req, State};
 websocket_handle(_Any, Req, State) -> {ok, Req, State}.
 websocket_info(Pro, Req, State) ->
-    error_logger:info_msg("WSINFO: ~p",[Pro]),
+%    error_logger:info_msg("WSINFO: ~p",[Pro]),
     Res = case Pro of
          {flush,Actions} -> {ok,Render} = wf_render_actions:render_actions(Actions), 
                             term_to_binary(lists:flatten(Render));

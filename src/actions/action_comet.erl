@@ -14,6 +14,4 @@ spawn_closure(Fun) ->
 flush(Pool) ->
     Actions = wf_context:actions(),
     wf_context:clear_actions(),
-    error_logger:info_msg("Actions ~p",[Actions]),
     gproc:send({p,l,Pool},{flush, Actions}).
-
