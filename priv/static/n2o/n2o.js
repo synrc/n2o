@@ -10,7 +10,7 @@ function addStatus(text){
 function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
-        ws = new WebSocket("ws://localhost:8000/websocket");
+        ws = new WebSocket("ws://"+window.location.hostname+":"+window.location.port+"/websocket");
         ws.binaryType = 'arraybuffer';
         ws.onopen = function() { ws.send("N2O HELO!"); };
         ws.onmessage = function (evt) {

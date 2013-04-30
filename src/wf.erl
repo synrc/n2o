@@ -98,7 +98,7 @@ comet(Function, Pool) ->  action_comet:comet(Function, Pool).
 comet_global(Function, Pool) -> action_comet:comet_global(Function, Pool).
 send(Pool, Message) -> ok = action_comet:send(Pool, Message).
 send_global(Pool, Message) -> ok = action_comet:send_global(Pool, Message).
-flush() -> ok = action_comet:flush().
+flush(Key) -> action_comet:flush(Key).
 async_mode() -> wf_context:async_mode().
 async_mode(AsyncMode) -> wf_context:async_mode(AsyncMode).
 switch_to_comet() -> async_mode(comet).
@@ -111,3 +111,11 @@ debug() -> wf_utils:debug().
 break() -> wf_utils:break().
 assert(true, _) -> ok;
 assert(false, Error) -> erlang:error(Error).
+reg_pool(Pool) -> 
+    Ctx = get(pool),
+    case Ctx of 
+         undefined -> gproc:reg({p,l,Pool}), 
+                      error_logger:info_msg("Pool Is Not Defined"),
+                      put(pool,Pool);
+         Defined -> error_logger:info_msg("Pool Defined"), skip
+    end.
