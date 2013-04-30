@@ -51,4 +51,4 @@ display_property({Prop, Values}) ->
     [<<" ">>, list_to_binary(Prop), "=\"", list_to_binary(StrValues2), <<"\"">>].
 
 data_tags(Data) -> [display_property({data_tag(FieldName),Value}) || {FieldName,Value} <- Data].
-data_tag(FieldName) -> DataField = wf:to_binary(FieldName), <<"data-",DataField/binary>>.
+data_tag(FieldName) -> DataField = wf:to_binary(FieldName), "data-" ++ DataField.

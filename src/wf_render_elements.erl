@@ -41,7 +41,7 @@ render_element(Element) when is_tuple(Element) ->
     end.
 
 call_element_render(Module, Element) ->
-%    error_logger:info_msg("call_element_render: ~p",[{Module,Element}]),
+    error_logger:info_msg("call_element_render: ~p",[{Module,Element}]),
     {module, Module} = code:ensure_loaded(Module),
     NewElements = Module:render_element(Element),
     {ok, _Html} = render_elements(NewElements, []).

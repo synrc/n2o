@@ -5,6 +5,8 @@
 reflect() -> record_info(fields, link).
 
 render_element(Record) -> 
+    error_logger:info_msg("#Link: ~p",[Record]),
+
     ID = Record#link.id,
     Anchor = Record#link.anchor,
     case Record#link.postback of
