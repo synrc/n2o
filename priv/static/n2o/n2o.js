@@ -3,8 +3,8 @@ var ws;
 
 function addStatus(text){
     var date = new Date();
-    document.getElementById('status').innerHTML =
-    document.getElementById('status').innerHTML + "E> " + text + "<br/>";
+    document.getElementById('n2ostatus').innerHTML =
+    document.getElementById('n2ostatus').innerHTML + "E> " + text + "<br/>";
 }
 
 function WebSocketsInit(){
