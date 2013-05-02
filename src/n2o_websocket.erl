@@ -33,10 +33,11 @@ websocket_info(Pro, Req, State) ->
 %    error_logger:info_msg("WSINFO: ~p",[Pro]),
     Res = case Pro of
          {flush,Actions} -> {ok,Render} = wf_render_actions:render_actions(Actions), 
+%                        error_logger:info_msg("Render: ~p",[Render]),
                             term_to_binary(lists:flatten(Render));
           Unknown -> error_logger:info_msg("Unknown: ~p",[Unknown]),
                     <<"OK">> end,
-
+%    error_logger:info_msg("Res: ~p",[Res]),
     {reply, {binary,Res}, Req, State}.
 
 websocket_terminate(_Reason, _Req, _State) -> 

@@ -10,7 +10,7 @@ render_action(#event{
     extra_param=ExtraParam}) ->
 
     Data = "[" ++ string:join([ "Bert.tuple(Bert.atom('"++atom_to_list(Src)++
-                     "'),$('#"++atom_to_list(Src)++"').val())" || Src <- Source ],",") ++ "]",
+                     "'), utf8.toByteArray($('#"++atom_to_list(Src)++"').val()))" || Src <- Source ],",") ++ "]",
 
     ValidationGroup1 = wf:coalesce([ValidationGroup, Trigger]),
     PostbackScript = wf_event:generate_postback_script(Postback, Anchor, ValidationGroup1, Delegate, ExtraParam, Data),

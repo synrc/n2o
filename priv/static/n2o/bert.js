@@ -88,10 +88,11 @@ BertClass.prototype.decode = function (S) {
 };
 
 BertClass.prototype.decodebuf = function (S) { return Bert.decode(Bert.bytes_to_string(new Uint8Array(S))); };
+//BertClass.prototype.decodebuf = function (S) { return Bert.decode(utf8.toByteArray(S)); };
 BertClass.prototype.encodebuf = function (S) { 
-    var ori = Bert.encode(S);
-    var buf = new Uint8Array(new ArrayBuffer(ori.length));
-    for (var i=0;i<buf.length;i++) { buf[i] = ori.charCodeAt(i); }
+     var ori = Bert.encode(S);
+     var buf = new Uint8Array(new ArrayBuffer(ori.length));
+     for (var i=0;i<buf.length;i++) buf[i] = ori.charCodeAt(i);
     return buf };
 
 BertClass.prototype.atom = function (Obj) { return new BertAtom(Obj); };
@@ -455,12 +456,15 @@ BertClass.prototype.bytes_to_bignum = function (S, Count) {
 };
 
 // Convert an array of bytes into a string.
-BertClass.prototype.bytes_to_string = function (Arr) {
-	var i, s = "";
-	for (i = 0; i < Arr.length; i++) {
-		s += String.fromCharCode(Arr[i]);
-	}
-	return s;
+BertClass.prototype.bytes_to_string = function (byteArray) {
+    var i, s = "";
+    for (i = 0; i < byteArray.length; i++) {
+                s += i > 3 ? (byteArray[i] <= 0x7F ? 
+                       byteArray[i] === 0x25 ? "%25" : // %
+                       String.fromCharCode(byteArray[i]) :
+                       "%" + byteArray[i].toString(16).toUpperCase()) : String.fromCharCode(byteArray[i]);
+    }
+    return decodeURIComponent(s);
 };
 
 // - TESTING -
