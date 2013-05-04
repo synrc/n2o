@@ -1,11 +1,17 @@
 -module(wf).
--author('Rusty Klophous').
+-author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile (export_all).
 
-wire(Actions) ->  ok = wire(undefined, undefined, Actions).
-wire(Target, Actions) -> ok = wire(Target, Target, Actions).
-wire(Trigger, Target, Actions) -> ok = action_wire:wire(Trigger, Target, Actions).
+% Here is Nitrogen Web Framework compatible API
+% Please read major changes made to N2O and how
+% to port existing nitrogen sites at http://synrc.com/framework/web/
+
+% N2O Core API compatible with Nitrogen
+% =====================================
+
+% Update DOM wf:update
+
 set(Element, Value) -> ok = action_set:set(Element, Value).
 update(Target, Elements) -> ok = action_update:update(Target, Elements).
 replace(Target, Elements) -> ok = action_update:replace(Target, Elements).
@@ -14,17 +20,58 @@ insert_bottom(Target, Elements) -> ok = action_update:insert_bottom(Target, Elem
 insert_before(Target, Elements) -> ok = action_update:insert_before(Target, Elements).
 insert_after(Target, Elements) -> ok = action_update:insert_after(Target, Elements).
 remove(Target) -> ok = action_update:remove(Target).
-flash(Elements) -> element_flash:add_flash(Elements).
-flash(FlashID, Elements) -> element_flash:add_flash(FlashID, Elements).
-f(S) -> _String = wf_utils:f(S).
-f(S, Args) -> _String = wf_utils:f(S, Args).
-coalesce(L) -> _Value = wf_utils:coalesce(L).
+
+% Wire JavaScript wf:wire
+
+wire(Actions) ->  ok = wire(undefined, undefined, Actions).
+wire(Target, Actions) -> ok = wire(Target, Target, Actions).
+wire(Trigger, Target, Actions) -> ok = action_wire:wire(Trigger, Target, Actions).
+
+% Spawn async processes wf:comet
+
+comet(Function) -> action_comet:comet(Function).
+flush(Key) -> action_comet:flush(Key).
+
+% Parse URL and context parameters wf:q
+
+q(Key) -> get(Key).
+qs(Key) -> query_handler:get_values(Key).
+mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
+mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
+q_pl(KeyList) when is_list(KeyList) -> [{K,q(K)} || K <- KeyList].
+qs_pl(KeyList) when is_list(KeyList) -> [{K,qs(K)} || K <- KeyList].
+params() -> query_handler:get_params().
+
+% Redirect and purge connection wf:redirect
+
 redirect(Url) -> action_redirect:redirect(Url).
 redirect_to_login(LoginUrl) -> action_redirect:redirect_to_login(LoginUrl).
 redirect_from_login(DefaultUrl) -> action_redirect:redirect_from_login(DefaultUrl).
+
+% GProc process registration wf:reg
+
+send(Pool, Message) -> gproc:send({p,l,Pool},Message).
+reg(Pool) -> 
+    Ctx = get(pool),
+    case Ctx of
+         undefined -> gproc:reg({p,l,Pool}), put(pool,Pool);
+         Defined -> skip end.
+
+% Pickling wf:pickle
+
 pickle(Data) -> _SerializedData = wf_pickle:pickle(Data).
 depickle(SerializedData) -> _Data = wf_pickle:depickle(SerializedData).
 depickle(SerializedData, TTLSeconds) -> _Data = wf_pickle:depickle(SerializedData, TTLSeconds).
+
+% Compatibility Obsolete API
+% ==========================
+
+send_global(Pool, Message) -> ok = action_comet:send_global(Pool, Message).
+comet(Function, Pool) ->  action_comet:comet(Function).
+comet_global(Function, Pool) -> action_comet:comet(Function).
+f(S) -> _String = wf_utils:f(S).
+f(S, Args) -> _String = wf_utils:f(S, Args).
+coalesce(L) -> _Value = wf_utils:coalesce(L).
 to_list(T) -> _String = wf_convert:to_list(T).
 to_atom(T) -> _Atom = wf_convert:to_atom(T).
 to_binary(T) -> _Binary = wf_convert:to_binary(T).
@@ -62,13 +109,6 @@ peer_ip() -> wf_context:peer_ip().
 peer_ip(Proxies) -> wf_context:peer_ip(Proxies).
 peer_ip(Proxies,ForwardedHeader) -> wf_context:peer_ip(Proxies,ForwardedHeader).
 request_body() -> wf_context:request_body().
-q(Key) -> get(Key).
-qs(Key) -> query_handler:get_values(Key).
-mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
-mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
-q_pl(KeyList) when is_list(KeyList) -> [{K,q(K)} || K <- KeyList].
-qs_pl(KeyList) when is_list(KeyList) -> [{K,qs(K)} || K <- KeyList].
-params() -> query_handler:get_params().
 info(String, Args) ->  ok = log_handler:info(String, Args).
 info(String) -> ok = log_handler:info(String).
 warning(String, Args) -> ok = log_handler:warning(String, Args).
@@ -92,13 +132,8 @@ state_default(Key, DefaultValue) -> _Value = state_handler:get_state(Key, Defaul
 state(Key, Value) -> ok = state_handler:set_state(Key, Value).
 clear_state(Key) -> ok = state_handler:clear(Key).
 clear_state() -> ok = state_handler:clear_all().
-push(X) -> ok.
-comet(Function) -> action_comet:comet(Function).
-comet(Function, Pool) ->  action_comet:comet(Function, Pool).
-comet_global(Function, Pool) -> action_comet:comet_global(Function, Pool).
-send(Pool, Message) -> ok = action_comet:send(Pool, Message).
-send_global(Pool, Message) -> ok = action_comet:send_global(Pool, Message).
-flush(Key) -> action_comet:flush(Key).
+flash(Elements) -> element_flash:add_flash(Elements).
+flash(FlashID, Elements) -> element_flash:add_flash(FlashID, Elements).
 async_mode() -> wf_context:async_mode().
 async_mode(AsyncMode) -> wf_context:async_mode(AsyncMode).
 switch_to_comet() -> async_mode(comet).
@@ -111,8 +146,3 @@ debug() -> wf_utils:debug().
 break() -> wf_utils:break().
 assert(true, _) -> ok;
 assert(false, Error) -> erlang:error(Error).
-reg_pool(Pool) -> 
-    Ctx = get(pool),
-    case Ctx of 
-         undefined -> gproc:reg({p,l,Pool}), put(pool,Pool);
-         Defined -> skip end.
