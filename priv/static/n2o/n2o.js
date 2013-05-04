@@ -21,16 +21,6 @@ utf8.toByteArray = function(str) {
     return byteArray;
 };
 
-utf8.parse = function(byteArray) {
-   var str = '';
-   for (var i = 0; i < byteArray.length; i++) 
-       str += byteArray[i] <= 0x7F ? 
-              byteArray[i] === 0x25 ? "%25" : // %
-              String.fromCharCode(byteArray[i]) : 
-              "%" + byteArray[i].toString(16).toUpperCase();    
-   return decodeURIComponent(str);
-};
-
 function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {

@@ -206,7 +206,7 @@
 -record(api, {?ACTION_BASE(action_api), name, tag, delegate }).
 -record(function, {?ACTION_BASE(action_function), function }).
 -record(set, {?ACTION_BASE(action_set), value}).
--record(redirect, {?ACTION_BASE(action_redirect), url}).
+-record(redirect, {?ACTION_BASE(action_redirect), url, nodrop=false}).
 -record(event, {?ACTION_BASE(action_event), type=default, keycode=undefined, shift_key=false, delay=0, postback, validation_group, delegate, extra_param}).
 %% we want validation assignments to happen last, so we use AV_BASE and set deferral to zero first
 -record(validate, {?ACTION_BASE(action_validate), on=submit, success_text=" ", group, validators, attach_to }).

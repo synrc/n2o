@@ -26,7 +26,7 @@ websocket_handle({binary,Info}, Req, State) ->
          _ -> error_logger:info_msg("Unknown Event") end,
     {ok,Render} = wf_render_actions:render_actions(wf_context:actions()), 
     wf_context:clear_actions(),
-%    error_logger:info_msg("Render: ~p~n",[Render]),
+    error_logger:info_msg("Render: ~p~n",[Render]),
     {reply,{binary,term_to_binary(lists:flatten(Render))}, Req, State};
 websocket_handle(_Any, Req, State) -> {ok, Req, State}.
 websocket_info(Pro, Req, State) ->

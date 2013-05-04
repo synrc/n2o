@@ -7,13 +7,22 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
-render_action(Record) ->
+render_action(Record=#redirect{nodrop=false}) ->
     DestinationUrl = Record#redirect.url,
-    wf:f("window.location=\"~s\";", [wf:js_escape(DestinationUrl)]).
+    wf:f("window.location=\"~s\";", [wf:js_escape(DestinationUrl)]);
+
+render_action(Record=#redirect{nodrop=true}) ->
+    {ok, Html} = wf_render_elements:render_elements(#template{file=code:priv_dir(web) ++ "/templates/" ++ Record#redirect.url}),
+    Re = re:replace(lists:flatten(Html),"\n"," ",[global,{return,list}]),
+    error_logger:info_msg("Html: ~p",[Re]),
+    wf:f("$('body').html('~s');", [Re]).
 
 redirect(Url) -> 
     wf:wire(#redirect { url=Url }),
     wf:f("<script>window.location=\"~s\";</script>", [wf:js_escape(Url)]).
+
+redirect_nodrop(Page) -> 
+    wf_context:add_action(#redirect{url =  Page,nodrop=true}).
 
 redirect_to_login(LoginUrl) ->
     % Assemble the original
