@@ -1,5 +1,5 @@
-N2O Web Framework for Erlang on WebSockets
-==========================================
+N2O: Erlang Web Framework on WebSockets
+=======================================
 
 Nitrogen 2 Optimized
 --------------------
@@ -216,6 +216,6 @@ recompile and reload modules in release.
 Credits
 -------
 
-* Maxim Sohatsky
-* Andrew Zadorozhny
+* Maxim Sokhatsky
+* Andrii Zadorozhnii
 * Roman Shestakov
