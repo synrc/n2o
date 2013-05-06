@@ -14,7 +14,7 @@ websocket_init(_Any, Req, _Opt) ->
 websocket_handle({text,Data}, Req, State) ->
     {ok, Req,State};
 websocket_handle({binary,Info}, Req, State) -> 
-    Pro = binary_to_term(Info),
+    Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
     lists:map(fun({K,V})->put(K,V)end,Linked),
