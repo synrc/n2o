@@ -14,9 +14,8 @@ render_action(#event{
 
     ValidationGroup1 = wf:coalesce([ValidationGroup, Trigger]),
     PostbackScript = wf_event:generate_postback_script(Postback, Anchor, ValidationGroup1, Delegate, ExtraParam, Data),
-%    SystemPostbackScript = wf_event:generate_system_postback_script(Postback, Anchor, ValidationGroup1, Delegate),
     WireAction = #wire { trigger=Trigger, target=Target, actions=Actions },
 
     [
-        wf:f("$('#~s').bind('click',function anonymous(event) { ", [ValidationGroup]), PostbackScript, WireAction, "});"
+        wf:f("$('#~s').bind('~s',function anonymous(event) { ", [ValidationGroup,Type]), PostbackScript, WireAction, "});"
     ].
