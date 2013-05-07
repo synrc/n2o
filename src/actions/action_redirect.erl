@@ -11,11 +11,18 @@ render_action(Record=#redirect{nodrop=false}) ->
     DestinationUrl = Record#redirect.url,
     wf:f("window.location=\"~s\";", [wf:js_escape(DestinationUrl)]);
 
+
 render_action(Record=#redirect{nodrop=true}) ->
-    {ok, Html} = wf_render_elements:render_elements(#template{file=code:priv_dir(web) ++ "/templates/" ++ Record#redirect.url}),
+    {ok, Html} = wf_render_elements:render_elements(#dtl{file=Record#redirect.url}),
     Re = re:replace(lists:flatten(Html),"\n"," ",[global,{return,list}]),
     error_logger:info_msg("Html: ~p",[Re]),
     wf:f("$('body').html('~s');", [Re]).
+
+%render_action_ori(Record=#redirect{nodrop=true}) ->
+%    {ok, Html} = wf_render_elements:render_elements(#template{file=code:priv_dir(web) ++ "/templates/" ++ Record#redirect.url}),
+%    Re = re:replace(lists:flatten(Html),"\n"," ",[global,{return,list}]),
+%    error_logger:info_msg("Html: ~p",[Re]),
+%    wf:f("$('body').html('~s');", [Re]).
 
 redirect(Url) -> 
     wf:wire(#redirect { url=Url }),
