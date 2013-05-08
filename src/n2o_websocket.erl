@@ -10,8 +10,11 @@ websocket_init(_Any, Req, _Opt) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),    
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     wf_context:init_context(RequestBridge,ResponseBridge),
+    wf_core:call_init_on_handlers(),
     {ok, Req, undefined_state}.
 websocket_handle({text,Data}, Req, State) ->
+    error_logger:info_msg("Text Received ~p",[Data]),
+    self() ! Data, 
     {ok, Req,State};
 websocket_handle({binary,Info}, Req, State) -> 
     Pro = binary_to_term(Info,[safe]),
@@ -38,8 +41,13 @@ websocket_info(Pro, Req, State) ->
          {flush,Actions} -> {ok,Render} = wf_render_actions:render_actions(Actions), 
 %                        error_logger:info_msg("Render: ~p",[Render]),
                             term_to_binary(lists:flatten(Render));
-          Unknown -> error_logger:info_msg("Unknown: ~p",[Unknown]),
-                    <<"OK">> end,
+          <<"N2O">> ->     error_logger:info_msg("N2O WS INIT ACK: ~p",[wf_context:page_module()]),
+                          (wf_context:page_module()):event(init),
+                         {ok,Render} = wf_render_actions:render_actions(wf_context:actions()), 
+                            term_to_binary(lists:flatten(Render));
+          Unknown ->     error_logger:info_msg("Unknown: ~p",[Unknown]),
+                           <<"OK">> 
+                    end,
 %    error_logger:info_msg("Res: ~p",[Res]),
     {reply, {binary,Res}, Req, State}.
 

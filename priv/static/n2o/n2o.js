@@ -26,7 +26,7 @@ function WebSocketsInit(){
     if ("WebSocket" in window) {
         ws = new WebSocket("ws://"+window.location.hostname+":"+window.location.port+"/websocket");
         ws.binaryType = 'arraybuffer';
-        ws.onopen = function() { ws.send("N2O HELO!"); };
+        ws.onopen = function() { ws.send("N2O"); };
         ws.onmessage = function (evt) {
             msg = evt.data;
             var actions = Bert.decodebuf(msg);;
