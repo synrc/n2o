@@ -240,7 +240,7 @@ init_context(RequestBridge, ResponseBridge) ->
             make_handler(process_registry_handler, nprocreg_registry_handler),
             make_handler(cache_handler, default_cache_handler), 
             make_handler(query_handler, default_query_handler),
-            make_handler(session_handler, simple_session_handler), 
+            make_handler(session_handler, n2o_session_handler), 
             make_handler(state_handler, default_state_handler), 
             make_handler(identity_handler, default_identity_handler), 
             make_handler(role_handler, default_role_handler), 

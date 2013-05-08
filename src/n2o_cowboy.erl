@@ -12,5 +12,6 @@ handle(Req, State) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     nitrogen:init_request(RequestBridge, ResponseBridge),
+    nitrogen:handler(http_basic_auth_security_handler, n2o_auth),
     {ok, NewReq} = nitrogen:run(),
     {ok, NewReq, State}.

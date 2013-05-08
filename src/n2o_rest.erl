@@ -39,8 +39,8 @@ allowed_methods(Req, State=#state{collection=false}) -> {[<<"GET">>, <<"PUT">>, 
 
 is_authorized(Req, State=#state{auth=undefined}) -> {true, Req, State};
 is_authorized(Req, State=#state{auth=AuthOpts}) ->
-    case fw_auth:authenticate(Req, AuthOpts) of
-        {false, Req2} -> {{false, fw_auth:methods(AuthOpts)}, Req2, State};
+    case n2o_auth:authenticate(Req, AuthOpts) of
+        {false, Req2} -> {{false, n2o_auth:methods(AuthOpts)}, Req2, State};
         {UserID, Req2} -> {true, Req2, State#state{userid=UserID}} end.
 
 content_types_provided(Req, State=#state{collection=true}) -> {[ {<<"text/html">>, collection_to_html}, {<<"application/json">>, collection_to_json} ], Req, State};
