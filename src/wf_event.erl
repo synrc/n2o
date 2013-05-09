@@ -17,7 +17,8 @@ generate_postback_script(Tag, Anchor, ValidationGroup, Delegate, ExtraParam, Dat
     Pickled = serialize_event_context(Tag, Anchor, ValidationGroup, Delegate),
     wf:f("ws.send(Bert.encodebuf({source: Bert.binary('~s'), "
                                  "pickle: Bert.binary('~s'), "
-                                 "linked: ~s}));",[ValidationGroup,Pickled,Data]).
+                                 "extras: Bert.binary('~s'),"
+                                 "linked: ~s}));",[ValidationGroup,Pickled,ExtraParam,Data]).
 
 serialize_event_context(Tag, Anchor, ValidationGroup, Delegate) ->
     error_logger:info_msg("Serialized: ~p",[{Tag, Anchor, ValidationGroup, Delegate}]),

@@ -20,8 +20,15 @@ websocket_handle({binary,Info}, Req, State) ->
     Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
-    lists:map(fun({K,V})->put(K,V)end,Linked),
+    Api = proplists:get_value(extras,Pro),
+    error_logger:info_msg("Extras  ~p~n",[Api]),
     Depickled = wf_pickle:depickle(Pickled),
+    error_logger:info_msg("Depickled  ~p~n",[Depickled]),
+    case Api of
+         <<"api">> -> {event_context,_,Args,_,_,_} = Depickled,
+                  action_api:event(Args,Linked);
+         _ ->  lists:map(fun({K,V})->put(K,V)end,Linked) end,
+    error_logger:info_msg("Depickled  ~p~n",[Depickled]),
     case Depickled of
          {event_context,Module,Parameter,_,_,_} ->
               Res = Module:event(Parameter);
@@ -44,6 +51,7 @@ websocket_info(Pro, Req, State) ->
           <<"N2O">> ->     error_logger:info_msg("N2O WS INIT ACK: ~p",[wf_context:page_module()]),
                           (wf_context:page_module()):event(init),
                          {ok,Render} = wf_render_actions:render_actions(wf_context:actions()), 
+                            wf_context:clear_actions(),
                             term_to_binary(lists:flatten(Render));
           Unknown ->     error_logger:info_msg("Unknown: ~p",[Unknown]),
                            <<"OK">> 
