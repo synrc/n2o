@@ -1,6 +1,6 @@
 -module(element_grid).
--compile(export_all).
 -include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 
 reflect() -> record_info(fields, grid).
 

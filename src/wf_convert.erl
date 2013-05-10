@@ -1,26 +1,7 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
 -module (wf_convert).
--export ([
-    clean_lower/1,
-    to_list/1,
-    to_atom/1,
-    to_binary/1,
-    to_integer/1,
-    to_string_list/1,
-    encode/2, decode/2,
-    html_encode/1, html_encode/2,
-    hex_encode/1, hex_decode/1,
-    url_encode/1, url_decode/1,
-    js_escape/1,
-	join/2
-
-]).
-
--include_lib ("wf.hrl").
+-author('Rusty Klophaus').
+-compile(export_all).
+-include_lib("n2o/include/wf.hrl").
 
 %%% CONVERSION %%%
 

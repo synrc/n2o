@@ -1,10 +1,6 @@
-% vim: sw=4 ts=4 et ft=erlang
-%%% Datepicker Control Element.
-%%% Copyright (c) 2009 Torbjorn Tornkvist
-%%% See MIT-LICENSE for the Nitrogen Web Framework for Erlang
-
--module (element_datepicker_textbox).
--include_lib ("n2o/include/wf.hrl").
+-module(element_datepicker_textbox).
+-author('Torbjorn Tornkvist').
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, datepicker_textbox).
@@ -21,7 +17,7 @@ render_element(Record) ->
         html_encode = Record#datepicker_textbox.html_encode
     },
 
-    Script = wf:f("Nitrogen.$datepicker(obj('~s'), ~s);", [Anchor, Options]),
+    Script = wf:f("jQuery($('#~s').datepicker(~s);", [Anchor, Options]),
     wf:wire(Anchor, #script { script=Script }),
 
     element_textbox:render_element(Textbox).

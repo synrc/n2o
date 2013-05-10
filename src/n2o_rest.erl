@@ -1,5 +1,5 @@
-%% /rest/bucket/[key/no]
 -module(n2o_rest).
+-author('Loïc Hoguin').
 
 -export([init/3]).
 -export([rest_init/2]).

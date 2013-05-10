@@ -1,6 +1,5 @@
-% vim: sw=4 ts=4 et ft=erlang
--module (file_not_found_page).
--include_lib ("wf.hrl").
+-module(file_not_found_page).
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 main() ->

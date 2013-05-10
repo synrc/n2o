@@ -1,10 +1,6 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (action_jquery_effect).
--include_lib ("wf.hrl").
+-module(action_jquery_effect).
+-author('Rusty Klophaus').
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 render_action(Record) ->
@@ -37,7 +33,7 @@ render_action(Record) ->
         'remove_class' -> [wf:f("removeClass('~s', ~p, ", [Class, Speed]), Actions, ");"];
         'animate' -> [wf:f("animate(~s, ~p, '~s', ", [Options, Speed, Easing]), Actions, ");"]
     end,
-    [wf:f("objs('~s').", [Target]), Script].
+    [wf:f("%('#~s').", [Target]), Script].
 
 
 %% Options is a list of {Key,Value} tuples	

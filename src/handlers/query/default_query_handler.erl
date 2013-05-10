@@ -1,23 +1,8 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
-% Though this is defined as a handler, it is unlikely
-% that anyone would want to override the default behaviour. 
-% It is defined as a handler simply because it fit well 
-% into the existing handler pattern.
-
--module (default_query_handler).
--behaviour (query_handler).
--include_lib ("wf.hrl").
--export ([
-    init/2, 
-    finish/2,
-    get_value/3,
-    get_values/3,
-    get_params/2
-]).
+-module(default_query_handler).
+-author('Rusty Klophaus').
+-behaviour(query_handler).
+-include_lib("n2o/include/wf.hrl").
+-export([init/2, finish/2, get_value/3, get_values/3, get_params/2]).
 
 init(_Config, _State) -> 
     % Get query params and post params

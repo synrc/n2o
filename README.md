@@ -219,5 +219,7 @@ Credits
 * Maxim Sokhatsky
 * Andrii Zadorozhnii
 * Roman Shestakov
+* Jesse Gumm
+* Rusty Klophaus
 
 OM A HUM

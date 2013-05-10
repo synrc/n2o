@@ -1,5 +1,5 @@
 -module(nitro_mochinum).
--author('Bob Ippolito <bob@mochimedia.com>').
+-author('Bob Ippolito').
 -compile(export_all).
 
 -define(FLOAT_BIAS, 1022).

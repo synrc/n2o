@@ -1,16 +1,6 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (query_handler).
--export ([
-    behaviour_info/1,
-    get_value/1,
-    get_values/1,
-    get_params/0
-]).
-
+-module(query_handler).
+-author('Rusty Klophaus').
+-export([behaviour_info/1, get_value/1, get_values/1, get_params/0]).
 
 % get_value(Path, State) -> Value.  Given a path, return the parameter
 % value, undefined, or throw an exception if there are too many

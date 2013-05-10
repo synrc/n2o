@@ -1,6 +1,7 @@
 -module(element_hr).
--compile(export_all).
+-author('Rusty Klophaus').
 -include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 
 reflect() -> record_info(fields, hr).
 

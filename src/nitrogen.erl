@@ -1,4 +1,4 @@
--module (nitrogen).
+-module(nitrogen).
 -compile(export_all).
 
 init_request(RequestBridge, ResponseBridge) -> wf_context:init_context(RequestBridge, ResponseBridge).

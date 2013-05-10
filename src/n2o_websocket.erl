@@ -1,4 +1,5 @@
 -module(n2o_websocket).
+-author('Maxim Sokhatsky').
 -behaviour(cowboy_websocket_handler).
 -include_lib("n2o/include/wf.hrl").
 -export([init/3]).

@@ -1,5 +1,6 @@
--module (element_template).
--include_lib ("n2o/include/wf.hrl").
+-module(element_template).
+-author('Rusty Klophaus').
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, template).

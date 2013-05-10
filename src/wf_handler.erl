@@ -1,14 +1,7 @@
-% vim: sw=4 ts=4 et ft=erlang
--module (wf_handler).
--include_lib ("wf.hrl").
--export ([
-    call/2, 
-    call/3,
-    call_readonly/2, 
-    call_readonly/3,
-    set_handler/2
-]).
-
+-module(wf_handler).
+-author('Rusty Klophaus').
+-include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 
 % Helper function to call a function within a handler.
 % Returns ok or {ok, Value}.

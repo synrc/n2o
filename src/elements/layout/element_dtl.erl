@@ -1,5 +1,6 @@
--module (element_dtl).
--include_lib ("n2o/include/wf.hrl").
+-module(element_dtl).
+-author('Maxim Sokhatsky').
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, dtl).

@@ -1,4 +1,5 @@
 -module(element_tableheader).
+-author('Rusty Klophaus').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 

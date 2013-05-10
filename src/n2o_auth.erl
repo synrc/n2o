@@ -1,4 +1,5 @@
 -module(n2o_auth).
+-author('Andrii Zadorozhnii').
 -compile(export_all).
 
 authenticate(Req, undefined) ->

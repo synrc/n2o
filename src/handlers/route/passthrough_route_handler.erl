@@ -1,15 +1,8 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (passthrough_route_handler).
--behaviour (route_handler).
--include_lib ("wf.hrl").
--export ([
-    init/2, 
-    finish/2
-]).
+-module(passthrough_route_handler).
+-author('Rusty Klophaus').
+-behaviour(route_handler).
+-include_lib("n2o/include/wf.hrl").
+-export([init/2, finish/2]).
 
 init(Module, State) -> 
     % Some values...

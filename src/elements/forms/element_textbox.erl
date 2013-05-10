@@ -1,6 +1,6 @@
--module (element_textbox).
--author('Andrew Zadorozhny').
--include_lib ("n2o/include/wf.hrl").
+-module(element_textbox).
+-author('Rusty Klophaus').
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, textbox).

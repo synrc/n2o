@@ -1,23 +1,11 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (default_config_handler).
--include_lib ("wf.hrl").
+-module(default_config_handler).
+-author('Rusty Klophaus').
+-include_lib("n2o/include/wf.hrl").
 -behaviour (config_handler).
--export ([
-    init/2, 
-    finish/2,
-    get_value/4,
-    get_values/4 
-]).
+-export([init/2, finish/2, get_value/4, get_values/4]).
 
-init(_Config, _State) -> 
-    {ok, []}.
-
-finish(_Config, _State) -> 
-    {ok, []}.
+init(_Config, _State) -> {ok, []}.
+finish(_Config, _State) -> {ok, []}.
 
 get_value(Key, DefaultValue, Config, State) ->
     case get_values(Key, [DefaultValue], Config, State) of

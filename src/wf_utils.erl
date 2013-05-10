@@ -1,24 +1,7 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (wf_utils).
--include_lib ("wf.hrl").
--export ([
-    f/1, f/2,
-    guid/0, short_guid/0,
-    path_search/3,
-    replace/3,
-    coalesce/1,
-    is_process_alive/1,
-    debug/0, break/0,
-    get_elementbase/1, get_actionbase/1, get_validatorbase/1, replace_with_base/2,
-    indexof/2,
-    replace_field/4,
-    get_field/3
-]).
-
+-module(wf_utils).
+-author('Rusty Klophaus').
+-include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 -define(COPY_TO_BASERECORD(Name, Size, Record),
     list_to_tuple([Name | lists:sublist(tuple_to_list(Record), 2, Size-1)])).
 

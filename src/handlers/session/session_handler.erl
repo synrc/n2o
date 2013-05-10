@@ -1,26 +1,7 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
+-module(session_handler).
+-author('Rusty Klophaus').
+-export([behaviour_info/1, get_value/1, get_value/2, set_value/2, clear_all/0, session_id/0]).
 
-%
-% The session_handler provides a place to store values on the server
-% between requests.
-%
-% An application can define a custom session handler to control
-% how Nitrogen manages session values.
-
--module (session_handler).
--export ([
-    behaviour_info/1, 
-    get_value/1, 
-    get_value/2, 
-    set_value/2, 
-    clear_all/0,
-    session_id/0
-]).
-
-% Example Session Handler Interface
 behaviour_info(callbacks) -> [
     {init, 2},      
     {finish, 2},

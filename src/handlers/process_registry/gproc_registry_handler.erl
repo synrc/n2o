@@ -1,4 +1,5 @@
 -module(gproc_registry_handler).
+-author('Maxim Sokhatsky').
 -behaviour(process_registry_handler).
 -include_lib("n2o/include/wf.hrl").
 -include_lib("stdlib/include/qlc.hrl").

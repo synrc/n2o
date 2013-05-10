@@ -1,4 +1,5 @@
--module (wf_pickle).
+-module(wf_pickle).
+-author('Rusty Klophaus').
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 

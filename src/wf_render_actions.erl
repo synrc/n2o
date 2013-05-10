@@ -1,4 +1,5 @@
 -module(wf_render_actions).
+-author('Rusty Klophaus').
 -author('Andrew Zadorozhny').
 -include_lib ("n2o/include/wf.hrl").
 -compile(export_all).

@@ -1,4 +1,5 @@
 -module(wf_tags).
+-author('Rusty Klophaus').
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).

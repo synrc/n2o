@@ -1,17 +1,7 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
 -module (http_basic_auth_security_handler).
--behaviour (security_handler).
--export ([
-    init/2, 
-    finish/2,
-    main/0
-]).
-
 -author('tobbe@tornkvist.org').
+-behaviour(security_handler).
+-export([init/2, finish/2, main/0]).
 
 %% @doc
 %%

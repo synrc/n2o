@@ -1,15 +1,8 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (named_route_handler).
+-module(named_route_handler).
+-author('Rusty Klophaus').
 -behaviour (route_handler).
--include_lib ("wf.hrl").
--export ([
-    init/2, 
-    finish/2
-]).
+-include_lib("n2o/include/wf.hrl").
+-export ([init/2, finish/2]).
 
 %% @doc
 %% The named route handler allows you to specify strongly

@@ -1,14 +1,6 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (role_handler).
--export ([
-    behaviour_info/1, get_has_role/1, set_has_role/2, get_roles/0, clear_all/0
-]).
-
-
+-module(role_handler).
+-author('Rusty Klophaus').
+-export([behaviour_info/1, get_has_role/1, set_has_role/2, get_roles/0, clear_all/0]).
 
 % get_has_role(Role, State) -> {ok, IsInRole, NewState}.
 % Returns true or false depending on whether the user is in the specified role.

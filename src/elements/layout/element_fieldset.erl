@@ -1,7 +1,6 @@
-% vim: sw=4 ts=4 et ft=erlang
--module (element_fieldset).
+-module(element_fieldset).
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
--include_lib("wf.hrl").
 
 reflect() -> record_info(fields, fieldset).
 

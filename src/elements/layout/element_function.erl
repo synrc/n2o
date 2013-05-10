@@ -1,10 +1,6 @@
-% vim: sw=4 ts=4 et ft=erlang
-% Nitrogen Web Framework for Erlang
-% Copyright (c) 2008-2010 Rusty Klophaus
-% See MIT-LICENSE for licensing information.
-
--module (element_function).
--include_lib ("n2o/include/wf.hrl").
+-module(element_function).
+-author('Rusty Klophaus').
+-include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
 % The 'function' attribute is an Erlang function of arity 0 that returns [Elements].
