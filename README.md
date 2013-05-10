@@ -162,9 +162,7 @@ To try N2O you need just fetch from Github and build. We don’t use fancy
 scripts so building process is OTP compatible: bootstrap site is bundled
 as Erlang release.
 
-
-    $ git clone https://github.com/5HT/n2o-release
-    $ cd n2o-release
+    $ cd samples
     $ rebar get-deps
     $ rebar compile
     $ cd rels/web && rebar -f generate
