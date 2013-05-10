@@ -237,7 +237,7 @@ init_context(RequestBridge, ResponseBridge) ->
         handler_list = [
             make_handler(config_handler, default_config_handler), 
             make_handler(log_handler, default_log_handler),
-            make_handler(process_registry_handler, nprocreg_registry_handler),
+            make_handler(process_registry_handler, gproc_registry_handler),
             make_handler(cache_handler, default_cache_handler), 
             make_handler(query_handler, default_query_handler),
             make_handler(session_handler, n2o_session_handler), 
