@@ -6,12 +6,12 @@ Nitrogen 2 Optimized
 
 Information for Nitrogen users:
 
-* Page construction from binaries
-* Do all Actions are triggered through WebSocket channel
-* Work within Cowboy processes
-* Bert/jQuery
-* no JSON, urlencode and nitrogen.js
-* Enough Compatible with original Nitrogen to convert Nitrogen sites to N2O
+* Page construction from Erlang binaries
+* All actions are triggered through WebSocket channel
+* Works within Cowboy processes
+* Dependency on Bert / jQuery
+* no JSON encoding for client/server data transfer, no use of urlencode and Nitrogen.js
+* Enough compatibility with original Nitrogen to convert Nitrogen sites to N2O
 * Clean codebase
 * Separate Advanced Nitrogen elements
 * GProc process registry instead of nprocreg
@@ -20,18 +20,18 @@ Information for Nitrogen users:
 WebSockets transport
 --------------------
 
-N2O was started as the first Erlang Web Framework that fully relies on WebSocket transport for client/server communication.
+N2O was started as the first Erlang Web Framework that fully relies on WebSocket transport for client / server communication.
 Compatibility with Nitrogen was mostly retained and many new improvements were made.
-E.g. binary page construction, binary data transfer, events trigger over WebSocket channel,
+Such as binary page construction, binary data transfer, events trigger over WebSocket channel,
 minumum process spawns, use of Cowboy processes to run N2O html rendering.
-N2O page rendering is several times faster than in original Nitrogen.
+N2O page rendering is several times faster than with the original Nitrogen.
 
 
 Binary events over WebSockets
 -----------------------------
 
-N2O does not use JSON to encode data transfer between client/server. Instead all data communications
-are encoded with native Erlang External Term Format. For that Berg.js library is used.
+N2O does not use JSON to encode data transfer between client / server. Instead, all data communication
+is encoded with native Erlang External Term Format. For that Berg.js library is used.
 Is it as simple as calling Bert.decode( msg ) and this allows to avoid complexity on the server-side.
 Please refer to http://bert-rpc.org for more information.
 
@@ -55,15 +55,15 @@ with i7640M processor:
 ![WebServers](http://synrc.com/lj/webcompare/connections.png)
 
 N2O greatly outperforms Nitrogen stack and is only ~2X slower than
-the raw HTTP Cowboy performance thus rising rendering performance
-several times in comparison to any other functional web framework.
+the raw HTTP Cowboy performance thus beating rendering performance
+of any other functional web framework several times over.
 It is certanly faster than raw HTTP node.js performance!
 
 Sending HTML5 over wire?
 ------------------------
 
 N2O does that. However, we agree that in some cases it is better to send
-only problem domain specific data over network (in JSON or Binary format) as you would do with
+only domain specific data over network (in JSON or Binary format) as you would do with
 Chaplin / CoffeScript and Meteor / JavaScript.
 However, Meteor is Node-based. And with “everything on the client” model
 it would not be possible to prototype services easily with your Erlang infrastructure.
@@ -71,7 +71,7 @@ You should always prototype a server side protocol along with the client.
 
 So, in cases when your system is built around Erlang infrastructure,
 N2O is the best choice that you could find for fast prototyping,
-simpicity of use, codebase maintanance, etc. Despite HTML5 tranfered over the wire,
+simpicity of use, codebase maintanance, etc. Despite HTML tranfer over the wire,
 you will still have access to all your erlang services directly.
 
 Templates vs DSL
@@ -84,8 +84,8 @@ deal with raw HTML, like Yesod, ASP, PHP, JSP, Rails, Yaws,
 ChicagoBoss. N2O goes further than that and optimizes HTML rendering from
 binary iolists instead of slower Erlang lists as in Nitrogen.
 
-Main N2O attraction is fast prototyping. We also use it
-in large scale projects. Here is complete Web Chat example
+Main N2O attraction is the fast prototyping. We also use it
+in large scale projects. Here is the complete Web Chat example
 working with WebSockets:
 
     -module(chat).
@@ -127,7 +127,7 @@ working with WebSockets:
         end,
         chat_loop().
 
-And try to compare how this functionality would be implemented in your favourite language / framework.
+And try to compare how this functionality would be implemented with your favourite language / framework.
 
 Clean codebase
 ------------------------------
@@ -136,7 +136,7 @@ We feel free to brake some of the compatability with the original Nitrogen proje
 a clean codebase. However, it is still possible to easily port Nitrogen web sites to N2O.
 E.g. N2O returns id and class semantics of HTML and not html_id.
 We simplify rendering by not using html_encode which should be handled by the application layer.
-Nitrogen.js that was originally created by Rusty Klophaus for XHR has been removed due to pure
+Nitrogen.js that was originally created by Rusty Klophaus for XHR, has been removed due to pure
 WebSocket nature of N2O and native jQuery handling. There are plans to add XHR support by
 using some of the ideas from Bullet.js - such as fallback from websockets to XHR.
 
