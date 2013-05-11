@@ -3,15 +3,6 @@
 -include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
-update_context_with_event() ->
-    PageModule = wf_context:page_module(),
-    update_context_for_first_request().
-
-update_context_for_first_request() ->
-    Module = wf_context:page_module(),
-    wf_context:event_module(Module),
-    ok.
-
 generate_postback_script(undefined, _Anchor, _ValidationGroup, _Delegate, _ExtraParam, Data) -> [];
 generate_postback_script(Tag, Anchor, ValidationGroup, Delegate, ExtraParam, Data) ->
     Pickled = serialize_event_context(Tag, Anchor, ValidationGroup, Delegate),

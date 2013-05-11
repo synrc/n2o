@@ -5,8 +5,7 @@
 
 run() ->
     call_init_on_handlers(),
-    wf_event:update_context_with_event(),
-    Module = wf_context:event_module(),
+    Module = wf_context:page_module(),
     Elements = Module:main(),
     Actions = wf_context:actions(),
     {ok, Html, JavaScript} = render(Elements, Actions, undefined, undefined),
