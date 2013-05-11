@@ -31,15 +31,15 @@ inner_render_action(Action, Trigger, Target) when is_tuple(Action) ->
     case Base#actionbase.show_if of 
         true -> 
             Trigger1 = wf:coalesce([Base#actionbase.trigger, Trigger]),
-            Trigger2 = normalize_path(Trigger1),
+%            Trigger2 = normalize_path(Trigger1),
             Target1  = wf:coalesce([Base#actionbase.target, Target]),
-            Target2  = normalize_path(Target1),
+%            Target2  = normalize_path(Target1),
             Base1 = Base#actionbase {
-                trigger = Trigger2,
-                target = Target2
+                trigger = Trigger1,
+                target = Target1
             },
             Action1 = wf_utils:replace_with_base(Base1, Action),
-            ActionScript = call_action_render(Module, Action1, Trigger2, Target2),
+            ActionScript = call_action_render(Module, Action1, Trigger1, Target1),
             case ActionScript /= undefined andalso lists:flatten(ActionScript) /= [] of
                 true  -> [ActionScript];
                 false -> []
@@ -53,20 +53,20 @@ call_action_render(Module, Action, Trigger, Target) ->
     NewActions = Module:render_action(Action),
     inner_render_actions(NewActions, Trigger, Target).
 
-normalize_path(undefined) -> undefined;
-normalize_path(page) -> "page";
-normalize_path(Path) when is_atom(Path) ->
-    String = atom_to_list(Path),
-    Tokens = string:tokens(String, "."),
-    Tokens1 = [ "#"++X || X <- Tokens],
-    string:join(Tokens1, " ");
-normalize_path(String) ->
-    case String of
-        "wfid_" ++ _ -> "." ++ String;
-        "temp" ++ S -> "temp" ++ S; % ".wfid_" ++ 
-                    %    String;
-        _ -> String % wf_utils:replace(String, "##", ".wfid_")
-    end.
+%normalize_path(undefined) -> undefined;
+%normalize_path(page) -> "page";
+%normalize_path(Path) when is_atom(Path) ->
+%    String = atom_to_list(Path),
+%    Tokens = string:tokens(String, "."),
+%    Tokens1 = [ "#"++X || X <- Tokens],
+%    string:join(Tokens1, " ");
+%normalize_path(String) ->
+%    case String of
+%        "wfid_" ++ _ -> "." ++ String;
+%        "temp" ++ S -> "temp" ++ S; % ".wfid_" ++ 
+%                    %    String;
+%        _ -> String % wf_utils:replace(String, "##", ".wfid_")
+%    end.
 
 to_js_id(P) ->
     P1 = lists:reverse(P),
