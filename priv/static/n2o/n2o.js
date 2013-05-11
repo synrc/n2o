@@ -22,21 +22,20 @@ utf8.toByteArray = function(str) {
 };
 
 function WebSocketsInit(){
-    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
-    if ("WebSocket" in window) {
-        ws = new WebSocket("ws://"+window.location.hostname+":"+window.location.port+"/websocket");
-        ws.binaryType = 'arraybuffer';
+//    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
+//    if ("WebSocket" in window) {
+        ws = new $.bullet("ws://"+window.location.hostname+":"+window.location.port+"/websocket");
         ws.onopen = function() { ws.send("N2O"); };
         ws.onmessage = function (evt) {
             msg = evt.data;
-            var actions = Bert.decodebuf(msg);;
+            var actions = msg;//Bert.decodebuf(msg);;
             addStatus("Received: '" + actions + "'");
             eval(actions);
         };
         ws.onclose = function() { addStatus("websocket was closed"); };
-    } else {
-        addStatus("sorry, your browser does not support websockets.");
-    }
+//    } else {
+//        addStatus("sorry, your browser does not support websockets.");
+//    }
 }
 
 WebSocketsInit();
