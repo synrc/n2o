@@ -8,7 +8,7 @@
 -export([info/3]).
 -export([terminate/2]).
 
--define(PERIOD, 5000).
+-define(PERIOD, 1000).
 
 init(_Transport, Req, _Opts, _Active) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),

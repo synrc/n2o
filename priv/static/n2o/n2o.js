@@ -25,7 +25,8 @@ function WebSocketsInit(){
 //    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
 //    if ("WebSocket" in window) {
         ws = new $.bullet("ws://"+window.location.hostname+":"+window.location.port+"/websocket");
-        ws.onopen = function() { ws.send("N2O"); };
+        initialized = false;
+        ws.onopen = function() { if (!initialized) { ws.send("N2O"); initialized = true; } };
         ws.onmessage = function (evt) {
             msg = evt.data;
             var actions = msg;//Bert.decodebuf(msg);;
