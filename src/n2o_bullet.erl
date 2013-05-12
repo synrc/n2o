@@ -1,8 +1,5 @@
-%% Feel free to use, reuse and abuse the code in this file.
-
-%% @doc Stream handler for clock synchronizing.
 -module(n2o_bullet).
-
+-author('Maxim Sokhatsky').
 -export([init/4]).
 -export([stream/3]).
 -export([info/3]).
@@ -14,6 +11,7 @@ init(_Transport, Req, _Opts, _Active) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     wf_context:init_context(RequestBridge,ResponseBridge),
+    error_logger:info_msg("PEER: ~p",[{RequestBridge:peer_ip(),RequestBridge:peer_port()}]),
     wf_core:call_init_on_handlers(),
    {ok, Req, undefined_state}.
 % io:format("bullet init~n"),
