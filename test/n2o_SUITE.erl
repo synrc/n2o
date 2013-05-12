@@ -7,7 +7,7 @@
 suite() -> [{timetrap,{seconds,30}}].
 all() -> [{group, elements}].
 groups() -> [
-	     {elements, [{repeat,1000}], [simple_elements]}
+	     {elements, [{repeat,10}], [simple_elements]}
 	    ].
 
 init_per_suite(Config) ->
