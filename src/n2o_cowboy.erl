@@ -12,7 +12,7 @@ terminate(_Reason, _Req, _State) -> ok.
 handle(Req, State) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
-    nitrogen:init_request(RequestBridge, ResponseBridge),
-    nitrogen:handler(http_basic_auth_security_handler, n2o_auth),
-    {ok, NewReq} = nitrogen:run(),
+    wf_context:init_context(RequestBridge, ResponseBridge),
+    wf_handler:set_handler(http_basic_auth_security_handler, n2o_auth),
+    {ok, NewReq} = wf_core:run(),
     {ok, NewReq, State}.

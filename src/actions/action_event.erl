@@ -17,5 +17,5 @@ render_action(#event{
     WireAction = #wire { trigger=Trigger, target=Target, actions=Actions },
 
     [
-        wf:f("$('#~s').bind('~s',function anonymous(event) { ", [ValidationGroup,Type]), PostbackScript, WireAction, "});"
+        wf:f("$('#~s').bind('~s',function anonymous(event) { ", [ValidationGroup1,Type]), PostbackScript, WireAction, "});"
     ].

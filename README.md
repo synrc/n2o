@@ -1,21 +1,30 @@
 N2O: Erlang Web Framework on WebSockets
 =======================================
 
-Nitrogen 2 Optimized
---------------------
+Nitrogen 2x Optimized
+---------------------
 
 Information for Nitrogen users:
 
-* Page construction from Erlang binaries
-* All actions are triggered through WebSocket channel
-* Works within Cowboy processes
-* Dependency on Bert / jQuery
+* All actions are triggered through single endpoint 
+* Works heavy coupled within Cowboy processes, but still simple_bridge compatible
+* No unnecessary process spawns
+* Dependency on Bert / jQuery / Bullet only
 * no JSON encoding for client/server data transfer, no use of urlencode and Nitrogen.js
 * Enough compatibility with original Nitrogen to convert Nitrogen sites to N2O
 * Clean codebase
-* Separate Advanced Nitrogen elements
-* GProc process registry instead of nprocreg
 * Proper id and class attributes
+* 2x faster that original Nitrogen
+
+New features
+------------
+
+* Page construction from Erlang binaries
+* Custom template engines as elements: DTL, SGTE, ET
+* Advanced element collection: Tabs, Grid, Viz.js, Mandala
+* XHR fallback through Bullet
+* Rapid REST apps prototyping
+* GProc process registry instead of nprocreg
 
 WebSockets transport
 --------------------
