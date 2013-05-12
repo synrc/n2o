@@ -17,7 +17,7 @@ init(_Config, _State) ->
 finish(_Config, State) -> 
     % Drop the session cookie...
     Timeout = wf:config_default(session_timeout, 20),
-    ok = wf:cookie(get_cookie_name(), wf:pickle(State), "/", Timeout),
+    wf:cookie(get_cookie_name(), wf:pickle(State), "/", Timeout),
     {ok, []}.
 
 get_value(Key, DefaultValue, Config, State) -> 

@@ -8,7 +8,7 @@ render_action(Record) ->
     Target  = Record#update.target,
     Elements = Record#update.elements,
     {ok, Html} = wf_render_elements:render_elements(Elements),
-    wf:f("$('~s').~s('~s');", [Target, atom_to_list(Type), wf:js_escape(Html)]).
+    wf:f("$('#~s').~s('~s');", [Target, atom_to_list(Type), wf:js_escape(Html)]).
 
 update(Target, Elements) -> update(html, Target, Elements).
 replace(Target, Elements) -> update(replaceWith, Target, Elements).
