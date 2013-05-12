@@ -1,6 +1,6 @@
 {application, n2o, [
     {description,  "N2O SXC"},
     {vsn,          "3.0"},
-    {applications, [kernel, stdlib, sasl]},
+    {applications, [kernel, stdlib, sasl, cowboy, ranch, crypto, gproc, simple_bridge]},
     {registered,   []}
 ]}.
