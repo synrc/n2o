@@ -7,7 +7,7 @@
 suite() -> [{timetrap,{seconds,30}}].
 all() -> [{group, elements}].
 groups() -> [
-	     {elements, [{repeat,10}], [simple_elements]}
+	     {elements, [], [elements]}
 	    ].
 
 init_per_suite(Config) ->
@@ -48,9 +48,9 @@ build_url(Path, Config) ->
     PathBin = list_to_binary(Path),
     << Scheme/binary, "://localhost:", PortBin/binary, PathBin/binary >>.
 
-simple_elements(Config) ->
+elements(Config) ->
     Client = ?config(client, Config),
-    URL = build_url("/simple_elements", Config),
+    URL = build_url("/elements", Config),
     ct:log("-> url ~p", [URL]),
     {ok, Client2} = cowboy_client:request(<<"GET">>, URL, Client),
     {ok, 200, Headers, Client3} = cowboy_client:response(Client2),
@@ -67,8 +67,10 @@ init({_Transport, http}, Req, _Opts) ->
 handle(Req, State) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
-    nitrogen:init_request(RequestBridge, ResponseBridge),
-    {ok, NewReq} = nitrogen:run(),
+    wf_context:init_context(RequestBridge, ResponseBridge),
+    %% wf_handler:set_handler(http_basic_auth_security_handler, n2o_auth),
+    {ok, NewReq} = wf_core:run(),
     {ok, NewReq, State}.
+
 terminate(_Reason, _Req, _State) ->
     ok.

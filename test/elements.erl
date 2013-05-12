@@ -1,4 +1,4 @@
--module(simple_elements).
+-module(elements).
 -include_lib("n2o/include/wf.hrl").
 -include_lib("common_test/include/ct.hrl").
 -include("test.hrl").
