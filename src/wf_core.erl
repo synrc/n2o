@@ -8,26 +8,14 @@ run() ->
     Module = wf_context:page_module(),
     Elements = Module:main(),
     Actions = wf_context:actions(),
-    {ok, Html, JavaScript} = render(Elements, Actions, undefined, undefined),
+    Script = wf_render_actions:render_actions(Actions, undefined, undefined),
+    put(script,Script),
+    Html = wf_render_elements:render_elements(Elements).
     call_finish_on_handlers(),
-    BinaryPage = iolist_to_binary(replace_script([JavaScript], Html)),
     ResponseBridge = wf_context:response_bridge(), 
-    Response = ResponseBridge:data(BinaryPage),
+    Response = ResponseBridge:data(Html),
     Response:build_response().
-
-render(Elements, Actions, Trigger, Target) ->
-    {ok, Html}    = wf_render_elements:render_elements(Elements),
-    {ok, Script1} = wf_render_actions:render_actions(Actions, Trigger, Target),
-    QueuedActions = wf_context:actions(),
-    {ok, Script2} = wf_render_actions:render_actions(QueuedActions, Trigger, Target),
-    Script= [Script1, Script2],
-    {ok, Html, Script}.
 
 call_init_on_handlers() -> [wf_handler:call(X#handler_context.name, init) || X <- wf_context:handlers()].
 call_finish_on_handlers() -> [wf_handler:call(X#handler_context.name, finish) || X <- wf_context:handlers()].
 
-replace_script(_,Html) when ?IS_STRING(Html) -> Html;
-replace_script(Script, [script|T]) -> [Script|T];
-replace_script(Script, [mobile_script|T]) -> [wf:html_encode(lists:flatten(Script))|T];
-replace_script(Script, [H|T]) -> [replace_script(Script, H)|replace_script(Script, T)];
-replace_script(_, Other) -> Other.

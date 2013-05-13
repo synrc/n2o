@@ -6,9 +6,7 @@
 
 render_actions(Actions) -> render_actions(Actions, undefined).
 render_actions(Actions, Anchor) -> render_actions(Actions, Anchor, Anchor).
-render_actions(Actions, Trigger, Target) ->
-    Script = inner_render_actions(Actions, Trigger, Target),
-    {ok, Script}.
+render_actions(Actions, Trigger, Target) -> inner_render_actions(Actions, Trigger, Target).
 
 inner_render_actions(Action, Trigger, Target) ->
     if

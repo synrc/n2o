@@ -8,7 +8,7 @@ render_action(Record=#redirect{nodrop=false}) ->
 
 
 render_action(Record=#redirect{nodrop=true}) ->
-    {ok, Html} = wf_render_elements:render_elements(#dtl{file=Record#redirect.url}),
+    Html = wf_render_elements:render_elements(#dtl{file=Record#redirect.url,bindings=[{hello,"Hello"}]}),
     Re = re:replace(lists:flatten(Html),"\n"," ",[global,{return,list}]),
     error_logger:info_msg("Html: ~p",[Re]),
     wf:f("$('body').html('~s');", [Re]).

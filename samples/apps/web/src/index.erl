@@ -2,9 +2,13 @@
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 
-main() -> #template { file= code:priv_dir(web) ++ "/templates/index.html" }.
-title() -> <<"N2O">>.
+main() -> 
+    Title = wf_render_elements:render_elements(title()),
+    Body = wf_render_elements:render_elements(body()),
+    #dtl{file = "index.html", bindings=[{title,Title},{body,Body}]}.
+    %#template { file= code:priv_dir(web) ++ "/templates/index.html" }.
 
+title() -> <<"N2O">>.
 
 body() -> %% area of http handler
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 

@@ -11,7 +11,7 @@ init(_Transport, Req, _Opts, _Active) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     wf_context:init_context(RequestBridge,ResponseBridge),
-    error_logger:info_msg("PEER: ~p",[{RequestBridge:peer_ip(),RequestBridge:peer_port()}]),
+%    error_logger:info_msg("PEER: ~p",[{RequestBridge:peer_ip(),RequestBridge:peer_port()}]),
     wf_core:call_init_on_handlers(),
    {ok, Req, undefined_state}.
 % io:format("bullet init~n"),
@@ -43,7 +43,7 @@ stream({binary,Info}, Req, State) ->
                      {event_context,Module,Parameter,_,_,_} -> Res = Module:event(Parameter);
                                             %              error_logger:info_msg("Event Result ~p~n",[Res]);
                                                        _ -> error_logger:info_msg("Unknown Event") end,
-               {ok,Render} = wf_render_actions:render_actions(wf_context:actions()),
+               Render = wf_render_actions:render_actions(wf_context:actions()),
                wf_context:clear_actions(),    
                error_logger:info_msg("Render: ~p~n",[Render]),    
                error_logger:info_msg("Cookies: ~p~n",[wf:cookies()]),    
@@ -60,12 +60,12 @@ stream(Data, Req, State) ->
 info(Pro, Req, State) ->
     error_logger:info_msg("WSINFO: ~p",[Pro]),    
     Res = case Pro of
-         {flush,Actions} -> {ok,Render} = wf_render_actions:render_actions(Actions),
+         {flush,Actions} -> Render = wf_render_actions:render_actions(Actions),
  %                        error_logger:info_msg("Render: ~p",[Render]),
                             lists:flatten(Render);
           <<"N2O">> ->     error_logger:info_msg("N2O WS INIT ACK: ~p",[wf_context:page_module()]),
                           (wf_context:page_module()):event(init),
-                         {ok,Render} = wf_render_actions:render_actions(wf_context:actions()),
+                         Render = wf_render_actions:render_actions(wf_context:actions()),
                              wf_context:clear_actions(),
                             lists:flatten(Render);
           Unknown ->     error_logger:info_msg("Unknown: ~p",[Unknown]),
