@@ -1,4 +1,5 @@
 .DS_Store
+Makefile
 .eunit
 logs
 /ebin/*
@@ -6,4 +7,3 @@ logs
 .#*
 *.beam
 /deps/*
-
