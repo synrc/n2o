@@ -12,7 +12,7 @@ run() ->
     put(script,Script),
     Html = wf_render_elements:render_elements(Elements),
     call_finish_on_handlers(),
-    ResponseBridge = wf_context:response_bridge(), 
+    ResponseBridge = wf_context:response_bridge(),
     Response = ResponseBridge:data(Html),
     Response:build_response().
 
