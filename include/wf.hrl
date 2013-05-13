@@ -77,7 +77,7 @@
 -define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", source=[]).
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
--record(dtl, {?ELEMENT_BASE(element_dtl), file, bindings=[] }).
+-record(dtl, {?ELEMENT_BASE(element_dtl), file="index.html", bindings=[], app=web, folder="priv/templates" }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
 -record(body, {?ELEMENT_BASE(element_body), title="", body=[]}).
 -record(h1, {?ELEMENT_BASE(element_h1), text="", html_encode=true}).

@@ -10,7 +10,7 @@ run() ->
     Actions = wf_context:actions(),
     Script = wf_render_actions:render_actions(Actions, undefined, undefined),
     put(script,Script),
-    Html = wf_render_elements:render_elements(Elements).
+    Html = wf_render_elements:render_elements(Elements),
     call_finish_on_handlers(),
     ResponseBridge = wf_context:response_bridge(), 
     Response = ResponseBridge:data(Html),
