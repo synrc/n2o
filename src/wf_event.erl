@@ -12,7 +12,7 @@ generate_postback_script(Tag, Anchor, ValidationGroup, Delegate, ExtraParam, Dat
                                  "linked: ~s}));",[ValidationGroup,Pickled,ExtraParam,Data]).
 
 serialize_event_context(Tag, Anchor, ValidationGroup, Delegate) ->
-    error_logger:info_msg("Serialized: ~p",[{Tag, Anchor, ValidationGroup, Delegate}]),
+%    error_logger:info_msg("Serialized: ~p",[{Tag, Anchor, ValidationGroup, Delegate}]),
     PageModule = wf_context:page_module(),
     EventModule = wf:coalesce([Delegate, PageModule]),
     Event = #event_context {

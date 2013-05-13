@@ -59,7 +59,7 @@ reg(Pool) ->
 
 % Pickling wf:pickle
 
-pickle(Data) -> _SerializedData = wf_pickle:pickle(Data).
+pickle(Data) -> wf_pickle:pickle(Data).
 depickle(SerializedData) -> wf_pickle:depickle(SerializedData).
 depickle(SerializedData, TTLSeconds) -> wf_pickle:depickle(SerializedData, TTLSeconds).
 
