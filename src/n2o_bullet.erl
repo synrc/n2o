@@ -11,8 +11,10 @@ init(_Transport, Req, _Opts, _Active) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     wf_context:init_context(RequestBridge,ResponseBridge),
-%    error_logger:info_msg("PEER: ~p",[{RequestBridge:peer_ip(),RequestBridge:peer_port()}]),
+    error_logger:info_msg("PEER: ~p",[{RequestBridge:peer_ip(),RequestBridge:peer_port()}]),
+    error_logger:info_msg("WS N2O Cookie: ~p",[wf:cookie("n2o-cookie")]),
     wf_core:call_init_on_handlers(),
+    error_logger:info_msg("INIT DONE"),
    {ok, Req, undefined_state}.
 % io:format("bullet init~n"),
 % _ = erlang:send_after(?PERIOD, self(), refresh),

@@ -158,7 +158,7 @@ using some of the ideas from Bullet.js - such as fallback from websockets to XHR
 Prerequisites
 -------------
 
-To run N2O sites you need Erlang R14 or higher and basho rebar installed.
+To run N2O sites you need Erlang R15 or higher and basho rebar installed.
 N2O works on Windows, Mac and Linux.
 
 Kickstart Bootstrap

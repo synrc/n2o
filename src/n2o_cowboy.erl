@@ -12,7 +12,10 @@ terminate(_Reason, _Req, _State) -> ok.
 handle(Req, State) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
+    error_logger:info_msg("Bridges: ~p",[{Req,RequestBridge,ResponseBridge}]),
     wf_context:init_context(RequestBridge, ResponseBridge),
 %    wf_handler:set_handler(http_basic_auth_security_handler, n2o_auth),
     {ok, NewReq} = wf_core:run(),
+    wf:session(<<"ok">>,"OK"),
+    error_logger:info_msg("Session ok Key = ~p",[wf:session(<<"ok">>)]),
     {ok, NewReq, State}.
