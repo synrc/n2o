@@ -10,7 +10,7 @@ init(_Config, State) ->
     {Module, PathInfo} = route(Path),
     {Module1, PathInfo1} = check_for_404(Module, PathInfo, Path),
     wf_context:page_module(Module1),
-    wf_context:path_info(PathInfo1),
+%    wf_context:path_info(PathInfo1),
     {ok, State}.
 
 finish(_Config, State) -> 
@@ -39,7 +39,7 @@ route(Path) ->
     end.
 
 module_name(Tokens) ->
-    ModulePrefix = wf:config_default(module_prefix, ""),
+    ModulePrefix = "",%wf:config_default(module_prefix, ""),
     AllTokens = case ModulePrefix of
                      "" -> Tokens;
                      _ -> [ ModulePrefix | Tokens ] end,
@@ -87,4 +87,5 @@ check_for_404(Module, PathInfo, Path) ->
                 {module, web_404} -> {web_404, Path};
                 _ -> {file_not_found_page, Path}
             end
+
     end.

@@ -15,17 +15,19 @@ init(_Config, _State) ->
     State = case lookup_ets({SessionId,<<"auth">>}) of 
                  undefined -> Cookie = {{new_cookie_value(),<<"auth">>},"/",now(),TTL,new},
                               ets:insert(cookies,Cookie),
-                              error_logger:info_msg("Cookie New: ~p",[Cookie]),
+%                              error_logger:info_msg("Cookie New: ~p",[Cookie]),
                               Cookie;
                  {{Session,Key},Path,Issued,TTL,Status} -> case expired(Issued,TTL) of
                      false -> Cookie = {{Session,Key},Path,Issued,TTL,Status},
-                              error_logger:info_msg("Cookie Same: ~p",[Cookie]),
+%                              error_logger:info_msg("Cookie Same: ~p",[Cookie]),
                               Cookie;
                       true -> Cookie = {{new_cookie_value(),<<"auth">>},"/",now(),TTL,new},
                               ets:insert(cookies,Cookie), 
-                              error_logger:info_msg("Cookie Expired: ~p",[Cookie]),
+%                              error_logger:info_msg("Cookie Expired: ~p",[Cookie]),
                               Cookie end;
-                 _ -> error_logger:info_msg("Cookie Error") end,
+                 _ -> skip
+                      %error_logger:info_msg("Cookie Error") 
+                      end,
 
     {ok, State}.
 
@@ -53,6 +55,6 @@ get_value(Key, DefaultValue, Config, State) ->
     Res = case lookup_ets({wf:cookie(session_cookie_name()),Key}) of
                undefined -> DefaultValue;
                Value -> Value end,
-    error_logger:info_msg("Session Lookup Key ~p Value ~p",[Key,Res]),
+%    error_logger:info_msg("Session Lookup Key ~p Value ~p",[Key,Res]),
     {ok, Res, State}.
 set_value(Key, Value, Config, State) -> ets:insert(cookies,{{wf:cookie(session_cookie_name()),Key},Value}), {ok, Value, State}.

@@ -13,12 +13,12 @@ render_element(Record) ->
 render_template(FullPathToFile,ViewFile,Data) ->
     Pieces = string:tokens(ViewFile,"/"),
     Name = string:join(Pieces,"_"),
-%    error_logger:info_msg("File: ~p", [FullPathToFile]),
-%    error_logger:info_msg("File: ~p", [Name]),
     Name1 = filename:basename(Name,".html"),
     ModName = list_to_atom(Name1 ++ "_view"),
-%    error_logger:info_msg("Module: ~p", [ModName]),
-    erlydtl:compile(FullPathToFile,ModName),
-    {ok,Render} = ModName:render(Data),
+    M = case code:ensure_loaded(ModName) of
+         {module,Module} -> Module;
+         _ -> erlydtl:compile(FullPathToFile,ModName), ModName
+         end,
+    {ok,Render} = M:render(Data),
 %    error_logger:info_msg("DTL: ~p", [Render]),
     iolist_to_binary(Render).

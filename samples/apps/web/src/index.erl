@@ -5,19 +5,19 @@
 main() -> 
     Title = wf_render_elements:render_elements(title()),
     Body = wf_render_elements:render_elements(body()),
-    #dtl{file = "index.html", bindings=[{title,Title},{body,Body}]}.
+    [ #dtl{file = "index.html", bindings=[{title,Title},{body,Body}]} ].
     %#template { file= code:priv_dir(web) ++ "/templates/index.html" }.
 
-title() -> <<"N2O">>.
+title() -> [ <<"N2O">> ].
 
-body() -> %% area of http handler
+body() -> %[ "OK" ].%% area of http handler
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
     wf:wire(#api{name=apiOne,tag=d1}),
   [ #span { text= <<"Your chatroom name: ">> }, 
     #textbox { id=userName, text= <<"Anonymous">> },
     #panel { id=chatHistory, class=chat_history },
-    #button{id=but,text="Click Me!",postback=change_me},
-    #button{text="Replace Body",postback=replace},
+    #button{id=but,text= <<"Click Me!">>,postback=change_me},
+    #button{id=replace,text= <<"Replace Body">>,postback=replace},
     "<a onclick=\"document.apiOne('Hello')\" name='1'>API</a>",
     #textbox { id=message },
     #button { id=sendButton, text= <<"Chat">>, postback={chat,Pid}, source=[userName,message] },
