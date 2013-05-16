@@ -14,7 +14,7 @@ handle(Handler = #handler_context { name = Name, module=Mod, config=Config, stat
 
 update_handler(Name, Handler, State) ->
     NewHandler = Handler#handler_context { state=State },
-    put(Name,Handler).
+    put(Name,NewHandler).
 
 call(Name, FunctionName) -> call(Name, FunctionName, []).
 call(Name, FunctionName, Args) -> Handler  = get_handler(Name), handle(Name, Handler, Args).

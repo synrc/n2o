@@ -37,6 +37,7 @@ expired(Issued,TTL) ->
     false.
 
 finish(_Config, State) -> 
+%    error_logger:info_msg("Finish Cookie Set ~p",[{_Config,State}]),
     case State of
          {{Session,Key},Path,Issued,TTL,Status} -> 
               wf:cookie(session_cookie_name(),binary_to_list(Session),Path,TTL);
