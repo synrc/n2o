@@ -16,6 +16,6 @@ run() ->
     Response = ResponseBridge:data(Html),
     Response:build_response().
 
-call_init_on_handlers() -> [wf_handler:call(X#handler_context.name, init) || X <- wf_context:handlers()].
-call_finish_on_handlers() -> [wf_handler:call(X#handler_context.name, finish) || X <- wf_context:handlers()].
+call_init_on_handlers() -> [wf_handler:handle(X, init) || X <- wf_context:handlers()].
+call_finish_on_handlers() -> [wf_handler:handle(X, finish) || X <- wf_context:handlers()].
 

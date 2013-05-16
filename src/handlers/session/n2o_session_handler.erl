@@ -27,8 +27,8 @@ init(_Config, _State) ->
                               ets:insert(cookies,Cookie), 
 %                              error_logger:info_msg("Cookie Expired: ~p",[Cookie]),
                               Cookie end;
-                 _ -> skip
-                      %error_logger:info_msg("Cookie Error") 
+                 _ -> skip,
+                      error_logger:info_msg("Cookie Error") 
                       end,
 
     {ok, State}.
@@ -37,8 +37,10 @@ expired(Issued,TTL) ->
     false.
 
 finish(_Config, State) -> 
-    {{Session,Key},Path,Issued,TTL,Status} = State,
-    wf:cookie(session_cookie_name(),binary_to_list(Session),Path,TTL),
+    case State of
+         {{Session,Key},Path,Issued,TTL,Status} -> 
+              wf:cookie(session_cookie_name(),binary_to_list(Session),Path,TTL);
+         _ -> skip end,
     {ok, []}.
 
 lookup_ets(Key) ->
@@ -50,7 +52,7 @@ lookup_ets(Key) ->
 
 new_cookie_value() -> wf:pickle(erlang:md5(term_to_binary({now(), make_ref()}))).
 new_state() -> #state{unique=new_cookie_value()}.
-session_cookie_name() -> "n2o-cookie".
+session_cookie_name() -> "n2o-sid".
 session_id(_Config, State) -> {ok, SessionId} = wf:hex_encode(State#state.unique), {ok, SessionId, State}.
 clear_all(Config, State) -> {ok, State}.
 get_value(Key, DefaultValue, Config, State) -> 

@@ -49,7 +49,6 @@ stream({binary,Info}, Req, State) ->
                wf_context:clear_actions(),    
                error_logger:info_msg("Render: ~p~n",[Render]),    
                error_logger:info_msg("Cookies: ~p~n",[wf:cookies()]),    
-               error_logger:info_msg("Session Data: ~p~n",[wf:session(id)]),    
                error_logger:info_msg("Headers: ~p~n",[wf:headers()]),    
     {reply,lists:flatten(Render), Req, State};
 %	io:format("stream received ~s~n", [Data]),
