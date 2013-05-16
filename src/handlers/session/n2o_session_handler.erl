@@ -6,6 +6,8 @@
 -compile(export_all).
 -record(state, {unique, node}).
 
+init2(_Config, _State) -> {ok, _State}.
+
 init(_Config, _State) -> 
     SessionId = case wf:cookie(session_cookie_name()) of
                      undefined -> undefined;
@@ -46,7 +48,7 @@ lookup_ets(Key) ->
          [Value] -> Value;
          Values -> Values end.
 
-new_cookie_value() -> wf:pickle(erlang:md5(term_to_binary({now(), erlang:make_ref()}))).
+new_cookie_value() -> wf:pickle(erlang:md5(term_to_binary({now(), make_ref()}))).
 new_state() -> #state{unique=new_cookie_value()}.
 session_cookie_name() -> "n2o-cookie".
 session_id(_Config, State) -> {ok, SessionId} = wf:hex_encode(State#state.unique), {ok, SessionId, State}.
