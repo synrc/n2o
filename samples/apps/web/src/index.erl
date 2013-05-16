@@ -3,6 +3,8 @@
 -include_lib("n2o/include/wf.hrl").
 
 main() -> 
+%    Title = "Title",
+%    Body = "Body",
     Title = wf_render_elements:render_elements(title()),
     Body = wf_render_elements:render_elements(body()),
     [ #dtl{file = "index.html", bindings=[{title,Title},{body,Body}]} ].
