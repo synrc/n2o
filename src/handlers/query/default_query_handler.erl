@@ -15,7 +15,7 @@ init(_Config, _State) ->
     Params = QueryParams ++ PostParams,
 
     % Pre-normalize the parameters.
-    Params1 = [{normalize_path(Path), Value} || {Path, Value} <- Params, Path /= undefined, Path /= []],
+    Params1 = [{Path, Value} || {Path, Value} <- Params, Path /= undefined, Path /= []],
     {ok, Params1}.
 
 finish(_Config, _State) -> 

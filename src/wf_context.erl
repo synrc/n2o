@@ -30,7 +30,8 @@ event_tag() -> (event_context())#event_context.tag.
 event_tag(Tag) -> event_context((event_context())#event_context { tag = Tag }).
 event_validation_group() -> (event_context())#event_context.validation_group.
 event_validation_group(ValidationGroup) -> event_context((event_context())#event_context { validation_group = ValidationGroup }).
-handlers() -> (context())#context.handler_list.
+%handlers() -> (context())#context.handler_list.
+handlers() -> [ get(query_handler), get(session_handler), get(route_handler) ].
 handlers(Handlers) -> context((context())#context { handler_list = Handlers }).
 request_body() -> (request_bridge()):request_body().
 status_code() -> (request_bridge()):status_code().
@@ -76,29 +77,20 @@ init_context(RequestBridge, ResponseBridge) ->
     Context = #context {
         request_bridge = RequestBridge,
         response_bridge = ResponseBridge,
-        page_context = #page_context { series_id = wf:temp_id() },
-        event_context = #event_context {},
-        handler_list = [
-%            make_handler(config_handler, default_config_handler), 
-%            make_handler(log_handler, default_log_handler),
-%            make_handler(process_registry_handler, gproc_registry_handler),
-%            make_handler(cache_handler, default_cache_handler), 
-            make_handler(query_handler, default_query_handler),
-            make_handler(session_handler, n2o_session_handler), 
-%            make_handler(state_handler, default_state_handler), 
-%            make_handler(identity_handler, default_identity_handler), 
-%            make_handler(role_handler, default_role_handler), 
-            make_handler(route_handler, dynamic_route_handler)
- %            make_handler(security_handler, default_security_handler)
-        ]
+        page_context = #page_context {},
+        event_context = #event_context {}
     },
+    make_handler(query_handler, default_query_handler),
+    make_handler(session_handler, n2o_session_handler), 
+    make_handler(route_handler, dynamic_route_handler),
     context(Context),
     Context.
 
 make_handler(Name, Module) -> 
-    #handler_context { 
+    Handler = #handler_context { 
         name=Name,
         module=Module,
         state=[]
-    }.
+    },
+    put(Name,Handler).
 

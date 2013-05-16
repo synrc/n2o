@@ -4,6 +4,8 @@
 -include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
+%render_elements(Elements) -> [ render_element(E) || E <- Elements ].
+
 render_elements(Elements) -> render_elements(Elements, []).
 render_elements(S, HtmlAcc) when S == undefined orelse S == []  -> HtmlAcc;
 render_elements(S, HtmlAcc) when is_integer(S) orelse is_binary(S) orelse ?IS_STRING(S) -> [S|HtmlAcc];
@@ -43,7 +45,7 @@ render_element(Element) when is_tuple(Element) ->
 
 call_element_render(Module, Element) ->
 %    error_logger:info_msg("call_element_render: ~p",[{Module,Element}]),
-    {module, Module} = code:ensure_loaded(Module),
+%    {module, Module} = code:ensure_loaded(Module),
     NewElements = Module:render_element(Element),
     render_elements(NewElements, []).
 

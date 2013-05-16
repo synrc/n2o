@@ -201,7 +201,7 @@ And put minimal index.erl page:
     -compile(export_all).
     -include_lib("n2o/include/wf.hrl").
 
-    main() -> #span{text=<<"Hello">>}.
+    main() -> [ #span{text = <<"Hello">>} ].
 
 Developer scripts for Sync
 --------------------------
