@@ -5,19 +5,22 @@
 -export([init/2, finish/2]).
 
 init(_Config, State) -> 
-    RequestBridge = wf_context:request_bridge(),
-    Path = RequestBridge:path(),
+%    RequestBridge = wf_context:request_bridge(),
+    {Path,_} = cowboy_req:path(get(req)), %RequestBridge:path(),
     {Module, PathInfo} = route(Path),
-    {Module1, PathInfo1} = check_for_404(Module, PathInfo, Path),
-    wf_context:page_module(Module1),
+%    error_logger:info_msg("Module: ~p",[Module]),
+%    {Module1, PathInfo1} = check_for_404(Module, PathInfo, Path),
+%    wf_context:page_module(Module),
+    put(page_module,Module),
 %    wf_context:path_info(PathInfo1),
     {ok, State}.
 
 finish(_Config, State) -> 
     {ok, State}.
 
-route("/") -> {list_to_atom(module_name(["index"])), []};
-route("/websocket") -> {list_to_atom(module_name(["index"])), []};
+route(<<"/">>) -> {list_to_atom(module_name(["index"])), []};
+route(<<"/websocket">>) -> {list_to_atom(module_name(["index"])), []};
+route(<<"/favicon.ico">>) -> {list_to_atom(module_name(["index"])), []};
 
 route(Path) ->
     IsStatic = (filename:extension(Path) /= []),

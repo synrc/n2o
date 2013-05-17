@@ -33,7 +33,7 @@ render_action(Record) ->
         'remove_class' -> [wf:f("removeClass('~s', ~p, ", [Class, Speed]), Actions, ");"];
         'animate' -> [wf:f("animate(~s, ~p, '~s', ", [Options, Speed, Easing]), Actions, ");"]
     end,
-    [wf:f("%('#~s').", [Target]), Script].
+    [wf:f("$('#~s').", [Target]), Script].
 
 
 %% Options is a list of {Key,Value} tuples	

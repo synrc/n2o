@@ -166,3 +166,5 @@ debug() -> wf_utils:debug().
 break() -> wf_utils:break().
 assert(true, _) -> ok;
 assert(false, Error) -> erlang:error(Error).
+
+append(List, Key, Value) -> case Value of undefined -> List; A -> [{Key, Value}|List] end.

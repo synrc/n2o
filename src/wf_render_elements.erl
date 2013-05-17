@@ -33,15 +33,18 @@ render_element(Element) when is_tuple(Element) ->
         undefined -> [];
         0 -> [];
         _ -> ID = case Base#elementbase.id of
-                       undefined -> normalize_id(temp_id());
-                       Other2 -> normalize_id(Other2) end,
+                       undefined -> temp_id();
+                       Other2 when is_atom(Other2) -> atom_to_list(Other2);
+                       L when is_list(L) -> L end,
              Class = [ID, Base#elementbase.class],
              Base1 = Base#elementbase { id=ID, class=Class },
              Element1 = wf_utils:replace_with_base(Base1, Element),
              wf:wire(Base1#elementbase.actions),
              call_element_render(Module, Element1)
 %             {ok, Html}
-    end.
+    end;
+render_element(Element) ->
+    error_logger:info_msg("Element: ~p",[Element]).
 
 call_element_render(Module, Element) ->
 %    error_logger:info_msg("call_element_render: ~p",[{Module,Element}]),
@@ -49,9 +52,9 @@ call_element_render(Module, Element) ->
     NewElements = Module:render_element(Element),
     render_elements(NewElements, []).
 
-normalize_id(ID) ->
-    case wf:to_string_list(ID) of
-        ["page"] -> "page";
-        [NewID]  -> NewID end.
+%normalize_id(ID) ->
+%    case wf:to_string_list(ID) of
+%        ["page"] -> "page";
+%        [NewID]  -> NewID end.
 
 temp_id() ->{_, _, C} = now(), "temp" ++ integer_to_list(C).

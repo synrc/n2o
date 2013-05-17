@@ -21,6 +21,8 @@
   validation_group % The validation group that should be run when this event is fired.
 }).
 
+-record(api_event,{body=[]}).
+
 % Handlers Context-
 % Handlers are used to encapsulate Nitrogen's behaviour, and
 % to allow other frameworks to substitute their own behaviour.
@@ -146,17 +148,6 @@
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, text="", minLength=2, delay=300, html_encode=true, next, postback, delegate=undefined }).
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
 
-%% Mobile Shortcut elements
--record(mobile_list, {?ELEMENT_BASE(element_mobile_list), body=[], data_fields=[], theme, inset=true}).
--record(mobile_list_divider, {?ELEMENT_BASE(element_mobile_list_divider), data_fields=[], theme, text="", body="", role=heading}).
--record(mobile_listitem, {?ELEMENT_BASE(element_mobile_listitem), data_fields=[], text="", body=[], theme=""}).
--record(mobile_toggle, {?ELEMENT_BASE(element_mobile_toggle), data_fields=[], on_text="On", on_value="on", off_text="Off", off_value="off", selected="on", postback, delegate, width=undefined, theme=""}).
--record(mobile_collapsible, {?ELEMENT_BASE(element_mobile_collapsible), data_fields=[], header_theme, content_theme, header_text="", content_body=[], content_text="", header_size=3, mini=false, collapsed=true}).
--record(mobile_collapsible_set, {?ELEMENT_BASE(element_mobile_collapsible_set), data_fields=[], header_theme, content_theme, mini=false, body=[]}).
--record(mobile_grid, {?ELEMENT_BASE(element_mobile_grid), data_fields=[], columns=2, blocks=[]}).
--record(mobile_grid_block, {?ELEMENT_BASE(element_mobile_grid_block), data_fields=[], text="", body=[], new_row=default}).
-
-
         
 %% HTML5 semantic elements
 -record(section, {?ELEMENT_BASE(element_section), body=""}).
@@ -168,30 +159,6 @@
 -record(html5_footer, {?ELEMENT_BASE(element_html5_footer), body=""}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime="", body=""}).
 -record(mark, {?ELEMENT_BASE(element_mark), body=""}).
-
-%% 960.gs Grid
--record(grid,  {?ELEMENT_BASE(element_grid), type, columns,  alpha, omega, push, pull, prefix, suffix, body}).
--record(container_12,  {?ELEMENT_BASE(element_grid), type=container, columns=12, alpha, omega, push, pull, prefix, suffix, body}).
--record(container_16,  {?ELEMENT_BASE(element_grid), type=container, columns=16, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_1,  {?ELEMENT_BASE(element_grid), type=grid, columns=1,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_2,  {?ELEMENT_BASE(element_grid), type=grid, columns=2,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_3,  {?ELEMENT_BASE(element_grid), type=grid, columns=3,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_4,  {?ELEMENT_BASE(element_grid), type=grid, columns=4,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_5,  {?ELEMENT_BASE(element_grid), type=grid, columns=5,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_6,  {?ELEMENT_BASE(element_grid), type=grid, columns=6,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_7,  {?ELEMENT_BASE(element_grid), type=grid, columns=7,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_8,  {?ELEMENT_BASE(element_grid), type=grid, columns=8,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_9,  {?ELEMENT_BASE(element_grid), type=grid, columns=9,  alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_10, {?ELEMENT_BASE(element_grid), type=grid, columns=10, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_11, {?ELEMENT_BASE(element_grid), type=grid, columns=11, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_12, {?ELEMENT_BASE(element_grid), type=grid, columns=12, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_13, {?ELEMENT_BASE(element_grid), type=grid, columns=13, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_14, {?ELEMENT_BASE(element_grid), type=grid, columns=14, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_15, {?ELEMENT_BASE(element_grid), type=grid, columns=15, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_16, {?ELEMENT_BASE(element_grid), type=grid, columns=16, alpha, omega, push, pull, prefix, suffix, body}).
--record(grid_clear,  {?ELEMENT_BASE(element_grid), type=clear, columns,  alpha, omega, push, pull, prefix, suffix, body}).
-
-
 
 %%% Actions %%%
 -define(AV_BASE(Module,Type), is_action=Type, module=Module, anchor, trigger, target, actions, show_if=true, source=[]).

@@ -6,16 +6,11 @@
 reflect() -> record_info(fields, textbox).
 
 render_element(Record) -> 
-    ID = Record#textbox.id,
-    Value = wf:html_encode(Record#textbox.text, Record#textbox.html_encode),
-    Placeholder  = wf:html_encode(Record#textbox.placeholder, true),
-    wf_tags:emit_tag(input, [
-        {id, Record#textbox.id},
-        {type, text}, 
-        {class, [textbox, Record#textbox.class]},
-        {maxlength, Record#textbox.maxlength},
-        {style, Record#textbox.style},
-        {name, Record#textbox.html_name},
-        {placeholder, Placeholder},
-        {value, Value}
-    ]).
+    List = [{<<"id">>, Record#textbox.id},{<<"type">>, <<"text">>}],
+    List1 = wf:append(List,<<"maxlength">>,Record#textbox.maxlength),
+    List2 = wf:append(List1,<<"style">>,Record#textbox.style),
+    List3 = wf:append(List2,<<"name">>,Record#textbox.html_name),
+    List4 = wf:append(List3,<<"placeholder">>,Record#textbox.placeholder),
+    List5 = wf:append(List4,<<"value">>,Record#textbox.text),
+    wf_tags:emit_tag(<<"input">>, List5).
+

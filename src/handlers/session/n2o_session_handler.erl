@@ -8,14 +8,16 @@
 
 init2(_Config, _State) -> {ok, _State}.
 
+
 init(_Config, _State) -> 
+    C = wf:cookie(session_cookie_name()),
     SessionId = case wf:cookie(session_cookie_name()) of
                      undefined -> undefined;
                      A when is_list(A) -> list_to_binary(A);
                      _Else -> _Else end,
     TTL = 20,
     State = case lookup_ets({SessionId,<<"auth">>}) of 
-                 undefined -> Cookie = {{new_cookie_value(),<<"auth">>},"/",now(),TTL,new},
+                 undefined -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
                               ets:insert(cookies,Cookie),
 %                              error_logger:info_msg("Cookie New: ~p",[Cookie]),
                               Cookie;
@@ -23,7 +25,7 @@ init(_Config, _State) ->
                      false -> Cookie = {{Session,Key},Path,Issued,TTL,Status},
 %                              error_logger:info_msg("Cookie Same: ~p",[Cookie]),
                               Cookie;
-                      true -> Cookie = {{new_cookie_value(),<<"auth">>},"/",now(),TTL,new},
+                      true -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
                               ets:insert(cookies,Cookie), 
 %                              error_logger:info_msg("Cookie Expired: ~p",[Cookie]),
                               Cookie end;
@@ -40,20 +42,25 @@ finish(_Config, State) ->
 %    error_logger:info_msg("Finish Cookie Set ~p",[{_Config,State}]),
     case State of
          {{Session,Key},Path,Issued,TTL,Status} -> 
-              wf:cookie(session_cookie_name(),binary_to_list(Session),Path,TTL);
+%     error_logger:info_msg("Finish Cookie Set ~p",[{{Session,Key},Path,Issued,TTL,Status}]),
+              
+              Req = wf:cookie(session_cookie_name(),Session,Path,TTL),
+              put(req,Req);
+%               skip;
          _ -> skip end,
     {ok, []}.
 
 lookup_ets(Key) ->
     Res = ets:lookup(cookies,Key),
+%    error_logger:info_msg("Lookup ETS: ~p",[{Res,Key}]),
     case Res of 
          [] -> undefined;
          [Value] -> Value;
          Values -> Values end.
 
-new_cookie_value() -> wf:pickle(erlang:md5(term_to_binary({now(), make_ref()}))).
+new_cookie_value() -> base64:encode(erlang:md5(term_to_binary({now(), make_ref()}))).
 new_state() -> #state{unique=new_cookie_value()}.
-session_cookie_name() -> "n2o-sid".
+session_cookie_name() -> <<"n2o-sid">>.
 session_id(_Config, State) -> {ok, SessionId} = wf:hex_encode(State#state.unique), {ok, SessionId, State}.
 clear_all(Config, State) -> {ok, State}.
 get_value(Key, DefaultValue, Config, State) -> 

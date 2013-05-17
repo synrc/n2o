@@ -9,7 +9,7 @@ render_element(Record) ->
         wf:html_encode(Record#strong.text, Record#strong.html_encode),
         Record#strong.body
     ],
-    wf_tags:emit_tag(strong, Body, [
-        {class, [p, Record#strong.class]},
-        {style, Record#strong.style}
+    wf_tags:emit_tag(<<"strong">>, Body, [
+        {<<"class">>, Record#strong.class},
+        {<<"style">>, Record#strong.style}
     ]).

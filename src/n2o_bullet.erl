@@ -8,21 +8,15 @@
 -define(PERIOD, 1000).
 
 init(_Transport, Req, _Opts, _Active) ->
-    RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),
-    ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
-    wf_context:init_context(RequestBridge,ResponseBridge),
-    error_logger:info_msg("PEER: ~p",[{RequestBridge:peer_ip(),RequestBridge:peer_port()}]),
-    error_logger:info_msg("WS N2O Cookie: ~p",[wf:cookie("n2o-cookie")]),
+    put(req,Req),
+    put(actions,[]),
+    wf_context:init_context(),
     wf_core:call_init_on_handlers(),
-    error_logger:info_msg("INIT DONE"),
-   {ok, Req, undefined_state}.
-% io:format("bullet init~n"),
-% _ = erlang:send_after(?PERIOD, self(), refresh),
-% {ok, Req, undefined}.
+    {ok, Req, undefined_state}.
 
 stream(<<"ping">>, Req, State) ->
-	io:format("ping received~n"),
-	{reply, <<"pong">>, Req, State};
+    io:format("ping received~n"),
+    {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->    
     error_logger:info_msg("Text Received ~p",[Data]),    
     self() ! Data,     
@@ -33,48 +27,42 @@ stream({binary,Info}, Req, State) ->
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
     Api = proplists:get_value(extras,Pro),
+%    error_logger:info_msg("Module  ~p~n",[Module]),
     error_logger:info_msg("Extras  ~p~n",[Api]),
+    error_logger:info_msg("Pickled  ~p~n",[Pickled]),
+%    Decode = wf_event:jsonx_decoder(),
+%    Depickled = Decode(Pickled), 
     Depickled = wf_pickle:depickle(Pickled),
     error_logger:info_msg("Depickled  ~p~n",[Depickled]),
     case Api of
          <<"api">> -> {event_context,_,Args,_,_,_} = Depickled,
                       action_api:event(Args,Linked);       
          _ ->  lists:map(fun({K,V})->put(K,V)end,Linked) end,
-                error_logger:info_msg("Depickled  ~p~n",[Depickled]),
                 case Depickled of  
                      {event_context,Module,Parameter,_,_,_} -> Res = Module:event(Parameter);
-                                            %              error_logger:info_msg("Event Result ~p~n",[Res]);
-                                                       _ -> error_logger:info_msg("Unknown Event") end,
-               Render = wf_render_actions:render_actions(wf_context:actions()),
-               wf_context:clear_actions(),    
-               error_logger:info_msg("Render: ~p~n",[Render]),    
-               error_logger:info_msg("Cookies: ~p~n",[wf:cookies()]),    
-               error_logger:info_msg("Headers: ~p~n",[wf:headers()]),    
-    {reply,lists:flatten(Render), Req, State};
-%	io:format("stream received ~s~n", [Data]),
-%	{ok, Req, State}.
+                                                          _ -> error_logger:info_msg("Unknown Event") end,
+               Render = wf_render_actions:render_actions(get(actions)),
+    wf_context:clear_actions(),
+    {reply,Render, Req, State};
 stream(Data, Req, State) ->    
      error_logger:info_msg("Data Received ~p",[Data]),    
      self() ! Data,
     {ok, Req,State}.
 
 info(Pro, Req, State) ->
-    error_logger:info_msg("WSINFO: ~p",[Pro]),    
     Res = case Pro of
-         {flush,Actions} -> Render = wf_render_actions:render_actions(Actions),
- %                        error_logger:info_msg("Render: ~p",[Render]),
-                            lists:flatten(Render);
-          <<"N2O">> ->     error_logger:info_msg("N2O WS INIT ACK: ~p",[wf_context:page_module()]),
-                          (wf_context:page_module()):event(init),
-                         Render = wf_render_actions:render_actions(wf_context:actions()),
-                             wf_context:clear_actions(),
-                            lists:flatten(Render);
-          Unknown ->     error_logger:info_msg("Unknown: ~p",[Unknown]),
-                           "OK"
-                     end,
-    error_logger:info_msg("Res: ~p",[Res]),
+         {flush,Actions} -> wf_render_actions:render_actions(Actions);
+          <<"N2O,",Rest/binary>> -> (get(page_module)):event(init),
+                        Pid = list_to_pid(binary_to_list(Rest)),
+                        Pid ! {'N2O',self()},
+                        InitActions = receive Actions -> Actions end,
+                        RenderInit = wf_render_actions:render_actions(InitActions),
+                        RenderOther = wf_render_actions:render_actions(get(actions)),
+                        RenderInit ++ RenderOther;
+          Unknown ->     <<"OK">> end,
+    wf_context:clear_actions(),
     {reply, Res, Req, State}.
 
 terminate(_Req, _State) ->
-	io:format("bullet terminate~n"),
-	ok.
+    io:format("bullet terminate~n"),
+    ok.

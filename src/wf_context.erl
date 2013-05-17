@@ -7,21 +7,16 @@ context() -> get(context).
 context(Context) -> put(context, Context).
 
 add_action(Action) ->
-    Context = context(),
-    Actions = Context#context.queued_actions,
-    context(Context#context { queued_actions=lists:flatten([Action|Actions]) }).
+    Actions = case get(actions) of undefined -> []; E -> E end,
+    put(actions,Actions ++ [Action]).
 
-actions() -> Actions = (context())#context.queued_actions, lists:reverse(Actions).
-actions(Actions) -> context((context())#context { queued_actions = lists:reverse(Actions) }).
-clear_actions() -> context((context())#context { queued_actions=[] }).
-page_context() -> (context())#context.page_context.
-page_context(PageContext) -> context((context())#context { page_context = PageContext }).
-series_id() -> (page_context())#page_context.series_id.
-series_id(SeriesID) -> page_context((page_context())#page_context { series_id = SeriesID }).
-page_module() -> (page_context())#page_context.module.
-page_module(Module) -> page_context((page_context())#page_context { module = Module }).
-path_info() -> (page_context())#page_context.path_info.
-path_info(PathInfo) -> page_context((page_context())#page_context { path_info = PathInfo }).
+actions() -> get(actions). %(context())#context.queued_actions, lists:reverse(Actions).
+actions(Actions) -> put(actions,Actions). %context((context())#context { queued_actions = lists:reverse(Actions) }).
+clear_actions() -> put(actions,[]). %context((context())#context { queued_actions=[] }).
+page_module() -> get(page_module).
+page_module(Module) -> put(page_module,Module).
+path_info() -> get(path_info).
+path_info(PathInfo) -> put(path_info,PathInfo).
 event_context() -> (context())#context.event_context.
 event_context(EventContext) -> context((context())#context { event_context = EventContext }).
 event_module() -> (event_context())#event_context.module.
@@ -41,16 +36,26 @@ headers() -> (request_bridge()):headers().
 header(Header) -> (request_bridge()):header(Header).
 header(Header, Value) -> response_bridge((response_bridge()):header(Header, Value)).
 cookies() -> (request_bridge()):cookies().
-cookie(Cookie) when is_atom(Cookie) -> cookie(atom_to_list(Cookie));
-cookie(Cookie) -> (request_bridge()):cookie(Cookie).
+cookie(Cookie) when is_atom(Cookie) -> cookie(list_to_binary(atom_to_list(Cookie)));
+%cookie(Cookie) -> (request_bridge()):cookie(Cookie).
+%cookie(Cookie) -> proplists:get_value(Cookie,get(cookies)).
+cookie(Cookie) -> {Val,_} = cowboy_req:cookie(Cookie,get(req)), 
+%                  error_logger:info_msg("Co: ~p",[Val]),
+                  Val. %proplists:get_value(Cookie,get(cookies)).
 cookie_default(Cookie,DefaultValue) ->
     case cookie(Cookie) of
         undefined -> DefaultValue;
         Value -> Value
     end.
 
-cookie(Cookie, Value) -> response_bridge((response_bridge()):cookie(Cookie, Value)).
-cookie(Cookie, Value, Path, MinutesToLive) -> response_bridge((response_bridge()):cookie(Cookie, Value, Path, MinutesToLive)).
+cookie(Cookie, Value) -> cookie(Cookie,Value,"/",0).
+cookie(Name, Value, Path, TTL) -> 
+    Options = [{path, Path}, {max_age, TTL}],
+%    error_logger:info_msg("Cookie: ~p",[{Name, Value, Options, get(req)}]),
+    cowboy_req:set_resp_cookie(Name, Value, Options, get(req)).
+
+%cookie(Cookie, Value) -> response_bridge((response_bridge()):cookie(Cookie, Value)).
+%cookie(Cookie, Value, Path, MinutesToLive) -> response_bridge((response_bridge()):cookie(Cookie, Value, Path, MinutesToLive)).
 delete_cookie(Cookie) -> cookie(Cookie,"","/",0).
 data() -> (context())#context.data.
 data(Data) -> context((context())#context { data = Data }).
@@ -73,18 +78,11 @@ peer_ip(Proxies,ForwardedHeader) ->
             end
     end.
 
-init_context(RequestBridge, ResponseBridge) ->
-    Context = #context {
-        request_bridge = RequestBridge,
-        response_bridge = ResponseBridge,
-        page_context = #page_context {},
-        event_context = #event_context {}
-    },
+init_context() ->
     make_handler(query_handler, default_query_handler),
     make_handler(session_handler, n2o_session_handler), 
     make_handler(route_handler, dynamic_route_handler),
-    context(Context),
-    Context.
+    ok.
 
 make_handler(Name, Module) -> 
     Handler = #handler_context { 

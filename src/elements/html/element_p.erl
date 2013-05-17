@@ -7,12 +7,12 @@ reflect() -> record_info(fields, p).
 
 render_element(Record) -> 
     Body = [
-        wf:html_encode(Record#p.text, Record#p.html_encode),
+        Record#p.text,
         Record#p.body
     ],
-    wf_tags:emit_tag(p, Body, [
-        {id, Record#p.id},
-        {class, [p, Record#p.class]},
-        {style, Record#p.style}
+    wf_tags:emit_tag(<<"p">>, Body, [
+        {<<"id">>, Record#p.id},
+        {<<"class">>, Record#p.class},
+        {<<"style">>, Record#p.style}
     ]).
 

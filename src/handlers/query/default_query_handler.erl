@@ -7,16 +7,16 @@
 init(_Config, _State) -> 
     % Get query params and post params
     % from the request bridge...
-    RequestBridge = wf_context:request_bridge(),
-    QueryParams = RequestBridge:query_params(),
-    PostParams = RequestBridge:post_params(),
+%    RequestBridge = wf_context:request_bridge(),
+%    QueryParams = RequestBridge:query_params(),
+%    PostParams = RequestBridge:post_params(),
 
     % Load into state...
-    Params = QueryParams ++ PostParams,
+%    Params = QueryParams ++ PostParams,
 
     % Pre-normalize the parameters.
-    Params1 = [{Path, Value} || {Path, Value} <- Params, Path /= undefined, Path /= []],
-    {ok, Params1}.
+%    Params1 = [{Path, Value} || {Path, Value} <- Params, Path /= undefined, Path /= []],
+    {ok, []}.
 
 finish(_Config, _State) -> 
     % Clear out the state.
