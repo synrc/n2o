@@ -3,27 +3,26 @@
 -include_lib("n2o/include/wf.hrl").
 
 main() -> 
-%    Title = "Title",
-%    Body = "Body",
     Title = wf_render_elements:render_elements(title()),
     Body = wf_render_elements:render_elements(body()),
-    [ #dtl{file = "index.html", bindings=[{title,Title},{body,Body}]} ].
-    %#template { file= code:priv_dir(web) ++ "/templates/index.html" }.
+    [ #dtl{file = "index", bindings=[{title,Title},{body,Body}]} ].
 
-title() -> [ <<"N2O">> ].
+title() -> [ <<"N2O2">> ].
 
-body() -> %[ "OK" ].%% area of http handler
+body() -> %% area of http handler
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
     wf:wire(#api{name=apiOne,tag=d1}),
-  [ #span { text= <<"Your chatroom name: ">> }, 
+  [
+    #span { text= <<"Your chatroom name: ">> }, 
     #textbox { id=userName, text= <<"Anonymous">> },
-    #panel { id=chatHistory, class=chat_history },
+    #panel { id=chatHistory },
     #button{id=but,text= <<"Click Me!">>,postback=change_me},
     #button{id=replace,text= <<"Replace Body">>,postback=replace},
     "<a onclick=\"document.apiOne('Hello')\" name='1'>API</a>",
     #textbox { id=message },
     #button { id=sendButton, text= <<"Chat">>, postback={chat,Pid}, source=[userName,message] },
-    #panel { id=n2ostatus } ].
+    #panel { id=n2ostatus }
+ ].
 
 api_event(Name,Tag,Term) -> error_logger:info_msg("Name ~p, Tag ~p, Term ~p",[Name,Tag,Term]), event(change_me).
 
@@ -37,16 +36,18 @@ event(init) ->
 event(change_me) ->
     wf:replace(but,
         #link{
-            url="http://erlang.org",
-            text="Here's Erlang",
+            url= <<"http://erlang.org">>,
+            text= <<"Here's Erlang">>,
             actions=#show{effect=fade}
         }
     );
 
 event(replace) ->
-    action_redirect:redirect_nodrop("hello.html");
+    action_redirect:redirect_nodrop("hello");
 
 event({chat,Pid}) -> %% area of websocket handler
+%    Pid = erlang:list_to_pid(P),
+    error_logger:info_msg("Chat Pid: ~p",[Pid]),
     Username = wf:q(userName),
     Message = wf:q(message),
     Terms = [ #span { text= <<"Message sent">> }, #br{} ],
