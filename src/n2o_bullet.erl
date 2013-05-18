@@ -10,8 +10,8 @@
 init(_Transport, Req, _Opts, _Active) ->
     put(req,Req),
     put(actions,[]),
-    wf_context:init_context(),
-    wf_core:call_init_on_handlers(),
+    Handlers = wf_context:init_context(),
+    wf_core:init(Handlers),
     {ok, Req, undefined_state}.
 
 stream(<<"ping">>, Req, State) ->

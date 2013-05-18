@@ -17,17 +17,6 @@ page_module() -> get(page_module).
 page_module(Module) -> put(page_module,Module).
 path_info() -> get(path_info).
 path_info(PathInfo) -> put(path_info,PathInfo).
-event_context() -> (context())#context.event_context.
-event_context(EventContext) -> context((context())#context { event_context = EventContext }).
-event_module() -> (event_context())#event_context.module.
-event_module(Module) -> event_context((event_context())#event_context { module = Module }).
-event_tag() -> (event_context())#event_context.tag.
-event_tag(Tag) -> event_context((event_context())#event_context { tag = Tag }).
-event_validation_group() -> (event_context())#event_context.validation_group.
-event_validation_group(ValidationGroup) -> event_context((event_context())#event_context { validation_group = ValidationGroup }).
-%handlers() -> (context())#context.handler_list.
-handlers() -> [ get(query_handler), get(session_handler), get(route_handler) ].
-handlers(Handlers) -> context((context())#context { handler_list = Handlers }).
 request_body() -> (request_bridge()):request_body().
 status_code() -> (request_bridge()):status_code().
 status_code(StatusCode) -> response_bridge((response_bridge()):status_code(StatusCode)).
@@ -78,17 +67,9 @@ peer_ip(Proxies,ForwardedHeader) ->
             end
     end.
 
-init_context() ->
-    make_handler(query_handler, default_query_handler),
-    make_handler(session_handler, n2o_session_handler), 
-    make_handler(route_handler, dynamic_route_handler),
-    ok.
+make_handler(Name, Module) -> #handler_context { name=Name, module=Module, state=[] }.
+init_context() -> [ make_handler(query_handler, default_query_handler),
+                    make_handler(session_handler, n2o_session_handler),
+                    make_handler(route_handler, dynamic_route_handler) ].
 
-make_handler(Name, Module) -> 
-    Handler = #handler_context { 
-        name=Name,
-        module=Module,
-        state=[]
-    },
-    put(Name,Handler).
 
