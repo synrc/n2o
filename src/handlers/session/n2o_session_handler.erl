@@ -15,7 +15,7 @@ init(_Config, _State) ->
                      undefined -> undefined;
                      A when is_list(A) -> list_to_binary(A);
                      _Else -> _Else end,
-    TTL = 20,
+    TTL = 24 * 60 * 60, % 1 day TTL
     State = case lookup_ets({SessionId,<<"auth">>}) of 
                  undefined -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
                               ets:insert(cookies,Cookie),
@@ -32,7 +32,6 @@ init(_Config, _State) ->
                  _ -> skip,
                       error_logger:info_msg("Cookie Error") 
                       end,
-
     {ok, State}.
 
 expired(Issued,TTL) ->

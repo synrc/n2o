@@ -1,14 +1,15 @@
 -module(action_wire).
--author('Rusty Klophaus').
+-author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
+% We have set of events that we wire them
+
 render_action(#wire{actions=Api=#api{}}) -> action_api:render_action(Api);
+render_action(#wire{actions=Redirect=#redirect{}}) -> action_redirect:render_action(Redirect);
 render_action(#wire{actions=Event=#event{}}) -> action_event:render_action(Event);
 render_action(#wire{actions=Script=#script{}}) -> action_script:render_action(Script);
 render_action(#wire{actions=Actions}) when is_list(Actions) -> Actions;
-%render_action(#wire{actions=Actions}) when is_tuple(Actions) -> wf_render_actions:render_action(Actions);
-%render_action(#wire{actions=Actions}) when is_list(Actions) -> wf_render_actions:render_actions(Actions);
 render_action(S) when is_list(S) -> S;
 render_action(_) -> [].
 
