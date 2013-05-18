@@ -1,0 +1,11 @@
+title N2O Page Lifetime
+
+Browser->+HTTP: HTTP GET
+HTTP->+Transition Proc: Store Actions
+HTTP->-Browser: Rendered Elements (HTML)
+Browser->+WebSocket: WS INIT
+WebSocket->Transition Proc: Transition ACK, Get Actions
+Transition Proc->-WebSocket: Actions
+WebSocket->-Browser: Rendered Actions (JavaScript), WS INIT DONE
+Browser->+WebSocket: Click Event
+WebSocket->-Browser: Rendered Elements (HTML) + Actions (JavaScript)
