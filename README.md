@@ -220,7 +220,7 @@ scripts so building process is OTP compatible: bootstrap site is bundled as Erla
     $ cd rels/web && rebar -f generate
     $ node/bin/node console
 
-Now you can try: http://localhost:8000.
+Now you can try: http://localhost:8000
 
 Start yourself depending N2O core
 ---------------------------------
