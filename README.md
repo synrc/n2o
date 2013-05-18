@@ -7,25 +7,27 @@ Nitrogen 2x Optimized
 Information for Nitrogen users:
 
 * All actions are triggered through single endpoint
-* Works heavy coupled within Cowboy processes
 * Dropped support of simple_brigde
-* No unnecessary process spawns
-* Dependency on Bert, jQuery/Zepto and Bullet only
+* Dependency on Bert, jQuery and Bullet only
 * no JSON encoding for client/server data transfer, no use of urlencode and Nitrogen.js
 * Enough compatibility with original Nitrogen to convert Nitrogen sites/elements to N2O
-* Clean codebase
 * Proper id and class attributes
 * Several times faster that original Nitrogen
+* GProc process registry instead of nprocreg
 
 New features
 ------------
 
+* Optimized for latency: all JS is deffered
+* Supports optional Zepto library for non-IE browsers
+* XHR fallback through Bullet for legacy browsers
+* Clean codebase
+* No unnecessary process spawns
+* Works heavy coupled within Cowboy processes
 * Page construction from Erlang binaries
 * Custom template engines as elements: DTL, SGTE, ET
 * Advanced element collection: Tabs, Grid, Viz.js, Mandala
-* XHR fallback through Bullet
 * Rapid REST apps prototyping
-* GProc process registry instead of nprocreg
 
 WebSockets transport
 --------------------
