@@ -74,6 +74,8 @@ the raw HTTP Cowboy performance thus beating rendering performance
 of any other functional web framework several times over.
 It is certanly faster than raw HTTP node.js performance!
 
+Reference to list of modern web frameworks: !(https://gist.github.com/5HT/5522302)[https://gist.github.com/5HT/5522302]
+
 Desktop and Mobile Applications
 -------------------------------
 
