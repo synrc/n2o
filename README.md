@@ -6,15 +6,16 @@ Nitrogen 2x Optimized
 
 Information for Nitrogen users:
 
-* All actions are triggered through single endpoint 
-* Works heavy coupled within Cowboy processes, but still simple_bridge compatible
+* All actions are triggered through single endpoint
+* Works heavy coupled within Cowboy processes
+* Dropped support of simple_brigde
 * No unnecessary process spawns
-* Dependency on Bert / jQuery / Bullet only
+* Dependency on Bert, jQuery/Zepto and Bullet only
 * no JSON encoding for client/server data transfer, no use of urlencode and Nitrogen.js
 * Enough compatibility with original Nitrogen to convert Nitrogen sites to N2O
 * Clean codebase
 * Proper id and class attributes
-* 2x faster that original Nitrogen
+* Several times faster that original Nitrogen
 
 New features
 ------------
@@ -29,19 +30,21 @@ New features
 WebSockets transport
 --------------------
 
-N2O was started as the first Erlang Web Framework that fully relies on WebSocket transport for client / server communication.
+N2O was started as the first Erlang Web Framework that fully relies on 
+WebSocket transport for client/server communication.
 Compatibility with Nitrogen was mostly retained and many new improvements were made.
 Such as binary page construction, binary data transfer, events trigger over WebSocket channel,
 minumum process spawns, use of Cowboy processes to run N2O html rendering.
 N2O page rendering is several times faster than with the original Nitrogen.
 
-
 Binary events over WebSockets
 -----------------------------
 
-N2O does not use JSON to encode data transfer between client / server. Instead, all data communication
-is encoded with native Erlang External Term Format. For that Berg.js library is used.
-Is it as simple as calling Bert.decode( msg ) and this allows to avoid complexity on the server-side.
+N2O does not use JSON to encode data transfer between client/server. 
+Instead, all data communication is encoded with native 
+Erlang External Term Format. For that Berg.js library is used.
+Is it as simple as calling Bert.decode(msg) and this allows 
+to avoid complexity on the server-side. 
 Please refer to http://bert-rpc.org for more information.
 
 Optimized for speed
@@ -49,8 +52,9 @@ Optimized for speed
 
 Original Nitrogen was tested in production under high-load and
 we decided to drop nprocreg process registry along with
-action_comet process creation. N2O creates only a single process for async websocket handler,
-all async operations are handled within Cowboy processes.
+action_comet process creation. N2O creates only a single
+process for async websocket handler, all async operations
+are handled within Cowboy processes.
 
 Why Erlang in Web?
 ------------------
@@ -68,18 +72,28 @@ the raw HTTP Cowboy performance thus beating rendering performance
 of any other functional web framework several times over.
 It is certanly faster than raw HTTP node.js performance!
 
-Sending HTML5 over wire?
-------------------------
+Desktop and Mobile Applications
+-------------------------------
 
-N2O does that. However, we agree that in some cases it is better to send
-only domain specific data over network (in JSON or Binary format) as you would do with
-Chaplin / CoffeScript and Meteor / JavaScript.
-However, Meteor is Node-based. And with “everything on the client” model
-it would not be possible to prototype services easily with your Erlang infrastructure.
-You should always prototype a server side protocol along with the client.
+There is two approaches to design communications between client/server.
+The first is called data-on-wire, where only data transfers on channel through
+through RPC, REST in form of JSON, XML or Binary. All rendering in first
+type are being made on client side. This calls rich client and mostly
+fits for desktop. The examples are Chaplin/CoffeScript and Meteor/JavaScript.
+
+The other approach is to send server prerendered part of pages and javascript,
+and on client side only replace HTML parts and execute JavaScript.
+This approach better fits for mobile applications, where client doesn't
+have much resources.
+
+Using N2O you could create both types of applications: using N2O REST framework
+for first type of application based on Cowboy REST features alogn with
+DTL templates for initial HTML renderings, and also Nitrogen DSL-based approach to model
+parts of the pages as widgets and control elements thanks
+to rich Nitrogen elements collections provided by Nitrogen community.
 
 So, in cases when your system is built around Erlang infrastructure,
-N2O is the best choice that you could find for fast prototyping,
+N2O is the best choice that you could made for fast prototyping,
 simpicity of use, codebase maintanance, etc. Despite HTML tranfer over the wire,
 you will still have access to all your erlang services directly.
 
@@ -87,11 +101,14 @@ Templates vs DSL
 ----------------
 
 We liked Nitrogen for simple and elegant way of typed HTML
-page construction similar to Scala Lift, OCaml Ocsigen and
-Haskell Happstack. Template-based approach pushes programmers to
+page construction with DSL base on host language similar to
+Scala Lift, OCaml Ocsigen and Haskell Blaze. It helps to develop
+reusable control elements and components in host language.
+
+Template-based approach pushes programmers to
 deal with raw HTML, like Yesod, ASP, PHP, JSP, Rails, Yaws,
-ChicagoBoss. N2O goes further than that and optimizes HTML rendering from
-binary iolists instead of slower Erlang lists as in Nitrogen.
+ChicagoBoss. It help to define the page in terms of top-level 
+consist of controls, playholders and panels. So N2O combine both approaches.
 
 Main N2O attraction is the fast prototyping. We also use it
 in large scale projects. Here is the complete Web Chat example
@@ -101,7 +118,7 @@ working with WebSockets:
     -compile(export_all).
     -include_lib("n2o/include/wf.hrl").
 
-    main() -> #template { file= code:priv_dir(web) ++ "/templates/index.html" }.
+    main() -> #dtl { file="index.html" }.
     title() -> <<"N2O">>.
 
     body() -> %% area of http handler
@@ -141,13 +158,15 @@ And try to compare how this functionality would be implemented with your favouri
 Clean codebase
 ------------------------------
 
-We feel free to brake some of the compatability with the original Nitrogen project, mostly because we want to have
-a clean codebase. However, it is still possible to easily port Nitrogen web sites to N2O.
+We feel free to brake some of the compatability with the original Nitrogen project,
+mostly because we want to have a clean codebase and fastest speed.
+However, it is still possible to easily port Nitrogen web sites to N2O.
 E.g. N2O returns id and class semantics of HTML and not html_id.
-We simplify rendering by not using html_encode which should be handled by the application layer.
-Nitrogen.js that was originally created by Rusty Klophaus for XHR, has been removed due to pure
-WebSocket nature of N2O and native jQuery handling. There are plans to add XHR support by
-using some of the ideas from Bullet.js - such as fallback from websockets to XHR.
+We simplified rendering by not using html_encode which should be handled by the application layer.
+Nitrogen.js that was originally created by Rusty Klophaus, has been removed due to pure simplified
+WebSocket nature of N2O. We added XHR fallback handling through Extend Bullet by Loïc Hoguin.
+We dropped simple_bridge and optimize N2O on every level for you to be sure its fastest way
+to develop application on erlang.
 
     <input id="sendButton" type="button" class="sendButton button" value="Send"/>
     <script>$('#sendButton').bind('click',function anonymous(event) {
@@ -155,11 +174,29 @@ using some of the ideas from Bullet.js - such as fallback from websockets to XHR
                                   pickle: Bert.binary('R2LH0INQAAAAWXicy2DKYEt...'),
                                   xforms: Bert.binary('undefined')}));});</script>
 
+Performance
+-----------
+
+We are using for measurement ab, httperf, wrk and siege, all of them. The most valuable storm
+created by wrk and it is not achieved in real apps but could show us the internal throughput
+of individual components. The most near to real life apps is siege who also make DNS lookup
+for each request. So this data shows internal data throughput by wrk:
+
+| Framework | Enabled Components | Speed | Timeouts |
+|-----------|--------------------|-------|----------|
+| PHP5      | Simple script with two <?php print "OK"; ?> terms inside | 5K | timeouts |
+| Nitrogen  | No sessions, No DSL, Simple template with two variable | 1K | no |
+| N2O       | All enabled, sessions, Template, heavy DSL | 7K | no |
+| N2O       | Sessions enabled, template with two variables, no DSL | 10K | no |
+| N2O       | No sessions, No DSL, only template with two vars | 15K | no |
+
 Prerequisites
 -------------
 
 To run N2O sites you need Erlang R15 or higher and basho rebar installed.
-N2O works on Windows, Mac and Linux.
+N2O works on Windows, Mac and Linux. 
+
+NOTE: the work of sync application on Windows is limited.
 
 Kickstart Bootstrap
 -------------------
@@ -173,7 +210,7 @@ scripts so building process is OTP compatible: bootstrap site is bundled as Erla
     $ cd rels/web && rebar -f generate
     $ node/bin/node console
 
-Now you can try: http://localhost:8000.
+Now you can try: !(http://localhost:8000)[http://localhost:8000].
 
 Start yourself depending N2O core
 ---------------------------------
@@ -183,7 +220,7 @@ N2O http and websocket cowboy handlers and cowboy static handler as
 Cowboy dispatch parameter:
 
     cowboy:start_http(http, 100, [{port, 8000}],
-                              [{env, [{dispatch, dispatch_rules()}]}]),
+                                 [{env, [{dispatch, dispatch_rules()}]}]),
 
 
     dispatch_rules() ->
@@ -213,7 +250,8 @@ and jQuery javascript. After making release you should run:
     $ ./nitrogen_static.sh
     $ ./release_sync.sh
 
-Now you can edit site sources and sync will automaticaly recompile and reload modules in release.
+Now you can edit site sources and sync will automaticaly recompile
+and reload modules in release.
 
 Credits
 -------
