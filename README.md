@@ -184,6 +184,30 @@ to develop application on erlang.
                                   pickle: Bert.binary('R2LH0INQAAAAWXicy2DKYEt...'),
                                   xforms: Bert.binary('undefined')}));});</script>
 
+Reduced Latency
+---------------
+
+The secret of reduced latency is simple. We try to deliver rendered HTML as soon as
+possible and render JavaScript only after WebSocket initialization. We use thre steps
+and three erlang processes for achieve that.
+
+![N2O Page Lifetime](http://synrc.com/lj/page-lifetime.png)
+
+In first HTTP handler we render only HTML and all created by the way action is
+stored in created transition process. 
+
+    transition(Actions) -> receive {'N2O',Pid} -> Pid ! Actions end.
+
+HTTP handler dies immediately after terurning HTML. Transition process waits for
+retrival request from future WebSocket handler.
+
+Just after receiving HTML browser initiates WebSocket connection and WebSocket
+handler arise. After returning actions transition process dies and from now on
+WebSocket handler stay alone. Thus initial phase done.
+
+After that through WebSocket channel all event comes from browser to server and
+handler by N2O, who renders elements to HTML and actions to JavaScript.
+
 Performance
 -----------
 
