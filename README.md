@@ -12,7 +12,7 @@ Information for Nitrogen users:
 * No unnecessary process spawns
 * Dependency on Bert, jQuery/Zepto and Bullet only
 * no JSON encoding for client/server data transfer, no use of urlencode and Nitrogen.js
-* Enough compatibility with original Nitrogen to convert Nitrogen sites to N2O
+* Enough compatibility with original Nitrogen to convert Nitrogen sites/elements to N2O
 * Clean codebase
 * Proper id and class attributes
 * Several times faster that original Nitrogen
@@ -112,17 +112,22 @@ consist of controls, playholders and panels. So N2O combine both approaches.
 
 Main N2O attraction is the fast prototyping. We also use it
 in large scale projects. Here is the complete Web Chat example
-working with WebSockets:
+working with WebSockets that demonstrate the use of Templates, DSL
+and async interprocesses communications:
 
     -module(chat).
     -compile(export_all).
     -include_lib("n2o/include/wf.hrl").
 
-    main() -> #dtl { file="index.html" }.
+    main() ->
+        Title = wf_render_elements:render_elements(title()),
+        Body = wf_render_elements:render_elements(body()),
+        [ #dtl{file = "index", bindings=[{title,Title},{body,Body}]} ].
+
     title() -> <<"N2O">>.
 
     body() -> %% area of http handler
-    {ok,Pid} = wf:comet(fun() -> chat_loop() end),
+        {ok,Pid} = wf:comet(fun() -> chat_loop() end),
       [ #span { text= <<"Your chatroom name: ">> },
         #textbox { id=userName, text= <<"Anonymous">> },
         #panel { id=chatHistory, class=chat_history },
@@ -139,7 +144,7 @@ working with WebSockets:
         wf:reg(room),
         Pid ! {message, Username, Message};
 
-    event(Event) -> error_logger:info_msg("Event: ~p", [Event]).
+    event(Event) -> error_logger:info_msg("Unknown Event: ~p", [Event]).
 
     chat_loop() -> %% background worker ala comet
         receive
