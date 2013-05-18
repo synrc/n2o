@@ -3,11 +3,13 @@
 -include_lib("n2o/include/wf.hrl").
 
 main() -> 
+%    Title = "Title",
+%    Body = "Body",
     Title = wf_render_elements:render_elements(title()),
     Body = wf_render_elements:render_elements(body()),
     [ #dtl{file = "index", bindings=[{title,Title},{body,Body}]} ].
 
-title() -> [ <<"N2O2">> ].
+title() -> [ <<"N2O">> ].
 
 body() -> %% area of http handler
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
@@ -43,10 +45,9 @@ event(change_me) ->
     );
 
 event(replace) ->
-    action_redirect:redirect_nodrop("hello");
+    wf:wire(#redirect{url="hello",nodrop=false});
 
 event({chat,Pid}) -> %% area of websocket handler
-%    Pid = erlang:list_to_pid(P),
     error_logger:info_msg("Chat Pid: ~p",[Pid]),
     Username = wf:q(userName),
     Message = wf:q(message),
