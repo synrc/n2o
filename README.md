@@ -18,16 +18,16 @@ Information for Nitrogen users:
 New features
 ------------
 
-* Optimized for latency: all JS is deffered
+* Optimized for latency: deffered JavaScript rendering
 * Supports optional Zepto library for non-IE browsers
 * XHR fallback through Bullet for legacy browsers
-* Clean codebase
-* No unnecessary process spawns
+* Clean codebase without additional layers
+* One process per page during lifetime
 * Works heavy coupled within Cowboy processes
 * Page construction from Erlang binaries
 * Custom template engines as elements: DTL, SGTE, ET
 * Advanced element collection: Tabs, Grid, Viz.js, Mandala
-* Rapid REST apps prototyping
+* Rapid REST apps prototyping with REST handlers
 
 WebSockets transport
 --------------------
@@ -218,7 +218,7 @@ for each request. So this data shows internal data throughput by wrk:
 
 | Framework | Enabled Components | Speed | Timeouts |
 |-----------|--------------------|-------|----------|
-| PHP5      | Simple script with two <?php print "OK"; ?> terms inside | 5K | timeouts |
+| PHP5 FCGI | Simple script with two <?php print "OK"; ?> terms inside | 5K | timeouts |
 | Nitrogen  | No sessions, No DSL, Simple template with two variable | 1K | no |
 | N2O       | All enabled, sessions, Template, heavy DSL | 7K | no |
 | N2O       | Sessions enabled, template with two variables, no DSL | 10K | no |
