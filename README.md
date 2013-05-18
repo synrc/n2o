@@ -74,7 +74,7 @@ the raw HTTP Cowboy performance thus beating rendering performance
 of any other functional web framework several times over.
 It is certanly faster than raw HTTP node.js performance!
 
-Reference to list of modern web frameworks: ![http://gist.github.com/5HT/5522302](http://gist.github.com/5HT/5522302)
+Reference to list of modern web frameworks: http://gist.github.com/5HT/5522302
 
 Desktop and Mobile Applications
 -------------------------------
@@ -162,7 +162,8 @@ and async interprocesses communications:
         end,
         chat_loop().
 
-And try to compare how this functionality would be implemented with your favourite language / framework.
+And try to compare how this functionality would be implemented
+with your favourite language/framework.
 
 Clean codebase
 ------------------------------
@@ -219,7 +220,7 @@ scripts so building process is OTP compatible: bootstrap site is bundled as Erla
     $ cd rels/web && rebar -f generate
     $ node/bin/node console
 
-Now you can try: !(http://localhost:8000)[http://localhost:8000].
+Now you can try: http://localhost:8000.
 
 Start yourself depending N2O core
 ---------------------------------
