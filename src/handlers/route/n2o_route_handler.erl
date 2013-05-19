@@ -17,5 +17,6 @@ route(<<"/hello">>) -> {hello, []};
 route(<<"/websocket/">>) -> {index, []};
 route(<<"/websocket/index">>) -> {index, []};
 route(<<"/websocket/hello">>) -> {hello, []};
-route(<<"/favicon.ico">>) -> {static_file, []}.
+route(<<"/favicon.ico">>) -> {static_file, []};
+route(_) -> {index, []}.
 
