@@ -14,7 +14,8 @@ handle(Req, State) -> {ok, NewReq} = wf_core:run(Req), {ok, NewReq, State}.
 
 % Cowboy Bridge Abstraction
 
-path(Req) -> {Path,Req} = cowboy_req:path(Req), Path.
+params(Req) -> {Params,NewReq} = cowboy_req:qs_vals(Req), Params.
+path(Req) -> {Path,NewReq} = cowboy_req:path(Req), Path.
 request_body(Req) -> cowboy_req:body(Req).
 headers(Req) -> cowboy_reg:headers(Req).
 response(Html,Req) -> cowboy_req:set_resp_body(Html,Req).

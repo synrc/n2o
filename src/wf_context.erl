@@ -3,6 +3,8 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
+params() -> get(params).
+params(Params) -> put(params,Params).
 page_module() -> get(page_module).
 page_module(Module) -> put(page_module,Module).
 actions() -> get(actions).
@@ -21,7 +23,8 @@ init_context(Req) ->
         module=index,
         path=[],
         req=Req,
+        params=[],
         session=undefined,
-        handlers= [ make_handler(query_handler, default_query_handler),
+        handlers= [ make_handler(query_handler,   n2o_query_handler),
                     make_handler(session_handler, n2o_session_handler),
-                    make_handler(route_handler, dynamic_route_handler) ]}.
+                    make_handler(route_handler,   n2o_route_handler) ]}.

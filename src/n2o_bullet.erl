@@ -9,7 +9,6 @@
 -define(PERIOD, 1000).
 
 init(_Transport, Req, _Opts, _Active) ->
-    put(req,Req),
     put(actions,[]),
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
@@ -37,11 +36,11 @@ stream({binary,Info}, Req, State) ->
     case Api of
          <<"api">> -> #ev{payload=Args} = Depickled,
                       action_api:event(Args,Linked,State);
-         _ ->  lists:map(fun({K,V})->put(K,V)end,Linked) end,
-                case Depickled of
-                     #ev{module=Module,payload=Parameter} -> Res = Module:event(Parameter);
-                                                          _ -> error_logger:info_msg("Unknown Event") end,
-               Render = wf_render_actions:render_actions(get(actions)),
+                 _ -> lists:map(fun({K,V})-> put(K,V) end,Linked) end,
+    case Depickled of
+        #ev{module=Module,payload=Parameter} -> Module:event(Parameter);
+                                           _ -> error_logger:info_msg("Unknown Event") end,
+    Render = wf_render_actions:render_actions(get(actions)),
     wf_context:clear_actions(),
     {reply,Render, Req, State};
 stream(Data, Req, State) ->    

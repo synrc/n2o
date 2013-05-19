@@ -2,7 +2,7 @@
 -define(wf_inc, ok).
 
 -record(handler, {name, module, config, state}).
--record(context, {handlers, actions, req, module, path, session}).
+-record(context, {handlers, actions, req, module, path, session, params}).
 -record(ev,      {module, payload, trigger}).
 
 %%% LOGGING %%%

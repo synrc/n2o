@@ -34,13 +34,12 @@ flush(Key) -> action_comet:flush(Key).
 
 % Parse URL and context parameters wf:q
 
-q(Key) -> get(Key).
-qs(Key) -> query_handler:get_values(Key).
-mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
-mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
-q_pl(KeyList) when is_list(KeyList) -> [{K,q(K)} || K <- KeyList].
-qs_pl(KeyList) when is_list(KeyList) -> [{K,qs(K)} || K <- KeyList].
-params() -> query_handler:get_params().
+%q(Key) -> get(Key).
+%mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
+%mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
+%q_pl(KeyList) when is_list(KeyList) -> [{K,q(K)} || K <- KeyList].
+%qs_pl(KeyList) when is_list(KeyList) -> [{K,qs(K)} || K <- KeyList].
+%params() -> query_handler:get_params().
 
 % Redirect and purge connection wf:redirect
 
@@ -84,6 +83,9 @@ clear_roles() -> role_handler:clear_all().
 -define(BRIDGE, n2o_cowboy).
 -endif.
 
+q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
+qs(Key) -> proplists:get_value(Key,wf_context:params()).
+params(Req) -> ?BRIDGE:params(Req).
 cookies(Req) -> ?BRIDGE:cookies(Req).
 cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie,Req).
 cookie(Cookie, Value, Req) -> ?BRIDGE:cookie(Cookie, Value, Req).
