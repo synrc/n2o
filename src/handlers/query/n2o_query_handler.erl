@@ -2,7 +2,7 @@
 -author('Maxim Sokhatsky').
 -behaviour(query_handler).
 -include_lib("n2o/include/wf.hrl").
--export([init/2, finish/2, get_value/3, get_values/3, get_params/2]).
+-export([init/2, finish/2]).
 
 init(State, Ctx) -> 
     Params = wf:params(Ctx#context.req),

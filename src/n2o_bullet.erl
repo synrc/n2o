@@ -12,6 +12,7 @@ init(_Transport, Req, _Opts, _Active) ->
     put(actions,[]),
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
+    wf_context:context(NewCtx),
     put(page_module,NewCtx#context.module),
     {ok, NewCtx#context.req, NewCtx}.
 
@@ -57,13 +58,15 @@ info(Pro, Req, State) ->
                     X = Pid ! {'N2O',self()},
                     error_logger:info_msg("Transition Actions: ~p",[X]),
                     InitActions = receive Actions -> % cache actions for back/next buttons where no TransProc exists
-                                          case ets:lookup(cookies,Module) of
-                                               [{Module,A}] -> A;
-                                               [] -> RenderInit = wf_render_actions:render_actions(Actions),
+%                                          case ets:lookup(cookies,Module) of
+%                                               [{Module,A}] -> A;
+%                                               [] -> 
+                                                     RenderInit = wf_render_actions:render_actions(Actions),
                                                      RenderOther = wf_render_actions:render_actions(get(actions)),
                                                      Y = RenderInit ++ RenderOther,
                                                      ets:insert(cookies,{Module,Y}),
-                                                     Y end
+                                                     Y
+% end
                                   after 100 -> [{Module,A}] = ets:lookup(cookies,Module), A end,
                     InitActions;
                 Unknown -> <<"OK">> end,

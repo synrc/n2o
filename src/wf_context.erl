@@ -3,6 +3,8 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
+context() -> get(context).
+context(Ctx) -> put(context,Ctx).
 params() -> get(params).
 params(Params) -> put(params,Params).
 page_module() -> get(page_module).

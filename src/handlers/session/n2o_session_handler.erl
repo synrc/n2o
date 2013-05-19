@@ -2,12 +2,11 @@
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -behaviour(session_handler).
--export([init/2, finish/2, get_value/4, set_value/4, clear_all/2, session_id/2]).
+-export([init/2, finish/2, get_value/2, set_value/2]).
 -compile(export_all).
 -record(state, {unique, node}).
 
 init2(State, Req) -> {ok, State, Req}.
-
 
 init(State, Ctx) -> 
     C = wf:cookie(session_cookie_name(),Ctx#context.req),
@@ -60,12 +59,10 @@ lookup_ets(Key) ->
 new_cookie_value() -> base64:encode(erlang:md5(term_to_binary({now(), make_ref()}))).
 new_state() -> #state{unique=new_cookie_value()}.
 session_cookie_name() -> <<"n2o-sid">>.
-session_id(_Config, State) -> {ok, SessionId} = wf:hex_encode(State#state.unique), {ok, SessionId, State}.
-clear_all(Config, State) -> {ok, State}.
-get_value(Key, DefaultValue, Config, State) -> 
+get_value(Key, DefaultValue) -> 
     Res = case lookup_ets({wf:cookie(session_cookie_name()),Key}) of
                undefined -> DefaultValue;
-               Value -> Value end,
-%    error_logger:info_msg("Session Lookup Key ~p Value ~p",[Key,Res]),
-    {ok, Res, State}.
-set_value(Key, Value, Config, State) -> ets:insert(cookies,{{wf:cookie(session_cookie_name()),Key},Value}), {ok, Value, State}.
+               {_,Value} -> Value end,
+    error_logger:info_msg("Session Lookup Key ~p Value ~p",[Key,Res]),
+    Res.
+set_value(Key, Value) -> ets:insert(cookies,{{wf:cookie(session_cookie_name()),Key},Value}), Value.

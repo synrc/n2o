@@ -6,11 +6,12 @@
 run(Req) ->
     Ctx = wf_context:init_context(Req),
     Ctx1 = fold(init,Ctx#context.handlers,Ctx),
-    wf_context:actions(Ctx#context.actions),
+    wf_context:actions(Ctx1#context.actions),
     Module = Ctx1#context.module,
     Params = Ctx1#context.params,
     wf_context:page_module(Module),
     wf_context:params(Params),
+    wf_context:context(Ctx1),
 %    error_logger:info_msg("Module: ~p Params: ~p",[Module,wf:path(Req)]),
     Elements = Module:main(),
     Actions = wf_context:actions(),

@@ -87,6 +87,7 @@ q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
 qs(Key) -> proplists:get_value(Key,wf_context:params()).
 params(Req) -> ?BRIDGE:params(Req).
 cookies(Req) -> ?BRIDGE:cookies(Req).
+cookie(Cookie) -> ?BRIDGE:cookie(Cookie,(wf_context:context())#context.req).
 cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie,Req).
 cookie(Cookie, Value, Req) -> ?BRIDGE:cookie(Cookie, Value, Req).
 cookie(Cookie, Value, Path, MinutesToLive, Req) -> ?BRIDGE:cookie(Cookie, Value, Path, MinutesToLive, Req).
@@ -134,11 +135,10 @@ to_js_id(Path) -> _String = wf_render_actions:to_js_id(Path).
 
 % Q: Why we need state if already has session process dictionary ?
 
-state(Key) -> state_handler:get_state(Key).
-state_default(Key, DefaultValue) -> state_handler:get_state(Key, DefaultValue).
-state(Key, Value) -> state_handler:set_state(Key, Value).
-clear_state(Key) -> state_handler:clear(Key).
-clear_state() -> state_handler:clear_all().
+state(Key) -> get(Key).
+state_default(Key, DefaultValue) -> case get(Key) of undefined -> DefaultValue; A -> A end.
+state(Key, Value) -> put(Key,Value).
+clear_state(Key) -> put(Key,undefined).
 
 % Q: Do we really need continuations ? Who using it ?
 
@@ -151,7 +151,7 @@ temp_id() -> _String = wf_render_elements:temp_id().
 normalize_id(Path) -> _String = wf_render_elements:normalize_id(Path).
 send_global(Pool, Message) -> ok = action_comet:send_global(Pool, Message).
 comet(Function, Pool) ->  action_comet:comet(Function).
-logout() -> clear_user(), clear_roles(), clear_state(), clear_session().
+logout() -> clear_user(), clear_roles(), clear_session().
 flash(Elements) -> element_flash:add_flash(Elements).
 flash(FlashID, Elements) -> element_flash:add_flash(FlashID, Elements).
 async_mode() -> wf_context:async_mode().
