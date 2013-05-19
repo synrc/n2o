@@ -49,17 +49,24 @@ stream(Data, Req, State) ->
     {ok, Req,State}.
 
 info(Pro, Req, State) ->
-    Res = case Pro of
-         {flush,Actions} -> wf_render_actions:render_actions(Actions);
-          <<"N2O,",Rest/binary>> -> (State#context.module):event(init),
-                        Pid = list_to_pid(binary_to_list(Rest)),
-                        Pid ! {'N2O',self()},
-                        InitActions = receive Actions -> Actions end,
-%                        error_logger:info_msg("Transition Actions: ~p",[InitActions]),
-                        RenderInit = wf_render_actions:render_actions(InitActions),
-                        RenderOther = wf_render_actions:render_actions(get(actions)),
-                        RenderInit ++ RenderOther;
-          Unknown ->     <<"OK">> end,
+    Res =  case Pro of
+                {flush,Actions} -> wf_render_actions:render_actions(Actions);
+                <<"N2O,",Rest/binary>> -> 
+                    Module = State#context.module, Module:event(init),
+                    Pid = list_to_pid(binary_to_list(Rest)),
+                    X = Pid ! {'N2O',self()},
+                    error_logger:info_msg("Transition Actions: ~p",[X]),
+                    InitActions = receive Actions -> % cache actions for back/next buttons where no TransProc exists
+                                          case ets:lookup(cookies,Module) of
+                                               [{Module,A}] -> A;
+                                               [] -> RenderInit = wf_render_actions:render_actions(Actions),
+                                                     RenderOther = wf_render_actions:render_actions(get(actions)),
+                                                     Y = RenderInit ++ RenderOther,
+                                                     ets:insert(cookies,{Module,Y}),
+                                                     Y end
+                                  after 100 -> [{Module,A}] = ets:lookup(cookies,Module), A end,
+                    InitActions;
+                Unknown -> <<"OK">> end,
     wf_context:clear_actions(),
     {reply, Res, Req, State}.
 
