@@ -1,5 +1,5 @@
 -module(wf_event).
--author('Maxim Sokhatsky').
+-author('Rusty Klophaus').
 -include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
@@ -23,12 +23,8 @@ jsonx_decoder() -> jsonx:decoder([{event_context,record_info(fields,event_contex
 
 serialize_event_context(Tag, Anchor, ValidationGroup, Delegate) ->
 %    error_logger:info_msg("Serialized: ~p",[{Tag, Anchor, ValidationGroup, Delegate}]),
-    PageModule = get(page_module),
+    PageModule = wf_context:page_module(),
     EventModule = wf:coalesce([Delegate, PageModule]),
-%    Event =  [ wf:to_list(EventModule),"~",
-%              lists:flatten(io_lib:format("~p",[Tag])),"~",
-%              wf:to_list(Anchor), "~",
-%              wf:to_list(ValidationGroup) ],
     Event = #event_context {
         module = EventModule,
         tag = Tag,
@@ -36,7 +32,3 @@ serialize_event_context(Tag, Anchor, ValidationGroup, Delegate) ->
         validation_group = ValidationGroup
     },
     wf_pickle:pickle(Event).
-%    Encoder = get(encoder), %jsonx_encoder(),
-%    Json = Encoder(Event),
-%    error_logger:info_msg("JSON: ~p",[Json]),
-%    Json.

@@ -6,17 +6,17 @@
 -compile(export_all).
 -record(state, {unique, node}).
 
-init2(_Config, _State) -> {ok, _State}.
+init2(State, Req) -> {ok, State, Req}.
 
 
-init(_Config, _State) -> 
-    C = wf:cookie(session_cookie_name()),
-    SessionId = case wf:cookie(session_cookie_name()) of
+init(State, Ctx) -> 
+    C = wf:cookie(session_cookie_name(),Ctx#context.req),
+    SessionId = case C of
                      undefined -> undefined;
                      A when is_list(A) -> list_to_binary(A);
                      _Else -> _Else end,
     TTL = 24 * 60 * 60, % 1 day TTL
-    State = case lookup_ets({SessionId,<<"auth">>}) of 
+    SessionCookie = case lookup_ets({SessionId,<<"auth">>}) of 
                  undefined -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
                               ets:insert(cookies,Cookie),
 %                              error_logger:info_msg("Cookie New: ~p",[Cookie]),
@@ -29,25 +29,25 @@ init(_Config, _State) ->
                               ets:insert(cookies,Cookie), 
 %                              error_logger:info_msg("Cookie Expired: ~p",[Cookie]),
                               Cookie end;
-                 _ -> skip,
-                      error_logger:info_msg("Cookie Error") 
+                 _ -> error_logger:info_msg("Cookie Error"), skip
                       end,
-    {ok, State}.
+%    error_logger:info_msg("State: ~p",[SessionCookie]),
+    {ok, State, Ctx#context{session=SessionCookie}}.
 
 expired(Issued,TTL) ->
     false.
 
-finish(_Config, State) -> 
+finish(State, Ctx) -> 
 %    error_logger:info_msg("Finish Cookie Set ~p",[{_Config,State}]),
-    case State of
+    NewReq = case Ctx#context.session of
          {{Session,Key},Path,Issued,TTL,Status} -> 
 %     error_logger:info_msg("Finish Cookie Set ~p",[{{Session,Key},Path,Issued,TTL,Status}]),
-              
-              Req = wf:cookie(session_cookie_name(),Session,Path,TTL),
-              put(req,Req);
+              wf:cookie(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
+%              put(req,New),
+%              New;
 %               skip;
-         _ -> skip end,
-    {ok, []}.
+         _ -> Ctx#context.req end,
+    {ok, [], Ctx#context{req=NewReq}}.
 
 lookup_ets(Key) ->
     Res = ets:lookup(cookies,Key),

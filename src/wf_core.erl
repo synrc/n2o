@@ -4,22 +4,24 @@
 -compile (export_all).
 
 run(Req) ->
-    put(req,Req),
-    Handlers = wf_context:init_context(),
-    init(Handlers),
-    put(actions,[]),
-    Module = get(page_module),
+    Ctx = wf_context:init_context(Req),
+    Ctx1 = fold(init,Ctx#context.handlers,Ctx),
+    wf_context:actions([]),
+    Module = Ctx1#context.module,
+    wf_context:page_module(Module),
     Elements = Module:main(),
     Actions = wf_context:actions(),
     Pid = spawn(fun() -> transition(Actions) end),
     PidString = io_lib:format("~p",[Pid]),
-    put(script,["TransitionProcess = '", PidString, "'"]),
+    wf_context:script(["TransitionProcess = '", PidString, "'"]),
     Html = wf_render_elements:render_elements(Elements),
-    terminate(Handlers),
-    Req2 = cowboy_req:set_resp_body(Html, get(req)),
-    {ok, ReqFinal} = cowboy_req:reply(200, Req2).
+    Ctx2 = fold(finish,Ctx#context.handlers,Ctx1),
+    Req2 = wf:response(Html,Ctx2#context.req),
+    {ok, ReqFinal} = wf:reply(200, Req2).
 
-init(Handlers) -> [wf_handler:handle(X, init) || X <- Handlers].
-terminate(Handlers) -> [wf_handler:handle(X, finish) || X <- Handlers].
+fold(Fun,Handlers,Ctx) ->
+    lists:foldl(fun(H,Ctx) ->
+        {ok,_,NewCtx} = (H#handler.module):Fun(H#handler.state,Ctx),
+        NewCtx end,Ctx,Handlers).
 
 transition(Actions) -> receive {'N2O',Pid} -> Pid ! Actions end.

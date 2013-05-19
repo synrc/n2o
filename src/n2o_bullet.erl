@@ -1,5 +1,6 @@
 -module(n2o_bullet).
 -author('Maxim Sokhatsky').
+-include_lib("n2o/include/wf.hrl").
 -export([init/4]).
 -export([stream/3]).
 -export([info/3]).
@@ -10,9 +11,10 @@
 init(_Transport, Req, _Opts, _Active) ->
     put(req,Req),
     put(actions,[]),
-    Handlers = wf_context:init_context(),
-    wf_core:init(Handlers),
-    {ok, Req, undefined_state}.
+    Ctx = wf_context:init_context(Req),
+    NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
+    put(page_module,NewCtx#context.module),
+    {ok, NewCtx#context.req, NewCtx}.
 
 stream(<<"ping">>, Req, State) ->
     io:format("ping received~n"),
@@ -36,9 +38,9 @@ stream({binary,Info}, Req, State) ->
     error_logger:info_msg("Depickled  ~p~n",[Depickled]),
     case Api of
          <<"api">> -> {event_context,_,Args,_,_,_} = Depickled,
-                      action_api:event(Args,Linked);       
+                      action_api:event(Args,Linked,State);       
          _ ->  lists:map(fun({K,V})->put(K,V)end,Linked) end,
-                case Depickled of  
+                case Depickled of
                      {event_context,Module,Parameter,_,_,_} -> Res = Module:event(Parameter);
                                                           _ -> error_logger:info_msg("Unknown Event") end,
                Render = wf_render_actions:render_actions(get(actions)),
@@ -52,10 +54,11 @@ stream(Data, Req, State) ->
 info(Pro, Req, State) ->
     Res = case Pro of
          {flush,Actions} -> wf_render_actions:render_actions(Actions);
-          <<"N2O,",Rest/binary>> -> (get(page_module)):event(init),
+          <<"N2O,",Rest/binary>> -> (State#context.module):event(init),
                         Pid = list_to_pid(binary_to_list(Rest)),
                         Pid ! {'N2O',self()},
                         InitActions = receive Actions -> Actions end,
+%                        error_logger:info_msg("Transition Actions: ~p",[InitActions]),
                         RenderInit = wf_render_actions:render_actions(InitActions),
                         RenderOther = wf_render_actions:render_actions(get(actions)),
                         RenderInit ++ RenderOther;

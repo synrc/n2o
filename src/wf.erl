@@ -80,25 +80,21 @@ clear_roles() -> role_handler:clear_all().
 
 % Bridge Information
 
-cookies() -> wf_context:cookies().
-cookie(Cookie) -> wf_context:cookie(Cookie).
-cookie_default(Cookie,DefaultValue) -> wf_context:cookie_default(Cookie,DefaultValue).
-cookie(Cookie, Value) -> wf_context:cookie(Cookie, Value).
-cookie(Cookie, Value, Path, MinutesToLive) -> wf_context:cookie(Cookie, Value, Path, MinutesToLive).
-delete_cookie(Cookie) -> wf_context:delete_cookie(Cookie).
-headers() -> wf_context:headers().
-header(Header) -> wf_context:header(Header).
-header(Header, Value) -> wf_context:header(Header, Value).
-socket() -> wf_context:socket().
-peer_ip() -> wf_context:peer_ip().
-peer_ip(Proxies) -> wf_context:peer_ip(Proxies).
-peer_ip(Proxies,ForwardedHeader) -> wf_context:peer_ip(Proxies,ForwardedHeader).
-request_body() -> wf_context:request_body().
-page_module() -> wf_context:page_module().
-path_info() -> wf_context:path_info().
-status_code() -> wf_context:status_code().
-status_code(StatusCode) -> wf_context:status_code(StatusCode).
-content_type(ContentType) -> wf_context:content_type(ContentType).
+-ifndef(BRIDGE).
+-define(BRIDGE, n2o_cowboy).
+-endif.
+
+cookies(Req) -> ?BRIDGE:cookies(Req).
+cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie,Req).
+cookie(Cookie, Value, Req) -> ?BRIDGE:cookie(Cookie, Value, Req).
+cookie(Cookie, Value, Path, MinutesToLive, Req) -> ?BRIDGE:cookie(Cookie, Value, Path, MinutesToLive, Req).
+headers(Req) -> ?BRIDGE:headers(Req).
+peer(Req) -> ?BRIDGE:peer(Req).
+path(Req) -> ?BRIDGE:path(Req).
+request_body(Req) -> ?BRIDGE:request_body(Req).
+delete_cookie(Cookie,Req) -> ?BRIDGE:delete_cookie(Cookie,Req).
+response(Html,Req) -> ?BRIDGE:response(Html,Req).
+reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
 % Compatibility Obsolete API
 % ==========================

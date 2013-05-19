@@ -12,8 +12,8 @@ render_action(Record) ->
     PostbackScript = wf_event:generate_postback_script(Tag, Anchor, "document", undefined, api, Data),
     wf:f("document.~s = function anonymous(event) { ", [Name]) ++ PostbackScript ++ "};".
 
-event(#api_event{body=Record},Args) ->
+event(#api_event{body=Record},Args,Ctx) ->
     error_logger:info_msg("API CALL ~p",[Record]),
-    Module = wf:coalesce([Record#api.delegate, get(page_module)]),
+    Module = wf:coalesce([Record#api.delegate, Ctx#context.module]),
     Term = binary_to_term(list_to_binary(Args)),
     Module:api_event(Record#api.name, Record#api.tag, Term).

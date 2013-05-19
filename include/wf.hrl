@@ -1,55 +1,10 @@
 -ifndef(wf_inc).
 -define(wf_inc, ok).
 
-%%% CONTEXT %%%
-
-% Page Request Information.
--record(page_context, {
-    series_id,   % A unique ID assigned to the first request which stays constant on repeated requests.
-    module,      % The requested page module
-    path_info,   % Any extra info passed with the request
-    async_mode= comet % {poll, Interval} or comet
-}).
-
-% Event Information. A serialized version of this record
-% is sent by the browser when an event is called.
--record(event_context, {
-  module,     % The module that should handle the event
-  tag,        % An Erlang term that is passed along with the event
-  type,       % The type of event postback, comet, continuation, upload
-  anchor,     % The element id to which trigger and target are relative.
-  validation_group % The validation group that should be run when this event is fired.
-}).
-
 -record(api_event,{body=[]}).
-
-% Handlers Context-
-% Handlers are used to encapsulate Nitrogen's behaviour, and
-% to allow other frameworks to substitute their own behaviour.
-% These are set in wf_context:make_context/1
--record(handler_context, {
-    name,    % The name of a handler. See wf_context for a list.
-    module,     % A module that provides the logic for a handler. This can be substituted by your app.
-    config,     % The config of the handler, set at the beginning of each request.
-    state       % The state of the handler, serialized and maintained between postbacks in a series.
-}).
-
--record(context, {
-    % Transient Information
-    type,                % Either first_request, postback_request, or static_file
-    request_bridge,      % Holds the simple_bridge request object
-    response_bridge,     % Holds the simple_bridge response object
-    anchor=undefined,    % Holds the unique ID of the current anchor element.
-    data=[],             % Holds whatever the page_module:main/1 method returns: HTML, Elements, Binary, etc..
-    queued_actions=[],   % List of actions queued in main/1, event/2, or when rendering elements.
-    deferred_actions=[], % List of actions to be rendered after the primary actions
-
-    % These are all serialized, sent to the browser
-    % and de-serialized on each request.
-    page_context,
-    event_context,
-    handler_list
-}).
+-record(handler, {name, module, config, state}).
+-record(context, { handlers, actions, req, module, path, session}).
+-record(event_context, { module, tag, type, anchor, validation_group}).
 
 %%% LOGGING %%%
 -ifndef(debug_print).

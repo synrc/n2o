@@ -4,7 +4,7 @@
 -include_lib("n2o/include/wf.hrl").
 -export([init/2, finish/2, get_value/3, get_values/3, get_params/2]).
 
-init(_Config, _State) -> 
+init(State, Ctx) -> 
     % Get query params and post params
     % from the request bridge...
 %    RequestBridge = wf_context:request_bridge(),
@@ -16,11 +16,11 @@ init(_Config, _State) ->
 
     % Pre-normalize the parameters.
 %    Params1 = [{Path, Value} || {Path, Value} <- Params, Path /= undefined, Path /= []],
-    {ok, []}.
+    {ok, [], Ctx}.
 
-finish(_Config, _State) -> 
+finish(State, Ctx) -> 
     % Clear out the state.
-    {ok, []}.
+    {ok, [], Ctx}.
 
 %% Given a path, return the value that matches the path.
 get_value(Path, Config, State) ->
