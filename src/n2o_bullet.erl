@@ -30,18 +30,16 @@ stream({binary,Info}, Req, State) ->
     Linked = proplists:get_value(linked,Pro),
     Api = proplists:get_value(extras,Pro),
 %    error_logger:info_msg("Module  ~p~n",[Module]),
-    error_logger:info_msg("Extras  ~p~n",[Api]),
-    error_logger:info_msg("Pickled  ~p~n",[Pickled]),
-%    Decode = wf_event:jsonx_decoder(),
-%    Depickled = Decode(Pickled), 
+%    error_logger:info_msg("Extras  ~p~n",[Api]),
+%    error_logger:info_msg("Pickled  ~p~n",[Pickled]),
     Depickled = wf_pickle:depickle(Pickled),
     error_logger:info_msg("Depickled  ~p~n",[Depickled]),
     case Api of
-         <<"api">> -> {event_context,_,Args,_,_,_} = Depickled,
-                      action_api:event(Args,Linked,State);       
+         <<"api">> -> #ev{payload=Args} = Depickled,
+                      action_api:event(Args,Linked,State);
          _ ->  lists:map(fun({K,V})->put(K,V)end,Linked) end,
                 case Depickled of
-                     {event_context,Module,Parameter,_,_,_} -> Res = Module:event(Parameter);
+                     #ev{module=Module,payload=Parameter} -> Res = Module:event(Parameter);
                                                           _ -> error_logger:info_msg("Unknown Event") end,
                Render = wf_render_actions:render_actions(get(actions)),
     wf_context:clear_actions(),

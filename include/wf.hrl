@@ -1,10 +1,9 @@
 -ifndef(wf_inc).
 -define(wf_inc, ok).
 
--record(api_event,{body=[]}).
 -record(handler, {name, module, config, state}).
--record(context, { handlers, actions, req, module, path, session}).
--record(event_context, { module, tag, type, anchor, validation_group}).
+-record(context, {handlers, actions, req, module, path, session}).
+-record(ev,      {module, payload, trigger}).
 
 %%% LOGGING %%%
 -ifndef(debug_print).

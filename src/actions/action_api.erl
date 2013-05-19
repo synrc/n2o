@@ -7,12 +7,12 @@ render_action(Record) ->
 %    error_logger:info_msg("Render API"),
     Anchor = Record#api.anchor,
     Name = Record#api.name,
-    Tag = #api_event{body= Record},
+    Tag = #ev{payload=Record},
     Data = "Bert.encode(event)",
     PostbackScript = wf_event:generate_postback_script(Tag, Anchor, "document", undefined, api, Data),
     wf:f("document.~s = function anonymous(event) { ", [Name]) ++ PostbackScript ++ "};".
 
-event(#api_event{body=Record},Args,Ctx) ->
+event(#ev{payload=Record},Args,Ctx) ->
     error_logger:info_msg("API CALL ~p",[Record]),
     Module = wf:coalesce([Record#api.delegate, Ctx#context.module]),
     Term = binary_to_term(list_to_binary(Args)),

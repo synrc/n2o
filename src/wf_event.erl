@@ -11,24 +11,13 @@ generate_postback_script(Tag, Anchor, ValidationGroup, Delegate, ExtraParam, Dat
                                  "extras: Bert.binary('~s'),"
                                  "linked: ~s}));",[ValidationGroup,Pickled,ExtraParam,Data]).
 
-jsonx_encoder() -> jsonx:encoder([{event_context,record_info(fields,event_context)},
-                                  {api_event,record_info(fields,api_event)},
-                                  {api,record_info(fields,api)}
-                                 ]).
-
-jsonx_decoder() -> jsonx:decoder([{event_context,record_info(fields,event_context)},
-                                  {api_event,record_info(fields,api_event)},
-                                  {api,record_info(fields,api)}
-                                 ]).
-
 serialize_event_context(Tag, Anchor, ValidationGroup, Delegate) ->
 %    error_logger:info_msg("Serialized: ~p",[{Tag, Anchor, ValidationGroup, Delegate}]),
     PageModule = wf_context:page_module(),
     EventModule = wf:coalesce([Delegate, PageModule]),
-    Event = #event_context {
+    Event = #ev {
         module = EventModule,
-        tag = Tag,
-        anchor = Anchor,
-        validation_group = ValidationGroup
+        payload = Tag,
+        trigger = ValidationGroup
     },
     wf_pickle:pickle(Event).
