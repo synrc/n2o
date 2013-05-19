@@ -16,6 +16,7 @@ title() -> [ <<"N2O">> ].
 body() -> %% area of http handler
   [
     #button{id=replace,text= <<"Goto Index">>,postback=replace},
+    #panel { id=ok, text = io_lib:format("'/hello?x=' is ~p",[wf:qs(<<"x">>)]) }, #br{},
     #panel { id=n2ostatus }
  ].
 
