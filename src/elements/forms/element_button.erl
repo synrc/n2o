@@ -9,22 +9,17 @@ render_element(Record) ->
     ID = Record#button.id,
     Anchor = Record#button.anchor,
     case Record#button.postback of
-        undefined -> ignore;
-        Postback -> wf:wire(Anchor, #event { type=click, 
-                                             validation_group=ID, 
-                                             postback=Postback, 
-                                             source=Record#button.source,
-                                             delegate=Record#button.delegate }) end,
+         undefined -> skip;
+         Postback -> wf:wire(Anchor, #event { type=click, 
+                                              validation_group=ID,
+                                              postback=Postback,
+                                              source=Record#button.source }) end,
 
     case Record#button.click of
          undefined -> ignore;
          ClickActions -> wf:wire(Anchor, #event { type=click, actions=ClickActions }) end,
 
-    Value = ["  ", wf:html_encode(Record#button.text, Record#button.html_encode), "  "], 
-    wf_tags:emit_tag(input, [
-        {id, Record#button.id},
-        {type, button},
-        {class, [button, Record#button.class]},
-        {style, Record#button.style},
-        {value, Value}
-    ]).
+    List = [{<<"id">>, ID},{<<"type">>, <<"button">>}],
+    List1 = wf:append(List,<<"style">>, Record#button.style),
+    List2 = wf:append(List1,<<"value">>, Record#button.text),
+    wf_tags:emit_tag(<<"input">>, List2).

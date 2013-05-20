@@ -1,41 +1,17 @@
 -module(session_handler).
 -author('Rusty Klophaus').
--export([behaviour_info/1, get_value/1, get_value/2, set_value/2, clear_all/0, session_id/0]).
+-export([behaviour_info/1, get_value/1, get_value/2, set_value/2]).
+
+-define(SESSION, n2o_session_handler).
 
 behaviour_info(callbacks) -> [
-    {init, 2},      
+    {init, 2},
     {finish, 2},
-    {get_value, 4},       
-    {set_value, 4},
-    {clear_all, 2},
-    {session_id, 2}
+    {get_value, 2},
+    {set_value, 2}
 ];
 behaviour_info(_) -> undefined.
 
-% get(Key, DefaultValue, State, Key, DefaultValue) -> {ok, Value, NewState}.
-% Retrieve a value from the storage area.
-get_value(Key) ->
-    _Value = get_value(Key, undefined).
-
-% get(Key, DefaultValue, State, Key, DefaultValue) -> {ok, Value, NewState}.
-% Retrieve a value from the storage area.
-get_value(Key, DefaultValue) ->
-    {ok, Value} = wf_handler:call(session_handler, get_value, [Key, DefaultValue]),
-    Value.
-
-% set_value(Key, Value, State) -> {ok, NewState}.
-% Put a value into the storage area.
-set_value(Key, Value) ->
-    {ok, OldValue} = wf_handler:call(session_handler, set_value, [Key, Value]),
-    OldValue.
-
-% clear_all(State) -> {ok, NewState}.
-% Clear all values from the storage area.
-clear_all() ->
-    ok = wf_handler:call(session_handler, clear_all).
-
-% session_id() -> SessionId
-% Return the unique session id
-session_id() ->
-    {ok, SessionId} = wf_handler:call(session_handler, session_id),
-    SessionId.
+get_value(Key) -> ?SESSION:get_value(Key,undefined).
+get_value(Key, DefaultValue) -> ?SESSION:get_value(Key, DefaultValue).
+set_value(Key, Value) -> ?SESSION:set_value(Key, Value).

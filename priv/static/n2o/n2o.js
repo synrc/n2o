@@ -24,9 +24,12 @@ utf8.toByteArray = function(str) {
 function WebSocketsInit(){
 //    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
 //    if ("WebSocket" in window) {
-        ws = new $.bullet("ws://"+window.location.hostname+":"+window.location.port+"/websocket");
+        ws = new bullet("ws://"+window.location.hostname+
+                            ":"+window.location.port+
+                   "/websocket"+window.location.pathname+
+                                window.location.search);
         initialized = false;
-        ws.onopen = function() { if (!initialized) { ws.send("N2O"); initialized = true; } };
+        ws.onopen = function() { if (!initialized) { ws.send(['N2O',TransitionProcess]); initialized = true; } };
         ws.onmessage = function (evt) {
             msg = evt.data;
             var actions = msg;//Bert.decodebuf(msg);;

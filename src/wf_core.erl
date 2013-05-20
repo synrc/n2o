@@ -3,31 +3,29 @@
 -include_lib("n2o/include/wf.hrl").
 -compile (export_all).
 
-run() ->
-    call_init_on_handlers(),
-    Module = wf_context:page_module(),
+run(Req) ->
+    Ctx = wf_context:init_context(Req),
+    Ctx1 = fold(init,Ctx#context.handlers,Ctx),
+    wf_context:actions(Ctx1#context.actions),
+    Module = Ctx1#context.module,
+    Params = Ctx1#context.params,
+    wf_context:page_module(Module),
+    wf_context:params(Params),
+    wf_context:context(Ctx1),
+%    error_logger:info_msg("Module: ~p Params: ~p",[Module,wf:path(Req)]),
     Elements = Module:main(),
     Actions = wf_context:actions(),
-    {ok, Html, JavaScript} = render(Elements, Actions, undefined, undefined),
-    call_finish_on_handlers(),
-    BinaryPage = iolist_to_binary(replace_script([JavaScript], Html)),
-    ResponseBridge = wf_context:response_bridge(), 
-    Response = ResponseBridge:data(BinaryPage),
-    Response:build_response().
+    Pid = spawn(fun() -> transition(Actions) end),
+    PidString = io_lib:format("~p",[Pid]),
+    wf_context:script(["TransitionProcess = '", PidString, "'"]),
+    Html = wf_render_elements:render_elements(Elements),
+    Ctx2 = fold(finish,Ctx#context.handlers,Ctx1),
+    Req2 = wf:response(Html,Ctx2#context.req),
+    {ok, ReqFinal} = wf:reply(200, Req2).
 
-render(Elements, Actions, Trigger, Target) ->
-    {ok, Html}    = wf_render_elements:render_elements(Elements),
-    {ok, Script1} = wf_render_actions:render_actions(Actions, Trigger, Target),
-    QueuedActions = wf_context:actions(),
-    {ok, Script2} = wf_render_actions:render_actions(QueuedActions, Trigger, Target),
-    Script= [Script1, Script2],
-    {ok, Html, Script}.
+fold(Fun,Handlers,Ctx) ->
+    lists:foldl(fun(H,Ctx) ->
+        {ok,_,NewCtx} = (H#handler.module):Fun(H#handler.state,Ctx),
+        NewCtx end,Ctx,Handlers).
 
-call_init_on_handlers() -> [wf_handler:call(X#handler_context.name, init) || X <- wf_context:handlers()].
-call_finish_on_handlers() -> [wf_handler:call(X#handler_context.name, finish) || X <- wf_context:handlers()].
-
-replace_script(_,Html) when ?IS_STRING(Html) -> Html;
-replace_script(Script, [script|T]) -> [Script|T];
-replace_script(Script, [mobile_script|T]) -> [wf:html_encode(lists:flatten(Script))|T];
-replace_script(Script, [H|T]) -> [replace_script(Script, H)|replace_script(Script, T)];
-replace_script(_, Other) -> Other.
+transition(Actions) -> receive {'N2O',Pid} -> Pid ! Actions end.

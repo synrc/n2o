@@ -16,7 +16,7 @@ render_element(Record) ->
     end,
 
     Body = [
-        wf:html_encode(Record#link.text, Record#link.html_encode),
+        Record#link.text,
         Record#link.body
     ],
 
@@ -26,18 +26,14 @@ render_element(Record) ->
     %% jquery mobile use its default setting. Anything other than a boolean
     %% will just treat it as blank
 
-    DataFields1 = add_field(Record#link.mobile_target==false,{ajax,false},Record#link.data_fields),
-    DataFields2 = add_field(Record#link.mobile_dialog==true,{rel,dialog},DataFields1),
-
-    wf_tags:emit_tag(a, Body, [
-        {id, Record#link.id},
-        {href, wf:to_list(Record#link.url)},
-        {class, [link, Record#link.class]},
-        {target, Target},
-        {style, Record#link.style},
-        {title, wf:html_encode(Record#link.title, Record#link.html_encode)},
-        {data_fields, DataFields2}
-    ]).
+%    DataFields1 = add_field(Record#link.mobile_target==false,{<<"ajax">>,false},Record#link.data_fields),
+%    DataFields2 = add_field(Record#link.mobile_dialog==true,{<<"rel">>,dialog},DataFields1),
+    List = [{<<"id">>, Record#link.id},{<<"href">>, Record#link.url}],
+    List1 = wf:append(List,<<"class">>, Record#link.class),
+    List2 = wf:append(List1,<<"target">>, Target),
+    List3 = wf:append(List2,<<"style">>, Record#link.style),
+    List4 = wf:append(List3,<<"title">>, Record#link.title),
+    wf_tags:emit_tag(<<"a">>, Body, List4).
 
 target(New) ->
     case New of

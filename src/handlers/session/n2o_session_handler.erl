@@ -2,44 +2,67 @@
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -behaviour(session_handler).
--export([init/2, finish/2, get_value/4, set_value/4, clear_all/2, session_id/2]).
+-export([init/2, finish/2, get_value/2, set_value/2]).
+-compile(export_all).
 -record(state, {unique, node}).
 
-init(_Config, _State) -> 
-    % Get the session cookie and node...
-    Cookie = wf:cookie(get_cookie_name()),
-    State = case wf:depickle(Cookie) of
-        undefined -> new_state();
-        Other -> Other
-    end,
-    {ok, State}.
+init2(State, Req) -> {ok, State, Req}.
 
-finish(_Config, State) -> 
-    % Drop the session cookie...
-    Timeout = wf:config_default(session_timeout, 20),
-    wf:cookie(get_cookie_name(), wf:pickle(State), "/", Timeout),
-    {ok, []}.
+init(State, Ctx) -> 
+    C = wf:cookie(session_cookie_name(),Ctx#context.req),
+    SessionId = case C of
+                     undefined -> undefined;
+                     A when is_list(A) -> list_to_binary(A);
+                     _Else -> _Else end,
+    TTL = 24 * 60 * 60, % 1 day TTL
+    SessionCookie = case lookup_ets({SessionId,<<"auth">>}) of 
+                 undefined -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
+                              ets:insert(cookies,Cookie),
+%                              error_logger:info_msg("Cookie New: ~p",[Cookie]),
+                              Cookie;
+                 {{Session,Key},Path,Issued,TTL,Status} -> case expired(Issued,TTL) of
+                     false -> Cookie = {{Session,Key},Path,Issued,TTL,Status},
+%                              error_logger:info_msg("Cookie Same: ~p",[Cookie]),
+                              Cookie;
+                      true -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
+                              ets:insert(cookies,Cookie), 
+%                              error_logger:info_msg("Cookie Expired: ~p",[Cookie]),
+                              Cookie end;
+                 _ -> error_logger:info_msg("Cookie Error"), skip
+                      end,
+%    error_logger:info_msg("State: ~p",[SessionCookie]),
+    {ok, State, Ctx#context{session=SessionCookie}}.
 
-get_value(Key, DefaultValue, Config, State) -> 
-    Value = get(Key),
-    {ok, Value, State}.
+expired(Issued,TTL) ->
+    false.
 
-set_value(Key, Value, Config, State) -> 
-    OldValue = "implement_me",
-    put(Key,Value),
-    {ok, OldValue, State}.
+finish(State, Ctx) -> 
+%    error_logger:info_msg("Finish Cookie Set ~p",[{_Config,State}]),
+    NewReq = case Ctx#context.session of
+         {{Session,Key},Path,Issued,TTL,Status} -> 
+%     error_logger:info_msg("Finish Cookie Set ~p",[{{Session,Key},Path,Issued,TTL,Status}]),
+              wf:cookie(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
+%              put(req,New),
+%              New;
+%               skip;
+         _ -> Ctx#context.req end,
+    {ok, [], Ctx#context{req=NewReq}}.
 
-clear_all(Config, State) -> 
-    {ok, State}.
+lookup_ets(Key) ->
+    Res = ets:lookup(cookies,Key),
+%    error_logger:info_msg("Lookup ETS: ~p",[{Res,Key}]),
+    case Res of 
+         [] -> undefined;
+         [Value] -> Value;
+         Values -> Values end.
 
-session_id(_Config, State) ->
-    {ok, SessionId} = wf:hex_encode (State#state.unique),
-    {ok, SessionId, State}.
-
-%%% PRIVATE FUNCTIONS
-
-get_cookie_name() -> "n2o-cookie".
-
-new_state() ->
-    Unique = erlang:md5(term_to_binary({now(), erlang:make_ref()})),
-    #state { unique=Unique }.
+new_cookie_value() -> base64:encode(erlang:md5(term_to_binary({now(), make_ref()}))).
+new_state() -> #state{unique=new_cookie_value()}.
+session_cookie_name() -> <<"n2o-sid">>.
+get_value(Key, DefaultValue) -> 
+    Res = case lookup_ets({wf:cookie(session_cookie_name()),Key}) of
+               undefined -> DefaultValue;
+               {_,Value} -> Value end,
+%    error_logger:info_msg("Session Lookup Key ~p Value ~p",[Key,Res]),
+    Res.
+set_value(Key, Value) -> ets:insert(cookies,{{wf:cookie(session_cookie_name()),Key},Value}), Value.

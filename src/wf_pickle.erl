@@ -4,9 +4,14 @@
 -include_lib("n2o/include/wf.hrl").
 
 pickle(Data) ->
+%    error_logger:info_msg("Pickling: ~p",[Data]),
     B = term_to_binary({Data, now()}, [compressed]),
-    <<Signature:4/binary, _/binary>> = erlang:md5([B, signkey()]),
-    _PickledData = modified_base64_encode(<<Signature/binary, B/binary>>).
+%    B = term_to_binary({Data, now()}, [compressed]),
+    <<Signature:4/binary, _/binary>> = B, %erlang:md5([B, signkey()]),
+    _PickledData = base64:encode(<<Signature/binary, B/binary>>),
+%    _PickledData = <<Signature/binary, B/binary>>,
+%    error_logger:info_msg("Pickled: ~p",[now()]),
+    _PickledData.
 
 depickle(PickledData) ->
     try
@@ -48,29 +53,10 @@ signkey() ->
 
 inner_depickle(PickledData) ->
     try
-	<<S:4/binary, B/binary>> = modified_base64_decode(wf:to_binary(PickledData)),
-	<<S:4/binary, _/binary>> = erlang:md5([B, signkey()]),
+	<<S:4/binary, B/binary>> = base64:decode(wf:to_binary(PickledData)),
+%	<<S:4/binary, B/binary>> = wf:to_binary(PickledData),
+	<<S:4/binary, _/binary>> = B, %erlang:md5([B, signkey()]),
 	{_Data, _PickleTime} = binary_to_term(B)
     catch _Type : _Message ->
 	undefined
     end.
-
-% modified_base64_encode/1 
-%	- Replace '+' and '/' with '-' and '_', respectively. 
-% - Strip '='.
-modified_base64_encode(B) -> m_b64_e(base64:encode(B), <<>>).
-m_b64_e(<<>>, Acc) -> Acc;
-m_b64_e(<<$+, Rest/binary>>, Acc) -> m_b64_e(Rest, <<Acc/binary, $->>);
-m_b64_e(<<$/, Rest/binary>>, Acc) -> m_b64_e(Rest, <<Acc/binary, $_>>);
-m_b64_e(<<$=, Rest/binary>>, Acc) -> m_b64_e(Rest, Acc);
-m_b64_e(<<H,  Rest/binary>>, Acc) -> m_b64_e(Rest, <<Acc/binary, H>>).
-
-% modified_base64_decode/1 
-% - Replace '-' and '_' with '+' and '/', respectively. 
-% - Pad with '=' to a multiple of 4 chars.
-modified_base64_decode(B) -> base64:decode(m_b64_d(B, <<>>)).
-m_b64_d(<<>>, Acc) when size(Acc) rem 4 == 0 -> Acc;
-m_b64_d(<<>>, Acc) when size(Acc) rem 4 /= 0 -> m_b64_d(<<>>, <<Acc/binary, $=>>);
-m_b64_d(<<$-, Rest/binary>>, Acc) -> m_b64_d(Rest, <<Acc/binary, $+>>);
-m_b64_d(<<$_, Rest/binary>>, Acc) -> m_b64_d(Rest, <<Acc/binary, $/>>);
-m_b64_d(<<H,  Rest/binary>>, Acc) -> m_b64_d(Rest, <<Acc/binary, H>>).

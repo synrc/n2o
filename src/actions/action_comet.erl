@@ -8,7 +8,7 @@ comet(Fun) ->
     {ok, Pid}.
 
 spawn_closure(Fun) ->
-    wf_context:init_context(undefined,undefined),
+    wf_context:init_context([]),
     Fun().
 
 flush(Pool) ->

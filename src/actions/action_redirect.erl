@@ -8,16 +8,10 @@ render_action(Record=#redirect{nodrop=false}) ->
 
 
 render_action(Record=#redirect{nodrop=true}) ->
-    {ok, Html} = wf_render_elements:render_elements(#dtl{file=Record#redirect.url}),
+    Html = wf_render_elements:render_elements(#dtl{file=Record#redirect.url,bindings=[{hello,"Hello"}]}),
     Re = re:replace(lists:flatten(Html),"\n"," ",[global,{return,list}]),
     error_logger:info_msg("Html: ~p",[Re]),
     wf:f("$('body').html('~s');", [Re]).
-
-%render_action_ori(Record=#redirect{nodrop=true}) ->
-%    {ok, Html} = wf_render_elements:render_elements(#template{file=code:priv_dir(web) ++ "/templates/" ++ Record#redirect.url}),
-%    Re = re:replace(lists:flatten(Html),"\n"," ",[global,{return,list}]),
-%    error_logger:info_msg("Html: ~p",[Re]),
-%    wf:f("$('body').html('~s');", [Re]).
 
 redirect(Url) -> 
     wf:wire(#redirect { url=Url }),
@@ -28,7 +22,7 @@ redirect_nodrop(Page) ->
 
 redirect_to_login(LoginUrl) ->
     % Assemble the original
-    Request = wf_context:request_bridge(),
+    Request = get(req),
     OriginalURI = Request:uri(),
     PickledURI = wf:pickle(OriginalURI),
     redirect(LoginUrl ++ "?x=" ++ wf:to_list(PickledURI)).

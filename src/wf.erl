@@ -34,13 +34,12 @@ flush(Key) -> action_comet:flush(Key).
 
 % Parse URL and context parameters wf:q
 
-q(Key) -> get(Key).
-qs(Key) -> query_handler:get_values(Key).
-mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
-mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
-q_pl(KeyList) when is_list(KeyList) -> [{K,q(K)} || K <- KeyList].
-qs_pl(KeyList) when is_list(KeyList) -> [{K,qs(K)} || K <- KeyList].
-params() -> query_handler:get_params().
+%q(Key) -> get(Key).
+%mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
+%mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
+%q_pl(KeyList) when is_list(KeyList) -> [{K,q(K)} || K <- KeyList].
+%qs_pl(KeyList) when is_list(KeyList) -> [{K,qs(K)} || K <- KeyList].
+%params() -> query_handler:get_params().
 
 % Redirect and purge connection wf:redirect
 
@@ -59,7 +58,7 @@ reg(Pool) ->
 
 % Pickling wf:pickle
 
-pickle(Data) -> _SerializedData = wf_pickle:pickle(Data).
+pickle(Data) -> wf_pickle:pickle(Data).
 depickle(SerializedData) -> wf_pickle:depickle(SerializedData).
 depickle(SerializedData, TTLSeconds) -> wf_pickle:depickle(SerializedData, TTLSeconds).
 
@@ -80,25 +79,25 @@ clear_roles() -> role_handler:clear_all().
 
 % Bridge Information
 
-cookies() -> wf_context:cookies().
-cookie(Cookie) -> wf_context:cookie(Cookie).
-cookie_default(Cookie,DefaultValue) -> wf_context:cookie_default(Cookie,DefaultValue).
-cookie(Cookie, Value) -> wf_context:cookie(Cookie, Value).
-cookie(Cookie, Value, Path, MinutesToLive) -> wf_context:cookie(Cookie, Value, Path, MinutesToLive).
-delete_cookie(Cookie) -> wf_context:delete_cookie(Cookie).
-headers() -> wf_context:headers().
-header(Header) -> wf_context:header(Header).
-header(Header, Value) -> wf_context:header(Header, Value).
-socket() -> wf_context:socket().
-peer_ip() -> wf_context:peer_ip().
-peer_ip(Proxies) -> wf_context:peer_ip(Proxies).
-peer_ip(Proxies,ForwardedHeader) -> wf_context:peer_ip(Proxies,ForwardedHeader).
-request_body() -> wf_context:request_body().
-page_module() -> wf_context:page_module().
-path_info() -> wf_context:path_info().
-status_code() -> wf_context:status_code().
-status_code(StatusCode) -> wf_context:status_code(StatusCode).
-content_type(ContentType) -> wf_context:content_type(ContentType).
+-ifndef(BRIDGE).
+-define(BRIDGE, n2o_cowboy).
+-endif.
+
+q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
+qs(Key) -> proplists:get_value(Key,wf_context:params()).
+params(Req) -> ?BRIDGE:params(Req).
+cookies(Req) -> ?BRIDGE:cookies(Req).
+cookie(Cookie) -> ?BRIDGE:cookie(Cookie,(wf_context:context())#context.req).
+cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie,Req).
+cookie(Cookie, Value, Req) -> ?BRIDGE:cookie(Cookie, Value, Req).
+cookie(Cookie, Value, Path, MinutesToLive, Req) -> ?BRIDGE:cookie(Cookie, Value, Path, MinutesToLive, Req).
+headers(Req) -> ?BRIDGE:headers(Req).
+peer(Req) -> ?BRIDGE:peer(Req).
+path(Req) -> ?BRIDGE:path(Req).
+request_body(Req) -> ?BRIDGE:request_body(Req).
+delete_cookie(Cookie,Req) -> ?BRIDGE:delete_cookie(Cookie,Req).
+response(Html,Req) -> ?BRIDGE:response(Html,Req).
+reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
 % Compatibility Obsolete API
 % ==========================
@@ -136,11 +135,10 @@ to_js_id(Path) -> _String = wf_render_actions:to_js_id(Path).
 
 % Q: Why we need state if already has session process dictionary ?
 
-state(Key) -> state_handler:get_state(Key).
-state_default(Key, DefaultValue) -> state_handler:get_state(Key, DefaultValue).
-state(Key, Value) -> state_handler:set_state(Key, Value).
-clear_state(Key) -> state_handler:clear(Key).
-clear_state() -> state_handler:clear_all().
+state(Key) -> get(Key).
+state_default(Key, DefaultValue) -> case get(Key) of undefined -> DefaultValue; A -> A end.
+state(Key, Value) -> put(Key,Value).
+clear_state(Key) -> put(Key,undefined).
 
 % Q: Do we really need continuations ? Who using it ?
 
@@ -153,7 +151,7 @@ temp_id() -> _String = wf_render_elements:temp_id().
 normalize_id(Path) -> _String = wf_render_elements:normalize_id(Path).
 send_global(Pool, Message) -> ok = action_comet:send_global(Pool, Message).
 comet(Function, Pool) ->  action_comet:comet(Function).
-logout() -> clear_user(), clear_roles(), clear_state(), clear_session().
+logout() -> clear_user(), clear_roles(), clear_session().
 flash(Elements) -> element_flash:add_flash(Elements).
 flash(FlashID, Elements) -> element_flash:add_flash(FlashID, Elements).
 async_mode() -> wf_context:async_mode().
@@ -166,3 +164,5 @@ debug() -> wf_utils:debug().
 break() -> wf_utils:break().
 assert(true, _) -> ok;
 assert(false, Error) -> erlang:error(Error).
+
+append(List, Key, Value) -> case Value of undefined -> List; A -> [{Key, Value}|List] end.

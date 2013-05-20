@@ -1,9 +1,9 @@
--module(action_event).
+-module(action_control).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-render_action(#event{ 
+render_action(#control{ 
     postback=Postback, actions=Actions, source=Source,
     anchor=Anchor, trigger=Trigger, target=Target, validation_group=ValidationGroup,
     type=Type, keycode=KeyCode, shift_key=ShiftKey, delay=Delay, delegate=Delegate,
@@ -13,7 +13,7 @@ render_action(#event{
                      "'), utf8.toByteArray($('#"++atom_to_list(Src)++"').val()))" || Src <- Source ],",") ++ "]",
 
     ValidationGroup1 = wf:coalesce([ValidationGroup, Trigger]),
-    PostbackScript = wf_event:generate_postback_script(Postback, Anchor, ValidationGroup1, Delegate, postback, Data),
+    PostbackScript = wf_event:generate_postback_script(Postback, Anchor, ValidationGroup1, Delegate, control, Data),
     WireAction = #wire { trigger=Trigger, target=Target, actions=Actions },
 
     [

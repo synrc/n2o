@@ -6,17 +6,11 @@
 reflect() -> record_info(fields, dtl).
 
 render_element(Record) ->
-    File = wf:to_list(Record#dtl.file),
-    render_template(code:priv_dir(web) ++ "/templates/" ++ File, File, Record#dtl.bindings).
-
-render_template(FullPathToFile,ViewFile,Data) ->
-    Pieces = string:tokens(ViewFile,"/"),
-    Name = string:join(Pieces,"_"),
-    error_logger:info_msg("File: ~p", Name),
-    Name1 = filename:basename(Name,".html"),
-    ModName = list_to_atom(Name1 ++ "_view"),
-    error_logger:info_msg("Module: ~p", ModName),
-    erlydtl:compile(FullPathToFile,ModName),
-    {ok,Render} = ModName:render(Data),
-    error_logger:info_msg("DTL: ~p", Render),
-    iolist_to_binary(Render).
+    ModName = list_to_atom(Record#dtl.file ++ "_view"),
+%    M = 
+%     case code:ensure_loaded(ModName) of {module,Module} -> Module; _ -> 
+    erlydtl:compile(code:lib_dir(Record#dtl.app) ++ "/" ++ Record#dtl.folder ++ "/" ++ Record#dtl.file ++ ".html",ModName),
+%    ModName end,
+    M = ModName,
+    {ok,R} = M:render(Record#dtl.bindings ++ [{script,wf_context:script()}]),
+    R.

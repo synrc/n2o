@@ -11,6 +11,7 @@ websocket_init(_Any, Req, _Opt) ->
     RequestBridge = simple_bridge:make_request(cowboy_request_bridge, Req),    
     ResponseBridge = simple_bridge:make_response(cowboy_response_bridge, RequestBridge),
     wf_context:init_context(RequestBridge,ResponseBridge),
+    wf:log("~p",[RequestBridge:peer_ip()]),
     wf_core:call_init_on_handlers(),
     {ok, Req, undefined_state}.
 websocket_handle({text,Data}, Req, State) ->
