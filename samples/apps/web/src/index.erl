@@ -19,13 +19,13 @@ body() -> %% area of http handler
     wf:wire(#api{name=apiOne,tag=d1}),
   [
     #span { text= <<"Your chatroom name: ">> }, 
-    #textbox { id=userName, text= <<"Anonymous">> }, #button{text="Logout",postback=logout}, #br{},
+    #span { id=userName, text= wf:user() }, #br{}, #button{text="Logout",postback=logout}, #br{},
     #panel { id=chatHistory },
     #button{id=but,text= <<"Click Me!">>,postback=change_me},
     #button{id=replace,text= <<"Replace Body">>,postback=replace},
     "<a onclick=\"document.apiOne('Hello')\" name='1'>API</a>",
     #textbox { id=message },
-    #button { id=sendButton, text= <<"Chat">>, postback={chat,Pid}, source=[userName,message] },
+    #button { id=sendButton, text= <<"Chat">>, postback={chat,Pid}, source=[message] },
     #panel { id=n2ostatus }
  ].
 
@@ -57,10 +57,10 @@ event(logout) -> wf:user(undefined), wf:redirect("login");
 
 event({chat,Pid}) -> %% area of websocket handler
     error_logger:info_msg("Chat Pid: ~p",[Pid]),
-    Username = wf:q(userName),
+    Username = wf:user(),
     Message = wf:q(message),
-    Terms = [ #span { text= <<"Message sent">> }, #br{} ],
-    wf:insert_bottom(chatHistory, Terms),
+%    Terms = [ #span { text= <<"Message sent">> }, #br{} ],
+%    wf:insert_bottom(chatHistory, Terms),
     wf:wire("$('#message').focus(); $('#message').select(); "),
     wf:reg(room),
     Pid ! {message, Username, Message};
