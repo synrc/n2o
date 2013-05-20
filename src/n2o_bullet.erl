@@ -28,19 +28,16 @@ stream({binary,Info}, Req, State) ->
     Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
-    Api = proplists:get_value(extras,Pro),
-%    error_logger:info_msg("Module  ~p~n",[Module]),
-%    error_logger:info_msg("Extras  ~p~n",[Api]),
-%    error_logger:info_msg("Pickled  ~p~n",[Pickled]),
     Depickled = wf_pickle:depickle(Pickled),
-    error_logger:info_msg("Depickled  ~p~n",[Depickled]),
-    case Api of
-         <<"api">> -> #ev{payload=Args} = Depickled,
-                      action_api:event(Args,Linked,State);
-                 _ -> lists:map(fun({K,V})-> put(K,V) end,Linked) end,
     case Depickled of
-        #ev{module=Module,payload=Parameter} -> Module:event(Parameter);
-                                           _ -> error_logger:info_msg("Unknown Event") end,
+         #ev{type=EvType,module=Module,payload=Parameter,trigger=Trigger} ->
+            case EvType of 
+                 api      -> Module:api_event(Parameter,Linked,State);
+                 postback -> lists:map(fun({K,V})-> put(K,V) end,Linked),
+                             Module:event(Parameter);
+                 control  -> Module:control_event(Trigger,Parameter)
+            end;
+          _ -> error_logger:info_msg("Unknown Event") end,
     Render = wf_render_actions:render_actions(get(actions)),
     wf_context:clear_actions(),
     {reply,Render, Req, State};

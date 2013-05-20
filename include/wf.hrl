@@ -3,7 +3,7 @@
 
 -record(handler, {name, module, config, state}).
 -record(context, {handlers, actions, req, module, path, session, params}).
--record(ev,      {module, payload, trigger}).
+-record(ev,      {module, payload, trigger, type}).
 
 %%% LOGGING %%%
 -ifndef(debug_print).
@@ -129,6 +129,7 @@
 -record(set, {?ACTION_BASE(action_set), value}).
 -record(redirect, {?ACTION_BASE(action_redirect), url, nodrop=false}).
 -record(event, {?ACTION_BASE(action_event), type=default, keycode=undefined, shift_key=false, delay=0, postback, validation_group, delegate, extra_param}).
+-record(control, {?ACTION_BASE(action_control), type=default, keycode=undefined, shift_key=false, delay=0, postback, validation_group, delegate, extra_param}).
 %% we want validation assignments to happen last, so we use AV_BASE and set deferral to zero first
 -record(validate, {?ACTION_BASE(action_validate), on=submit, success_text=" ", group, validators, attach_to }).
 -record(validation_error, {?ACTION_BASE(action_validation_error), text="" }).
