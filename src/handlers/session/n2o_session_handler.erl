@@ -63,6 +63,6 @@ get_value(Key, DefaultValue) ->
     Res = case lookup_ets({wf:cookie(session_cookie_name()),Key}) of
                undefined -> DefaultValue;
                {_,Value} -> Value end,
-    error_logger:info_msg("Session Lookup Key ~p Value ~p",[Key,Res]),
+%    error_logger:info_msg("Session Lookup Key ~p Value ~p",[Key,Res]),
     Res.
 set_value(Key, Value) -> ets:insert(cookies,{{wf:cookie(session_cookie_name()),Key},Value}), Value.
