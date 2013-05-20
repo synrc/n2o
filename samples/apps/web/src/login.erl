@@ -12,7 +12,7 @@ main() ->
 body() -> [ #span{id=display}, #br{},
             #span{text="Login: "}, #textbox{id=user}, #br{},
             #span{text="Password: "}, #password{id=pass},
-            #button{id=login,text="Login",postback=login,source=[user,pass]} ].
+            #button{text="Login",postback=login,source=[user,pass]} ].
 
 event(init) -> [];
 

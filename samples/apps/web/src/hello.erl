@@ -2,11 +2,12 @@
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 
-%main() -> [ <<"N2O">> ].
+main2() -> [ <<"N2O">> ].
 
 main() ->
 %    Title = "Title",
 %    Body = "Body",
+
     Title = wf_render_elements:render_elements(title()),
     Body = wf_render_elements:render_elements(body()),
     [ #dtl{file = "hello", bindings=[{title,Title},{hello,Body}]} ].
