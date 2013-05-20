@@ -7,9 +7,9 @@ reflect() -> record_info(fields, dtl).
 
 render_element(Record) ->
     ModName = list_to_atom(Record#dtl.file ++ "_view"),
-    M = case code:ensure_loaded(ModName) of
-            {module,Module} -> Module;
-             _ -> erlydtl:compile(code:lib_dir(Record#dtl.app) ++ "/" ++ Record#dtl.folder 
-                                  ++ "/" ++ Record#dtl.file ++ ".html",ModName), ModName end,
-     {ok,R} = M:render(Record#dtl.bindings ++ [{script,wf_context:script()}]),
+%    M = case code:ensure_loaded(ModName) of {module,Module} -> Module; _ -> 
+    erlydtl:compile(code:lib_dir(Record#dtl.app) ++ "/" ++ Record#dtl.folder ++ "/" ++ Record#dtl.file ++ ".html",ModName), ModName 
+%    end
+    ,
+    {ok,R} = M:render(Record#dtl.bindings ++ [{script,wf_context:script()}]),
     R.
