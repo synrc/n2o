@@ -12,10 +12,9 @@ render_action(#event{
     Data = "[" ++ string:join([ "Bert.tuple(Bert.atom('"++atom_to_list(Src)++
                      "'), utf8.toByteArray($('#"++atom_to_list(Src)++"').val()))" || Src <- Source ],",") ++ "]",
 
-    ValidationGroup1 = wf:coalesce([ValidationGroup, Trigger]),
-    PostbackScript = wf_event:generate_postback_script(Postback, Anchor, ValidationGroup1, Delegate, postback, Data),
-    WireAction = #wire { trigger=Trigger, target=Target, actions=Actions },
+    Control = wf:coalesce([ValidationGroup, Trigger]),
+    PostbackScript = wf_event:generate_postback_script(Postback, Anchor, Control, Delegate, event, Data),
 
     [
-        wf:f("$('#~s').bind('~s',function anonymous(event) { ", [ValidationGroup1,Type]), PostbackScript, "});"
+        wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Control,Type]), PostbackScript, "});"
     ].

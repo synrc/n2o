@@ -30,14 +30,14 @@ stream({binary,Info}, Req, State) ->
     Linked = proplists:get_value(linked,Pro),
     Depickled = wf_pickle:depickle(Pickled),
     case Depickled of
-         #ev{type=EvType,module=Module,payload=Parameter,trigger=Trigger} ->
-            case EvType of 
-                 api      -> Module:api_event(Parameter,Linked,State);
-                 postback -> lists:map(fun({K,V})-> put(K,V) end,Linked),
-                             Module:event(Parameter);
-                 control  -> Module:control_event(Trigger,Parameter)
-            end;
-          _ -> error_logger:info_msg("Unknown Event") end,
+         #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
+            case Function of 
+                 control_event   -> Module:Function(Trigger,Parameter);
+                 api_event       -> Module:Function(Parameter,Linked,State);
+                 event           -> lists:map(fun({K,V})-> put(K,V) end,Linked),
+                                    Module:Function(Parameter);
+                 UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
+          _ -> error_logger:error_msg("N2O allows only #ev{} events") end,
     Render = wf_render_actions:render_actions(get(actions)),
     wf_context:clear_actions(),
     {reply,Render, Req, State};
@@ -53,7 +53,7 @@ info(Pro, Req, State) ->
                     Module = State#context.module, Module:event(init),
                     Pid = list_to_pid(binary_to_list(Rest)),
                     X = Pid ! {'N2O',self()},
-                    error_logger:info_msg("Transition Actions: ~p",[X]),
+%                    error_logger:info_msg("Transition Actions: ~p",[X]),
                     InitActions = receive Actions -> % cache actions for back/next buttons where no TransProc exists
 %                                          case ets:lookup(cookies,Module) of
 %                                               [{Module,A}] -> A;
@@ -71,5 +71,5 @@ info(Pro, Req, State) ->
     {reply, Res, Req, State}.
 
 terminate(_Req, _State) ->
-    io:format("bullet terminate~n"),
+    error_logger:info_msg("Bullet Terminated~n"),
     ok.
