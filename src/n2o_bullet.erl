@@ -32,7 +32,8 @@ stream({binary,Info}, Req, State) ->
     case Depickled of
          #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
             case Function of 
-                 control_event   -> Module:Function(Trigger,Parameter);
+                 control_event   -> lists:map(fun({K,V})-> put(K,V) end,Linked),
+                                    Module:Function(Trigger, Parameter);
                  api_event       -> Module:Function(Parameter,Linked,State);
                  event           -> lists:map(fun({K,V})-> put(K,V) end,Linked),
                                     Module:Function(Parameter);

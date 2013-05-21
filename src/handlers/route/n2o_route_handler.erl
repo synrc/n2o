@@ -14,10 +14,12 @@ init(State, Ctx) ->
 route(<<"/">>) -> {index, []};
 route(<<"/index">>) -> {index, []};
 route(<<"/hello">>) -> {hello, []};
+route(<<"/tblist">>) -> {tblist, []};
 route(<<"/websocket/">>) -> {index, []};
 route(<<"/websocket/index">>) -> {index, []};
 route(<<"/websocket/login">>) -> {login, []};
 route(<<"/websocket/hello">>) -> {hello, []};
+route(<<"/websocket/tblist">>) -> {tblist, []};
 route(<<"/favicon.ico">>) -> {static_file, []};
 route(<<"/login">>) -> {login, []};
 route(_) -> {index, []}.
