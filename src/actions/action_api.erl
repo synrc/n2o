@@ -9,6 +9,6 @@ render_action(Record) ->
     Name = Record#api.name,
     Tag = #ev{payload=Record},
     Data = "Bert.encode(event)",
-    PostbackScript = wf_event:generate_postback_script(Tag, Anchor, "document", undefined, api, Data),
+    PostbackScript = wf_event:generate_postback_script(Tag, Anchor, "document", undefined, api_event, Data),
     wf:f("document.~s = function anonymous(event) { ", [Name]) ++ PostbackScript ++ "};".
 

@@ -3,7 +3,7 @@
 
 -record(handler, {name, module, config, state}).
 -record(context, {handlers, actions, req, module, path, session, params}).
--record(ev,      {module, payload, trigger, type}).
+-record(ev,      {module, payload, trigger, name :: api_event | control_event | event | atom() }).
 
 %%% LOGGING %%%
 -ifndef(debug_print).
