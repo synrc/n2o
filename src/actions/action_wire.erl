@@ -8,6 +8,7 @@
 render_action(#wire{actions=Api=#api{}}) -> action_api:render_action(Api);
 render_action(#wire{actions=Redirect=#redirect{}}) -> action_redirect:render_action(Redirect);
 render_action(#wire{actions=Event=#event{}}) -> action_event:render_action(Event);
+render_action(#wire{actions=Event=#control{}}) -> action_control:render_action(Event);
 render_action(#wire{actions=Script=#script{}}) -> action_script:render_action(Script);
 render_action(#wire{actions=Actions}) -> Actions;
 render_action(S) when is_list(S) -> S;
