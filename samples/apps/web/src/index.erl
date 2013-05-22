@@ -4,13 +4,14 @@
 
 main() -> 
     case wf:user() of
-         undefined -> timer:sleep(500), wf:redirect("login");
+         undefined -> wf:redirect("login");
          _ -> 
 %    Title = "Title",
 %    Body = "Body",
-    Title = wf_render_elements:render_elements(title()),
-    Body = wf_render_elements:render_elements(body()),
-    [ #dtl{file = "index", bindings=[{title,Title},{body,Body}]} ] end.
+             Title = wf_core:render(title()),
+             Body = wf_core:render(body()),
+           [ #dtl{file = "index", bindings=[{title,Title},{body,Body}]} ]
+     end.
 
 title() -> [ <<"N2O">> ].
 
@@ -19,7 +20,7 @@ body() -> %% area of http handler
     wf:wire(#api{name=apiOne,tag=d1}),
   [
     #span { text= <<"Your chatroom name: ">> }, 
-    #span { id=userName, text= wf:user() }, #br{}, #button{text="Logout",postback=logout}, #br{},
+    #span { id=userName, text= wf:user() }, #br{}, #button{id=logout,text="Logout",postback=logout}, #br{},
     #panel { id=chatHistory },
     #button{id=but,text= <<"Click Me!">>,postback=change_me},
     #button{id=replace,text= <<"Replace Body">>,postback=replace},
@@ -34,7 +35,7 @@ api_event(Name,Tag,Term) -> error_logger:info_msg("Name ~p, Tag ~p, Term ~p",[Na
 
 event(init) ->
   User = wf:user(),
-   error_logger:info_msg("User: ~p",[User]),
+%   error_logger:info_msg("User: ~p",[User]),
   [ begin
           Terms = [ #span { text= User }, ": ",
                       #span { text=integer_to_list(N) }, #br{} ],

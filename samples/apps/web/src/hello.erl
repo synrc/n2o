@@ -8,8 +8,10 @@ main() ->
 %    Title = "Title",
 %    Body = "Body",
 
-    Title = wf_render_elements:render_elements(title()),
-    Body = wf_render_elements:render_elements(body()),
+%    Title = wf_render_elements:render_elements(title()),
+%    Body = wf_render_elements:render_elements(body()),
+    Title = wf_core:render(title()),
+    Body = wf_core:render(body()),
     [ #dtl{file = "hello", bindings=[{title,Title},{hello,Body}]} ].
 
 title() -> [ <<"N2O">> ].

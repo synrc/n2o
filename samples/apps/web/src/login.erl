@@ -5,14 +5,14 @@
 title() -> [ <<"Login">> ].
 
 main() ->
-    Title = wf_render_elements:render_elements(title()),
-    Body = wf_render_elements:render_elements(body()),
+    Title = wf_core:render(title()),
+    Body = wf_core:render(body()),
   [ #dtl{file = "login", bindings=[{title,Title},{body,Body}]} ].
 
 body() -> [ #span{id=display}, #br{},
             #span{text="Login: "}, #textbox{id=user}, #br{},
             #span{text="Password: "}, #password{id=pass},
-            #button{text="Login",postback=login,source=[user,pass]} ].
+            #button{id=login,text="Login",postback=login,source=[user,pass]} ].
 
 event(init) -> [];
 
