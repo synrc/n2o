@@ -3,9 +3,6 @@
 -include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
-render_actions(Actions) -> 
-    [ render_action(A) || A <- Actions].
-
 render_action(Action) ->
     Module = element(3,Action),
     Res = Module:render_action(Action),
@@ -13,3 +10,4 @@ render_action(Action) ->
          Res when is_tuple(Res) -> render_action(Res);
          Str when is_list(Str) -> Str;
          A -> [] end.
+

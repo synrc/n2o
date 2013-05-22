@@ -7,7 +7,12 @@ render_action(Record) ->
     Type    = Record#update.type,
     Target  = Record#update.target,
     Elements = Record#update.elements,
-    Html = wf_render_elements:render_elements(Elements),
+%    Html = wf_render_elements:render_elements(Elements),
+%    error_logger:info_msg("Element ~p",[Elements]),
+    Html = case Elements of
+                E when element(2,E) == is_element -> wf_core:render_item(Elements);
+                E when element(2,E) == is_action  -> wf_core:render_item(Elements);
+                E -> wf_core:render(E) end,
     wf:f("$('#~s').~s('~s');", [Target, atom_to_list(Type), wf:js_escape(Html)]).
 
 update(Target, Elements) -> update(html, Target, Elements).

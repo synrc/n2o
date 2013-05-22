@@ -39,7 +39,8 @@ stream({binary,Info}, Req, State) ->
                                     Module:Function(Parameter);
                  UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
           _ -> error_logger:error_msg("N2O allows only #ev{} events") end,
-    Render = wf_render_actions:render_actions(get(actions)),
+%    Render = wf_render_actions:render_actions(get(actions)),
+    Render = wf_core:render(get(actions)),
     wf_context:clear_actions(),
     {reply,Render, Req, State};
 stream(Data, Req, State) ->    
@@ -49,7 +50,7 @@ stream(Data, Req, State) ->
 
 info(Pro, Req, State) ->
     Res =  case Pro of
-                {flush,Actions} -> wf_render_actions:render_actions(Actions);
+                {flush,Actions} -> wf_core:render(Actions);
                 <<"N2O,",Rest/binary>> -> 
                     Module = State#context.module, Module:event(init),
                     Pid = list_to_pid(binary_to_list(Rest)),
@@ -59,8 +60,10 @@ info(Pro, Req, State) ->
 %                                          case ets:lookup(cookies,Module) of
 %                                               [{Module,A}] -> A;
 %                                               [] -> 
-                                                     RenderInit = wf_render_actions:render_actions(Actions),
-                                                     RenderOther = wf_render_actions:render_actions(get(actions)),
+                                                     RenderInit = wf_core:render(Actions),
+                                                     RenderOther = wf_core:render(get(actions)),
+%                                                     RenderInit = wf_render_actions:render_actions(Actions),
+%                                                     RenderOther = wf_render_actions:render_actions(get(actions)),
                                                      Y = RenderInit ++ RenderOther,
                                                      ets:insert(cookies,{Module,Y}),
                                                      Y

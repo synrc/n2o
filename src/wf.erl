@@ -99,17 +99,18 @@ delete_cookie(Cookie,Req) -> ?BRIDGE:delete_cookie(Cookie,Req).
 response(Html,Req) -> ?BRIDGE:response(Html,Req).
 reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
+% Logging API
+
+info(String, Args) ->  error_logger:info_msg(String, Args).
+info(String) -> error_logger:info_msg(String).
+warning(String, Args) -> error_logger:warning_msg(String, Args).
+warning(String) -> error_logger:warning_msg(String).
+error(String, Args) -> error_logger:error_msg(String, Args).
+error(String) -> error_logger:error_msg(String).
+
 % Compatibility Obsolete API
 % ==========================
 
-% Q: Do we need logging API ?
-
-info(String, Args) ->  log_handler:info(String, Args).
-info(String) -> log_handler:info(String).
-warning(String, Args) -> log_handler:warning(String, Args).
-warning(String) -> log_handler:warning(String).
-error(String, Args) -> log_handler:error(String, Args).
-error(String) -> log_handler:error(String).
 
 % Q: Do we need converting API ?
 

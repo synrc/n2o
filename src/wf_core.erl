@@ -18,7 +18,8 @@ run(Req) ->
     Pid = spawn(fun() -> transition(Actions) end),
     PidString = io_lib:format("~p",[Pid]),
     wf_context:script(["TransitionProcess = '", PidString, "'"]),
-    Html = wf_render_elements:render_elements(Elements),
+%    Html = wf_render_elements:render_elements(Elements),
+    Html = render(Elements),
     Ctx2 = fold(finish,Ctx#context.handlers,Ctx1),
     Req2 = wf:response(Html,Ctx2#context.req),
     {ok, ReqFinal} = wf:reply(200, Req2).
@@ -29,3 +30,8 @@ fold(Fun,Handlers,Ctx) ->
         NewCtx end,Ctx,Handlers).
 
 transition(Actions) -> receive {'N2O',Pid} -> Pid ! Actions end.
+
+render_item(E) when element(2,E) == is_element -> wf_render_elements:render_element(E);
+render_item(E) when element(2,E) == is_action  -> wf_render_actions:render_action(E);
+render_item(E) -> E.
+render(Elements) -> [ render_item(E) || E <- Elements ].
