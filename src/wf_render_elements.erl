@@ -19,11 +19,11 @@ render_element(Element) when is_tuple(Element) ->
                        undefined -> temp_id();
                        Other2 when is_atom(Other2) -> atom_to_list(Other2);
                        L when is_list(L) -> L end,
-             Class = [Base#elementbase.class],
+             Class = Base#elementbase.class,
              Base1 = Base#elementbase { id=ID, class=Class },
              Element1 = wf_utils:replace_with_base(Base1, Element),
              wf:wire(Base1#elementbase.actions),
-             NewElements = Module:render_element(Element),
+             NewElements = Module:render_element(Element1),
              wf_core:render(NewElements)
     end;
 render_element(Element) -> error_logger:info_msg("Unknown Element: ~p",[Element]).
