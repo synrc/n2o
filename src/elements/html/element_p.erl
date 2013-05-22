@@ -6,9 +6,10 @@
 reflect() -> record_info(fields, p).
 
 render_element(Record) -> 
+    Inner = wf:render(Record#p.body),
     Body = [
         Record#p.text,
-        Record#p.body
+        Inner
     ],
     wf_tags:emit_tag(<<"p">>, Body, [
         {<<"id">>, Record#p.id},
