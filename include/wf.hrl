@@ -3,7 +3,7 @@
 
 -record(handler, {name, module, config, state}).
 -record(context, {handlers, actions, req, module, path, session, params}).
--record(ev,      {module, payload, trigger, type}).
+-record(ev,      {module, payload, trigger, name :: api_event | control_event | event | atom() }).
 
 %%% LOGGING %%%
 -ifndef(debug_print).
@@ -32,7 +32,7 @@
 -define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", source=[]).
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
--record(dtl, {?ELEMENT_BASE(element_dtl), file="index.html", bindings=[], app=web, folder="priv/templates" }).
+-record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates" }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
 -record(body, {?ELEMENT_BASE(element_body), title="", body=[]}).
 -record(h1, {?ELEMENT_BASE(element_h1), text="", html_encode=true}).
@@ -101,6 +101,7 @@
 -record(sparkline, {?ELEMENT_BASE(element_sparkline), type, values, options }).
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, text="", minLength=2, delay=300, html_encode=true, next, postback, delegate=undefined }).
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
+-record(textboxlist, {?ELEMENT_BASE(element_textboxlist), delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 
         
 %% HTML5 semantic elements
@@ -129,7 +130,7 @@
 -record(set, {?ACTION_BASE(action_set), value}).
 -record(redirect, {?ACTION_BASE(action_redirect), url, nodrop=false}).
 -record(event, {?ACTION_BASE(action_event), type=default, keycode=undefined, shift_key=false, delay=0, postback, validation_group, delegate, extra_param}).
--record(control, {?ACTION_BASE(action_control), type=default, keycode=undefined, shift_key=false, delay=0, postback, validation_group, delegate, extra_param}).
+-record(control, {?ACTION_BASE(action_control), type=default, keycode=undefined, shift_key=false, delay=0, validation_group, delegate, extra_param}).
 %% we want validation assignments to happen last, so we use AV_BASE and set deferral to zero first
 -record(validate, {?ACTION_BASE(action_validate), on=submit, success_text=" ", group, validators, attach_to }).
 -record(validation_error, {?ACTION_BASE(action_validation_error), text="" }).
