@@ -8,8 +8,8 @@ main() ->
          _ -> 
 %    Title = "Title",
 %    Body = "Body",
-             Title = wf_core:render(title()),
-             Body = wf_core:render(body()),
+             Title = wf:render(title()),
+             Body = wf:render(body()),
            [ #dtl{file = "index", bindings=[{title,Title},{body,Body}]} ]
      end.
 

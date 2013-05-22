@@ -5,8 +5,8 @@
 title() -> [ <<"Login">> ].
 
 main() ->
-    Title = wf_core:render(title()),
-    Body = wf_core:render(body()),
+    Title = wf:render(title()),
+    Body = wf:render(body()),
   [ #dtl{file = "login", bindings=[{title,Title},{body,Body}]} ].
 
 body() -> [ #span{id=display}, #br{},
