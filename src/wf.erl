@@ -167,3 +167,4 @@ assert(true, _) -> ok;
 assert(false, Error) -> erlang:error(Error).
 
 append(List, Key, Value) -> case Value of undefined -> List; A -> [{Key, Value}|List] end.
+render(X) -> wf_core:render(X).
