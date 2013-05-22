@@ -4,7 +4,7 @@
 -compile(export_all).
 
 render_action(#control{ 
-    postback=Postback, actions=Actions, source=Source,
+    actions=Actions, source=Source,
     anchor=Anchor, trigger=Trigger, target=Target, validation_group=ValidationGroup,
     type=Type, keycode=KeyCode, shift_key=ShiftKey, delay=Delay, delegate=Delegate,
     extra_param=ExtraParam}) ->
