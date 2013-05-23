@@ -27,9 +27,8 @@ render_element(Record) ->
       {<<"class">>, Record#link.class},
       {<<"target">>, Target},
       {<<"style">>, Record#link.style},
-      {<<"data-toggle">>, Record#link.data_fields},
       {<<"title">>, Record#link.title},
-      {<<"name">>, Record#link.name}
+      {<<"name">>, Record#link.name} | Record#link.data_fields
     ],
     wf_tags:emit_tag(<<"a">>, Body, List).
 
