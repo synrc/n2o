@@ -19,7 +19,7 @@ render_element(Record) ->
          undefined -> ignore;
          ClickActions -> wf:wire(Anchor, #event { type=click, actions=ClickActions }) end,
 
-    List = [{<<"id">>, ID},{<<"type">>, <<"button">>}],
+    List = [{<<"id">>, ID},{<<"type">>, <<"button">>}, {<<"class">>, Record#button.class}],
     List1 = wf:append(List,<<"style">>, Record#button.style),
     List2 = wf:append(List1,<<"value">>, Record#button.text),
     wf_tags:emit_tag(<<"input">>, List2).
