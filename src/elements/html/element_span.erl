@@ -8,7 +8,7 @@ render_element(Record) ->
     Body = [
 %        wf:html_encode(Record#span.text, Record#span.html_encode),
         Record#span.text,
-        Record#span.body
+        wf:render(Record#span.body)
     ],
 
     wf_tags:emit_tag(<<"span">>, Body, [

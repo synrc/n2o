@@ -8,7 +8,7 @@ reflect() -> record_info(fields, label).
 render_element(Record) -> 
     Body = [
         Record#label.text,
-        Record#label.body
+        wf:render(Record#label.body)
     ],
     wf_tags:emit_tag(<<"label">>, Body, [
         {<<"id">>, Record#label.id},
