@@ -12,5 +12,5 @@ render_element(Record) ->
     erlydtl:compile(code:lib_dir(Record#dtl.app) ++ "/" ++ Record#dtl.folder ++ "/" ++ Record#dtl.file ++ ".html",ModName),
 %    ModName end,
     M = ModName,
-    {ok,R} = M:render(Record#dtl.bindings ++ [{script,wf_context:script()}]),
+    {ok,R} = M:render([{K,wf:render(V)} || {K,V} <- Record#dtl.bindings] ++ [{script,wf_context:script()}]),
     R.

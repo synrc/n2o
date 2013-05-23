@@ -33,9 +33,11 @@ render_element(Record) ->
       wf_tags:emit_tag(<<"span">>, Icons, [{<<"class">>, <<"icons">>}]),
       wf_tags:emit_tag(<<"input">>, [
             {<<"name">>, Record#checkbox.html_name},
-            {<<"id">>,   Id},
+            {<<"id">>,   ID},
             {<<"type">>, <<"checkbox">>},
             {<<"data-toggle">>, <<"checkbox">>},
+            {<<"class">>, Record#checkbox.class},
+            {<<"style">>, Record#checkbox.style},
             {<<"value">>, Record#checkbox.value},
             {CheckedOrNot, true}
       ]),
