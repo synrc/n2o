@@ -13,5 +13,5 @@ render_element(Record) ->
     List4 = wf:append(List3,<<"placeholder">>,Record#textbox.placeholder),
     List5 = wf:append(List4,<<"value">>,Record#textbox.text),
     List6 = wf:append(List5,<<"class">>,Record#textbox.class),
-    wf_tags:emit_tag(<<"input">>, List5).
+    wf_tags:emit_tag(<<"input">>, List6).
 
