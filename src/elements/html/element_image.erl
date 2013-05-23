@@ -11,6 +11,7 @@ render_element(Record) ->
     {<<"class">>, Record#image.class},
     {<<"style">>, Record#image.style},
     {<<"alt">>, Record#image.alt},
+    {<<"width">>, Record#image.width},
     {<<"src">>, Record#image.image} | Record#image.data_fields
   ],
 

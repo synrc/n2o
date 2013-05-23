@@ -6,7 +6,6 @@
 reflect() -> record_info(fields, link).
 
 render_element(Record) -> 
-    error_logger:info_msg("#Link: ~p",[Record]),
 
     ID = Record#link.id,
     Anchor = Record#link.anchor,
@@ -20,7 +19,7 @@ render_element(Record) ->
         wf:render(Record#link.body)
     ],
 
-    Target = target(Record#link.new),
+    Target = Record#link.new,
 
     List = [{<<"id">>, Record#link.id},
       {<<"href">>, Record#link.url},
@@ -30,14 +29,5 @@ render_element(Record) ->
       {<<"title">>, Record#link.title},
       {<<"name">>, Record#link.name} | Record#link.data_fields
     ],
+
     wf_tags:emit_tag(<<"a">>, Body, List).
-
-target(New) ->
-    case New of
-        false -> "";
-        true -> "_blank";
-        _ -> ""
-    end.
-
-add_field(true,ToAdd,DataFields) -> [ToAdd | DataFields];
-add_field(_,_,DataFields) -> DataFields.
