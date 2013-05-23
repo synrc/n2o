@@ -34,4 +34,5 @@ transition(Actions) -> receive {'N2O',Pid} -> Pid ! Actions end.
 render_item(E) when element(2,E) == is_element -> wf_render_elements:render_element(E);
 render_item(E) when element(2,E) == is_action  -> wf_render_actions:render_action(E);
 render_item(E) -> E.
-render(Elements) -> [ render_item(E) || E <- Elements ].
+render(Elements) when is_list(Elements) -> [ render_item(E) || E <- Elements ];
+render(Elements) -> render_item(Elements).
