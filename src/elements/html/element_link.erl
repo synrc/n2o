@@ -17,7 +17,7 @@ render_element(Record) ->
 
     Body = [
         Record#link.text,
-        Record#link.body
+        wf:render(Record#link.body)
     ],
 
     Target = target(Record#link.new),

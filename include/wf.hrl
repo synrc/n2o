@@ -46,6 +46,7 @@
 -record(br, {?ELEMENT_BASE(element_br) }).
 -record(hr, {?ELEMENT_BASE(element_hr) }).
 -record(p, {?ELEMENT_BASE(element_p), body="", text="", html_encode=true}).
+-record(i, {?ELEMENT_BASE(element_i), text="", html_encode=true}).
 -record(label, {?ELEMENT_BASE(element_label), body="", text="", html_encode=true, for=""}).
 -record(pre, {?ELEMENT_BASE(element_pre), text="", html_encode=true}).
 -record(strong, {?ELEMENT_BASE(element_strong), body="", text="", html_encode=true}).
