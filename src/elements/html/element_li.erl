@@ -7,7 +7,7 @@ reflect() -> record_info(fields, li).
 
 render_element(Record) -> 
   Body = [
-    wf:html_encode(Record#li.text, Record#li.html_encode),
+    Record#li.text,
     wf:render(Record#li.body)
   ],
 

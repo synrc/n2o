@@ -7,10 +7,10 @@ reflect() -> record_info(fields, image).
 
 render_element(Record) ->
     Attributes = [
-        {id, Record#image.id},
-        {class, [image, Record#image.class]},
-        {style, Record#image.style},
-        {src, Record#image.image}
+        {<<"id">>, Record#image.id},
+        {<<"class">>, Record#image.class},
+        {<<"style">>, Record#image.style},
+        {<<"src">>, Record#image.image}
     ],
 
     FinalAttributes = case Record#image.alt of
