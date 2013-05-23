@@ -36,8 +36,6 @@ render_element(Record) ->
             {<<"id">>,   Id},
             {<<"type">>, <<"checkbox">>},
             {<<"data-toggle">>, <<"checkbox">>},
-            {<<"class">>, Record#checkbox.class},
-            {<<"style">>, Record#checkbox.style},
             {<<"value">>, Record#checkbox.value},
             {CheckedOrNot, true}
       ]),
