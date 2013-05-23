@@ -15,4 +15,4 @@ render_element(Record) ->
     {<<"src">>, Record#image.image} | Record#image.data_fields
   ],
 
-  wf_tags:emit_tag(img, Attributes).
+  wf_tags:emit_tag(<<"img">>, Attributes).
