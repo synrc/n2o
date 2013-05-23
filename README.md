@@ -18,6 +18,7 @@ Information for Nitrogen users:
 New features
 ------------
 
+* Twitter Bootstrap compatible rendering
 * Optimized for latency: deffered JavaScript rendering
 * Supports optional Zepto library for non-IE browsers
 * XHR fallback through Bullet for legacy browsers
