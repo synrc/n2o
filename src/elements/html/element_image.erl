@@ -6,16 +6,12 @@
 reflect() -> record_info(fields, image).
 
 render_element(Record) ->
-    Attributes = [
-        {<<"id">>, Record#image.id},
-        {<<"class">>, Record#image.class},
-        {<<"style">>, Record#image.style},
-        {<<"src">>, Record#image.image}
-    ],
+  Attributes = [
+    {<<"id">>, Record#image.id},
+    {<<"class">>, Record#image.class},
+    {<<"style">>, Record#image.style},
+    {<<"alt">>, Record#image.alt},
+    {<<"src">>, Record#image.image} | Record#image.data_fields
+  ],
 
-    FinalAttributes = case Record#image.alt of
-        undefined -> Attributes;
-        ImageAlt -> [{alt, ImageAlt}|Attributes] 
-    end,
-
-    wf_tags:emit_tag(img, FinalAttributes).
+  wf_tags:emit_tag(img, Attributes).
