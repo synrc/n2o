@@ -24,8 +24,9 @@ render_element(Record) ->
     [
         wf_tags:emit_tag(<<"input">>, [
             {<<"name">>, Record#checkbox.html_name},
-            {<<"id">>,   Anchor},
+            {<<"id">>,   ID},
             {<<"type">>, <<"checkbox">>},
+            {<<"data-toggle">>, <<"checkbox">>},
             {<<"class">>, Record#checkbox.class},
             {<<"style">>, Record#checkbox.style},
             {<<"value">>, Record#checkbox.value},
