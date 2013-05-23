@@ -105,15 +105,13 @@
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 
-        
-%% HTML5 semantic elements
 -record(section, {?ELEMENT_BASE(element_section), body=""}).
 -record(nav, {?ELEMENT_BASE(element_nav), body=""}).
 -record(article, {?ELEMENT_BASE(element_article), body=""}).
 -record(aside, {?ELEMENT_BASE(element_aside), body=""}).
 -record(hgroup, {?ELEMENT_BASE(element_hgroup), body=""}).
--record(html5_header, {?ELEMENT_BASE(element_html5_header), body=""}).
--record(html5_footer, {?ELEMENT_BASE(element_html5_footer), body=""}).
+-record(header, {?ELEMENT_BASE(element_header), body=""}).
+-record(footer, {?ELEMENT_BASE(element_footer), body=""}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime="", body=""}).
 -record(mark, {?ELEMENT_BASE(element_mark), body=""}).
 
