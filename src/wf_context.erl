@@ -26,7 +26,7 @@ init_context(Req) ->
         req=Req,
         params=[],
         session=undefined,
-        handlers= [ {query,   handler_coalecse(query, n2o_query_handler)},
+        handlers= [ {'query', handler_coalecse('query', n2o_query_handler)},
                     {session, handler_coalecse(session, n2o_session_handler)},
                     {route,   handler_coalecse(route, n2o_route_handler)} ]}.
 
