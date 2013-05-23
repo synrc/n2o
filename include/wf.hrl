@@ -42,11 +42,12 @@
 -record(h5, {?ELEMENT_BASE(element_h5), text="", html_encode=true}).
 -record(h6, {?ELEMENT_BASE(element_h6), text="", html_encode=true}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false, body=[], data_fields=[]}).
--record(listitem, {?ELEMENT_BASE(element_listitem), body=[], text="", html_encode=true, role="", data_fields=[] }).
+-record(li, {?ELEMENT_BASE(element_li), body=[], text="", html_encode=true, role="", data_fields=[] }).
 -record(br, {?ELEMENT_BASE(element_br) }).
 -record(hr, {?ELEMENT_BASE(element_hr) }).
 -record(p, {?ELEMENT_BASE(element_p), body="", text="", html_encode=true}).
 -record(i, {?ELEMENT_BASE(element_i), text="", html_encode=true}).
+-record(b, {?ELEMENT_BASE(element_b), text="", html_encode=true}).
 -record(label, {?ELEMENT_BASE(element_label), body="", text="", html_encode=true, for=""}).
 -record(pre, {?ELEMENT_BASE(element_pre), text="", html_encode=true}).
 -record(strong, {?ELEMENT_BASE(element_strong), body="", text="", html_encode=true}).
