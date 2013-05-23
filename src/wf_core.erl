@@ -25,8 +25,8 @@ run(Req) ->
     {ok, ReqFinal} = wf:reply(200, Req2).
 
 fold(Fun,Handlers,Ctx) ->
-    lists:foldl(fun(H,Ctx) ->
-        {ok,_,NewCtx} = (H#handler.module):Fun(H#handler.state,Ctx),
+    lists:foldl(fun({_,Module},Ctx) ->
+        {ok,_,NewCtx} = Module:Fun([],Ctx),
         NewCtx end,Ctx,Handlers).
 
 transition(Actions) -> receive {'N2O',Pid} -> Pid ! Actions end.

@@ -18,7 +18,6 @@ add_action(Action) ->
     Actions = case get(actions) of undefined -> []; E -> E end,
     put(actions,Actions ++ [Action]).
 
-make_handler(Name, Module) -> #handler{name=Name, module=Module, state=[]}.
 init_context(Req) ->
     #context{
         actions=[],
@@ -27,6 +26,10 @@ init_context(Req) ->
         req=Req,
         params=[],
         session=undefined,
-        handlers= [ make_handler(query_handler,   n2o_query_handler),
-                    make_handler(session_handler, n2o_session_handler),
-                    make_handler(route_handler,   n2o_route_handler) ]}.
+        handlers= [ {query,   handler_coalecse(query, n2o_query_handler)},
+                    {session, handler_coalecse(session, n2o_session_handler)},
+                    {route,   handler_coalecse(route, n2o_route_handler)} ]}.
+
+handler_coalecse(Key, Default) -> case application:get_env(n2o,Key) of
+                              undefined -> Default;
+                              {ok,V} -> V end.
