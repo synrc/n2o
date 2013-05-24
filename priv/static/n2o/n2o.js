@@ -26,7 +26,7 @@ function WebSocketsInit(){
 //    if ("WebSocket" in window) {
         ws = new bullet("ws://"+window.location.hostname+
                             ":"+window.location.port+
-                   "/websocket"+window.location.pathname+
+                   "/ws"+window.location.pathname+
                                 window.location.search);
         initialized = false;
         ws.onopen = function() { if (!initialized) { ws.send(['N2O',TransitionProcess]); initialized = true; } };
