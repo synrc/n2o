@@ -25,7 +25,7 @@ function WebSocketsInit(){
 //    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
 //    if ("WebSocket" in window) {
         ws = new bullet("ws://"+window.location.hostname+
-                            ":"+window.location.port+
+                            ":8000"+//window.location.port+
                    "/ws"+window.location.pathname+
                                 window.location.search);
         initialized = false;
