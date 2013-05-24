@@ -13,6 +13,5 @@ render_element(Record) ->
     wf_tags:emit_tag(<<"div">>, Body, [
         {<<"id">>, wf:to_binary(Record#panel.id)},
         {<<"class">>, Record#panel.class},
-        {<<"style">>, Record#panel.style},
-        {<<"data_fields">>, Record#panel.data_fields}
+        {<<"style">>, Record#panel.style} | Record#panel.data_fields
     ]).
