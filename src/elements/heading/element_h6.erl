@@ -5,7 +5,7 @@
 reflect() -> record_info(fields, h6).
 
 render_element(Record) ->
-  wf_tags:emit_tag(<<"h6">>, Record#h6.text, [
+  wf_tags:emit_tag(<<"h6">>, wf:render(Record#h6.body), [
     {<<"id">>, Record#h6.id},
     {<<"class">>, Record#h6.class},
     {<<"style">>, Record#h6.style}

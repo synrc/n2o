@@ -21,7 +21,7 @@ render_element(Record) ->
         Postback -> wf:wire(Anchor, #event { type=change, postback=Postback, validation_group=ID, delegate=Record#radio.delegate })
     end,
 
-    Content = wf:html_encode(Record#radio.text, Record#radio.html_encode),
+    Content = Record#radio.body,
 
     [
         %% Checkbox...

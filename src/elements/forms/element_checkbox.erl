@@ -16,7 +16,6 @@ render_element(Record) ->
         Postback -> wf:wire(Id, #event { type=change, postback=Postback, validation_group=Id, delegate=Record#checkbox.delegate })
     end,
 
-    Text = Record#checkbox.text,
     Icons = [
       wf_tags:emit_tag(<<"span">>, [], [
         {<<"class">>, <<"first-icon fui-checkbox-unchecked">>}
@@ -35,7 +34,7 @@ render_element(Record) ->
             {<<"value">>, Record#checkbox.value},
             {CheckedOrNot, true}
       ]),
-      Text
+      Record#checkbox.body
     ],
     wf_tags:emit_tag(<<"label">>, Label, [
       {<<"class">>, Record#checkbox.class},

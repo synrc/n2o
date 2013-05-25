@@ -22,7 +22,7 @@ reflect() -> record_info(fields, restful_form).
 
 render_element(Record) ->
     Body= [
-           #hidden{id=restful_method, text=Record#restful_form.method}|
+           #hidden{id=restful_method, body=Record#restful_form.method}|
            Record#restful_form.body
           ],
     WithName = inject_name(Record#restful_form{body=Body}),

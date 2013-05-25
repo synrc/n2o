@@ -10,9 +10,9 @@
 reflect() -> record_info(fields, restful_upload).
 
 render_element(Record) -> 
-  wf_tags:emit_tag(input, [
-			   {type, file}, 
-			   {class, [restful_upload, Record#restful_upload.class]},
-			   {style, Record#restful_upload.style},
-			   {name, Record#restful_upload.html_name}
-			  ]).
+  wf_tags:emit_tag(<<"input">>, [
+    {<<"type">>, <<"file">>}, 
+    {<<"class">>, Record#restful_upload.class},
+    {<<"style">>, Record#restful_upload.style},
+    {<<"name">>, Record#restful_upload.html_name}
+  ]).

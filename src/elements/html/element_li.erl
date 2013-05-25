@@ -6,13 +6,8 @@
 reflect() -> record_info(fields, li).
 
 render_element(Record) -> 
-  Body = [
-    Record#li.text,
-    wf:render(Record#li.body)
-  ],
-
-  wf_tags:emit_tag(<<"li">>, Body, [
+  wf_tags:emit_tag(<<"li">>, wf:render(Record#li.body), [
     {<<"id">>, Record#li.id},
-    {<<"class">>, [Record#li.class]},
+    {<<"class">>, Record#li.class},
     {<<"style">>, Record#li.style} | Record#li.data_fields
   ]).

@@ -13,8 +13,7 @@ render_element(Record) ->
         id     = Record#datepicker_textbox.id,
         class       = [datepicker_textbox, Record#datepicker_textbox.class],
         style       = Record#datepicker_textbox.style,
-        text        = Record#datepicker_textbox.text,
-        html_encode = Record#datepicker_textbox.html_encode
+        value        = Record#datepicker_textbox.value
     },
 
     Script = wf:f("jQuery($('#~s').datepicker(~s);", [Anchor, Options]),

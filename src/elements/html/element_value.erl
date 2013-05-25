@@ -5,9 +5,8 @@
 reflect() -> record_info(fields, value).
 
 render_element(Record) -> 
-    Text = wf:html_encode(Record#value.text, Record#value.html_encode),
-    wf_tags:emit_tag(span, Text, [
-        {id, Record#value.id},
-        {class, [value, Record#value.class]},
-        {style, Record#value.style}
-    ]).
+  wf_tags:emit_tag(<<"span">>, wf:render(Record#value.body), [
+    {<<"id">>, Record#value.id},
+    {<<"class">>, Record#value.class},
+    {<<"style">>, Record#value.style}
+  ]).

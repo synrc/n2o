@@ -14,11 +14,6 @@ render_element(Record) ->
         Postback -> wf:wire(Anchor, #event { type=click, postback=Postback, validation_group=ID, delegate=Record#link.delegate })
     end,
 
-    Body = [
-        Record#link.text,
-        wf:render(Record#link.body)
-    ],
-
     Target = Record#link.new,
 
     List = [{<<"id">>, Record#link.id},
@@ -30,4 +25,4 @@ render_element(Record) ->
       {<<"name">>, Record#link.name} | Record#link.data_fields
     ],
 
-    wf_tags:emit_tag(<<"a">>, Body, List).
+    wf_tags:emit_tag(<<"a">>, wf:render(Record#link.body), List).

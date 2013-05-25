@@ -20,12 +20,11 @@ render_element(Record) ->
                                              delegate=Record#password.delegate })
     end,
 
-    Value = Record#password.text,
     wf_tags:emit_tag(<<"input">>, [
         {<<"id">>, Record#password.id},
         {<<"type">>, <<"password">>},
         {<<"class">>, Record#password.class},
         {<<"style">>, Record#password.style},
         {<<"name">>, Record#password.html_name},
-        {<<"value">>, Value}
+        {<<"value">>, Record#password.value}
     ]).

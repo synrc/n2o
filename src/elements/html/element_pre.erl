@@ -5,8 +5,7 @@
 reflect() -> record_info(fields, pre).
 
 render_element(Record) ->
-    Body = wf:html_encode(Record#pre.text, Record#pre.html_encode),
-    wf_tags:emit_tag(pre, Body, [
-        {class, [pre, Record#pre.class]},
-        {style, Record#pre.style}
-    ]).
+  wf_tags:emit_tag(<<"pre">>, wf:render(Record#pre.body), [
+    {<<"class">>, [pre, Record#pre.class]},
+    {<<"style">>, Record#pre.style}
+  ]).

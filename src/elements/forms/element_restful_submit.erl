@@ -10,11 +10,10 @@
 reflect() -> record_info(fields, restful_submit).
 
 render_element(Record) ->
-    Value = ["  ", wf:html_encode(Record#restful_submit.text, Record#restful_submit.html_encode), "  "], 
-    wf_tags:emit_tag(input, [
-        {type,  submit},
-	{name, Record#restful_submit.html_name},
-        {class, [restful_submit, Record#restful_submit.class]},
-        {style, Record#restful_submit.style},
-        {value, Value}
-    ]).
+  wf_tags:emit_tag(<<"input">>, <<"Submit">>, [
+    {<<"type">>,  <<"submit">>},
+    {<<"name">>, Record#restful_submit.html_name},
+    {<<"class">>, [restful_submit, Record#restful_submit.class]},
+    {<<"style">>, Record#restful_submit.style},
+    {<<"value">>, Record#restful_submit.value}
+  ]).

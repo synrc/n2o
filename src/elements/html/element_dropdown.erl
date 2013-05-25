@@ -39,10 +39,10 @@ wire_postback(Dropdown) ->
 
 format_options(Dropdown) when Dropdown#dropdown.options==undefined ->
     "";
-format_options(#dropdown{options=Opts, value=Value, html_encode=HtmlEncode}) ->
-    [create_option(Opt, HtmlEncode, Value) || Opt <- Opts, Opt#option.show_if==true].
+format_options(#dropdown{options=Opts, value=Value}) ->
+    [create_option(Opt, Value) || Opt <- Opts, Opt#option.show_if==true].
 
-create_option(X, HtmlEncode, Value) ->
+create_option(X, Value) ->
     SelectedOrNot = if
         (Value =/= undefined andalso X#option.value == Value)
                 orelse X#option.selected == true ->
@@ -51,7 +51,7 @@ create_option(X, HtmlEncode, Value) ->
             not_selected
     end,
 
-    Content = wf:html_encode(X#option.text, HtmlEncode),
+    Content = wf:html_encode(X#option.body),
 
     Props = [{SelectedOrNot, true}],
 
@@ -59,7 +59,7 @@ create_option(X, HtmlEncode, Value) ->
     %% This keeps it consistent with the behavior of HTML forms
     Props1 = case X#option.value of
         undefined -> Props;
-        V -> [ {value,wf:html_encode(V,HtmlEncode)} | Props]
+        V -> [ {value,wf:html_encode(V)} | Props]
     end,
 
     wf_tags:emit_tag(option, Content, Props1).

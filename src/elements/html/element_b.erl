@@ -6,7 +6,7 @@
 reflect() -> record_info(fields, b).
 
 render_element(Record = #b{}) ->
-  wf_tags:emit_tag(<<"b">>, [Record#b.text], [
+  wf_tags:emit_tag(<<"b">>, wf:render(Record#b.body), [
     {<<"id">>, Record#b.id},
     {<<"class">>, Record#b.class},
     {<<"style">>, Record#b.style}

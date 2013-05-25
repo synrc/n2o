@@ -6,14 +6,9 @@
 reflect() -> record_info(fields, label).
 
 render_element(Record) -> 
-    Inner = wf:render(Record#label.body),
-    Body = [
-        Record#label.text,
-        Inner
-    ],
-    wf_tags:emit_tag(<<"label">>, Body, [
-        {<<"id">>, Record#label.id},
-        {<<"class">>, Record#label.class},
-        {<<"style">>, Record#label.style},
-        {<<"for">>, Record#label.for}
-    ]).
+  wf_tags:emit_tag(<<"label">>, wf:render(Record#label.body), [
+    {<<"id">>, Record#label.id},
+    {<<"class">>, Record#label.class},
+    {<<"style">>, Record#label.style},
+    {<<"for">>, Record#label.for}
+  ]).

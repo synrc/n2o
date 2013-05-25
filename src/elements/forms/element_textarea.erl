@@ -6,13 +6,11 @@
 reflect() -> record_info(fields, textarea).
 
 render_element(Record) -> 
-    Text = Record#textarea.text,
-    Placeholder  = Record#textarea.placeholder,
-    wf_tags:emit_tag(<<"textarea">>, Text, [
-        {<<"class">>, Record#textarea.class},
-        {<<"id">>, Record#textarea.id},
-        {<<"style">>, Record#textarea.style},
-        {<<"name">>, Record#textarea.html_name},
-        {<<"placeholder">>, Placeholder}
-    ]).
+  wf_tags:emit_tag(<<"textarea">>, wf:render(Record#textarea.body), [
+    {<<"class">>, Record#textarea.class},
+    {<<"id">>, Record#textarea.id},
+    {<<"style">>, Record#textarea.style},
+    {<<"name">>, Record#textarea.html_name},
+    {<<"placeholder">>, Record#textarea.placeholder}
+  ]).
 
