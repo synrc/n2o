@@ -22,9 +22,9 @@ utf8.toByteArray = function(str) {
 };
 
 function WebSocketsInit(){
-//    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
-//    if ("WebSocket" in window) {
-        ws = new bullet("ws://"+window.location.hostname+
+    if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
+    if ("WebSocket" in window) {
+        ws = new WebSocket("ws://"+window.location.hostname+
                             ":8000"+//window.location.port+
                    "/ws"+window.location.pathname+
                                 window.location.search);
@@ -37,9 +37,9 @@ function WebSocketsInit(){
             eval(actions);
         };
         ws.onclose = function() { addStatus("websocket was closed"); };
-//    } else {
-//        addStatus("sorry, your browser does not support websockets.");
-//    }
+    } else {
+        addStatus("sorry, your browser does not support websockets.");
+    }
 }
 
 WebSocketsInit();
