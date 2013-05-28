@@ -145,7 +145,6 @@ and async interprocesses communications:
         Message = wf:q(message),
         Terms = [ #span { text="Message sent" }, #br{} ],
         wf:insert_bottom(chatHistory, Terms),
-        wf:wire("$('#message').focus(); $('#message').select(); "),
         wf:reg(room),
         Pid ! {message, Username, Message};
 
@@ -157,7 +156,6 @@ and async interprocesses communications:
                 Terms = [ #span { text=Username }, ": ",
                           #span { text=Message }, #br{} ],
                 wf:insert_bottom(chatHistory, Terms),
-                wf:wire("$('#chatHistory').scrollTop = $('#chatHistory').scrollHeight;"),
                 wf:flush(room); %% we flush to websocket process by key
             Unknown -> error_logger:info_msg("Unknown Looper Message ~p",[Unknown])
         end,
