@@ -80,7 +80,7 @@ Reference to list of modern web frameworks: http://gist.github.com/5HT/5522302
 Desktop and Mobile Applications
 -------------------------------
 
-There is two approaches to design communications between client/server.
+There are two approaches to design communications between client/server.
 The first is called data-on-wire, where only data transfers on channel through
 through RPC, REST in form of JSON, XML or Binary. All rendering in first
 type are being made on client side. This calls rich client and mostly
@@ -167,7 +167,7 @@ with your favourite language/framework.
 Clean codebase
 ------------------------------
 
-We feel free to brake some of the compatability with the original Nitrogen project,
+We feel free to break some of the compatability with the original Nitrogen project,
 mostly because we want to have a clean codebase and fastest speed.
 However, it is still possible to easily port Nitrogen web sites to N2O.
 E.g. N2O returns id and class semantics of HTML and not html_id.
