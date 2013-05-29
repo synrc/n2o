@@ -249,7 +249,7 @@ Start yourself depending N2O core
 ---------------------------------
 
 If you want dependency on the raw N2O core you should define
-N2O http and websocket cowboy handlers and cowboy static handler as
+N2O http and websocket (ws endpoint) cowboy handlers and cowboy static handler as
 Cowboy dispatch parameter:
 
     cowboy:start_http(http, 100, [{port, 8000}],
@@ -261,7 +261,7 @@ Cowboy dispatch parameter:
            [{'_', [
                 {["/static/[...]"], cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
                         {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
-                {["/websocket/[...]"], n2o_websocket, []},
+                {["/ws/[...]"], n2o_websocket, []},
                 {'_', n2o_cowboy, []}
         ]}]).
 
