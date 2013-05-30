@@ -374,7 +374,7 @@ $.Autocompleter = function(input, options) {
 
 $.Autocompleter.defaults = {
   inputClass: "textboxlister-autocomplete-input",
-  resultsClass: "textboxlister-autocomplete-results",
+  resultsClass: "tbl-autocomplete",
   loadingClass: "textboxlister-autocomplete-loading",
   minChars: 1,
   delay: 10,
@@ -539,7 +539,7 @@ $.Autocompleter.Cache = function(options) {
 };
 
 $.Autocompleter.Select = function (options, input, select, config) {
-  var CLASSES = {ACTIVE: "textboxlister-autocomplete-over"};
+  var CLASSES = {ACTIVE: "active"};
 
   var b = $(input).parent().parent();
   var listItems,
@@ -547,18 +547,16 @@ $.Autocompleter.Select = function (options, input, select, config) {
   data,
   term = "",
   needsInit = true,
-  element,
   list;
 
   // Create results
   function init() {
     if (!needsInit) return;
-
-    element = $("<div/>")
-      .hide()
-      .addClass(options.resultsClass)
-      .appendTo(b);
     list = $("<ul/>")
+      .addClass('dropdown-menu')
+      .addClass(options.resultsClass)
+      .hide()
+      .appendTo(b)
       .mouseover(function(event) {
         if(target(event).nodeName && target(event).nodeName.toUpperCase() == 'LI') {
           active = $("li", list).removeClass(CLASSES.ACTIVE).index(target(event));
@@ -574,9 +572,8 @@ $.Autocompleter.Select = function (options, input, select, config) {
       }).mouseup(function() {
         config.mouseDownOnSelect = false;
       });
-      $(element).append(list);
 
-    if( options.width > 0 ) element.css("width", options.width);
+    if( options.width > 0 ) list.css("width", options.width);
     needsInit = false;
   }
 
@@ -628,9 +625,11 @@ $.Autocompleter.Select = function (options, input, select, config) {
       if (!data[i]) continue;
       var formatted = options.formatItem(data[i].data, i+1, max, data[i].value, term);
       if ( formatted === false ) continue;
-      var li = $("<li/>").html( options.highlight(formatted, term) )
-        .addClass(i%2 == 0 ? "textboxlister-autocomplete-even" : "textboxlister-autocomplete-odd").appendTo(list)[0];
-        $(li).attr("data-textboxlister-autocomplete", JSON.stringify(data[i]));
+
+      $("<li/>")
+        .attr("data-tbl-autocomplete", JSON.stringify(data[i]))
+        .append($("<a href='#'/>").html(options.highlight(formatted, term)))
+        .appendTo(list);
     }
     listItems = list.find("li");
     if ( options.selectFirst ) {
@@ -665,22 +664,23 @@ $.Autocompleter.Select = function (options, input, select, config) {
       }
     },
     hide: function() {
-      element && element.hide();
+      list && list.hide();
       listItems && listItems.removeClass(CLASSES.ACTIVE);
       active = -1;
     },
     visible : function() {
-      return element && element.css("display")!== 'none';
+      return list && list.css("display")!== 'none';
     },
     current: function() {
       return this.visible() && (listItems.filter("." + CLASSES.ACTIVE)[0] || options.selectFirst && listItems[0]);
     },
     show: function() {
-      element.css({
-        width: $(input).parent().parent().width() - 2, //FIXME: border width
-        top: $(input).parent().parent().height() + 1, //FIXME: border width
-        left:0
-      }).show();
+      list
+        .css({
+          left: $(input).offset().left,
+          top: b.offset().top + b.height()
+        })
+        .show();
 
       if(options.scroll) {
         list.scrollTop(0);
@@ -706,16 +706,16 @@ $.Autocompleter.Select = function (options, input, select, config) {
     selected: function() {
       var selected = listItems && listItems.filter("." + CLASSES.ACTIVE).removeClass(CLASSES.ACTIVE);
       var data = selected;
-      if($(selected).attr("data-textboxlister-autocomplete")){
-        data = JSON.parse($(selected).attr("data-textboxlister-autocomplete"));
+      if($(selected).attr("data-tbl-autocomplete")){
+        data = JSON.parse($(selected).attr("data-tbl-autocomplete"));
       }
-      return selected.length && data;
+      return selected && selected.length && data;
     },
     emptyList: function (){
       list && list.empty();
     },
     unbind: function() {
-      element && element.remove();
+      list && list.remove();
     }
   };
 };
