@@ -9,9 +9,5 @@ render_element(Record) ->
   wf_tags:emit_tag(<<"th">>, wf:render(Record#tableheader.body), [
     {<<"id">>, Record#tableheader.id},
     {<<"class">>, Record#tableheader.class},
-    {<<"style">>, Record#tableheader.style},
-    {<<"align">>, Record#tableheader.align},
-    {<<"valign">>, Record#tableheader.valign},
-    {<<"colspan">>, Record#tableheader.colspan},
-    {<<"rowspan">>, Record#tableheader.rowspan}
+    {<<"style">>, Record#tableheader.style}
   ]).

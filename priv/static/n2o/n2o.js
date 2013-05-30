@@ -1,3 +1,14 @@
+(function($){
+  $.fn.vals = function(){
+    if(this.attr('data-list')){
+      var vals = [];
+      $('[name='+ this.attr('id')+']').each(function(i){ vals[i] = $(this).val() });
+      return vals.join();
+    } else
+      return $.fn.val.apply(this, arguments);
+    }
+})(window.jQuery || window.Zepto);
+
 var msg = 0;
 var ws;
 var utf8 = {};

@@ -23,8 +23,8 @@ render_element(R = #textboxlist{}) ->
   wf_tags:emit_tag(<<"input">>, [
     {<<"id">>, Id},
     {<<"type">>, <<"text">>},
-    {<<"class">>, <<"textboxlister">>},
-    {<<"style">>, [R#textboxlist.style, "display:none;"]}
+    {<<"placeholder">>, R#textboxlist.placeholder},
+    {<<"style">>, <<"display:none;">>}
   ]).
 
 process_autocomplete(Target, Result, SearchTerm)->
