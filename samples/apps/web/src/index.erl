@@ -19,14 +19,14 @@ body() -> %% area of http handler
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
     wf:wire(#api{name=apiOne,tag=d1}),
   [
-    #span { text= <<"Your chatroom name: ">> }, 
-    #span { id=userName, text= wf:user() }, #br{}, #button{id=logout,text="Logout",postback=logout}, #br{},
+    #span { body= <<"Your chatroom name: ">> }, 
+    #span { id=userName, body= wf:user() }, #br{}, #button{id=logout,body="Logout",postback=logout}, #br{},
     #panel { id=chatHistory },
-    #button{id=but,text= <<"Click Me!">>,postback=change_me},
-    #button{id=replace,text= <<"Replace Body">>,postback=replace},
+    #button{id=but,body= <<"Click Me!">>,postback=change_me},
+    #button{id=replace,body= <<"Replace Body">>,postback=replace},
     "<a onclick=\"document.apiOne('Hello')\" name='1'>API</a>",
     #textbox { id=message },
-    #button { id=sendButton, text= <<"Chat">>, postback={chat,Pid}, source=[message] },
+    #button { id=sendButton, body= <<"Chat">>, postback={chat,Pid}, source=[message] },
     #panel { id=n2ostatus }
  ].
 
@@ -37,8 +37,8 @@ event(init) ->
   User = wf:user(),
 %   error_logger:info_msg("User: ~p",[User]),
   [ begin
-          Terms = [ #span { text= User }, ": ",
-                      #span { text=integer_to_list(N) }, #br{} ],
+          Terms = [ #span { body= User }, ": ",
+                      #span { body=integer_to_list(N) }, #br{} ],
             wf:insert_bottom(chatHistory, Terms)
             end || N <- lists:seq(1,3) ];
 
@@ -46,7 +46,7 @@ event(change_me) ->
     wf:replace(but,
         #link{
             url= <<"http://erlang.org">>,
-            text= <<"Here's Erlang">>,
+            body= <<"Here's Erlang">>,
             actions=#show{effect=fade}
         }
     );
@@ -71,8 +71,8 @@ event(Event) -> error_logger:info_msg("Event: ~p", [Event]).
 chat_loop() -> %% background worker ala comet
     receive 
         {message, Username, Message} ->
-            Terms = [ #span { text=Username }, ": ",
-                      #span { text=Message }, #br{} ],
+            Terms = [ #span { body=Username }, ": ",
+                      #span { body=Message }, #br{} ],
             wf:insert_bottom(chatHistory, Terms),
             wf:wire("$('#chatHistory').scrollTop = $('#chatHistory').scrollHeight;"),
             wf:flush(room); %% we flush to websocket process by key
