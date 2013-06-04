@@ -1,5 +1,5 @@
-N2O: Erlang Web Framework on WebSockets
-=======================================
+N2O: Erlang Web Framework
+=========================
 
 Nitrogen 2x Optimized
 ---------------------
