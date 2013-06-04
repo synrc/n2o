@@ -88,14 +88,6 @@ $.Autocompleter = function(input, options) {
   var blockSubmit;
 
   // add spinner
-  $input.wrap("<div style='position:relative; display:inline; white-space:nowrap'></div>");
-  var $spinner = $("<span class='textboxlister-autocomplete-spinner' />").insertAfter($input);
-
-  // delay until the interface has been repainted
-  window.setTimeout(function() {
-    var margin = parseInt($input.css("margin-right"), 10) || 0;
-    $spinner.css({'margin-left': -20-margin});
-  }, 0);
 
   // prevent form submit in opera when selecting with return key
   $.browser.opera && $(input.form).bind("submit.autocomplete", function() {
@@ -382,7 +374,7 @@ $.Autocompleter = function(input, options) {
 
 $.Autocompleter.defaults = {
   inputClass: "textboxlister-autocomplete-input",
-  resultsClass: "textboxlister-autocomplete-results",
+  resultsClass: "tbl-autocomplete",
   loadingClass: "textboxlister-autocomplete-loading",
   minChars: 1,
   delay: 10,
@@ -547,7 +539,7 @@ $.Autocompleter.Cache = function(options) {
 };
 
 $.Autocompleter.Select = function (options, input, select, config) {
-  var CLASSES = {ACTIVE: "textboxlister-autocomplete-over"};
+  var CLASSES = {ACTIVE: "active"};
 
   var b = $(input).parent().parent();
   var listItems,
@@ -555,18 +547,16 @@ $.Autocompleter.Select = function (options, input, select, config) {
   data,
   term = "",
   needsInit = true,
-  element,
   list;
 
   // Create results
   function init() {
     if (!needsInit) return;
-
-    element = $("<div/>")
-      .hide()
-      .addClass(options.resultsClass)
-      .appendTo(b);
     list = $("<ul/>")
+      .addClass('dropdown-menu')
+      .addClass(options.resultsClass)
+      .hide()
+      .appendTo(b)
       .mouseover(function(event) {
         if(target(event).nodeName && target(event).nodeName.toUpperCase() == 'LI') {
           active = $("li", list).removeClass(CLASSES.ACTIVE).index(target(event));
@@ -582,9 +572,8 @@ $.Autocompleter.Select = function (options, input, select, config) {
       }).mouseup(function() {
         config.mouseDownOnSelect = false;
       });
-      $(element).append(list);
 
-    if( options.width > 0 ) element.css("width", options.width);
+    if( options.width > 0 ) list.css("width", options.width);
     needsInit = false;
   }
 
@@ -636,9 +625,11 @@ $.Autocompleter.Select = function (options, input, select, config) {
       if (!data[i]) continue;
       var formatted = options.formatItem(data[i].data, i+1, max, data[i].value, term);
       if ( formatted === false ) continue;
-      var li = $("<li/>").html( options.highlight(formatted, term) )
-        .addClass(i%2 == 0 ? "textboxlister-autocomplete-even" : "textboxlister-autocomplete-odd").appendTo(list)[0];
-        $(li).attr("data-textboxlister-autocomplete", JSON.stringify(data[i]));
+
+      $("<li/>")
+        .attr("data-tbl-autocomplete", JSON.stringify(data[i]))
+        .append($("<a href='#'/>").html(options.highlight(formatted, term)))
+        .appendTo(list);
     }
     listItems = list.find("li");
     if ( options.selectFirst ) {
@@ -673,22 +664,23 @@ $.Autocompleter.Select = function (options, input, select, config) {
       }
     },
     hide: function() {
-      element && element.hide();
+      list && list.hide();
       listItems && listItems.removeClass(CLASSES.ACTIVE);
       active = -1;
     },
     visible : function() {
-      return element && element.css("display")!== 'none';
+      return list && list.css("display")!== 'none';
     },
     current: function() {
       return this.visible() && (listItems.filter("." + CLASSES.ACTIVE)[0] || options.selectFirst && listItems[0]);
     },
     show: function() {
-      element.css({
-        width: $(input).parent().parent().width() - 2, //FIXME: border width
-        top: $(input).parent().parent().height() + 1, //FIXME: border width
-        left:0
-      }).show();
+      list
+        .css({
+          left: $(input).offset().left,
+          top: b.offset().top + b.height()
+        })
+        .show();
 
       if(options.scroll) {
         list.scrollTop(0);
@@ -714,16 +706,16 @@ $.Autocompleter.Select = function (options, input, select, config) {
     selected: function() {
       var selected = listItems && listItems.filter("." + CLASSES.ACTIVE).removeClass(CLASSES.ACTIVE);
       var data = selected;
-      if($(selected).attr("data-textboxlister-autocomplete")){
-        data = JSON.parse($(selected).attr("data-textboxlister-autocomplete"));
+      if($(selected).attr("data-tbl-autocomplete")){
+        data = JSON.parse($(selected).attr("data-tbl-autocomplete"));
       }
-      return selected.length && data;
+      return selected && selected.length && data;
     },
     emptyList: function (){
       list && list.empty();
     },
     unbind: function() {
-      element && element.remove();
+      list && list.remove();
     }
   };
 };
@@ -780,17 +772,18 @@ $.TextboxLister = function(elem, opts) {
   elem.textboxLister = self;
   self.opts = opts;
 
-  if(!self.opts.inputName) {
-    self.opts.inputName = self.input.attr('name');
-  }
+  $(self.input).attr('data-list', true);
+
   // wrap
-  self.container = self.input.wrap("<div class="+self.opts.listValuesContainerClass+"></div>");
+  var valContainer = $("<div class="+self.opts.listValuesContainerClass+"></div>");
+  self.container = self.input.wrap(valContainer);
   self.mainContainer = self.input.parent().wrap("<div class="+self.opts.containerClass+"></div>");
 
   self.mainContainer.focusin(function(){ focused = true;});
   $(document).focusin(function(e){ 
     focused = $(e.target).closest(self.mainContainer).length !=0;
   });
+
 
   if (self.opts.clearControl) { //clear button
     $(self.opts.clearControl).click(function() {
@@ -874,27 +867,34 @@ $.TextboxLister = function(elem, opts) {
         } else {
           self.input.focus();
         }
-        self.input.trigger("DeleteValue", val);
+        self.input.trigger("DeleteTag", val);
         break;
     }
   });
 
-  self.input.bind('SpanClick', function(e, val){self.focusTag(val, 'self');});
-  self.input.bind('SelectedValue', function(e, val){
-    var valuesContainer = $(self.input).parent().parent();
-    var il = valuesContainer.width() - 20;
-    var span = $(self.input).prevAll('span');
-    var i, offset=0;
+  self.input.on('focus', function(){$(this).parent().addClass('focus')});
+  self.input.on('blur', function(){$(this).parent().removeClass('focus')});
+  self.input.on('TagClick', function(e, val){self.focusTag(val, 'self');});
+  self.input.on('UpdateTags', function(e){
+    var input = $(self.input);
+    var tagsCont  = input.parent();
+    var tags = input.prevAll('span.tbl-tag');
+    var il = tagsCont.width() - 2;//border
+    var span = input.prevAll('span');
+
+    var i, offset=0, width, empty=0, tag;
     for(i=0;i<span.length;i++){
-      offset = offset + $(span[i]).width() + 5;
-      var gap = il - offset;
-      if(gap < 40){
-        offset = 0;
-        i--;
+      tag = $(span[i]);
+      width = tag.width() + parseInt(tag.css('margin-left'),10) + parseInt(tag.css('margin-right'),10);
+      offset = offset + width;
+      if(offset > il){
+        empty = empty + (offset - il);
+        offset = width;
       }
     }
-    var width = il - offset;
-    $(self.input).css({width:(width)});
+    var iw = il - offset;
+    if(il-offset < 40) iw = il;
+    input.css({width: iw - (parseInt(input.css('margin-left'),10) + parseInt(input.css('margin-right'),10)) });
 
   });
   self.input.bind("AddValue", function(e, val) {
@@ -902,7 +902,7 @@ $.TextboxLister = function(elem, opts) {
       self.select(val);
     }
   });
-  self.input.bind("DeleteValue", function(e, val) {
+  self.input.on("DeleteTag", function(e, val) {
     if (val){
       self.deselect([val]);
       if(!self.cursor) $(self.input).focus();
@@ -918,6 +918,10 @@ $.TextboxLister = function(elem, opts) {
     self.select(self.input.val().split(/\s*,\s*/).sort(), true);
   }
   self.initialValues = self.currentValues.slice();
+  var wd = self.input.parent().width()
+    - (parseInt(self.input.css('margin-left'),10) + parseInt(self.input.css('margin-right'),10))
+    - (parseInt(self.input.css('padding-left'),10) + parseInt(self.input.css('padding-right'),10));
+  self.input.css({width: wd})
   self.input.show();
 
   return this;
@@ -978,7 +982,7 @@ $.TextboxLister.prototype.reset = function() {
 
 // add values to the selection
 $.TextboxLister.prototype.select = function(values, suppressCallback) {
-    var self = this, i, j, val, title, found, currentVal, input, close, className;
+    var self = this, i, j, val, title, close, found, currentVal, input;
 
     if (typeof(values) === 'object') {
       values = values.join(',');
@@ -1044,38 +1048,32 @@ $.TextboxLister.prototype.select = function(values, suppressCallback) {
       val = self.currentValues[i];
       if (!val) continue;
 
-      title = $("<a href='#'>"+(self.titleOfValue["_"+val] || val)+"</a>");
+      input = "<input type='hidden' name='"+self.input.attr('id')+"' value='"+val+"'/>";
+
+      close = $("<a class='"+ self.opts.closeClass+"' href='#'>&times;</a>");
+      close.on("click", function(e){
+        var val = $(this).parent().parent().find("input[type=hidden]").val();
+        self.input.trigger('DeleteTag', val);
+        return false;
+      });
+
+      title = $("<span>"+(self.titleOfValue["_"+val] || val)+"</span>");
       title.addClass(self.opts.titleClass);
+      title.append(close);
 
-      //className = "tag_" + title.replace(/["' ]/, "_");
-      className = "tag_"+ val;
-
-      input = "<input type='hidden' class='"+ self.opts.inputName+"' name='"+self.opts.inputName+"' value='"+val+"' title='"+self.titleOfValue["_"+val]+"' />";
-      close = $("<a href='#' title='remove "+(self.titleOfValue["_"+val] || val)+"'></a>").
-        addClass(self.opts.closeClass).
-        click(function(e) {
-          e.preventDefault();
-          self.input.trigger("DeleteValue", $(this).parent().find("input").val());
-          return false;
+      var sp = $("<span></span>")
+        .addClass(self.opts.listValueClass)
+        .append(input)
+        .append(title)
+        .prependTo(self.container.parent())
+        .on('click', function() {
+          self.input.trigger('TagClick', $(this));
         });
-
-      var sp = $("<span tabindex='0'></span>");
-      sp.addClass(self.opts.listValueClass+" "+className).
-        append(input).
-        append(title).
-        append(close).
-        prependTo($(self.container).parent());
 
       if (val==cursorVal){
-        sp.addClass(self.opts.listValueSelectedClass);
+        sp.addClass("active");
         self.cursor = sp;
       }
-
-      sp.click(function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          self.input.trigger('SpanClick', $(this));
-        });
     }
     self.input.val('');
 
@@ -1083,7 +1081,7 @@ $.TextboxLister.prototype.select = function(values, suppressCallback) {
     if (!suppressCallback && typeof(self.opts.onSelect) == 'function') {
       self.opts.onSelect(self);
     }
-    self.input.trigger("SelectedValue", values);
+    self.input.trigger("UpdateTags");
 };
 
 // remove values from the selection 
@@ -1125,16 +1123,14 @@ $.TextboxLister.prototype.deselect = function(values) {
 
 // default settings
 $.TextboxLister.defaults = {
-  containerClass: 'textboxlister',
-  listValuesContainerClass: 'textboxlister-values',
-  listValueContainerClass: 'textboxlister-value-container',
-  listValueClass: 'textboxlister-value',
-  listValueSelectedClass: 'textboxlister-value-selected',
-  titleClass: 'textboxlister-value-title',
-  closeClass: 'textboxlister-close',
+  containerClass: 'tbl',
+  listValuesContainerClass: 'tbl-tags',
+  listValueClass: 'tbl-tag',
+  listValueSelectedClass: 'active',
+  titleClass: 'tbl-tag-label',
+  closeClass: 'close',
   keys:{prev:37, next:39, del: 46},
   doSort: false,
-  inputName: undefined,
   resetControl: undefined,
   clearControl: undefined,
   autocomplete: undefined,

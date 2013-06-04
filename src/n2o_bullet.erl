@@ -65,10 +65,10 @@ info(Pro, Req, State) ->
 %                                                     RenderInit = wf_render_actions:render_actions(Actions),
 %                                                     RenderOther = wf_render_actions:render_actions(get(actions)),
                                                      Y = RenderInit ++ RenderOther,
-                                                     ets:insert(cookies,{Module,Y}),
+                                                     ets:insert(actions,{Module,Y}),
                                                      Y
 % end
-                                  after 100 -> [{Module,A}] = ets:lookup(cookies,Module), A end,
+                                  after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
                     InitActions;
                 Unknown -> <<"OK">> end,
     wf_context:clear_actions(),

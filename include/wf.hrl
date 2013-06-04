@@ -29,7 +29,7 @@
 %%% FRAMEWORK %%%
 
 %%% Elements %%%
--define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", source=[], data_fields=[], body=[]).
+-define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", source=[], data_fields=[], body=undefined).
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates" }).
@@ -52,6 +52,7 @@
 -record(pre, {?ELEMENT_BASE(element_pre)}).
 -record(strong, {?ELEMENT_BASE(element_strong)}).
 -record(em, {?ELEMENT_BASE(element_em)}).
+-record(small, {?ELEMENT_BASE(element_small)}).
 -record(value, {?ELEMENT_BASE(element_value)}).
 -record(link, {?ELEMENT_BASE(element_link), title = "", new=false, mobile_target=false, mobile_dialog=false, url="javascript:", postback, delegate, name}).
 -record(email_link, {?ELEMENT_BASE(element_email_link), title="", email=""}).
@@ -103,7 +104,8 @@
 -record(sparkline, {?ELEMENT_BASE(element_sparkline), type, values, options }).
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, minLength=2, delay=300, next, postback, delegate=undefined }).
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
--record(textboxlist, {?ELEMENT_BASE(element_textboxlist), delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
+-record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
+-record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], delegate, postback}).
 
 -record(section, {?ELEMENT_BASE(element_section)}).
 -record(nav, {?ELEMENT_BASE(element_nav)}).

@@ -9,6 +9,7 @@ start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 init([]) ->
 
     ets:new(cookies,[set,named_table,{keypos,1},public]),
+    ets:new(actions,[set,named_table,{keypos,1},public]),
 
     {ok, {{one_for_one, 5, 10}, []}}.
 

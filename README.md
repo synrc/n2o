@@ -80,7 +80,7 @@ Reference to list of modern web frameworks: http://gist.github.com/5HT/5522302
 Desktop and Mobile Applications
 -------------------------------
 
-There is two approaches to design communications between client/server.
+There are two approaches to design communications between client/server.
 The first is called data-on-wire, where only data transfers on channel through
 through RPC, REST in form of JSON, XML or Binary. All rendering in first
 type are being made on client side. This calls rich client and mostly
@@ -167,7 +167,7 @@ with your favourite language/framework.
 Clean codebase
 ------------------------------
 
-We feel free to brake some of the compatability with the original Nitrogen project,
+We feel free to break some of the compatability with the original Nitrogen project,
 mostly because we want to have a clean codebase and fastest speed.
 However, it is still possible to easily port Nitrogen web sites to N2O.
 E.g. N2O returns id and class semantics of HTML and not html_id.
@@ -249,7 +249,7 @@ Start yourself depending N2O core
 ---------------------------------
 
 If you want dependency on the raw N2O core you should define
-N2O http and websocket cowboy handlers and cowboy static handler as
+N2O http and websocket (ws endpoint) cowboy handlers and cowboy static handler as
 Cowboy dispatch parameter:
 
     cowboy:start_http(http, 100, [{port, 8000}],
@@ -261,7 +261,7 @@ Cowboy dispatch parameter:
            [{'_', [
                 {["/static/[...]"], cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
                         {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
-                {["/websocket/[...]"], n2o_websocket, []},
+                {["/ws/[...]"], n2o_websocket, []},
                 {'_', n2o_cowboy, []}
         ]}]).
 

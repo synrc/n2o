@@ -10,9 +10,9 @@ main() ->
   [ #dtl{file = "login", bindings=[{title,Title},{body,Body}]} ].
 
 body() -> [ #span{id=display}, #br{},
-            #span{text="Login: "}, #textbox{id=user}, #br{},
-            #span{text="Password: "}, #password{id=pass},
-            #button{id=login,text="Login",postback=login,source=[user,pass]} ].
+            #span{body="Login: "}, #textbox{id=user}, #br{},
+            #span{body="Password: "}, #password{id=pass},
+            #button{id=login,body="Login",postback=login,source=[user,pass]} ].
 
 event(init) -> [];
 
