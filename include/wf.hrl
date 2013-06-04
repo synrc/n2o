@@ -54,7 +54,7 @@
 -record(em, {?ELEMENT_BASE(element_em)}).
 -record(small, {?ELEMENT_BASE(element_small)}).
 -record(value, {?ELEMENT_BASE(element_value)}).
--record(link, {?ELEMENT_BASE(element_link), title = "", new=false, mobile_target=false, mobile_dialog=false, url="javascript:", postback, delegate, name}).
+-record(link, {?ELEMENT_BASE(element_link), title, target, url="#", postback, delegate, name}).
 -record(email_link, {?ELEMENT_BASE(element_email_link), title="", email=""}).
 -record(error, {?ELEMENT_BASE(element_error)}).
 -record(span, {?ELEMENT_BASE(element_span)}).
@@ -78,7 +78,7 @@
 -record(panel, {?ELEMENT_BASE(element_panel)}).
 -record(fieldset, {?ELEMENT_BASE(element_fieldset), legend_body="", legend_text="", legend_html_encode=true}).
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
--record(image, {?ELEMENT_BASE(element_image), image="", alt="", width}).
+-record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
 -record(lightbox, {?ELEMENT_BASE(element_lightbox) }).
 -record(table, {?ELEMENT_BASE(element_table), rows, header=[], footer=[]}).
 -record(tablerow, {?ELEMENT_BASE(element_tablerow), cells}).

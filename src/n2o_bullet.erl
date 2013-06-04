@@ -51,7 +51,7 @@ stream(Data, Req, State) ->
 info(Pro, Req, State) ->
     Res =  case Pro of
                 {flush,Actions} -> wf_core:render(Actions);
-                <<"N2O,",Rest/binary>> -> 
+                <<"N2O,",Rest/binary>> ->
                     Module = State#context.module, Module:event(init),
                     Pid = list_to_pid(binary_to_list(Rest)),
                     X = Pid ! {'N2O',self()},
@@ -64,7 +64,7 @@ info(Pro, Req, State) ->
                                                      RenderOther = wf_core:render(get(actions)),
 %                                                     RenderInit = wf_render_actions:render_actions(Actions),
 %                                                     RenderOther = wf_render_actions:render_actions(get(actions)),
-                                                     Y = RenderInit ++ RenderOther,
+                                                     Y = [RenderInit, RenderOther],
                                                      ets:insert(actions,{Module,Y}),
                                                      Y
 % end

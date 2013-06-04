@@ -14,12 +14,10 @@ render_element(Record) ->
         Postback -> wf:wire(Anchor, #event { type=click, postback=Postback, validation_group=ID, delegate=Record#link.delegate })
     end,
 
-    Target = Record#link.new,
-
     List = [{<<"id">>, Record#link.id},
       {<<"href">>, Record#link.url},
       {<<"class">>, Record#link.class},
-      {<<"target">>, Target},
+      {<<"target">>, Record#link.target},
       {<<"style">>, Record#link.style},
       {<<"title">>, Record#link.title},
       {<<"name">>, Record#link.name} | Record#link.data_fields

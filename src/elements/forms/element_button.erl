@@ -22,5 +22,5 @@ render_element(Record) ->
       {<<"type">>, <<"button">>},
       {<<"class">>, Record#button.class},
       {<<"style">>, Record#button.style},
-      {<<"value">>, Record#button.body}
+      {<<"value">>, Record#button.body}  | Record#button.data_fields
   ]).

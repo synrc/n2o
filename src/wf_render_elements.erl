@@ -23,8 +23,7 @@ render_element(Element) when is_tuple(Element) ->
              Base1 = Base#elementbase { id=ID, class=Class },
              Element1 = wf_utils:replace_with_base(Base1, Element),
              wf:wire(Base1#elementbase.actions),
-             NewElements = Module:render_element(Element1),
-             wf_core:render(NewElements)
+             list_to_binary(Module:render_element(Element1))
     end;
 render_element(Element) -> error_logger:info_msg("Unknown Element: ~p",[Element]).
 

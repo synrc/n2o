@@ -12,6 +12,7 @@ render_element(Record) ->
     {<<"style">>, Record#image.style},
     {<<"alt">>, Record#image.alt},
     {<<"width">>, Record#image.width},
+    {<<"height">>, Record#image.height},
     {<<"src">>, Record#image.image} | Record#image.data_fields
   ],
 
