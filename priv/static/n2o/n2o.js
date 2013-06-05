@@ -35,7 +35,7 @@ utf8.toByteArray = function(str) {
 function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
-        ws = new WebSocket("ws://"+window.location.hostname+
+        ws = new bullet("ws://"+window.location.hostname+
                             ":8000"+//window.location.port+
                    "/ws"+window.location.pathname+
                                 window.location.search);
