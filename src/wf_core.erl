@@ -12,11 +12,12 @@ run(Req) ->
     wf_context:page_module(Module),
     wf_context:params(Params),
     wf_context:context(Ctx1),
-    Elements = Module:main(),
+    render(Module:main()), % render the actions
     Actions = wf_context:actions(),
     Pid = spawn(fun() -> transition(Actions) end),
     PidString = io_lib:format("~p",[Pid]),
     wf_context:script(["TransitionProcess = '", PidString, "'"]),
+    Elements = Module:main(),
     Html = render(Elements),
     Ctx2 = fold(finish,Ctx#context.handlers,Ctx1),
     Req2 = wf:response(Html,Ctx2#context.req),
