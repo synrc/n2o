@@ -30,7 +30,7 @@ stream({binary,Info}, Req, State) ->
     Linked = proplists:get_value(linked,Pro),
     Depickled = wf_pickle:depickle(Pickled),
     case Depickled of
-         #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
+        #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
             case Function of 
                  control_event   -> lists:map(fun({K,V})-> put(K,V) end,Linked),
                                     Module:Function(Trigger, Parameter);
@@ -39,40 +39,38 @@ stream({binary,Info}, Req, State) ->
                                     Module:Function(Parameter);
                  UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
           _ -> error_logger:error_msg("N2O allows only #ev{} events") end,
-%    Render = wf_render_actions:render_actions(get(actions)),
+%    error_logger:info_msg("Actions: ~p",[get(actions)]),
     Render = wf_core:render(get(actions)),
     wf_context:clear_actions(),
     {reply,Render, Req, State};
 stream(Data, Req, State) ->    
-     error_logger:info_msg("Data Received ~p",[Data]),    
-     self() ! Data,
+    error_logger:info_msg("Data Received ~p",[Data]),    
+    self() ! Data,
     {ok, Req,State}.
 
 info(Pro, Req, State) ->
     Res =  case Pro of
-                {flush,Actions} -> wf_core:render(Actions);
+                {flush,Actions} -> 
+                    error_logger:info_msg("Comet Actions: ~p",[Actions]),
+                    wf_core:render(Actions);
                 <<"N2O,",Rest/binary>> ->
                     Module = State#context.module, Module:event(init),
                     Pid = list_to_pid(binary_to_list(Rest)),
                     X = Pid ! {'N2O',self()},
-%                    error_logger:info_msg("Transition Actions: ~p",[X]),
-                    InitActions = receive Actions -> % cache actions for back/next buttons where no TransProc exists
-%                                          case ets:lookup(cookies,Module) of
-%                                               [{Module,A}] -> A;
-%                                               [] -> 
-                                                     RenderInit = wf_core:render(Actions),
-                                                     RenderOther = wf_core:render(get(actions)),
-%                                                     RenderInit = wf_render_actions:render_actions(Actions),
-%                                                     RenderOther = wf_render_actions:render_actions(get(actions)),
-                                                     Y = [RenderInit, RenderOther],
-                                                     ets:insert(actions,{Module,Y}),
-                                                     Y
-% end
-                                  after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
+                    InitActions = receive Actions ->
+                        RenderInit = wf_core:render(Actions),
+                        RenderOther = wf_core:render(get(actions)),
+                        Y = [RenderInit, RenderOther],
+                        ets:insert(actions,{Module,Y}),
+                        Y
+                    after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
                     InitActions;
-                Unknown -> <<"OK">> end,
+            Unknown -> <<"OK">> end,
+%    error_logger:info_msg("Rendered Comet Actions: ~p",[Res]),
+    GenActions = get(actions),
+%    error_logger:info_msg("Generated Actions: ~p",[GenActions]),
     wf_context:clear_actions(),
-    {reply, Res, Req, State}.
+    {reply, Res ++ wf_core:render(GenActions), Req, State}.
 
 terminate(_Req, _State) ->
     error_logger:info_msg("Bullet Terminated~n"),
