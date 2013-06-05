@@ -39,10 +39,13 @@ stream({binary,Info}, Req, State) ->
                                     Module:Function(Parameter);
                  UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
           _ -> error_logger:error_msg("N2O allows only #ev{} events") end,
-%    error_logger:info_msg("Actions: ~p",[get(actions)]),
-    Render = wf_core:render(get(actions)),
+    Actions = get(actions),
     wf_context:clear_actions(),
-    {reply,Render, Req, State};
+    Render = wf_core:render(Actions),
+    GenActions = get(actions),
+    RenderGenActions = wf_core:render(GenActions),
+    wf_context:clear_actions(),
+    {reply,[Render,RenderGenActions], Req, State};
 stream(Data, Req, State) ->    
     error_logger:info_msg("Data Received ~p",[Data]),    
     self() ! Data,
