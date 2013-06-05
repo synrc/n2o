@@ -29,7 +29,8 @@
 %%% FRAMEWORK %%%
 
 %%% Elements %%%
--define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", source=[], data_fields=[], body=undefined).
+-define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="",
+                              source=[], data_fields=[], aria_states=[], body=undefined, role, tabindex).
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates" }).
@@ -42,9 +43,9 @@
 -record(h5, {?ELEMENT_BASE(element_h5)}).
 -record(h6, {?ELEMENT_BASE(element_h6)}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
--record(li, {?ELEMENT_BASE(element_li), role="" }).
--record(br, {?ELEMENT_BASE(element_br) }).
--record(hr, {?ELEMENT_BASE(element_hr) }).
+-record(li, {?ELEMENT_BASE(element_li)}).
+-record(br, {?ELEMENT_BASE(element_br)}).
+-record(hr, {?ELEMENT_BASE(element_hr)}).
 -record(p, {?ELEMENT_BASE(element_p)}).
 -record(i, {?ELEMENT_BASE(element_i)}).
 -record(b, {?ELEMENT_BASE(element_b)}).
