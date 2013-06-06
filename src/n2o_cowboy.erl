@@ -17,7 +17,7 @@ handle(Req, State) -> {ok, NewReq} = wf_core:run(Req), {ok, NewReq, State}.
 params(Req) -> {Params,NewReq} = cowboy_req:qs_vals(Req), Params.
 path(Req) -> {Path,NewReq} = cowboy_req:path(Req), Path.
 request_body(Req) -> cowboy_req:body(Req).
-headers(Req) -> cowboy_reg:headers(Req).
+headers(Req) -> cowboy_req:headers(Req).
 response(Html,Req) -> cowboy_req:set_resp_body(Html,Req).
 reply(StatusCode,Req) -> cowboy_req:reply(StatusCode, Req).
 cookies(Req) -> {Cookies,Req} = cowboy_req:cookies(Req), Cookies.
