@@ -5,8 +5,10 @@
 
 reflect() -> record_info(fields, panel).
 render_element(Record) -> 
-  wf_tags:emit_tag(<<"div">>, wf:render(Record#panel.body), [
-    {<<"id">>, wf:to_binary(Record#panel.id)},
-    {<<"class">>, Record#panel.class},
-    {<<"style">>, Record#panel.style} | Record#panel.data_fields
-  ]).
+  wf_tags:emit_tag(<<"div">>, wf:render(Record#panel.body),
+    lists:append([
+      [{<<"id">>, wf:to_binary(Record#panel.id)},
+      {<<"class">>, Record#panel.class},
+      {<<"style">>, Record#panel.style}],
+      Record#panel.data_fields,
+      Record#panel.aria_states])).
