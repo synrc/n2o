@@ -39,12 +39,15 @@ stream({binary,Info}, Req, State) ->
                                     Module:Function(Parameter);
                  UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
           _ -> error_logger:error_msg("N2O allows only #ev{} events") end,
+
     Actions = get(actions),
-    wf_context:clear_actions(),
     Render = wf_core:render(Actions),
+
+    wf_context:clear_actions(),
     GenActions = get(actions),
     RenderGenActions = wf_core:render(GenActions),
     wf_context:clear_actions(),
+
     {reply,[Render,RenderGenActions], Req, State};
 stream(Data, Req, State) ->    
     error_logger:info_msg("Data Received ~p",[Data]),    
@@ -52,7 +55,7 @@ stream(Data, Req, State) ->
     {ok, Req,State}.
 
 info(Pro, Req, State) ->
-    Res =  case Pro of
+    Render =  case Pro of
                 {flush,Actions} -> 
                     error_logger:info_msg("Comet Actions: ~p",[Actions]),
                     wf_core:render(Actions);
@@ -69,11 +72,13 @@ info(Pro, Req, State) ->
                     after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
                     InitActions;
             Unknown -> <<"OK">> end,
-%    error_logger:info_msg("Rendered Comet Actions: ~p",[Res]),
-    GenActions = get(actions),
-%    error_logger:info_msg("Generated Actions: ~p",[GenActions]),
+
     wf_context:clear_actions(),
-    {reply, Res ++ wf_core:render(GenActions), Req, State}.
+    GenActions = get(actions),
+    RenderGenActions = wf_core:render(GenActions),
+    wf_context:clear_actions(),
+
+    {reply, [Render,RenderGenActions], Req, State}.
 
 terminate(_Req, _State) ->
     error_logger:info_msg("Bullet Terminated~n"),
