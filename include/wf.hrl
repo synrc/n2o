@@ -118,6 +118,9 @@
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 -record(mark, {?ELEMENT_BASE(element_mark)}).
 
+%% Twitter Bootstrap %%
+-record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[]}).
+
 %%% Actions %%%
 -define(AV_BASE(Module,Type), is_action=Type, module=Module, anchor, trigger, target, actions, show_if=true, source=[]).
 
