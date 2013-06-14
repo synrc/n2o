@@ -41,9 +41,9 @@ stream({binary,Info}, Req, State) ->
           _ -> error_logger:error_msg("N2O allows only #ev{} events") end,
 
     Actions = get(actions),
+    wf_context:clear_actions(),
     Render = wf_core:render(Actions),
 
-    wf_context:clear_actions(),
     GenActions = get(actions),
     RenderGenActions = wf_core:render(GenActions),
     wf_context:clear_actions(),
