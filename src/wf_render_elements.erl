@@ -6,7 +6,7 @@
 render_element(E) when is_list(E) -> E;
 render_element(Element) when is_tuple(Element) ->
     Base = wf_utils:get_elementbase(Element),
-    Module = Base#elementbase.module, 
+    Module = Base#elementbase.module,
     case Base#elementbase.is_element == is_element of
         true -> ok;
         false -> throw({not_an_element, Element}) end,
@@ -16,7 +16,7 @@ render_element(Element) when is_tuple(Element) ->
         undefined -> [];
         0 -> [];
         _ -> ID = case Base#elementbase.id of
-                       undefined -> temp_id();
+                       undefined -> undefined;
                        Other2 when is_atom(Other2) -> atom_to_list(Other2);
                        L when is_list(L) -> L end,
              Class = Base#elementbase.class,
