@@ -118,6 +118,8 @@
 -record(footer, {?ELEMENT_BASE(element_footer)}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 -record(mark, {?ELEMENT_BASE(element_mark)}).
+-record(figure, {?ELEMENT_BASE(element_figure)}).
+-record(figcaption, {?ELEMENT_BASE(element_figcaption)}).
 
 %% Twitter Bootstrap %%
 -record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[], caption=[]}).
