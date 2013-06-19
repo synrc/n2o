@@ -25,40 +25,23 @@
 
 -define(WF_IF(Term,IfTrue), ?WF_IF(Term,IfTrue,"")).
 
-
 %%% FRAMEWORK %%%
 
 %%% Elements %%%
 -define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="",
-                              source=[], data_fields=[], aria_states=[], body=undefined, role, tabindex).
--record(elementbase, {?ELEMENT_BASE(undefined)}).
+                              source=[], data_fields=[], aria_states=[], body, role, tabindex, html_tag).
+-define(DEFAULT_BASE, {?ELEMENT_BASE(undefined)}).
+
+-record(elementbase, ?DEFAULT_BASE).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates" }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
 -record(body, {?ELEMENT_BASE(element_body), title=""}).
--record(h1, {?ELEMENT_BASE(element_h1)}).
--record(h2, {?ELEMENT_BASE(element_h2)}).
--record(h3, {?ELEMENT_BASE(element_h3)}).
--record(h4, {?ELEMENT_BASE(element_h4)}).
--record(h5, {?ELEMENT_BASE(element_h5)}).
--record(h6, {?ELEMENT_BASE(element_h6)}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
--record(li, {?ELEMENT_BASE(element_li)}).
--record(br, {?ELEMENT_BASE(element_br)}).
--record(hr, {?ELEMENT_BASE(element_hr)}).
--record(p, {?ELEMENT_BASE(element_p)}).
--record(i, {?ELEMENT_BASE(element_i)}).
--record(b, {?ELEMENT_BASE(element_b)}).
 -record(label, {?ELEMENT_BASE(element_label), for=""}).
--record(pre, {?ELEMENT_BASE(element_pre)}).
--record(strong, {?ELEMENT_BASE(element_strong)}).
--record(em, {?ELEMENT_BASE(element_em)}).
--record(small, {?ELEMENT_BASE(element_small)}).
--record(value, {?ELEMENT_BASE(element_value)}).
 -record(link, {?ELEMENT_BASE(element_link), title, target, url="#", postback, delegate, name}).
 -record(email_link, {?ELEMENT_BASE(element_email_link), title="", email=""}).
 -record(error, {?ELEMENT_BASE(element_error)}).
--record(span, {?ELEMENT_BASE(element_span)}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
 -record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
@@ -78,7 +61,6 @@
 -record(restful_reset, {?ELEMENT_BASE(element_restful_reset), html_name}).
 -record(restful_upload, {?ELEMENT_BASE(element_restful_upload), html_name}).
 -record(panel, {?ELEMENT_BASE(element_panel)}).
--record(fieldset, {?ELEMENT_BASE(element_fieldset), legend_body="", legend_text="", legend_html_encode=true}).
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
 -record(lightbox, {?ELEMENT_BASE(element_lightbox) }).
@@ -108,18 +90,37 @@
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], delegate, postback}).
-
--record(section, {?ELEMENT_BASE(element_section)}).
--record(nav, {?ELEMENT_BASE(element_nav)}).
--record(article, {?ELEMENT_BASE(element_article)}).
--record(aside, {?ELEMENT_BASE(element_aside)}).
--record(hgroup, {?ELEMENT_BASE(element_hgroup)}).
--record(header, {?ELEMENT_BASE(element_header)}).
--record(footer, {?ELEMENT_BASE(element_footer)}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
--record(mark, {?ELEMENT_BASE(element_mark)}).
--record(figure, {?ELEMENT_BASE(element_figure)}).
--record(figcaption, {?ELEMENT_BASE(element_figcaption)}).
+
+-record(h1,         ?DEFAULT_BASE).
+-record(h2,         ?DEFAULT_BASE).
+-record(h3,         ?DEFAULT_BASE).
+-record(h4,         ?DEFAULT_BASE).
+-record(h5,         ?DEFAULT_BASE).
+-record(h6,         ?DEFAULT_BASE).
+-record(li,         ?DEFAULT_BASE).
+-record(br,         ?DEFAULT_BASE).
+-record(hr,         ?DEFAULT_BASE).
+-record(p,          ?DEFAULT_BASE).
+-record(i,          ?DEFAULT_BASE).
+-record(b,          ?DEFAULT_BASE).
+-record(pre,        ?DEFAULT_BASE).
+-record(strong,     ?DEFAULT_BASE).
+-record(em,         ?DEFAULT_BASE).
+-record(small,      ?DEFAULT_BASE).
+-record(span,       ?DEFAULT_BASE).
+-record(fieldset,   ?DEFAULT_BASE).
+-record(legend,     ?DEFAULT_BASE).
+-record(section,    ?DEFAULT_BASE).
+-record(nav,        ?DEFAULT_BASE).
+-record(article,    ?DEFAULT_BASE).
+-record(aside,      ?DEFAULT_BASE).
+-record(hgroup,     ?DEFAULT_BASE).
+-record(header,     ?DEFAULT_BASE).
+-record(footer,     ?DEFAULT_BASE).
+-record(mark,       ?DEFAULT_BASE).
+-record(figure,     ?DEFAULT_BASE).
+-record(figcaption, ?DEFAULT_BASE).
 
 %% Twitter Bootstrap %%
 -record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[], caption=[]}).
