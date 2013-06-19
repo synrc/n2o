@@ -13,7 +13,7 @@ render_element(R = #carousel{})->
         Index = list_to_binary(integer_to_list(I)),
         {
           #li{data_fields=[{<<"data-target">>, list_to_binary("#"++Id)}, {<<"data-slide-to">>, Index}]},
-          #panel{class=if I==1 -> [item,active]; true -> [item] end, data_fields=[{<<"data-slide-number">>, Index}], body=E}
+          #panel{class=if I==0 -> [item,active]; true -> [item] end, data_fields=[{<<"data-slide-number">>, Index}], body=E}
         }
       end || {I, E} <- lists:zip(lists:seq(0,ItemsCount-1), R#carousel.items)]),
 
