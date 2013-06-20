@@ -45,7 +45,7 @@
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
 -record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
--record(textbox, {?ELEMENT_BASE(element_textbox), value, maxlength="", placeholder="", next, postback, delegate, html_name}).
+-record(textbox, {?ELEMENT_BASE(element_textbox), value, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
 -record(textarea, {?ELEMENT_BASE(element_textarea), placeholder="", html_name}).
 -record(range, {?ELEMENT_BASE(element_range), min=0, max=100, step=1, value=0, next, postback, delegate}).
@@ -55,7 +55,7 @@
 -record(checkbox, {?ELEMENT_BASE(element_checkbox), checked=false, value="on", postback, delegate, html_name}).
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup)}).
 -record(radio, {?ELEMENT_BASE(element_radio), value, name, checked=false, postback, delegate, html_name}).
--record(password, {?ELEMENT_BASE(element_password), value, next, postback, delegate, html_name}).
+-record(password, {?ELEMENT_BASE(element_password), value, maxlength="", placeholder= <<"password">>, next, postback, delegate, name}).
 -record(restful_form, {?ELEMENT_BASE(element_restful_form), method="POST", action, html_name, enctype}).
 -record(restful_submit, {?ELEMENT_BASE(element_restful_submit), value, html_name}).
 -record(restful_reset, {?ELEMENT_BASE(element_restful_reset), html_name}).

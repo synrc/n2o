@@ -11,10 +11,10 @@ render_element(Record) ->
       {<<"type">>, <<"text">>},
       {<<"maxlength">>,Record#textbox.maxlength},
       {<<"style">>,Record#textbox.style},
-      {<<"name">>,Record#textbox.html_name},
+      {<<"name">>,Record#textbox.name},
       {<<"placeholder">>,Record#textbox.placeholder},
       {<<"value">>,Record#textbox.value},
-      {<<"class">>,Record#textbox.class}
+      {<<"class">>,Record#textbox.class} | Record#textbox.data_fields
   ],
   wf_tags:emit_tag(<<"input">>, wf:render(Record#textbox.body), List).
 
