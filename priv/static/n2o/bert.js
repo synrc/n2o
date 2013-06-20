@@ -72,6 +72,7 @@ BertClass.prototype.encodebuf = function (S) {
 // - ENCODING -
 
 BertClass.prototype.encode_inner = function (Obj) {
+    if(Obj === undefined) return this.NIL;
     var func = 'encode_' + typeof(Obj);
     return this[func](Obj);
 };

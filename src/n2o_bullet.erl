@@ -34,7 +34,7 @@ stream({binary,Info}, Req, State) ->
             case Function of 
                  control_event   -> lists:map(fun({K,V})-> put(K,V) end,Linked),
                                     Module:Function(Trigger, Parameter);
-                 api_event       -> Module:Function(Parameter,Linked,State);
+                 api_event       -> Module:Function(Parameter,binary_to_term(list_to_binary(Linked)),State);
                  event           -> lists:map(fun({K,V})-> put(K,V) end,Linked),
                                     Module:Function(Parameter);
                  UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
