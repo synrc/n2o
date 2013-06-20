@@ -10,7 +10,7 @@ render_element(Record) ->
     Anchor = Record#button.anchor,
     case Record#button.postback of
          undefined -> skip;
-         Postback -> wf:wire(Anchor, #event { type=click, 
+         Postback -> wf:wire(Anchor, #event { type=click,
                                               validation_group=ID,
                                               postback=Postback,
                                               source=Record#button.source }) end,

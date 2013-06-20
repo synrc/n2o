@@ -16,18 +16,9 @@ render_element(Record) ->
         Postback -> wf:wire(Id, #event { type=change, postback=Postback, validation_group=Id, delegate=Record#checkbox.delegate })
     end,
 
-    Icons = [
-      wf_tags:emit_tag(<<"span">>, [], [
-        {<<"class">>, <<"first-icon fui-checkbox-unchecked">>}
-      ]),
-      wf_tags:emit_tag(<<"span">>, [], [
-        {<<"class">>, <<"second-icon fui-checkbox-checked">>}
-      ])
-    ],
     Label = [
-      wf_tags:emit_tag(<<"span">>, Icons, [{<<"class">>, <<"icons">>}]),
-      wf_tags:emit_tag(<<"input">>, [
-            {<<"name">>, Record#checkbox.html_name},
+      wf_tags:emit_tag(<<"input">>, [], [
+            {<<"name">>, Record#checkbox.name},
             {<<"id">>,   Id},
             {<<"type">>, <<"checkbox">>},
             {<<"data-toggle">>, <<"checkbox">>},
@@ -36,7 +27,7 @@ render_element(Record) ->
       ]),
       Record#checkbox.body
     ],
-    wf_tags:emit_tag(<<"label">>, Label, [
+    wf_tags:emit_tag(<<"label">>, wf:render(Label), [
       {<<"class">>, Record#checkbox.class},
       {<<"style">>, Record#checkbox.style},
       {<<"for">>, Id}
