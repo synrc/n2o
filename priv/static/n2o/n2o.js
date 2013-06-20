@@ -21,6 +21,7 @@ function addStatus(text){
 
 utf8.toByteArray = function(str) {
     var byteArray = [];
+    if (str !== undefined)
     for (var i = 0; i < str.length; i++)
         if (str.charCodeAt(i) <= 0x7F)
             byteArray.push(str.charCodeAt(i));

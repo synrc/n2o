@@ -9,5 +9,5 @@ render_action(Record) ->
     %Tag = #ev{payload=Record},
     Data = "utf8.toByteArray(data)", %    Data = "Bert.encode(event)",
     PostbackScript = wf_event:generate_postback_script(Name, Anchor, "document", undefined, api_event, Data),
-    wf:f("document.~s = function(data) {", [Name]) ++ PostbackScript ++ "};".
+    wf:f("~s = function(data) {", [Name]) ++ PostbackScript ++ "};".
 
