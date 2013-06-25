@@ -34,7 +34,7 @@
 
 -record(elementbase, ?DEFAULT_BASE).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
--record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates" }).
+-record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates", ext="html", bind_script=true }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
 -record(body, {?ELEMENT_BASE(element_body), title=""}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
