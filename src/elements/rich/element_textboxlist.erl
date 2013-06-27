@@ -16,9 +16,9 @@ render_element(R = #textboxlist{}) ->
                                                     R#textboxlist.delegate,
                                                     control_event,
                                                     [<<"{'term': term}">>]),
-      [{autocomplete,[case R#textboxlist.queryRemote of false -> []; true -> {postback, list_to_binary(Postback)} end ]}]
+      {struct,[{autocomplete, {struct, [case R#textboxlist.queryRemote of false -> []; true -> {postback, list_to_binary(Postback)} end ]} }]}
   end,
-  wf:wire(wf:f("$(function(){$('#~s').textboxlister(~s);});", [Id, jsonx:encode(Plugins)])),
+  wf:wire(wf:f("$(function(){$('#~s').textboxlister(~s);});", [Id, mochijson2:encode(Plugins)])),
 
   wf_tags:emit_tag(<<"input">>, [
     {<<"id">>, Id},
@@ -28,4 +28,4 @@ render_element(R = #textboxlist{}) ->
   ]).
 
 process_autocomplete(Target, Result, SearchTerm)->
-  wf:wire(wf:f("$(~s).trigger('autocompleteData', [~s, '~s']);", [Target, jsonx:encode(Result), SearchTerm])).
+  wf:wire(wf:f("$(~s).trigger('autocompleteData', [~s, '~s']);", [Target, mochijson2:encode(Result), SearchTerm])).
