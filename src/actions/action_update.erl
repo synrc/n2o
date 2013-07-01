@@ -13,7 +13,7 @@ render_action(Record) ->
                 E when element(2,E) == is_element -> wf_core:render_item(Elements);
                 E when element(2,E) == is_action  -> wf_core:render_item(Elements);
                 E -> wf_core:render(E) end,
-    wf:f("$('#~s').~s('~s');", [Target, atom_to_list(Type), wf:js_escape(Html)]).
+    wf:f("$('#~s').~s('~s');", [Target, atom_to_list(Type), Html]).
 
 update(Target, Elements) -> update(html, Target, Elements).
 replace(Target, Elements) -> update(replaceWith, Target, Elements).
