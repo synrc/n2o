@@ -1,5 +1,5 @@
-N2O: Erlang Web Framework on WebSockets
-=======================================
+N2O: Erlang Web Framework
+=========================
 
 Nitrogen 2x Optimized
 ---------------------
@@ -137,7 +137,8 @@ and async interprocesses communications:
         #textbox { id=userName, text= <<"Anonymous">> },
         #panel { id=chatHistory, class=chat_history },
         #textbox { id=message },
-        #button { id=sendButton, text= <<"Send">>, postback={chat,Pid}, source=[userName,message] },
+        #button { id=sendButton, text= <<"Send">>,
+                  postback={chat,Pid}, source=[userName,message] },
         #panel { id=status } ].
 
     event({chat,Pid}) -> %% area of websocket handler
@@ -259,8 +260,9 @@ Cowboy dispatch parameter:
     dispatch_rules() ->
         cowboy_router:compile(
            [{'_', [
-                {["/static/[...]"], cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
-                        {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
+                {["/static/[...]"], cowboy_static,
+                    [{directory, {priv_dir, ?APP, [<<"static">>]}},
+                     {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
                 {["/ws/[...]"], n2o_websocket, []},
                 {'_', n2o_cowboy, []}
         ]}]).
