@@ -12,7 +12,7 @@ title() -> [ <<"N2O">> ].
 
 body() ->
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
-    [ #span{ body = io_lib:format("'/hello?x=' is ~p",[wf:qs(<<"x">>)]) },
+    [ #span{ body = io_lib:format("'/index?x=' is ~p",[wf:qs(<<"x">>)]) },
       #panel{ id=history },
       #textbox{ id=message },
       #button{ id=send, body= <<"Chat">>, postback={chat,Pid}, source=[message] } ].
