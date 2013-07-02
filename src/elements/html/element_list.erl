@@ -11,5 +11,5 @@ render_element(Record) ->
   wf_tags:emit_tag(Tag, wf:render(Record#list.body), [
     {<<"id">>, Record#list.id},
     {<<"class">>, Record#list.class},
-    {<<"style">>, Record#list.style}
+    {<<"style">>, Record#list.style} | Record#list.data_fields
   ]).
