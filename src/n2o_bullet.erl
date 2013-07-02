@@ -61,23 +61,26 @@ info(Pro, Req, State) ->
                     wf_core:render(Actions);
                 <<"N2O,",Rest/binary>> ->
                     Module = State#context.module, Module:event(init),
+                    InitActions = get(actions),
+                    wf_context:clear_actions(),
                     Pid = list_to_pid(binary_to_list(Rest)),
                     X = Pid ! {'N2O',self()},
-                    InitActions = receive Actions ->
-                        RenderInit = wf_core:render(Actions),
-                        RenderOther = wf_core:render(get(actions)),
-                        Y = [RenderInit, RenderOther],
+                    R = receive Actions ->
+                        RenderInit = wf_core:render(InitActions),
+                        InitGenActions = get(actions),
+                        RenderInitGenActions = wf_core:render(InitGenActions),
+                        wf_context:clear_actions(),
+                        RenderPage = wf_core:render(Actions),
+                        Y = [RenderInit, RenderPage, RenderInitGenActions],
                         ets:insert(actions,{Module,Y}),
                         Y
                     after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
-                    InitActions;
+                    R;
             Unknown -> <<"OK">> end,
-
-    wf_context:clear_actions(),
     GenActions = get(actions),
+    wf_context:clear_actions(),
     RenderGenActions = wf_core:render(GenActions),
     wf_context:clear_actions(),
-
     {reply, [Render,RenderGenActions], Req, State}.
 
 terminate(_Req, _State) ->

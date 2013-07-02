@@ -34,7 +34,7 @@
 
 -record(elementbase, ?DEFAULT_BASE).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
--record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates" }).
+-record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates", ext="html", bind_script=true }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
 -record(body, {?ELEMENT_BASE(element_body), title=""}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
@@ -43,7 +43,7 @@
 -record(email_link, {?ELEMENT_BASE(element_email_link), title="", email=""}).
 -record(error, {?ELEMENT_BASE(element_error)}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
--record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback}).
+-record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
 -record(textbox, {?ELEMENT_BASE(element_textbox), value, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
@@ -121,6 +121,7 @@
 -record(mark,       ?DEFAULT_BASE).
 -record(figure,     ?DEFAULT_BASE).
 -record(figcaption, ?DEFAULT_BASE).
+-record(blockquote, {?ELEMENT_BASE(element_blockquote), cite}).
 
 %% Twitter Bootstrap %%
 -record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[], caption=[]}).

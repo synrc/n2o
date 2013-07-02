@@ -1,5 +1,5 @@
-N2O: Erlang Web Framework on WebSockets
-=======================================
+N2O: Erlang Web Framework
+=========================
 
 Nitrogen 2x Optimized
 ---------------------
@@ -81,7 +81,7 @@ Desktop and Mobile Applications
 -------------------------------
 
 There are two approaches to design communications between client/server.
-The first is called data-on-wire, where only data transfers on channel through
+The first is called data-on-wire, where only data transfers on channel
 through RPC, REST in form of JSON, XML or Binary. All rendering in first
 type are being made on client side. This calls rich client and mostly
 fits for desktop. The examples are Chaplin/CoffeScript and Meteor/JavaScript.
@@ -92,7 +92,7 @@ This approach better fits for mobile applications, where client doesn't
 have much resources.
 
 Using N2O you could create both types of applications: using N2O REST framework
-for first type of application based on Cowboy REST features alogn with
+for first type of application based on Cowboy REST features along with
 DTL templates for initial HTML renderings, and also Nitrogen DSL-based approach to model
 parts of the pages as widgets and control elements thanks
 to rich Nitrogen elements collections provided by Nitrogen community.
@@ -137,7 +137,8 @@ and async interprocesses communications:
         #textbox { id=userName, text= <<"Anonymous">> },
         #panel { id=chatHistory, class=chat_history },
         #textbox { id=message },
-        #button { id=sendButton, text= <<"Send">>, postback={chat,Pid}, source=[userName,message] },
+        #button { id=sendButton, text= <<"Send">>,
+                  postback={chat,Pid}, source=[userName,message] },
         #panel { id=status } ].
 
     event({chat,Pid}) -> %% area of websocket handler
@@ -259,8 +260,9 @@ Cowboy dispatch parameter:
     dispatch_rules() ->
         cowboy_router:compile(
            [{'_', [
-                {["/static/[...]"], cowboy_static, [{directory, {priv_dir, ?APP, [<<"static">>]}},
-                        {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
+                {["/static/[...]"], cowboy_static,
+                    [{directory, {priv_dir, ?APP, [<<"static">>]}},
+                     {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
                 {["/ws/[...]"], n2o_websocket, []},
                 {'_', n2o_cowboy, []}
         ]}]).

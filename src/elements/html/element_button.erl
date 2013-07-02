@@ -13,7 +13,8 @@ render_element(Record) ->
          Postback -> wf:wire(Anchor, #event { type=click,
                                               validation_group=ID,
                                               postback=Postback,
-                                              source=Record#button.source }) end,
+                                              source=Record#button.source,
+                                              delegate=Record#button.delegate }) end,
 
   wf_tags:emit_tag(<<"button">>, wf:render(Record#button.body), [
       {<<"id">>, ID},
