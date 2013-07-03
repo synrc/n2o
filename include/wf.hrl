@@ -64,11 +64,10 @@
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
 -record(lightbox, {?ELEMENT_BASE(element_lightbox) }).
--record(table, {?ELEMENT_BASE(element_table), rows, header=[], footer=[]}).
--record(tablerow, {?ELEMENT_BASE(element_tablerow), cells}).
--record(tableheader, {?ELEMENT_BASE(element_tableheader), align="left", valign="middle", colspan=1, rowspan=1}).
--record(tablecell, {?ELEMENT_BASE(element_tablecell), align="left", valign="middle", colspan=1, rowspan=1}).
--record(singlerow, {?ELEMENT_BASE(element_singlerow), cells}).
+-record(table, {?ELEMENT_BASE(element_table), rows, header, footer}).
+-record(td, {?ELEMENT_BASE(element_td), colspan=1, rowspan=1, scope}).
+-record(th, {?ELEMENT_BASE(element_th), colspan=1, rowspan=1, scope}).
+-record(tr, {?ELEMENT_BASE(element_tr), cells}).
 -record(file, {?ELEMENT_BASE(element_file), file}).
 -record(flash, {?ELEMENT_BASE(element_flash)}).
 -record(placeholder, {?ELEMENT_BASE(element_placeholder)}).
