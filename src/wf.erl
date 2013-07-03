@@ -159,8 +159,6 @@ async_mode() -> wf_context:async_mode().
 async_mode(AsyncMode) -> wf_context:async_mode(AsyncMode).
 switch_to_comet() -> async_mode(comet).
 switch_to_polling(IntervalInMS) -> async_mode({poll, IntervalInMS}).
-config(Key) -> config_handler:get_value(Key).
-config_default(Key, DefaultValue) -> config_handler:get_value(Key, DefaultValue).
 debug() -> wf_utils:debug().
 break() -> wf_utils:break().
 assert(true, _) -> ok;
@@ -168,3 +166,13 @@ assert(false, Error) -> erlang:error(Error).
 
 append(List, Key, Value) -> case Value of undefined -> List; A -> [{Key, Value}|List] end.
 render(X) -> wf_core:render(X).
+
+config_multiple(Keys) -> [value(Key, "") || Key <- Keys].
+config(Key) -> config(n2o, Key, "").
+config(App,Key) -> config(App,Key, "").
+config(App, Key, Default) -> case application:get_env(App,Key) of
+                              undefined -> Default;
+                              {ok,V} -> V end.
+config(Key, Default) -> case application:get_env(n2o,Key) of
+                              undefined -> Default;
+                              {ok,V} -> V end.
