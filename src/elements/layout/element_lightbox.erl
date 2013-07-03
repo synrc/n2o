@@ -15,8 +15,8 @@ render_element(Record) ->
             },
             #table { 
                 class=lightbox_table,
-                rows=#tablerow {
-                    cells=#tablecell { align=center, valign=middle, style="vertical-align: middle;", body=[
+                rows=#tr {
+                    cells=#td { style="vertical-align: middle;", body=[
                         "<center><table><tr><td>",
                         Record#lightbox.body,
                         "</td></tr></table></center>"
