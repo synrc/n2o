@@ -1,6 +1,6 @@
--module (element_rtable).
+-module(element_rtable).
 -compile(export_all).
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 
 reflect() -> record_info(fields, rtable).
 

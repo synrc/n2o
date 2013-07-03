@@ -1,6 +1,6 @@
 -module (element_blockquote).
 -author('Andrew Zadorozhny').
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 -compile(export_all).
 
 render_element(Record) ->

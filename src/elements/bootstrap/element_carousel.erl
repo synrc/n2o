@@ -1,6 +1,6 @@
 -module(element_carousel).
 -compile(export_all).
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 
 render_element(R = #carousel{})->
   Id = if R#carousel.id == undefined -> wf:temp_id(); true -> R#carousel.id end,

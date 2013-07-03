@@ -1,6 +1,6 @@
--module (element_textboxlist).
+-module(element_textboxlist).
 -compile(export_all).
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 
 reflect() -> record_info(fields, textboxlist).
 

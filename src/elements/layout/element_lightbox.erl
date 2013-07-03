@@ -1,5 +1,5 @@
 -module(element_lightbox).
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, lightbox).

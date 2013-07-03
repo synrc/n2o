@@ -1,5 +1,3 @@
--ifndef(wf_inc).
--define(wf_inc, ok).
 
 -record(handler, {name, module, config, state}).
 -record(context, {handlers, actions, req, module, path, session, params}).
@@ -180,4 +178,3 @@
 -record(js_custom, {?VALIDATOR_BASE(validator_js_custom), function, args="{}" }).
 
 
--endif.

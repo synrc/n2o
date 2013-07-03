@@ -1,6 +1,6 @@
 -module(element_panel).
 -author('Maxim Sokhatsky').
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 -compile(export_all).
 
 reflect() -> record_info(fields, panel).

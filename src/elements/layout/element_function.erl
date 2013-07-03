@@ -1,6 +1,6 @@
 -module(element_function).
 -author('Rusty Klophaus').
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 -compile(export_all).
 
 % The 'function' attribute is an Erlang function of arity 0 that returns [Elements].

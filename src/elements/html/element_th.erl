@@ -1,5 +1,5 @@
 -module(element_th).
--include_lib("n2o/include/wf.hrl").
+-include("wf.hrl").
 -compile(export_all).
 
 render_element(Record) ->
