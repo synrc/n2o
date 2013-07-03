@@ -3,6 +3,7 @@
 NODE=${1:-"web"}
 
 function release_node {
+    ./nitrogen_static.sh
     rm -rf rels/$1/node/lib
     rm -rf rels/$1/node/data
     rm -rf rels/$1/node/log
