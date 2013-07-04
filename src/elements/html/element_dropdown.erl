@@ -5,61 +5,29 @@
 reflect() -> record_info(fields, dropdown).
 
 render_element(Record) -> 
+    ID = Record#dropdown.id,
+    Anchor = Record#dropdown.anchor,
+    case Record#dropdown.postback of
+         undefined -> skip;
+         Postback -> wf:wire(Anchor, #event { type=change,
+                                              validation_group=ID,
+                                              postback=Postback,
+%                                              source=Record#button.source,
+                                              delegate=Record#button.delegate }) end,
 
-    wire_postback(Record),
-    Options = format_options(Record),
+    Opts = [wf_tags:emit_tag(<<"otion">>, [], [
+      {<<"disabled">>, O#option.disabled},
+      {<<"label">>, O#option.label},
+      {<<"selected">>, case O#option.selected of true -> <<"selected">>; _-> undefined end},
+      {<<"value">>, O#option.value}
+    ])|| O = #option{show_if=Visible} <- Record#dropdown.options, Visible == true],
 
-    Multiple = case Record#dropdown.multiple of
-        true -> [{multiple}];
-        false -> []
-    end,
-
-    Disabled = case Record#dropdown.disabled of
-        true -> [{disabled}];
-        false -> []
-    end,
-
-    wf_tags:emit_tag(select, Options, [
-        {id, Record#dropdown.id},
-        {class, [dropdown, Record#dropdown.class]},
-        {style, Record#dropdown.style},
-        {name, Record#dropdown.html_name},
-        {data_fields, Record#dropdown.data_fields}
-    ] ++ Multiple ++ Disabled).
-
-wire_postback(Dropdown) when Dropdown#dropdown.postback==undefined ->
-    ignore;
-wire_postback(Dropdown) ->
-    wf:wire(Dropdown#dropdown.anchor, #event { 
-        type=change, 
-        postback=Dropdown#dropdown.postback,
-        validation_group=Dropdown#dropdown.id,
-        delegate=Dropdown#dropdown.delegate 
-    }).
-
-format_options(Dropdown) when Dropdown#dropdown.options==undefined ->
-    "";
-format_options(#dropdown{options=Opts, value=Value}) ->
-    [create_option(Opt, Value) || Opt <- Opts, Opt#option.show_if==true].
-
-create_option(X, Value) ->
-    SelectedOrNot = if
-        (Value =/= undefined andalso X#option.value == Value)
-                orelse X#option.selected == true ->
-            selected;
-        true ->
-            not_selected
-    end,
-
-    Content = wf:html_encode(X#option.body),
-
-    Props = [{SelectedOrNot, true}],
-
-    %% if value property is 'undefined', then we don't want to emit it at all
-    %% This keeps it consistent with the behavior of HTML forms
-    Props1 = case X#option.value of
-        undefined -> Props;
-        V -> [ {value,wf:html_encode(V)} | Props]
-    end,
-
-    wf_tags:emit_tag(option, Content, Props1).
+    wf_tags:emit_tag(<<"select">>, Opts, [
+        {<<"id">>, Record#dropdown.id},
+        {<<"class">>, [dropdown, Record#dropdown.class]},
+        {<<"style">>, Record#dropdown.style},
+        {<<"name">>, Record#dropdown.name},
+        {<<"data_fields">>, Record#dropdown.data_fields},
+        {<<"disabled">>, case Record#dropdown.disabled of true -> <<"disabled">>; _-> undefined end},
+        {<<"multiple">>, case Record#dropdown.multiple of true -> <<"multiple">>; _-> undefined end}
+    ]).

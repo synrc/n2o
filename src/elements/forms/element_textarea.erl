@@ -10,7 +10,9 @@ render_element(Record) ->
     {<<"class">>, Record#textarea.class},
     {<<"id">>, Record#textarea.id},
     {<<"style">>, Record#textarea.style},
-    {<<"name">>, Record#textarea.html_name},
+    {<<"name">>, Record#textarea.name},
+    {<<"rows">>, Record#textarea.rows},
+    {<<"cols">>, Record#textarea.cols},
     {<<"placeholder">>, Record#textarea.placeholder}
   ]).
 

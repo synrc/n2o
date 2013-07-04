@@ -45,11 +45,11 @@
 -record(literal, {?ELEMENT_BASE(element_literal)}).
 -record(textbox, {?ELEMENT_BASE(element_textbox), value, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
--record(textarea, {?ELEMENT_BASE(element_textarea), placeholder="", html_name}).
+-record(textarea, {?ELEMENT_BASE(element_textarea), placeholder, name, cols, rows}).
 -record(range, {?ELEMENT_BASE(element_range), min=0, max=100, step=1, value=0, next, postback, delegate}).
 -record(datepicker_textbox, {?ELEMENT_BASE(element_datepicker_textbox), value, next, validators=[], options = [{dateFormat, "yy-mm-dd"}] }).
--record(dropdown, {?ELEMENT_BASE(element_dropdown), options=[], postback, delegate, value, multiple=false, disabled=false, html_name}).
--record(option, {body, value=undefined, selected=false, show_if=true }).
+-record(dropdown, {?ELEMENT_BASE(element_dropdown), options=[], postback, delegate, value, multiple=false, disabled=false, name}).
+-record(option, {body, label, value, selected=false, disabled, show_if=true }).
 -record(checkbox, {?ELEMENT_BASE(element_checkbox), checked=false, value="on", postback, delegate, name}).
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup)}).
 -record(radio, {?ELEMENT_BASE(element_radio), value, name, checked=false, postback, delegate, html_name}).
