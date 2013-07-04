@@ -15,7 +15,7 @@ render_element(Record) ->
 %                                              source=Record#button.source,
                                               delegate=Record#button.delegate }) end,
 
-    Opts = [wf_tags:emit_tag(<<"otion">>, [], [
+    Opts = [wf_tags:emit_tag(<<"option">>, [O#option.label], [
       {<<"disabled">>, O#option.disabled},
       {<<"label">>, O#option.label},
       {<<"selected">>, case O#option.selected of true -> <<"selected">>; _-> undefined end},
