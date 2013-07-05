@@ -36,12 +36,12 @@ utf8.toByteArray = function(str) {
 function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
-        ws = new bullet("ws://"+window.location.hostname+
-                            ":8000"+//window.location.port+
+        ws = new bullet("ws://"+window.location.hostname+ 
+                    ":"+ transition.port +
                    "/ws"+window.location.pathname+
                                 window.location.search);
         initialized = false;
-        ws.onopen = function() { if (!initialized) { ws.send(['N2O',TransitionProcess]); initialized = true; } };
+        ws.onopen = function() { if (!initialized) { ws.send(['N2O', transition.pid]); initialized = true; } };
         ws.onmessage = function (evt) {
             msg = evt.data;
             var actions = msg;//Bert.decodebuf(msg);;
