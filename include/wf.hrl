@@ -48,8 +48,10 @@
 -record(textarea, {?ELEMENT_BASE(element_textarea), placeholder, name, cols, rows}).
 -record(range, {?ELEMENT_BASE(element_range), min=0, max=100, step=1, value=0, next, postback, delegate}).
 -record(datepicker_textbox, {?ELEMENT_BASE(element_datepicker_textbox), value, next, validators=[], options = [{dateFormat, "yy-mm-dd"}] }).
--record(dropdown, {?ELEMENT_BASE(element_dropdown), options=[], postback, delegate, value, multiple=false, disabled=false, name}).
--record(option, {body, label, value, selected=false, disabled, show_if=true }).
+-record(dropdown, {?ELEMENT_BASE(element_dropdown), options, postback, delegate, value, multiple=false, disabled=false, name}).
+-record(select, {?ELEMENT_BASE(element_select), disabled, multiple, name, size, postback, delegate}).
+-record(optgroup, {?ELEMENT_BASE(element_select), label, disabled}).
+-record(option, {?ELEMENT_BASE(element_select), label, value, selected=false, disabled}).
 -record(checkbox, {?ELEMENT_BASE(element_checkbox), checked=false, value="on", postback, delegate, name}).
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup)}).
 -record(radio, {?ELEMENT_BASE(element_radio), value, name, checked=false, postback, delegate, html_name}).

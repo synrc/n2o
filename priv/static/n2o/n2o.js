@@ -20,8 +20,9 @@ function addStatus(text){
 }
 
 utf8.toByteArray = function(str) {
+    if($.isArray(str)) str = str.join();
     var byteArray = [];
-    if (str !== undefined)
+    if (str !== undefined && str !== null)
     for (var i = 0; i < str.length; i++)
         if (str.charCodeAt(i) <= 0x7F)
             byteArray.push(str.charCodeAt(i));
