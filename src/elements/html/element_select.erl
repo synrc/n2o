@@ -15,7 +15,7 @@ render_element(Record = #select{}) ->
 
   wf_tags:emit_tag(<<"select">>, wf:render(Record#select.body), [
     {<<"id">>, Record#select.id},
-    {<<"class">>, [select, Record#select.class]},
+    {<<"class">>, Record#select.class},
     {<<"style">>, Record#select.style},
     {<<"name">>, Record#select.name},
     {<<"data_fields">>, Record#select.data_fields},
