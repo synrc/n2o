@@ -36,7 +36,8 @@ render_element(Tag, Record =#elementbase{}) ->
   wf_tags:emit_tag(Tag, wf:render(Record#elementbase.body), lists:append([
     [{<<"id">>,   Record#elementbase.id},
     {<<"class">>, Record#elementbase.class},
-    {<<"style">>, Record#elementbase.style}],
+    {<<"style">>, Record#elementbase.style},
+    {<<"title">>, Record#elementbase.title}],
     Record#elementbase.data_fields,
     Record#elementbase.aria_states])).
 

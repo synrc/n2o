@@ -18,9 +18,10 @@ render_element(Record = #select{}) ->
     {<<"class">>, Record#select.class},
     {<<"style">>, Record#select.style},
     {<<"name">>, Record#select.name},
+    {<<"title">>, Record#select.title},
     {<<"data_fields">>, Record#select.data_fields},
     {<<"disabled">>, case Record#select.disabled of true -> <<"disabled">>; _-> undefined end},
-    {<<"multiple">>, case Record#select.multiple of true -> <<"multiple">>; _-> undefined end}
+    {<<"multiple">>, case Record#select.multiple of true -> <<"multiple">>; _-> undefined end} | Record#select.data_fields
   ]);
 render_element(Group = #optgroup{}) ->
   wf_tags:emit_tag(<<"optgroup">>, wf:render(Group#optgroup.body), [
@@ -31,5 +32,6 @@ render_element(O = #option{}) ->
   wf_tags:emit_tag(<<"option">>, wf:render(O#option.body), [
     {<<"disabled">>, O#option.disabled},
     {<<"label">>, O#option.label},
+    {<<"title">>, O#option.title},
     {<<"selected">>, case O#option.selected of true -> <<"selected">>; _-> undefined end},
-    {<<"value">>, O#option.value}]).
+    {<<"value">>, O#option.value}| O#option.data_fields]).

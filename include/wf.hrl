@@ -27,18 +27,18 @@
 
 %%% Elements %%%
 -define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="",
-                              source=[], data_fields=[], aria_states=[], body, role, tabindex, html_tag).
+                              source=[], data_fields=[], aria_states=[], body, role, tabindex, html_tag, title).
 -define(DEFAULT_BASE, {?ELEMENT_BASE(undefined)}).
 
 -record(elementbase, ?DEFAULT_BASE).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates", ext="html", bind_script=true }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
--record(body, {?ELEMENT_BASE(element_body), title=""}).
+-record(body, {?ELEMENT_BASE(element_body)}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
 -record(label, {?ELEMENT_BASE(element_label), for=""}).
--record(link, {?ELEMENT_BASE(element_link), title, target, url="#", postback, delegate, name}).
--record(email_link, {?ELEMENT_BASE(element_email_link), title="", email=""}).
+-record(link, {?ELEMENT_BASE(element_link), target, url="#", postback, delegate, name}).
+-record(email_link, {?ELEMENT_BASE(element_email_link), email=""}).
 -record(error, {?ELEMENT_BASE(element_error)}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
 -record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate}).
