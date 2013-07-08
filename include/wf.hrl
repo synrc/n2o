@@ -125,6 +125,7 @@
 %% Twitter Bootstrap %%
 -record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[], caption=[]}).
 -record(accordion, {?ELEMENT_BASE(element_accordion), items=[], nav_stacked=false}).
+-record(slider, {?ELEMENT_BASE(element_slider), min, max, step, orientation, value, selection, tooltip, handle, formater}).
 
 %%% Actions %%%
 -define(AV_BASE(Module,Type), is_action=Type, module=Module, anchor, trigger, target, actions, show_if=true, source=[]).
