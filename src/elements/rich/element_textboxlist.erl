@@ -18,7 +18,7 @@ render_element(R = #textboxlist{}) ->
                                                     [<<"{'term': term}">>]),
       {struct,[{autocomplete, {struct, [case R#textboxlist.queryRemote of false -> []; true -> {postback, list_to_binary(Postback)} end ]} }]}
   end,
-  wf:wire(wf:f("$(function(){$('#~s').textboxlister(~s);});", [Id, mochijson2:encode(Plugins)])),
+  wf:wire(wf:f("$(function(){$('#~s').textboxlister(~s);});", [Id, n2o_json:encode(Plugins)])),
 
   wf_tags:emit_tag(<<"input">>, [
     {<<"id">>, Id},
