@@ -6,7 +6,7 @@
 render_action(Record) ->
     Anchor = Record#api.anchor,
     Name = Record#api.name,
-    Data = "Bert.encode(data)",
+    Data = "utf8.toByteArray(JSON.stringify(data))",
     PostbackScript = wf_event:generate_postback_script(Name, Anchor, "document", undefined, api_event, Data),
     wf:f("~s = function(data) {",  [Name]) ++ PostbackScript ++ "};".
 
