@@ -22,4 +22,3 @@ render_element(#upload{} = Record) ->
     {<<"style">>, Record#upload.style},
     {<<"name">>, Record#upload.name}
   ]).
-

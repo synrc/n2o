@@ -56,9 +56,6 @@
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup)}).
 -record(radio, {?ELEMENT_BASE(element_radio), value, name, checked=false, postback, delegate, html_name}).
 -record(password, {?ELEMENT_BASE(element_password), value, maxlength="", placeholder= <<"password">>, next, postback, delegate, name}).
--record(restful_form, {?ELEMENT_BASE(element_restful_form), method="POST", action, html_name, enctype}).
--record(restful_submit, {?ELEMENT_BASE(element_restful_submit), value, html_name}).
--record(restful_reset, {?ELEMENT_BASE(element_restful_reset), html_name}).
 -record(panel, {?ELEMENT_BASE(element_panel)}).
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
