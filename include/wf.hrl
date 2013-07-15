@@ -59,7 +59,6 @@
 -record(restful_form, {?ELEMENT_BASE(element_restful_form), method="POST", action, html_name, enctype}).
 -record(restful_submit, {?ELEMENT_BASE(element_restful_submit), value, html_name}).
 -record(restful_reset, {?ELEMENT_BASE(element_restful_reset), html_name}).
--record(restful_upload, {?ELEMENT_BASE(element_restful_upload), html_name}).
 -record(panel, {?ELEMENT_BASE(element_panel)}).
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
@@ -82,7 +81,7 @@
 -record(inplace_textbox, {?ELEMENT_BASE(element_inplace_textbox), tag, start_mode=view, validators=[], delegate=undefined}).
 -record(inplace, {?ELEMENT_BASE(element_inplace), tag, delegate=undefined, view, edit, start_mode=view}).
 
--record(upload, {?ELEMENT_BASE(element_upload), delegate, tag, show_button=true, file_text="Select file", button_text="Upload", droppable=false, droppable_text="Drop Files Here", multiple=false}).
+-record(upload, {?ELEMENT_BASE(element_upload), delegate}).
 -record(wizard, {?ELEMENT_BASE(element_wizard), tag, titles, steps, next="Next", back="Back", finish="Finish",show_progress=true,progress_step="Step ",progress_of=" of "}).
 -record(sparkline, {?ELEMENT_BASE(element_sparkline), type, values, options }).
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, minLength=2, delay=300, next, postback, delegate=undefined }).
