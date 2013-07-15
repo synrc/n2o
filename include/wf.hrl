@@ -43,7 +43,7 @@
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
 -record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
--record(textbox, {?ELEMENT_BASE(element_textbox), value, maxlength="", placeholder="", next, postback, delegate, name}).
+-record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
 -record(textarea, {?ELEMENT_BASE(element_textarea), placeholder, name, cols, rows}).
 -record(range, {?ELEMENT_BASE(element_range), min=0, max=100, step=1, value=0, next, postback, delegate}).
