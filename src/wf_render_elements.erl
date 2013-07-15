@@ -25,3 +25,5 @@ default_render(Tag, Record) ->
             {<<"title">>, element(#elementbase.title,Record)}],
         element(#elementbase.data_fields,Record),
         element(#elementbase.aria_states,Record)])).
+
+temp_id()-> {_, _, C} = now(), "temp" ++ integer_to_list(C).
