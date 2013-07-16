@@ -16,6 +16,7 @@
 
     var $input = $(input);
     var self = this;
+    var pid;
     var reader;
     var block_size = options.block_size;
     var cancelled_upload;
@@ -63,7 +64,7 @@
       browse_btn.show();
       upload_btn.show();
       progress_bar.attr("style", "width: 0");
-      options.queryFile(Bert.tuple(Bert.atom('query'),Bert.encode(file.name)));
+      options.queryFile(Bert.tuple(Bert.atom('query'),Bert.binary(file.name)));
     }).on('exist', function(e, fileSize){
       file_index = 0;
       var size = parseInt(fileSize);
@@ -80,6 +81,9 @@
         }
         update_progress_bar();
       }
+    }).on('begin_upload', function(e, pid){
+      self.pid = pid;
+      read_slice(file_index, block_size);
     }).on('upload', function(e, fileSize){
       var size = parseInt(fileSize);
       if (!paused_upload && !cancelled_upload && file_index<file.size) {
@@ -105,7 +109,10 @@
       progress_label.html('');
       progress_bar.attr("style", "width: 0");
     }
-    function error(message){ reset_upload(); info.html(message);}
+    function error(message){ 
+      reset_upload();
+      progress_label.html(message);
+    }
     function onabort(event){ error('File upload aborted'); reader.abort();}
     function onerror(event){
       switch(event.target.error.code) {
@@ -116,7 +123,7 @@
     }
     function onloadend(event){
       if(event.target.readyState == FileReader.DONE){
-        if (options.deliverSlice(Bert.tuple(Bert.atom('upload'), Bert.binary(file.name), Bert.binary(event.target.result))) == false) {
+        if (options.deliverSlice(Bert.tuple(Bert.atom('upload'), Bert.binary(self.pid), Bert.binary(event.target.result))) == false) {
           error('Error delivering data to server');
           return;
         }
@@ -128,7 +135,7 @@
           file_buttons.hide();
           browse_btn.show();
           progress_label.html('Upload complete');
-          options.complete(Bert.tuple(Bert.atom('complete'), Bert.binary(file.name)));
+          options.complete(Bert.tuple(Bert.atom('complete'), Bert.binary(self.pid)));
         }
       }
     }
@@ -171,8 +178,7 @@
       start_time = Date.now();
       start_file_index = file_index;
       if (paused_upload) paused_upload = false;
-      options.beginUpload(Bert.tuple(Bert.atom('create'), Bert.binary(file.name), Bert.encode(file.size), Bert.encode(file_index)));
-      read_slice(file_index, block_size);
+      options.beginUpload(Bert.tuple(Bert.atom('begin_upload'), Bert.binary(file.name)));
     }
 
     reset_upload();
