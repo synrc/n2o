@@ -49,11 +49,10 @@
         progress_label.html('');
       });
 
-    var file_buttons = $(':button');
-
     $input.wrap("<div class='file_upload'></div>").hide().parent().append(
       progress, info, browse_btn, upload_btn, pause_btn, reupload_btn, resume_btn, cancel_btn
     );
+    var file_buttons = $(':button', $input.parent());
 
     $input.on('change', function(e) {
       file = this.files[0];
@@ -97,8 +96,6 @@
     }).on('error', function(e, msg){
       error(msg);
     });
-
-    var file_buttons = $(':button');
 
     function reset_upload(){
       file_buttons.hide();
