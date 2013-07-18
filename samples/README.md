@@ -44,11 +44,13 @@ Compile Image at Erlang on Xen builder:
     $ rebar ling-build-image
     $ sudo xl create -c domain_config
 
-Ling 0.2.2 is here
-Started in 49438 us
-Erlang [ling-0.2.2]
+Inside Ling start n2o_sample application:
 
-Eshell V5.10.2  (abort with ^G)
-1> application:start(n2o_sample).
+    Ling 0.2.2 is here
+    Started in 49438 us
+    Erlang [ling-0.2.2]
+
+    Eshell V5.10.2  (abort with ^G)
+    1> application:start(n2o_sample).
 
 And open it in browser [http://172.16.42.108:8000](http://172.16.42.108:8000)
