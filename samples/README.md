@@ -26,7 +26,7 @@ And open it in browser [http://localhost:8000](http://localhost:8000)
 Xen
 ---
 
-To run on Xen is a bot tricky:
+To run on Xen is a bit tricky:
 
     $ sudo apt-get install xen-hypervisor-amd64
     $ echo XENTOOLSTACK=xl > /etc/default/xen
