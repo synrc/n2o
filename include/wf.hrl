@@ -43,7 +43,7 @@
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
 -record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
--record(textbox, {?ELEMENT_BASE(element_textbox), value, maxlength="", placeholder="", next, postback, delegate, name}).
+-record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
 -record(textarea, {?ELEMENT_BASE(element_textarea), placeholder, name, cols, rows}).
 -record(range, {?ELEMENT_BASE(element_range), min=0, max=100, step=1, value=0, next, postback, delegate}).
@@ -56,10 +56,6 @@
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup)}).
 -record(radio, {?ELEMENT_BASE(element_radio), value, name, checked=false, postback, delegate, html_name}).
 -record(password, {?ELEMENT_BASE(element_password), value, maxlength="", placeholder= <<"password">>, next, postback, delegate, name}).
--record(restful_form, {?ELEMENT_BASE(element_restful_form), method="POST", action, html_name, enctype}).
--record(restful_submit, {?ELEMENT_BASE(element_restful_submit), value, html_name}).
--record(restful_reset, {?ELEMENT_BASE(element_restful_reset), html_name}).
--record(restful_upload, {?ELEMENT_BASE(element_restful_upload), html_name}).
 -record(panel, {?ELEMENT_BASE(element_panel)}).
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
@@ -78,17 +74,14 @@
 -record(droppable, {?ELEMENT_BASE(element_droppable), tag, accept_groups=all, active_class=active, hover_class=hover, delegate=undefined}).
 -record(gravatar, {?ELEMENT_BASE(element_gravatar), email="", size="80", rating="g", default=""}).
 
--record(inplace_textarea, {?ELEMENT_BASE(element_inplace_textarea), tag, start_mode=view, validators=[], delegate=undefined}).
--record(inplace_textbox, {?ELEMENT_BASE(element_inplace_textbox), tag, start_mode=view, validators=[], delegate=undefined}).
--record(inplace, {?ELEMENT_BASE(element_inplace), tag, delegate=undefined, view, edit, start_mode=view}).
-
--record(upload, {?ELEMENT_BASE(element_upload), delegate, tag, show_button=true, file_text="Select file", button_text="Upload", droppable=false, droppable_text="Drop Files Here", multiple=false}).
+-record(upload, {?ELEMENT_BASE(element_upload), name, delegate, root=code:priv_dir(n2o)}).
 -record(wizard, {?ELEMENT_BASE(element_wizard), tag, titles, steps, next="Next", back="Back", finish="Finish",show_progress=true,progress_step="Step ",progress_of=" of "}).
 -record(sparkline, {?ELEMENT_BASE(element_sparkline), type, values, options }).
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, minLength=2, delay=300, next, postback, delegate=undefined }).
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], delegate, postback}).
+-record(htmlbox, {?ELEMENT_BASE(element_htmlbox), html="", script_url="static/tinymce/tinymce.min.js", theme="modern", delegate}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 
 -record(h1,         ?DEFAULT_BASE).
