@@ -14,4 +14,4 @@ spawn_closure(Fun) ->
 flush(Pool) ->
     Actions = wf_context:actions(),
     wf_context:clear_actions(),
-    gproc:send({p,l,Pool},{flush, Actions}).
+    wf:send(Pool,{flush,Actions}).
