@@ -74,17 +74,14 @@
 -record(droppable, {?ELEMENT_BASE(element_droppable), tag, accept_groups=all, active_class=active, hover_class=hover, delegate=undefined}).
 -record(gravatar, {?ELEMENT_BASE(element_gravatar), email="", size="80", rating="g", default=""}).
 
--record(inplace_textarea, {?ELEMENT_BASE(element_inplace_textarea), tag, start_mode=view, validators=[], delegate=undefined}).
--record(inplace_textbox, {?ELEMENT_BASE(element_inplace_textbox), tag, start_mode=view, validators=[], delegate=undefined}).
--record(inplace, {?ELEMENT_BASE(element_inplace), tag, delegate=undefined, view, edit, start_mode=view}).
-
--record(upload, {?ELEMENT_BASE(element_upload), name, delegate}).
+-record(upload, {?ELEMENT_BASE(element_upload), name, delegate, root=code:priv_dir(n2o)}).
 -record(wizard, {?ELEMENT_BASE(element_wizard), tag, titles, steps, next="Next", back="Back", finish="Finish",show_progress=true,progress_step="Step ",progress_of=" of "}).
 -record(sparkline, {?ELEMENT_BASE(element_sparkline), type, values, options }).
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, minLength=2, delay=300, next, postback, delegate=undefined }).
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], delegate, postback}).
+-record(htmlbox, {?ELEMENT_BASE(element_htmlbox), html="", script_url="static/tiny_mce/tinymce.min.js", theme="modern", delegate}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 
 -record(h1,         ?DEFAULT_BASE).

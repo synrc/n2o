@@ -1,0 +1,31 @@
+.mce-content-body {
+  #font > .shorthand(@baseFontSize,normal,@baseLineHeight);
+  display: inline-block;
+  padding: 4px 6px;
+  margin-left: 0 !important;
+  margin-bottom: @baseLineHeight / 2;
+  font-family: @baseFontFamily;
+  font-size: @baseFontSize;
+  line-height: @baseLineHeight;
+  color: @gray;
+  border-color: @borderColor;
+  .border-radius(@inputBorderRadius);
+  vertical-align: middle;
+
+  background-color: @inputBackground;
+  border: 1px solid @inputBorder;
+  .transition(~"border linear .2s, box-shadow linear .2s");
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,.075)); // Redeclare so transitions work
+
+  min-height: 120px !important;
+  resize: vertical;
+  overflow: hidden;
+
+  &:focus {
+    border-color: rgba(82,168,236,.8);
+    outline: 0;
+    outline: thin dotted \9; /* IE6-9 */
+    .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6)");
+  }
+}
+
