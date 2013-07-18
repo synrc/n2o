@@ -49,12 +49,12 @@ redirect_from_login(DefaultUrl) -> action_redirect:redirect_from_login(DefaultUr
 
 % GProc process registration wf:reg wf:send
 
-send(Pool, Message) -> gproc:send({p,l,Pool},Message).
-reg(Pool) -> 
-    Ctx = get(pool),
-    case Ctx of
-         undefined -> gproc:reg({p,l,Pool}), put(pool,Pool);
-         Defined -> skip end.
+-ifndef(REGISTRATOR).
+-define(REGISTRATOR, n2o_xen).
+-endif.
+
+send(Pool, Message) -> ?REGISTRATOR:send(Pool,Message).
+reg(Pool) -> ?REGISTRATOR:reg(Pool).
 
 % Pickling wf:pickle
 
