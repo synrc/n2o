@@ -7,32 +7,56 @@ render_element(R = #htmlbox{})->
   Id = R#htmlbox.id,
   ToolbarId = wf:temp_id(),
   Html = R#htmlbox.html,
-  % tinymce based 
+  Up =  #upload{id=wf:temp_id(), delegate=element_htmlbox, root=code:priv_dir(web)++"/static"},
+  UploadPostback = wf_event:generate_postback_script(Up, ignore, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
+
   wf:wire(wf:f(
     "$(function(){"++
+      "function wireUpload(uid){~s;};"++
       "var editorId = '~s';" ++ 
       "$('#'+editorId).tinymce({" ++
         "inline: true," ++
         "selector: \"div#\"+editorId," ++
         "script_url: '~s',"++
-        "theme: 'modern'," ++
+        "theme: 'n2o'," ++
         "theme_modern_toolbar_location: \"external\"," ++
         "fixed_toolbar_container: '#'+'~s', "++
         "menubar: false,"++
         "statusbar: false,"
-        "plugins: 'link image',"++
-        "toolbar: 'image'," ++
+        "plugins: 'image',"++
+        "toolbar: 'ins'," ++
         "setup: function(ed){"++
           "ed.on('init', function(e){$('#'+editorId).attr('tabIndex', 0); ed.setContent('~s') });" ++
-          "ed.on('SaveContent', function(e){});"  ++
-%        "$(ed).unbind('SaveContent');
-%         encodeURIComponent($.trim(ed.getContent().replace(/[\\s\\n\\r]+/g, ' ')));
+          "ed.addButton('ins', {title: 'image', onclick: function(){
+            var p = '~s';
+            ed.execCommand('mceInsertContent', '~s', p + '<p></p>');
+          }, icon: 'icon-picture' });" ++
+          "ed.on('ExecCommand', function(e){
+            if(e.command == 'mceInsertContent'){ wireUpload(Bert.binary(e.ui)); }
+          });" ++
       "}" ++
     "});"++
-  "});", [Id, R#htmlbox.script_url, ToolbarId, Html])),
 
-  P = #panel{class=["row-fluid"], body=[
-    #panel{id=Id, class=[span12], tabindex = 0},
-    #panel{id=ToolbarId, style="display:none"}
+    "$('.htmlbox-toolbar').scrollToFixed({
+      marginTop: function(){return $('.navbar-fixed-top').height();},
+      limit: function(){ var ed = $('#'+editorId); return ed.offset().top + ed.height() - $(this).height() + 10; },
+      preUnfixed: function(){ $(this).parent().css('overflow','inherit'); },
+      preAbsolute:function(){ $(this).parent().css('overflow', 'hidden'); }
+    });"++
+
+  "});", [UploadPostback, Id, R#htmlbox.script_url, ToolbarId, Html, element_upload:render(Up), Up#upload.id])),
+
+  P = #panel{class=["htmlbox-container"], body=[
+      #panel{id=ToolbarId, class= ["htmlbox-toolbar"], body= <<"">>},
+      #panel{id=Id, class=[span12], tabindex = 0}
   ]},
   element_panel:render_element(P).
+
+control_event(Cid, #upload{} = Tag) -> element_upload:wire(Tag);
+control_event(Cid, {File, Data, ActionHolder}) ->
+  Base = code:priv_dir(web),
+  file:write_file(File, Data, [append, raw]),
+  wf:wire(wf:f("$('.file_upload').after(\"<img src='~s'>\").remove();", [File--Base])),
+  wf:flush(ActionHolder),
+  ok.
+
