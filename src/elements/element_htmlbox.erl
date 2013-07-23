@@ -23,7 +23,7 @@ render_element(R = #htmlbox{})->
         "fixed_toolbar_container: '#'+'~s', "++
         "menubar: false,"++
         "statusbar: false,"
-        "plugins: 'image',"++
+        "plugins: '',"++
         "toolbar: 'ins'," ++
         "setup: function(ed){"++
           "ed.on('init', function(e){$('#'+editorId).attr('tabIndex', 0); ed.setContent('~s') });" ++
