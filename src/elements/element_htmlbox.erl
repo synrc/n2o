@@ -21,12 +21,13 @@ render_element(R = #htmlbox{})->
         "theme: 'n2o'," ++
         "theme_modern_toolbar_location: \"external\"," ++
         "fixed_toolbar_container: '#'+'~s', "++
+        "paste_as_text: true,"++
         "menubar: false,"++
         "statusbar: false,"
-        "plugins: '',"++
+        "plugins: 'paste',"++
         "toolbar: 'ins'," ++
         "setup: function(ed){"++
-          "ed.on('init', function(e){$('#'+editorId).attr('tabIndex', 0); ed.setContent('~s') });" ++
+          "ed.on('init', function(e){ $('#'+editorId).attr('tabIndex', 0); ed.setContent('~s'); });" ++
           "ed.addButton('ins', {title: 'image', onclick: function(){
             var p = '~s';
             ed.execCommand('mceInsertContent', '~s', p + '<p></p>');
