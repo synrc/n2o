@@ -29,11 +29,11 @@ render_element(R = #rtable{rows=Rows}) ->
 
 render_table(Id, Rows) ->
   error_logger:info_msg("Render rows:~n~p~n", [Rows]),
-  #table{id=Id, class=["table", "table-hover", "table-striped", "table-bordered"], rows=
+  #table{id=Id, class=["table", "table-hover", "table-striped", "table-bordered"], body=[
     [#tr{cells=[
       #td{body=key_to_bin(K)},
       #td{body=#pre{style="height:280px;overflow:auto;", body=V}}
-    ]} || {K, V} <- Rows]}.
+    ]} || {K, V} <- Rows]]}.
 
 key_to_bin(K) when is_atom(K) -> error_logger:info_msg("atom key ~p", [K] ),atom_to_binary(K, latin1);
 key_to_bin(K) when is_tuple(K) -> error_logger:info_msg("tuple Key:~p", [K]), tuple_to_list(K);

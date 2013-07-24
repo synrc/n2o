@@ -37,7 +37,7 @@
 -record(body, {?ELEMENT_BASE(element_body)}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
 -record(label, {?ELEMENT_BASE(element_label), for=""}).
--record(link, {?ELEMENT_BASE(element_link), target, url="#", postback, delegate, name}).
+-record(link, {?ELEMENT_BASE(element_link), target, url="javascript:void(0);", postback, delegate, name}).
 -record(email_link, {?ELEMENT_BASE(element_email_link), email=""}).
 -record(error, {?ELEMENT_BASE(element_error)}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
@@ -60,7 +60,7 @@
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
 -record(lightbox, {?ELEMENT_BASE(element_lightbox) }).
--record(table, {?ELEMENT_BASE(element_table), rows, header, footer}).
+-record(table, {?ELEMENT_BASE(element_table), header, footer}).
 -record(td, {?ELEMENT_BASE(element_td), colspan=1, rowspan=1, scope}).
 -record(th, {?ELEMENT_BASE(element_th), colspan=1, rowspan=1, scope}).
 -record(tr, {?ELEMENT_BASE(element_tr), cells}).
@@ -82,6 +82,7 @@
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], delegate, postback}).
 -record(htmlbox, {?ELEMENT_BASE(element_htmlbox), html="", script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate}).
+-record(canvas, {?ELEMENT_BASE(element_canvas)}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 
 -record(h1,         ?DEFAULT_BASE).
