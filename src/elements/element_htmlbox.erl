@@ -56,7 +56,7 @@ render_element(R = #htmlbox{})->
 control_event(Cid, #upload{} = Tag) -> element_upload:wire(Tag);
 control_event(Cid, {File, Data, ActionHolder}) ->
   Base = code:priv_dir(web),
-  file:write_file(File, Data, [append, raw]),
+  file:write_file(File, Data, [write, raw]),
   wf:wire(wf:f("$('.file_upload').after(\"<img src='~s'>\").remove();", [File--Base])),
   wf:flush(ActionHolder),
   ok.
