@@ -50,7 +50,7 @@ redirect_from_login(DefaultUrl) -> action_redirect:redirect_from_login(DefaultUr
 % GProc process registration wf:reg wf:send
 
 -ifndef(REGISTRATOR).
--define(REGISTRATOR, n2o_xen).
+-define(REGISTRATOR, n2o_gproc).
 -endif.
 
 send(Pool, Message) -> ?REGISTRATOR:send(Pool,Message).

@@ -3,9 +3,7 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-reflect() -> record_info(fields, table).
-
-render_element(Record) -> 
+render_element(Record = #table{}) -> 
   Header = case Record#table.header of
     undefined -> "";
     _ -> wf_tags:emit_tag(<<"thead">>, wf:render(Record#table.header), [])
@@ -15,8 +13,13 @@ render_element(Record) ->
     undefined -> "";
     _ -> wf_tags:emit_tag(<<"tfoot">>, wf:render(Record#table.footer), [])
   end,
+  Bodies = case Record#table.body of
+    undefined -> wf_tags:emit_tag(<<"tbody">>, []);
+    [] -> wf_tags:emit_tag(<<"tbody">>, []);
+    Rows -> [ wf_tags:emit_tag(<<"tbody">>, wf:render(B), []) || B <- Rows]
+  end,
 
-  wf_tags:emit_tag( <<"table">>, [Header, Footer, wf:render(Record#table.rows)], [
+  wf_tags:emit_tag( <<"table">>, [Header, Footer, Bodies], [
       {<<"id">>, Record#table.id},
       {<<"class">>, Record#table.class},
       {<<"style">>, Record#table.style}
