@@ -48,7 +48,7 @@ render_element(#upload{} = R) ->
 control_event(Cid, Tag) ->
   Msg = wf:q(msg),
   {Event, Param} = case Msg of
-    {query, Name} ->
+    {'query', Name} ->
       {query_file, Root} = Tag,
       {exist, case file:read_file_info(Root++"/"++binary_to_list(Name)) of {ok, FileInfo} -> FileInfo#file_info.size; {error, _} -> 0 end};
     {begin_upload, Name} ->
