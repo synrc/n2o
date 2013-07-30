@@ -6,15 +6,15 @@
 reflect() -> record_info(fields, link).
 
 render_element(Record) -> 
-
-    ID = Record#link.id,
     Anchor = Record#link.anchor,
-    case Record#link.postback of
-        undefined -> ignore;
-        Postback -> wf:wire(Anchor, #event { type=click, postback=Postback, validation_group=ID, source=Record#link.source,  delegate=Record#link.delegate })
+    Id = case Record#link.postback of
+        undefined -> Record#link.id;
+        Postback ->
+          ID = case Record#link.id of undefined -> wf:temp_id(); I -> I end,
+          wf:wire(Anchor, #event { type=click, postback=Postback, validation_group=ID, source=Record#link.source,  delegate=Record#link.delegate }), ID
     end,
 
-    List = [{<<"id">>, Record#link.id},
+    List = [{<<"id">>, Id},
       {<<"href">>, Record#link.url},
       {<<"class">>, Record#link.class},
       {<<"target">>, Record#link.target},
