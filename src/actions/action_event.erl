@@ -8,8 +8,9 @@ render_action(#event{
     anchor=Anchor, trigger=Trigger, target=Target, validation_group=ValidationGroup,
     type=Type, keycode=KeyCode, shift_key=ShiftKey, delay=Delay, delegate=Delegate,
     extra_param=ExtraParam}) ->
-    Data = "[" ++ string:join([ "Bert.tuple(Bert.atom('"++atom_to_list(Src)++
-                     "'), utf8.toByteArray($('#"++atom_to_list(Src)++"').vals()))" || Src <- Source ],",") ++ "]",
+    Data = "[" ++ string:join([begin 
+      {Key, Id} = if is_atom(Src)-> S = atom_to_list(Src), {"Bert.atom('"++S++"')", S}; true -> {"utf8.toByteArray('"++Src++"')", Src} end,
+      "Bert.tuple("++Key++", utf8.toByteArray($('#"++Id++"').vals()))" end || Src <- Source ],",") ++ "]",
 
     Control = wf:coalesce([ValidationGroup, Trigger]),
     PostbackScript = wf_event:generate_postback_script(Postback, Anchor, Control, Delegate, event, Data),
