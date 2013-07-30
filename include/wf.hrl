@@ -63,7 +63,7 @@
 -record(table, {?ELEMENT_BASE(element_table), header, footer}).
 -record(td, {?ELEMENT_BASE(element_td), colspan=1, rowspan=1, scope}).
 -record(th, {?ELEMENT_BASE(element_th), colspan=1, rowspan=1, scope}).
--record(tr, {?ELEMENT_BASE(element_tr), cells}).
+-record(tr, {?ELEMENT_BASE(element_tr), cells, postback, delegate}).
 -record(file, {?ELEMENT_BASE(element_file), file}).
 -record(flash, {?ELEMENT_BASE(element_flash)}).
 -record(placeholder, {?ELEMENT_BASE(element_placeholder)}).
@@ -74,7 +74,7 @@
 -record(droppable, {?ELEMENT_BASE(element_droppable), tag, accept_groups=all, active_class=active, hover_class=hover, delegate=undefined}).
 -record(gravatar, {?ELEMENT_BASE(element_gravatar), email="", size="80", rating="g", default=""}).
 
--record(upload, {?ELEMENT_BASE(element_upload), name, delegate, root=code:priv_dir(n2o)}).
+-record(upload, {?ELEMENT_BASE(element_upload), name, delegate_query, delegate, root=code:priv_dir(n2o), post_write, img_tool, preview=false}).
 -record(wizard, {?ELEMENT_BASE(element_wizard), tag, titles, steps, next="Next", back="Back", finish="Finish",show_progress=true,progress_step="Step ",progress_of=" of "}).
 -record(sparkline, {?ELEMENT_BASE(element_sparkline), type, values, options }).
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, minLength=2, delay=300, next, postback, delegate=undefined }).
