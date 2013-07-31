@@ -4,7 +4,7 @@
 -include_lib("n2o/include/wf.hrl").
 
 render_element(R = #htmlbox{})->
-  Id = R#htmlbox.id,
+  Id = case R#htmlbox.id of undefined-> wf:temp_id(); I -> I end,
   ToolbarId = wf:temp_id(),
   Html = R#htmlbox.html,
   Up =  #upload{id=wf:temp_id(), delegate=element_htmlbox, root=code:priv_dir(web)++"/static"},
