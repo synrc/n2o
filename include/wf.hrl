@@ -59,7 +59,6 @@
 -record(panel, {?ELEMENT_BASE(element_panel)}).
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
--record(lightbox, {?ELEMENT_BASE(element_lightbox) }).
 -record(table, {?ELEMENT_BASE(element_table), header, footer}).
 -record(td, {?ELEMENT_BASE(element_td), colspan=1, rowspan=1, scope}).
 -record(th, {?ELEMENT_BASE(element_th), colspan=1, rowspan=1, scope}).
