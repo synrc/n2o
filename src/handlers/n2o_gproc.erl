@@ -3,7 +3,7 @@
 
 send(Pool, Message) -> gproc:send({p,l,Pool},Message).
 reg(Pool) -> 
-    Ctx = get(pool),
+    Ctx = get({pool,Pool}),
     case Ctx of
-         undefined -> gproc:reg({p,l,Pool}), put(pool,Pool);
+         undefined -> gproc:reg({p,l,Pool}), put({pool,Pool},Pool);
          Defined -> skip end.
