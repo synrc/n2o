@@ -24,7 +24,7 @@ stream({text,Data}, Req, State) ->
     self() ! Data,     
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
-    error_logger:info_msg("Binary Received: ~p",[Info]),    
+%    error_logger:info_msg("Binary Received: ~p",[Info]),    
     Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
@@ -56,7 +56,7 @@ stream(Data, Req, State) ->
 
 info(Pro, Req, State) ->
     Render =  case Pro of
-                {flush,Actions} -> 
+                {flush,Actions} ->
                     error_logger:info_msg("Comet Actions: ~p",[Actions]),
                     wf_core:render(Actions);
                 <<"N2O,",Rest/binary>> ->
@@ -76,7 +76,12 @@ info(Pro, Req, State) ->
                         Y
                     after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
                     R;
-            Unknown -> <<"OK">> end,
+                Unknown ->
+                  M = State#context.module,
+                  M:event(Unknown),
+                  Actions = get(actions),
+                  wf_context:clear_actions(),
+                  wf_core:render(Actions) end,
     GenActions = get(actions),
     wf_context:clear_actions(),
     RenderGenActions = wf_core:render(GenActions),
@@ -84,5 +89,5 @@ info(Pro, Req, State) ->
     {reply, [Render,RenderGenActions], Req, State}.
 
 terminate(_Req, _State) ->
-    error_logger:info_msg("Bullet Terminated~n"),
+%    error_logger:info_msg("Bullet Terminated~n"),
     ok.
