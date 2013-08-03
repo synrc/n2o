@@ -75,7 +75,7 @@ control_event(Cid, Tag) ->
   Msg = wf:q(msg),
   Room = upload,
   {Event, Param} = case Msg of
-    {query, Name, MimeType} ->
+    {'query', Name, MimeType} ->
       wf:reg(Room),
       case Tag of
         {query_file, Root, undefined} -> {exist, case file:read_file_info(Root++"/"++binary_to_list(Name)) of {ok, FileInfo} -> FileInfo#file_info.size; {error, _} -> 0 end};
