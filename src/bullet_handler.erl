@@ -69,6 +69,16 @@ init(Transport, Req, Opts, <<"POST">>) ->
 		{shutdown, Req2, HandlerState} ->
 			{shutdown, Req2, State#state{handler_state=HandlerState}}
 	end;
+init(Transport, Req, Opts, <<"OPTIONS">>) ->
+	{handler, Handler} = lists:keyfind(handler, 1, Opts),
+	State = #state{handler=Handler},
+	case Handler:init(Transport, Req, Opts, once) of
+		{ok, Req2, HandlerState} ->
+			{ok, cowboy_req:compact(Req2), State#state{handler_state=HandlerState}};
+	{shutdown, Req2, HandlerState} ->
+		{shutdown, Req2, State#state{handler_state=HandlerState}}
+	end;
+
 init(_Transport, Req, _Opts, _Method) ->
 	{ok, Req2} = cowboy_req:reply(405, [], [], Req),
 	{shutdown, Req2, undefined}.
@@ -76,7 +86,15 @@ init(_Transport, Req, _Opts, _Method) ->
 handle(Req, State) ->
 	{Method, Req2} = cowboy_req:method(Req),
 	handle(Req2, State, Method).
-
+handle(Req, State, <<"OPTIONS">>)->
+       Headers = [
+        {<<"Content-Type">>, <<"text/html; charset=utf-8">>},
+        {<<"Access-Control-Allow-Origin">>, <<"*">>},
+        {<<"Access-Control-Allow-Headers">>, <<"X-Socket-Transport, Content-Type, x-requested-with, Accept">>},
+        {<<"Access-Control-Allow-Methods">>, <<"GET, POST, PUT, DELETE, OPTIONS">>}
+       ],
+       {ok, Req1} = cowboy_req:reply(200, Headers, [], cowboy_req:compact(Req)),
+       {ok, Req1, State};
 handle(Req, State=#state{handler=Handler, handler_state=HandlerState},
 		<<"POST">>) ->
 	case cowboy_req:body(Req) of

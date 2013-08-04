@@ -96,6 +96,7 @@ peer(Req) -> ?BRIDGE:peer(Req).
 path(Req) -> ?BRIDGE:path(Req).
 request_body(Req) -> ?BRIDGE:request_body(Req).
 delete_cookie(Cookie,Req) -> ?BRIDGE:delete_cookie(Cookie,Req).
+header(Name, Val, Req) -> ?BRIDGE:header(Name, Val, Req).
 response(Html,Req) -> ?BRIDGE:response(Html,Req).
 reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 

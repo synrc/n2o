@@ -14,14 +14,15 @@ init(_Transport, Req, _Opts, _Active) ->
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
     wf_context:context(NewCtx),
     put(page_module,NewCtx#context.module),
-    {ok, NewCtx#context.req, NewCtx}.
+    Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
+    {ok, Req1, NewCtx}.
 
 stream(<<"ping">>, Req, State) ->
     io:format("ping received~n"),
     {reply, <<"pong">>, Req, State};
-stream({text,Data}, Req, State) ->    
-    error_logger:info_msg("Text Received ~p",[Data]),    
-    self() ! Data,     
+stream({text,Data}, Req, State) ->
+    error_logger:info_msg("Text Received ~p",[Data]),
+    self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
 %    error_logger:info_msg("Binary Received: ~p",[Info]),    
@@ -49,7 +50,7 @@ stream({binary,Info}, Req, State) ->
     wf_context:clear_actions(),
 
     {reply,[Render,RenderGenActions], Req, State};
-stream(Data, Req, State) ->    
+stream(Data, Req, State) ->
     error_logger:info_msg("Data Received ~p",[Data]),    
     self() ! Data,
     {ok, Req,State}.
