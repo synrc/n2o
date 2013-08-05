@@ -238,11 +238,14 @@ Kickstart Bootstrap
 To try N2O you just need to clone a N2O repo from Github and build. We don’t use fancy
 scripts so building process is OTP compatible: bootstrap site is bundled as Erlang release.
 
-    $ cd samples
+    $ git clone https://github.com/5HT/n2o
+    $ cd n2o/samples
     $ rebar get-deps
     $ rebar compile
-    $ cd rels/web && rebar -f generate
-    $ node/bin/node console
+    $ ./nitrogen_static.sh
+    $ ./release.sh
+    $ ./release_sync.sh
+    $ ./start.sh
 
 Now you can try: [http://localhost:8000](http://localhost:8000)
 
@@ -263,7 +266,7 @@ Cowboy dispatch parameter:
                 {["/static/[...]"], cowboy_static,
                     [{directory, {priv_dir, ?APP, [<<"static">>]}},
                      {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]},
-                {["/ws/[...]"], n2o_websocket, []},
+                {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
                 {'_', n2o_cowboy, []}
         ]}]).
 
