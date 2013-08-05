@@ -80,7 +80,7 @@
 -record(recaptcha, {?ELEMENT_BASE(element_recaptcha), captcha_opts=[], button_id, button_label="Check!", delegate, fail_body="Please try again!"}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], delegate, postback}).
--record(htmlbox, {?ELEMENT_BASE(element_htmlbox), html="", script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate}).
+-record(htmlbox, {?ELEMENT_BASE(element_htmlbox), html="", script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate, toolbar_class, toolbar_script}).
 -record(canvas, {?ELEMENT_BASE(element_canvas)}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 

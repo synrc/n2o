@@ -37,18 +37,12 @@ render_element(R = #htmlbox{})->
           });" ++
       "}" ++
     "});"++
-
-    "$('.htmlbox-toolbar').scrollToFixed({
-      marginTop: function(){return $('.navbar-fixed-top').height();},
-      limit: function(){ var ed = $('#'+editorId); return ed.offset().top + ed.height() - $(this).height() + 10; },
-      preUnfixed: function(){ $(this).parent().css('overflow','inherit'); },
-      preAbsolute:function(){ $(this).parent().css('overflow', 'hidden'); }
-    });"++
-
   "});", [UploadPostback, Id, R#htmlbox.script_url, ToolbarId, Html, element_upload:render(Up), Up#upload.id])),
 
+  case R#htmlbox.toolbar_script of undefined -> []; Script -> wf:wire(wf:f("~s", [Script])) end,
+
   P = #panel{class=["htmlbox-container"], body=[
-      #panel{id=ToolbarId, class= ["htmlbox-toolbar"], body= <<"">>},
+      #panel{id=ToolbarId, class= [span12, case R#htmlbox.toolbar_class of undefined -> []; C -> C end], body= <<"">>},
       #panel{id=Id, class=[span12], tabindex = 0}
   ]},
   element_panel:render_element(P).
