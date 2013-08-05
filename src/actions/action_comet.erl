@@ -3,13 +3,18 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-comet(Fun) ->
-    Pid = spawn_link(fun() -> spawn_closure(Fun) end),
-    {ok, Pid}.
-
-spawn_closure(Fun) ->
-    wf_context:init_context([]),
-    Fun().
+comet(Fun) -> comet("comet",Fun).
+comet(Name, F) ->
+    Pid = case global:whereis_name(Name) of
+        undefined -> 
+            Closure = fun(Fun) ->
+                R = global:register_name(Name,self()),
+                case R of
+                    yes -> Fun();
+                    _ -> skip end end,
+            spawn(fun() -> wf_context:init_context([]), Closure(F) end);
+        Registered -> Registered end,
+    {ok,Pid}.
 
 flush(Pool) ->
     Actions = wf_context:actions(),
