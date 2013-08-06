@@ -21,7 +21,7 @@ stream(<<"ping">>, Req, State) ->
     io:format("ping received~n"),
     {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->
-    error_logger:info_msg("Text Received ~p",[Data]),
+%    error_logger:info_msg("Text Received ~p",[Data]),
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
@@ -77,6 +77,7 @@ info(Pro, Req, State) ->
                         Y
                     after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
                     R;
+                <<"PING">> -> [];
                 Unknown ->
                   M = State#context.module,
                   M:event(Unknown),
