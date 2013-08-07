@@ -9,7 +9,7 @@ render_element(R = #htmlbox{})->
   ToolbarId = wf:temp_id(),
   Html = R#htmlbox.html,
   Root = case R#htmlbox.root of undefined -> code:priv_dir(n2o); Path -> Path end,
-  Up =  #upload{id=wf:temp_id(), dir=R#htmlbox.dir, delegate=element_htmlbox, root=Root, post_write=R#htmlbox.post_write, img_tool=R#htmlbox.img_tool, post_target=PreviewId},
+  Up =  #upload{id=wf:temp_id(), dir=R#htmlbox.dir, delegate=element_htmlbox, root=Root, post_write=R#htmlbox.post_write, img_tool=R#htmlbox.img_tool, post_target=PreviewId, size=R#htmlbox.size},
   UploadPostback = wf_event:generate_postback_script(Up, ignore, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
 
   wf:wire(wf:f(
@@ -50,7 +50,7 @@ render_element(R = #htmlbox{})->
   element_panel:render_element(P).
 
 control_event(_Cid, #upload{} = Tag) -> element_upload:wire(Tag);
-control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, ImgTool, Target}) ->
+control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, ImgTool, Target, Size}) ->
   Full = filename:join([Root, Dir, File]),
 
   file:write_file(Full, Data, [write, raw]),
@@ -64,11 +64,13 @@ control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, Im
         M ->
           Ext = filename:extension(File),
           Name = filename:basename(File, Ext),
-          Th = filename:join([Root, Dir, "thumbnail", Name++"_thumb"++Ext]),
-          filelib:ensure_dir(Th),
-          M:make_thumb(Full, 200, 120, Th),
-          Th
+          ThDir = filename:join([Root, Dir, "thumbnail"]),
+          filelib:ensure_dir(ThDir),
+          [begin
+            Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
+            M:make_thumb(Full, X, Y, Th) end || {X, Y}<- Size],
+          filename:join([ThDir--Root, Name++Ext])
       end,
-      wf:wire(wf:f("~s({preview: '~s', id:'~s', file:'~s', type:'~s', thumb:'~s'});", [Api, Target, element_upload:hash(Full), filename:join([Dir,File]), MimeType, [Thumb--Root]]))
+      wf:wire(wf:f("~s({preview: '~s', id:'~s', file:'~s', type:'~s', thumb:'~s'});", [Api, Target, element_upload:hash(Full), filename:join([Dir,File]), MimeType, Thumb]))
   end,
   wf:flush(ActionHolder).
