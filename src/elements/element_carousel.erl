@@ -17,7 +17,7 @@ render_element(R = #carousel{})->
         }
       end || {I, E} <- lists:zip(lists:seq(0,ItemsCount-1), R#carousel.items)]),
 
-      C = #panel{id = Id, show_if=ItemsCount > 0, class=[carousel, slide | R#carousel.class],
+      C = #panel{id = Id, show_if=ItemsCount > 0, class=[carousel, slide | R#carousel.class], style=[R#carousel.style],
                  data_fields=[{<<"data-interval">>, Interval}, {<<"data-pause">>, R#carousel.pause}], body=[
         #list{show_if=R#carousel.indicators == true, numbered=true, class=["carousel-indicators"], body=List},
         #panel{class=["carousel-inner"], body=Items},
