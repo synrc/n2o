@@ -7,7 +7,8 @@ render_element(R = #htmlbox{})->
   Id = case R#htmlbox.id of undefined-> wf:temp_id(); I -> I end,
   ToolbarId = wf:temp_id(),
   Html = R#htmlbox.html,
-  Up =  #upload{id=wf:temp_id(), delegate=element_htmlbox, root=code:priv_dir(web)++"/static"},
+  Root = case R#htmlbox.root of undefined -> code:priv_dir(n2o); Path -> Path end,
+  Up =  #upload{id=wf:temp_id(), dir=R#htmlbox.dir, delegate=element_htmlbox, root=Root, post_write=R#htmlbox.post_write, img_tool=R#htmlbox.img_tool},
   UploadPostback = wf_event:generate_postback_script(Up, ignore, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
 
   wf:wire(wf:f(
@@ -47,11 +48,27 @@ render_element(R = #htmlbox{})->
   ]},
   element_panel:render_element(P).
 
-control_event(Cid, #upload{} = Tag) -> element_upload:wire(Tag);
-control_event(Cid, {File, MimeType, Data, ActionHolder}) ->
-  Base = code:priv_dir(web),
-  file:write_file(File, Data, [write, raw]),
-  wf:wire(wf:f("$('#~s').parent('.file_upload').after(\"<img src='~s'>\").remove();", [Cid, File--Base])),
-  wf:flush(ActionHolder),
-  ok.
+control_event(_Cid, #upload{} = Tag) -> element_upload:wire(Tag);
+control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, ImgTool}) ->
+  Full = filename:join([Root, Dir, File]),
+
+  file:write_file(Full, Data, [write, raw]),
+  wf:wire(wf:f("$('#~s').parent('.file_upload').after(\"<img src='~s'>\").remove();", [Cid, filename:join([Dir, File])])),
+
+  case PostWrite of
+    undefined-> undefined;
+    Api ->
+      Thumb = case ImgTool of
+        undefined ->"";
+        M ->
+          Ext = filename:extension(File),
+          Name = filename:basename(File, Ext),
+          Th = filename:join([Root, Dir, "thumbnail", Name++"_thumb"++Ext]),
+          filelib:ensure_dir(Th),
+          M:make_thumb(Full, 200, 120, Th),
+          Th
+      end,
+      wf:wire(wf:f("~s({id:'~s', file:'~s', type:'~s', thumb:'~s'});", [Api, element_upload:hash(Full), File, MimeType, Thumb]))
+  end,
+  wf:flush(ActionHolder).
 
