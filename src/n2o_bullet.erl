@@ -75,7 +75,7 @@ info(Pro, Req, State) ->
                         Y = [RenderInit, RenderPage, RenderInitGenActions],
                         ets:insert(actions,{Module,Y}),
                         Y
-                    after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
+                    after 100 -> [{Module,A}] = ets:lookup(actions,Module), [] end,
                     R;
                 <<"PING">> -> [];
                 Unknown ->
