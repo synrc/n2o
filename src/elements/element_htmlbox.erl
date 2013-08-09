@@ -5,9 +5,11 @@
 
 render_element(R = #htmlbox{})->
   Id = case R#htmlbox.id of undefined-> wf:temp_id(); I -> I end,
+  PreviewId = case R#htmlbox.post_target of undefined -> "preview_"++Id; T-> T end, 
   ToolbarId = wf:temp_id(),
   Html = R#htmlbox.html,
-  Up =  #upload{id=wf:temp_id(), delegate=element_htmlbox, root=code:priv_dir(web)++"/static"},
+  Root = case R#htmlbox.root of undefined -> code:priv_dir(n2o); Path -> Path end,
+  Up =  #upload{id=wf:temp_id(), dir=R#htmlbox.dir, delegate=element_htmlbox, root=Root, post_write=R#htmlbox.post_write, img_tool=R#htmlbox.img_tool, post_target=PreviewId, size=R#htmlbox.size},
   UploadPostback = wf_event:generate_postback_script(Up, ignore, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
 
   wf:wire(wf:f(
@@ -37,27 +39,38 @@ render_element(R = #htmlbox{})->
           });" ++
       "}" ++
     "});"++
-
-    "$('.htmlbox-toolbar').scrollToFixed({
-      marginTop: function(){return $('.navbar-fixed-top').height();},
-      limit: function(){ var ed = $('#'+editorId); return ed.offset().top + ed.height() - $(this).height() + 10; },
-      preUnfixed: function(){ $(this).parent().css('overflow','inherit'); },
-      preAbsolute:function(){ $(this).parent().css('overflow', 'hidden'); }
-    });"++
-
   "});", [UploadPostback, Id, R#htmlbox.script_url, ToolbarId, Html, element_upload:render(Up), Up#upload.id])),
 
+  case R#htmlbox.toolbar_script of undefined -> []; Script -> wf:wire(wf:f("~s", [Script])) end,
+
   P = #panel{class=["htmlbox-container"], body=[
-      #panel{id=ToolbarId, class= ["htmlbox-toolbar"], body= <<"">>},
+      #panel{id=ToolbarId, class= [span12, case R#htmlbox.toolbar_class of undefined -> []; C -> C end], body= <<"">>},
       #panel{id=Id, class=[span12], tabindex = 0}
   ]},
   element_panel:render_element(P).
 
-control_event(Cid, #upload{} = Tag) -> element_upload:wire(Tag);
-control_event(Cid, {File, MimeType, Data, ActionHolder}) ->
-  Base = code:priv_dir(web),
-  file:write_file(File, Data, [write, raw]),
-  wf:wire(wf:f("$('#~s').parent('.file_upload').after(\"<img src='~s'>\").remove();", [Cid, File--Base])),
-  wf:flush(ActionHolder),
-  ok.
+control_event(_Cid, #upload{} = Tag) -> element_upload:wire(Tag);
+control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, ImgTool, Target, Size}) ->
+  Full = filename:join([Root, Dir, File]),
 
+  file:write_file(Full, Data, [write, raw]),
+  wf:wire(wf:f("$('#~s').parent('.file_upload').after(\"<img src='~s'>\").remove();", [Cid, filename:join([Dir, File])])),
+
+  case PostWrite of
+    undefined-> undefined;
+    Api ->
+      Thumb = case ImgTool of
+        undefined ->"";
+        M ->
+          Ext = filename:extension(File),
+          Name = filename:basename(File, Ext),
+          ThDir = filename:join([Root, Dir, "thumbnail"]),
+          filelib:ensure_dir(ThDir),
+          [begin
+            Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
+            M:make_thumb(Full, X, Y, Th) end || {X, Y}<- Size],
+          filename:join([ThDir--Root, Name++Ext])
+      end,
+      wf:wire(wf:f("~s({preview: '~s', id:'~s', file:'~s', type:'~s', thumb:'~s'});", [Api, Target, element_upload:hash(Full), filename:join([Dir,File]), MimeType, Thumb]))
+  end,
+  wf:flush(ActionHolder).

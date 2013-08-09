@@ -28,4 +28,4 @@ render_element(R = #textboxlist{}) ->
   ]).
 
 process_autocomplete(Target, Result, SearchTerm)->
-  wf:wire(wf:f("$(~s).trigger('autocompleteData', [~s, '~s']);", [Target, mochijson2:encode(Result), SearchTerm])).
+  wf:wire(wf:f("$(~s).trigger('autocompleteData', [~s, '~s']);", [Target, n2o_json:encode(Result), SearchTerm])).

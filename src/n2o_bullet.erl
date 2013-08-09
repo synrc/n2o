@@ -21,7 +21,7 @@ stream(<<"ping">>, Req, State) ->
     io:format("ping received~n"),
     {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->
-    error_logger:info_msg("Text Received ~p",[Data]),
+%    error_logger:info_msg("Text Received ~p",[Data]),
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
@@ -72,11 +72,10 @@ info(Pro, Req, State) ->
                         RenderInitGenActions = wf_core:render(InitGenActions),
                         wf_context:clear_actions(),
                         RenderPage = wf_core:render(Actions),
-                        Y = [RenderInit, RenderPage, RenderInitGenActions],
-                        ets:insert(actions,{Module,Y}),
-                        Y
-                    after 100 -> [{Module,A}] = ets:lookup(actions,Module), A end,
-                    R;
+                        [RenderInit, RenderPage, RenderInitGenActions]
+                    after 100 -> wf:redirect(wf:to_list(Module)), wf_core:render(get(actions))
+                    end, R;
+                <<"PING">> -> [];
                 Unknown ->
                   M = State#context.module,
                   M:event(Unknown),
