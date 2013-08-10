@@ -30,13 +30,11 @@ render_element(R = #htmlbox{})->
         "toolbar: 'ins'," ++
         "setup: function(ed){"++
           "ed.on('init', function(e){ $('#'+editorId).attr('tabIndex', 0); ed.setContent('~s'); });" ++
-          "ed.addButton('ins', {title: 'image', onclick: function(){
+          "ed.addButton('ins', {title: 'image', onclick: function(e){
             var p = '~s';
             ed.execCommand('mceInsertContent', '~s', p + '<p></p>');
+            wireUpload(Bert.encode(e.ui));
           }, icon: 'icon-picture' });" ++
-          "ed.on('ExecCommand', function(e){
-            if(e.command == 'mceInsertContent'){ wireUpload(Bert.binary(e.ui)); }
-          });" ++
       "}" ++
     "});"++
   "});", [UploadPostback, Id, R#htmlbox.script_url, ToolbarId, Html, element_upload:render(Up), Up#upload.id])),
