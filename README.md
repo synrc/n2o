@@ -232,6 +232,16 @@ N2O works on Windows, Mac and Linux.
 
 NOTE: the work of sync application on Windows is limited.
 
+    $ sudo apt-get install build-essential libncurses5-dev openssl libssl-dev m4
+    $ curl -O https://github.com/spawngrid/kerl/blob/master/kerl
+    $ chmod a+x kerl
+    $ echo KERL_CONFIGURE_OPTIONS="--enable-threads --enable-smp-support \
+           --enable-m64-build --without-javac --enable-kernel-poll" > ~/.kerlrc
+    $ kerl update releases
+    $ kerl build R16B01 r16b01
+    $ kerl install r16b01 /usr/lib/erlang
+    $ . /usr/lib/erlang/activate
+
 Kickstart Bootstrap
 -------------------
 
