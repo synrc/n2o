@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Warning for Mac users: bash 4.0 needed
+
 wd=`pwd`
 appss=( "rels/web/node/lib/n2o_sample-*" "rels/web/node/lib/n2o-*")
 
