@@ -14,6 +14,7 @@ render_element(Record) ->
       {<<"name">>,Record#textbox.name},
       {<<"placeholder">>,Record#textbox.placeholder},
       {<<"value">>,Record#textbox.value},
+      {<<"disabled">>,Record#textbox.disabled},
       {<<"class">>,Record#textbox.class} | Record#textbox.data_fields
   ] ++ case Record#textbox.disabled of undefined -> []; _ -> [{<<"disabled">>,<<"disabled">>}] end,
   wf_tags:emit_tag(<<"input">>, wf:render(Record#textbox.body), List).

@@ -6,18 +6,17 @@
 reflect() -> record_info(fields, button).
 
 render_element(Record) ->
-    ID = Record#button.id,
     Anchor = Record#button.anchor,
-    case Record#button.postback of
-         undefined -> skip;
-         Postback -> wf:wire(Anchor, #event { type=click,
-                                              validation_group=ID,
-                                              postback=Postback,
-                                              source=Record#button.source,
-                                              delegate=Record#button.delegate }) end,
+
+    Id = case Record#button.postback of
+        undefined -> Record#button.id;
+        Postback ->
+          ID = case Record#button.id of undefined -> wf:temp_id(); I -> I end,
+          wf:wire(Anchor, #event { type=click, postback=Postback, validation_group=ID, source=Record#button.source,  delegate=Record#button.delegate }), ID
+    end,
 
   wf_tags:emit_tag(<<"button">>, wf:render(Record#button.body), [
-      {<<"id">>, ID},
+      {<<"id">>, Id},
       {<<"type">>, Record#button.type},
       {<<"name">>, Record#button.name},
       {<<"class">>, Record#button.class},

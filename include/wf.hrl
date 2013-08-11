@@ -114,6 +114,8 @@
 -record(figure,     ?DEFAULT_BASE).
 -record(figcaption, ?DEFAULT_BASE).
 -record(blockquote, {?ELEMENT_BASE(element_blockquote), cite}).
+-record(address, ?DEFAULT_BASE).
+-record(abbr, ?DEFAULT_BASE).
 
 %% Twitter Bootstrap %%
 -record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[], caption=[]}).
