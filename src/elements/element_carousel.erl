@@ -20,9 +20,11 @@ render_element(R = #carousel{})->
       C = #panel{id = Id, show_if=ItemsCount > 0, class=[carousel, slide | R#carousel.class], style=[R#carousel.style],
                  data_fields=[{<<"data-interval">>, Interval}, {<<"data-pause">>, R#carousel.pause}], body=[
         #list{show_if=R#carousel.indicators == true, numbered=true, class=["carousel-indicators"], body=List},
-        #panel{class=["carousel-inner"], body=Items},
-        #link{class=["carousel-control", left], url="#"++Id, data_fields=[{<<"data-slide">>, <<"prev">>}], body="&lsaquo;"},
-        #link{class=["carousel-control", right], url="#"++Id, data_fields=[{<<"data-slide">>, <<"next">>}], body="&rsaquo;"},
+        #panel{class=["carousel-inner"], body=[
+          Items,
+          #link{class=["carousel-control", left], url="#"++Id, data_fields=[{<<"data-slide">>, <<"prev">>}], body="&lsaquo;"},
+          #link{class=["carousel-control", right], url="#"++Id, data_fields=[{<<"data-slide">>, <<"next">>}], body="&rsaquo;"}]
+        },
         #panel{class=["carousel-caption"], body=R#carousel.caption} ]},
       element_panel:render_element(C)
   end.
