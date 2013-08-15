@@ -69,10 +69,11 @@ wire(#upload{id=Id} = R) ->
 
   wf:wire( wf:f("$(function(){ $('#~s').upload({"
     "preview: '~s',"
+    "value: '~s',"
     "beginUpload: function(msg){~s},"
     "deliverSlice: function(msg){~s},"
     "queryFile: function(msg){~s},"
-    "complete: function(msg){~s} }); });", [Id, atom_to_list(R#upload.preview)]++ [wf_event:generate_postback_script(Tag, ignore, Id, element_upload, control_event, <<"{'msg': msg}">>)
+    "complete: function(msg){~s} }); });", [Id, atom_to_list(R#upload.preview), R#upload.value]++ [wf_event:generate_postback_script(Tag, ignore, Id, element_upload, control_event, <<"{'msg': msg}">>)
       || Tag <- [{begin_upload, R#upload.root, R#upload.dir, R#upload.delegate, R#upload.post_write, R#upload.img_tool, R#upload.post_target, R#upload.size}, deliver_slice, {query_file, R#upload.root, R#upload.dir, R#upload.delegate_query}, complete]])).
 
 control_event(Cid, Tag) ->
