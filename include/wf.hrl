@@ -45,7 +45,7 @@
 -record(literal, {?ELEMENT_BASE(element_literal)}).
 -record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
--record(textarea, {?ELEMENT_BASE(element_textarea), placeholder, name, cols, rows}).
+-record(textarea, {?ELEMENT_BASE(element_textarea), placeholder, name, cols, rows, value}).
 -record(range, {?ELEMENT_BASE(element_range), min=0, max=100, step=1, value=0, next, postback, delegate}).
 -record(datepicker_textbox, {?ELEMENT_BASE(element_datepicker_textbox), value, next, validators=[], options = [{dateFormat, "yy-mm-dd"}] }).
 -record(dropdown, {?ELEMENT_BASE(element_dropdown), options, postback, delegate, value, multiple=false, disabled=false, name}).
@@ -73,7 +73,7 @@
 -record(droppable, {?ELEMENT_BASE(element_droppable), tag, accept_groups=all, active_class=active, hover_class=hover, delegate=undefined}).
 -record(gravatar, {?ELEMENT_BASE(element_gravatar), email="", size="80", rating="g", default=""}).
 
--record(upload, {?ELEMENT_BASE(element_upload), name, delegate_query, delegate, root=code:priv_dir(n2o), dir="", post_write, post_target, img_tool, preview=false, size=[{200,200}]}).
+-record(upload, {?ELEMENT_BASE(element_upload), name, value, delegate_query, delegate, root=code:priv_dir(n2o), dir="", post_write, post_target, img_tool, preview=false, size=[{200,200}]}).
 -record(wizard, {?ELEMENT_BASE(element_wizard), tag, titles, steps, next="Next", back="Back", finish="Finish",show_progress=true,progress_step="Step ",progress_of=" of "}).
 -record(sparkline, {?ELEMENT_BASE(element_sparkline), type, values, options }).
 -record(textbox_autocomplete, {?ELEMENT_BASE(element_textbox_autocomplete), tag, minLength=2, delay=300, next, postback, delegate=undefined }).

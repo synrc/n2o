@@ -6,7 +6,6 @@ reflect() -> record_info(fields, textboxlist).
 
 render_element(R = #textboxlist{}) ->
   Id = case R#textboxlist.id of [] -> wf:temp_id(); I -> I end,
-%  Values = R#textboxlist.values,
   Plugins = case R#textboxlist.autocomplete of
     false -> [];
     true ->
@@ -24,6 +23,7 @@ render_element(R = #textboxlist{}) ->
     {<<"id">>, Id},
     {<<"type">>, <<"text">>},
     {<<"placeholder">>, R#textboxlist.placeholder},
+    {<<"value">>, R#textboxlist.values},
     {<<"style">>, <<"display:none;">>}
   ]).
 

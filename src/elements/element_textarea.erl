@@ -13,6 +13,7 @@ render_element(Record) ->
     {<<"name">>, Record#textarea.name},
     {<<"rows">>, Record#textarea.rows},
     {<<"cols">>, Record#textarea.cols},
+    {<<"value">>,Record#textarea.value},
     {<<"placeholder">>, Record#textarea.placeholder}
   ]).
 
