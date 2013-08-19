@@ -82,12 +82,27 @@ clear_roles() -> role_handler:clear_all().
 -ifndef(BRIDGE).
 -define(BRIDGE, n2o_cowboy).
 -endif.
+-define(CTX, (wf_context:context())).
+-define(REQ, (wf_context:context())#context.req).
 
+% functions that use the default (current) context
 q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
 qs(Key) -> proplists:get_value(Key,wf_context:params()).
+cookie(Cookie) -> ?BRIDGE:cookie(Cookie, ?REQ).
+params() -> ?BRIDGE:params(?REQ).
+cookies() -> ?BRIDGE:cookies(?REQ).
+headers() -> ?BRIDGE:headers(?REQ).
+peer() -> ?BRIDGE:peer(?REQ).
+path() -> ?BRIDGE:path(?REQ).
+request_body() -> ?BRIDGE:request_body(?REQ).
+delete_cookie(Cookie) -> ?BRIDGE:delete_cookie(Cookie,?REQ).
+header(Name, Val) -> ?BRIDGE:header(Name, Val, ?REQ).
+response(Html) -> ?BRIDGE:response(Html,?REQ).
+reply(Status) -> ?BRIDGE:reply(Status,?REQ).
+
+% functions that need a request context
 params(Req) -> ?BRIDGE:params(Req).
 cookies(Req) -> ?BRIDGE:cookies(Req).
-cookie(Cookie) -> ?BRIDGE:cookie(Cookie,(wf_context:context())#context.req).
 cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie,Req).
 cookie(Cookie, Value, Req) -> ?BRIDGE:cookie(Cookie, Value, Req).
 cookie(Cookie, Value, Path, MinutesToLive, Req) -> ?BRIDGE:cookie(Cookie, Value, Path, MinutesToLive, Req).
