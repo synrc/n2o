@@ -115,7 +115,7 @@ error(String) -> error_logger:error_msg(String).
 
 % Q: Do we need converting API ?
 
-comet_global(Function, Pool) -> action_comet:comet(Function).
+comet_global(Function, _Pool) -> action_comet:comet(Function).
 f(S) -> _String = wf_utils:f(S).
 f(S, Args) -> _String = wf_utils:f(S, Args).
 coalesce(L) -> _Value = wf_utils:coalesce(L).
@@ -152,7 +152,7 @@ continue(Tag, Function, TimeoutMS) -> action_continue:continue(Tag, Function, Ti
 temp_id() -> _String = wf_render_elements:temp_id().
 normalize_id(Path) -> _String = wf_render_elements:normalize_id(Path).
 send_global(Pool, Message) -> ok = action_comet:send_global(Pool, Message).
-comet(Function, Pool) ->  action_comet:comet(Function).
+comet(Function, _Pool) ->  action_comet:comet(Function).
 logout() -> clear_user(), clear_roles(), clear_session().
 flash(Elements) -> element_flash:add_flash(Elements).
 flash(FlashID, Elements) -> element_flash:add_flash(FlashID, Elements).
@@ -165,7 +165,7 @@ break() -> wf_utils:break().
 assert(true, _) -> ok;
 assert(false, Error) -> erlang:error(Error).
 
-append(List, Key, Value) -> case Value of undefined -> List; A -> [{Key, Value}|List] end.
+append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_core:render(X).
 
 config_multiple(Keys) -> [config(Key, "") || Key <- Keys].
