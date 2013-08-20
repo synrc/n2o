@@ -91,6 +91,7 @@
 -record(h4,         ?DEFAULT_BASE).
 -record(h5,         ?DEFAULT_BASE).
 -record(h6,         ?DEFAULT_BASE).
+-record(ul,         ?DEFAULT_BASE).
 -record(li,         ?DEFAULT_BASE).
 -record(br,         ?DEFAULT_BASE).
 -record(hr,         ?DEFAULT_BASE).
@@ -115,8 +116,8 @@
 -record(figure,     ?DEFAULT_BASE).
 -record(figcaption, ?DEFAULT_BASE).
 -record(blockquote, {?ELEMENT_BASE(element_blockquote), cite}).
--record(address, ?DEFAULT_BASE).
--record(abbr, ?DEFAULT_BASE).
+-record(address,    ?DEFAULT_BASE).
+-record(abbr,       ?DEFAULT_BASE).
 
 %% Twitter Bootstrap %%
 -record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[], caption=[]}).
