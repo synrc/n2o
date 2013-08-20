@@ -84,6 +84,7 @@
 -record(canvas, {?ELEMENT_BASE(element_canvas)}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 
+-record('div',      ?DEFAULT_BASE).
 -record(h1,         ?DEFAULT_BASE).
 -record(h2,         ?DEFAULT_BASE).
 -record(h3,         ?DEFAULT_BASE).
