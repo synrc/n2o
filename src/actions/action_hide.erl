@@ -8,6 +8,7 @@ render_action(Record) ->
         type=hide,
         effect = Record#hide.effect,
         options = Record#hide.options,
+        target = Record#hide.target,
         speed = Record#hide.speed,
         actions = Record#hide.actions
     }.
