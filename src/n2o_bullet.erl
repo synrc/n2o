@@ -73,7 +73,10 @@ info(Pro, Req, State) ->
                         wf_context:clear_actions(),
                         RenderPage = wf_core:render(Actions),
                         [RenderInit, RenderPage, RenderInitGenActions]
-                    after 100 -> wf:redirect(wf:to_list(Module)), wf_core:render(get(actions))
+                    after 100 -> 
+                        error_logger:info_msg("Req QS: ~p",[element(14,Req)]),
+                        wf:redirect(wf:to_list(Module)++"?"++wf:to_list(element(14,Req))),
+                        wf_core:render(get(actions))
                     end, R;
                 <<"PING">> -> [];
                 Unknown ->
