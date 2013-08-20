@@ -73,19 +73,8 @@ info(Pro, Req, State) ->
                         wf_context:clear_actions(),
                         RenderPage = wf_core:render(Actions),
                         [RenderInit, RenderPage, RenderInitGenActions]
-                    after 100 ->
-                            case get(actions) of
-                                [] -> [];
-                                Actions ->
-                                    % if the page has any actions,
-                                    % right now we have to redirect to force them to propagate again
-                                    %
-                                    % actions should be carried with the client in the future
-                                    wf:redirect(""),
-                                    wf_core:render(Actions)
-                            end
-                    end,
-                    R;
+                    after 100 -> wf:redirect(wf:to_list(Module)), wf_core:render(get(actions))
+                    end, R;
                 <<"PING">> -> [];
                 Unknown ->
                   M = State#context.module,
