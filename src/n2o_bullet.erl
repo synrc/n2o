@@ -75,7 +75,7 @@ info(Pro, Req, State) ->
                         [RenderInit, RenderPage, RenderInitGenActions]
                     after 100 -> 
                         QS = element(14,Req),
-                        error_logger:info_msg("QS: ~p",[QS]),
+                        %error_logger:info_msg("QS: ~p",[QS]),
                         wf:redirect(case QS of <<>> -> ""; _ -> "?" ++ wf:to_list(QS) end),
                         wf_core:render(get(actions))
                     end, R;
