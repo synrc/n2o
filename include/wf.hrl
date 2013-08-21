@@ -149,6 +149,7 @@
 -record(script, {?ACTION_BASE(action_script), script}).
 -record(disable_selection, {?ACTION_BASE(action_disable_selection)}).
 -record(jquery_effect, {?ACTION_BASE(action_jquery_effect), type, effect, speed, options=[], class, easing}).
+-record(jq, {?ACTION_BASE(action_jq), type, method, args=[], class}).
 -record(show, {?ACTION_BASE(action_show), effect=none, options=[], speed=500}).
 -record(hide, {?ACTION_BASE(action_hide), effect=none, options=[], speed=500}).
 -record(appear, {?ACTION_BASE(action_appear), speed=500}).
