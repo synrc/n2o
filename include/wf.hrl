@@ -84,12 +84,14 @@
 -record(canvas, {?ELEMENT_BASE(element_canvas)}).
 -record(time, {?ELEMENT_BASE(element_time), pubdate=false, datetime=""}).
 
+-record('div',      ?DEFAULT_BASE).
 -record(h1,         ?DEFAULT_BASE).
 -record(h2,         ?DEFAULT_BASE).
 -record(h3,         ?DEFAULT_BASE).
 -record(h4,         ?DEFAULT_BASE).
 -record(h5,         ?DEFAULT_BASE).
 -record(h6,         ?DEFAULT_BASE).
+-record(ul,         ?DEFAULT_BASE).
 -record(li,         ?DEFAULT_BASE).
 -record(br,         ?DEFAULT_BASE).
 -record(hr,         ?DEFAULT_BASE).
@@ -114,8 +116,8 @@
 -record(figure,     ?DEFAULT_BASE).
 -record(figcaption, ?DEFAULT_BASE).
 -record(blockquote, {?ELEMENT_BASE(element_blockquote), cite}).
--record(address, ?DEFAULT_BASE).
--record(abbr, ?DEFAULT_BASE).
+-record(address,    ?DEFAULT_BASE).
+-record(abbr,       ?DEFAULT_BASE).
 
 %% Twitter Bootstrap %%
 -record(carousel, {?ELEMENT_BASE(element_carousel), interval=5000, pause= <<"hover">>, start=0, indicators=true, items=[], caption=[]}).
@@ -147,6 +149,7 @@
 -record(script, {?ACTION_BASE(action_script), script}).
 -record(disable_selection, {?ACTION_BASE(action_disable_selection)}).
 -record(jquery_effect, {?ACTION_BASE(action_jquery_effect), type, effect, speed, options=[], class, easing}).
+-record(jq, {?ACTION_BASE(action_jq), type, method, args=[], class}).
 -record(show, {?ACTION_BASE(action_show), effect=none, options=[], speed=500}).
 -record(hide, {?ACTION_BASE(action_hide), effect=none, options=[], speed=500}).
 -record(appear, {?ACTION_BASE(action_appear), speed=500}).

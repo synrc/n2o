@@ -8,6 +8,7 @@ render_action(Record) ->
         type=show,
         effect = Record#show.effect,
         options = Record#show.options,
+        target = Record#show.target,
         speed = Record#show.speed,
         actions = Record#show.actions
     }.
