@@ -26,16 +26,34 @@ render_element(R = #htmlbox{})->
         "fixed_toolbar_container: '#'+'~s', "++
         "paste_as_text: true,"++
         "menubar: false,"++
-        "statusbar: false,"
-        "plugins: 'paste',"++
-        "toolbar: 'ins'," ++
+        "statusbar: false,"++
+        "plugins: 'paste, visualblocks, autolink',"++
+        "visualblocks_default_state: false,"++
+        "end_container_on_empty_block: true," ++
+        "toolbar: 'pic, bq, cd'," ++
         "setup: function(ed){"++
           "ed.on('init', function(e){ $('#'+editorId).attr('tabIndex', 0); ed.setContent('~s'); });" ++
-          "ed.addButton('ins', {title: 'image', onclick: function(e){
+          "ed.on('GetContent', function(e){
+            e.content=e.content.replace(/(<pre>(?:[^<](?!\\/pre))*<\\/pre>)/gi, function(a){return a.replace(/&amp;/g, '&');}); // :)
+          });" ++
+          "ed.addButton('pic', {title: 'image', onclick: function(e){
             var p = '~s';
             ed.execCommand('mceInsertContent', '~s', p + '<p></p>');
             wireUpload(Bert.encode(e.ui));
           }, icon: 'icon-picture' });" ++
+          "ed.addButton('b', {title: 'bold', onclick: function(e){
+            ed.execCommand('Bold');
+          }, icon:'icon-bold', toggle: 'button'});" ++
+          "ed.addButton('bq', {title: 'blockquote', onclick: function(e){
+            ed.execCommand('formatBlock', false, 'blockquote');
+          }, icon:'icon-quote-right'});" ++
+          "ed.addButton('cd', {title: 'code', onclick: function(e){
+            ed.execCommand('formatBlock', false, 'pre');
+          }, icon:'icon-code'});" ++
+          "ed.addButton('blks', {title: 'show blocks', class:'pull-right', onclick: function(e){
+            ed.execCommand('mceVisualBlocks');
+          }, icon:'icon-eye-open', toggle: 'button'});" ++
+
       "}" ++
     "});"++
   "});", [UploadPostback, Id, R#htmlbox.script_url, ToolbarId, Html, element_upload:render(Up), Up#upload.id])),
