@@ -90,9 +90,10 @@ control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, Im
           Ext = filename:extension(File),
           Name = filename:basename(File, Ext),
           ThDir = filename:join([Root, Dir, "thumbnail"]),
-          filelib:ensure_dir(ThDir),
           [begin
             Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
+            En = filelib:ensure_dir(Th),
+            error_logger:info_msg("Ensure thumb dir exist: ~p ~p", [Th, En]),
             M:make_thumb(Full, X, Y, Th) end || {X, Y}<- Size],
           filename:join([ThDir--Root, Name++Ext])
       end,
