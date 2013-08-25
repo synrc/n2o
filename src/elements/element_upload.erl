@@ -31,9 +31,10 @@ handle_cast(complete, S) ->
               Ext = filename:extension(File),
               Name = filename:basename(File, Ext),
               ThDir = filename:join([S#state.root, S#state.dir, "thumbnail"]),
-              filelib:ensure_dir(ThDir),
               [begin
                 Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
+                En = filelib:ensure_dir(Th),
+                error_logger:info_msg("Ensure thumb dir exist: ~p ~p", [Th, En]),
                 M:make_thumb(File, X, Y, Th) end || {X, Y}<- S#state.size],
               filename:join([ThDir--S#state.root, Name++Ext])
           end,
