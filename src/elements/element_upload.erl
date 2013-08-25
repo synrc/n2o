@@ -66,7 +66,7 @@ render(#upload{id=Id} = R) ->
   ]).
 
 wire(#upload{id=Id} = R) ->
-  case R#upload.post_write of undefined-> ok;  Api -> wf:wire(#api{name=Api, tag=postwrite}) end,
+  case R#upload.post_write of undefined-> ok;  Api -> wf:wire(#api{name=Api, tag=postwrite, delegate=R#upload.delegate_api}) end,
 
   wf:wire( wf:f("$(function(){ $('#~s').upload({"
     "preview: '~s',"
@@ -74,8 +74,12 @@ wire(#upload{id=Id} = R) ->
     "beginUpload: function(msg){~s},"
     "deliverSlice: function(msg){~s},"
     "queryFile: function(msg){~s},"
-    "complete: function(msg){~s} }); });", [Id, atom_to_list(R#upload.preview), R#upload.value]++ [wf_event:generate_postback_script(Tag, ignore, Id, element_upload, control_event, <<"{'msg': msg}">>)
-      || Tag <- [{begin_upload, R#upload.root, R#upload.dir, R#upload.delegate, R#upload.post_write, R#upload.img_tool, R#upload.post_target, R#upload.size}, deliver_slice, {query_file, R#upload.root, R#upload.dir, R#upload.delegate_query}, complete]])).
+    "complete: function(msg){~s} }); });", [Id, atom_to_list(R#upload.preview), R#upload.value]++ [
+        wf_event:generate_postback_script(Tag, ignore, Id, element_upload, control_event, <<"{'msg': msg}">>) || Tag <- [
+        {begin_upload, R#upload.root, R#upload.dir, R#upload.delegate, R#upload.post_write, R#upload.img_tool, R#upload.post_target, R#upload.size},
+        deliver_slice,
+        {query_file, R#upload.root, R#upload.dir, R#upload.delegate_query, R#upload.post_write, R#upload.post_target},
+        complete]])).
 
 control_event(Cid, Tag) ->
   Msg = wf:q(msg),
@@ -84,8 +88,8 @@ control_event(Cid, Tag) ->
     {'query', Name, MimeType} ->
       wf:reg(Room),
       case Tag of
-        {query_file, Root, Dir, undefined} -> {exist, case file:read_file_info(filename:join([Root,Dir,binary_to_list(Name)])) of {ok, FileInfo} -> FileInfo#file_info.size; {error, _} -> 0 end};
-        {query_file, Root, Dir, M} -> M:control_event(Cid, {query_file, Root, Dir, Name, MimeType});
+        {query_file, Root, Dir, undefined, _} -> {exist, case file:read_file_info(filename:join([Root,Dir,binary_to_list(Name)])) of {ok, FileInfo} -> FileInfo#file_info.size; {error, _} -> 0 end};
+        {query_file, Root, Dir, M, PostWrite, Target} -> M:control_event(Cid, {query_file, Root, Dir, Name, MimeType, PostWrite, Target});
         _ -> {error, "Server error: Wrong postback!"}
       end;
     {begin_upload, Name, MimeType} ->

@@ -10,7 +10,16 @@ render_element(R = #htmlbox{})->
   ToolbarId = wf:temp_id(),
   Html = R#htmlbox.html,
   Root = case R#htmlbox.root of undefined -> code:priv_dir(n2o); Path -> Path end,
-  Up =  #upload{id=wf:temp_id(), dir=R#htmlbox.dir, delegate=element_htmlbox, delegate_query=element_htmlbox, root=Root, post_write=R#htmlbox.post_write, img_tool=R#htmlbox.img_tool, post_target=PreviewId, size=R#htmlbox.size},
+  Up =  #upload{id = wf:temp_id(),
+    root = Root,
+    dir = R#htmlbox.dir,
+    delegate = element_htmlbox,
+    delegate_query = element_htmlbox,
+    delegate_api = R#htmlbox.delegate_api,
+    post_write = R#htmlbox.post_write,
+    img_tool = R#htmlbox.img_tool,
+    post_target = PreviewId,
+    size = R#htmlbox.size},
   UploadPostback = wf_event:generate_postback_script(Up, ignore, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
 
   wf:wire(wf:f(
@@ -67,36 +76,40 @@ render_element(R = #htmlbox{})->
   element_panel:render_element(P).
 
 control_event(_Cid, #upload{} = Tag) -> element_upload:wire(Tag);
-control_event(Cid, {query_file, Root, Dir, File, MimeType})->
+control_event(Cid, {query_file, Root, Dir, File, MimeType, PostWrite, Target})->
   Name = binary_to_list(File),
   Size = case file:read_file_info(filename:join([Root,Dir,Name])) of 
     {ok, FileInfo} ->
       wf:wire(wf:f("$('#~s').parent('.file_upload').after(\"<img src='~s'>\").remove();", [Cid, filename:join([Dir, Name])])),
+
+      ThDir = filename:join([Root, Dir, "thumbnail"]),
+      post_write(PostWrite, Target, Root, Dir, Name, MimeType, filename:join([ThDir--Root, Name])),
+
       FileInfo#file_info.size;
     {error, _} -> 0 end,
   {exist, Size};
 control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, ImgTool, Target, Size}) ->
-  Full = filename:join([Root, Dir, File]),
+    Full = filename:join([Root, Dir, File]),
+    file:write_file(Full, Data, [write, raw]),
+    wf:wire(wf:f("$('#~s').parent('.file_upload').after(\"<img src='~s'>\").remove();", [Cid, filename:join([Dir, File])])),
 
-  file:write_file(Full, Data, [write, raw]),
-  wf:wire(wf:f("$('#~s').parent('.file_upload').after(\"<img src='~s'>\").remove();", [Cid, filename:join([Dir, File])])),
-
-  case PostWrite of
-    undefined-> undefined;
+    case PostWrite of undefined-> undefined;
     Api ->
-      Thumb = case ImgTool of
-        undefined ->"";
+        Thumb = case ImgTool of undefined ->"";
         M ->
-          Ext = filename:extension(File),
-          Name = filename:basename(File, Ext),
-          ThDir = filename:join([Root, Dir, "thumbnail"]),
-          [begin
-            Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
-            En = filelib:ensure_dir(Th),
-            error_logger:info_msg("Ensure thumb dir exist: ~p ~p", [Th, En]),
-            M:make_thumb(Full, X, Y, Th) end || {X, Y}<- Size],
-          filename:join([ThDir--Root, Name++Ext])
-      end,
-      wf:wire(wf:f("~s({preview: '~s', id:'~s', file:'~s', type:'~s', thumb:'~s'});", [Api, Target, element_upload:hash(Full), filename:join([Dir,File]), MimeType, Thumb]))
-  end,
-  wf:flush(ActionHolder).
+            Ext = filename:extension(File),
+            Name = filename:basename(File, Ext),
+            ThDir = filename:join([Root, Dir, "thumbnail"]),
+            [begin
+                Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
+                En = filelib:ensure_dir(Th),
+                M:make_thumb(Full, X, Y, Th) end || {X, Y}<- Size],
+                filename:join([ThDir--Root, Name++Ext]) end,
+            post_write(Api, Target, Root, Dir, File, MimeType, Thumb) end,
+    wf:flush(ActionHolder).
+
+post_write(undefined,_,_,_,_,_,_) -> skip;
+post_write(Api, Target, Root, Dir, File, MimeType, Thumb)->
+    Full = filename:join([Root, Dir, File]),
+    wf:wire(wf:f("~s({preview: '~s', id:'~s', file:'~s', type:'~s', thumb:'~s'});", [
+        Api, Target, element_upload:hash(Full), filename:join([Dir,File]), MimeType, Thumb ])).
