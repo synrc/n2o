@@ -88,7 +88,7 @@ control_event(Cid, Tag) ->
     {'query', Name, MimeType} ->
       wf:reg(Room),
       case Tag of
-        {query_file, Root, Dir, undefined, _} -> {exist, case file:read_file_info(filename:join([Root,Dir,binary_to_list(Name)])) of {ok, FileInfo} -> FileInfo#file_info.size; {error, _} -> 0 end};
+        {query_file, Root, Dir, undefined,_,_} -> {exist, case file:read_file_info(filename:join([Root,Dir,binary_to_list(Name)])) of {ok, FileInfo} -> FileInfo#file_info.size; {error, _} -> 0 end};
         {query_file, Root, Dir, M, PostWrite, Target} -> M:control_event(Cid, {query_file, Root, Dir, Name, MimeType, PostWrite, Target});
         _ -> {error, "Server error: Wrong postback!"}
       end;
