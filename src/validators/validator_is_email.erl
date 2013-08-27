@@ -18,8 +18,11 @@ render_action(Record)  ->
     }),
     wf:f("v.add(Validate.Email, { failureMessage: \"~s\" });", [Text]).
 
+% http://tools.ietf.org/html/rfc3696#section-3
+% this validator does not support quoted characters (and quoted substrings)
+
 validate(_, Value) ->
-    case re:run(wf:to_list(Value), "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+") of
+    case re:run(wf:to_list(Value), "^[a-zA-Z0-9!#$%&'*\+-/=\?^_`\.{|}~]+" ++ "@[a-zA-Z0-9][a-zA-Z0-9\.-]+\.[a-zA-Z]+$") of
         {match, _} -> true;
         _ -> false
     end.
