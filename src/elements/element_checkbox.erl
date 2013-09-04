@@ -21,7 +21,7 @@ render_element(Record) ->
             {<<"value">>, Record#checkbox.value},
             {<<"checked">>, if Record#checkbox.checked==true -> <<"checked">>; true -> undefined end}
       ]),
-      Record#checkbox.body
+      case Record#checkbox.body of undefined -> []; B -> B end
     ],
     wf_tags:emit_tag(<<"label">>, wf:render(Label), [
       {<<"class">>, Record#checkbox.class},
