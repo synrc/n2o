@@ -20,6 +20,7 @@ render_element(Record) ->
       {<<"target">>, Record#link.target},
       {<<"style">>, Record#link.style},
       {<<"title">>, Record#link.title},
+      {<<"tabindex">>, Record#link.tabindex},
       {<<"name">>, Record#link.name} | Record#link.data_fields
     ],
 
