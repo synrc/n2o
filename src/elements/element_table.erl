@@ -1,5 +1,4 @@
 -module(element_table).
--author('Rusty Klophaus').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
@@ -14,12 +13,13 @@ render_element(Record = #table{}) ->
     _ -> wf_tags:emit_tag(<<"tfoot">>, wf:render(Record#table.footer), [])
   end,
   Bodies = case Record#table.body of
-    undefined -> wf_tags:emit_tag(<<"tbody">>, []);
-    [] -> wf_tags:emit_tag(<<"tbody">>, []);
-    Rows -> [ wf_tags:emit_tag(<<"tbody">>, wf:render(B), []) || B <- Rows]
+    #tbody{} = B -> B;
+    undefined -> #tbody{};
+    [] -> #tbody{};
+    Rows -> [case B of #tbody{}=B1 -> B1; _-> #tbody{body=B} end  || B <- Rows]
   end,
 
-  wf_tags:emit_tag( <<"table">>, [Header, Footer, Bodies], [
+  wf_tags:emit_tag( <<"table">>, wf:render([Header, Footer, Bodies]), [
       {<<"id">>, Record#table.id},
       {<<"class">>, Record#table.class},
       {<<"style">>, Record#table.style}

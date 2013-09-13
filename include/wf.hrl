@@ -60,6 +60,7 @@
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
 -record(table, {?ELEMENT_BASE(element_table), header, footer}).
+-record(tbody, {?ELEMENT_BASE(element_tbody)}).
 -record(td, {?ELEMENT_BASE(element_td), colspan=1, rowspan=1, scope}).
 -record(th, {?ELEMENT_BASE(element_th), colspan=1, rowspan=1, scope}).
 -record(tr, {?ELEMENT_BASE(element_tr), cells, postback, delegate}).
