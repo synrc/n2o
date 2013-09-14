@@ -41,7 +41,7 @@
 -record(email_link, {?ELEMENT_BASE(element_email_link), email=""}).
 -record(error, {?ELEMENT_BASE(element_error)}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
--record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate}).
+-record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate, disabled}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
 -record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
