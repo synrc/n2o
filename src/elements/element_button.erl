@@ -21,5 +21,6 @@ render_element(Record) ->
       {<<"name">>, Record#button.name},
       {<<"class">>, Record#button.class},
       {<<"style">>, Record#button.style},
+      {<<"disabled">>, if Record#button.disabled == true -> "disabled"; true -> undefined end},
       {<<"value">>, Record#button.value}  | Record#button.data_fields
   ]).

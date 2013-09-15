@@ -41,7 +41,7 @@
 -record(email_link, {?ELEMENT_BASE(element_email_link), email=""}).
 -record(error, {?ELEMENT_BASE(element_error)}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
--record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate}).
+-record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate, disabled}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
 -record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, delegate, name}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
@@ -60,6 +60,7 @@
 -record(spinner, {?ELEMENT_BASE(element_spinner), image="/nitrogen/spinner.gif"}).
 -record(image, {?ELEMENT_BASE(element_image), image="", alt="", width, height}).
 -record(table, {?ELEMENT_BASE(element_table), header, footer}).
+-record(tbody, {?ELEMENT_BASE(element_tbody)}).
 -record(td, {?ELEMENT_BASE(element_td), colspan=1, rowspan=1, scope}).
 -record(th, {?ELEMENT_BASE(element_th), colspan=1, rowspan=1, scope}).
 -record(tr, {?ELEMENT_BASE(element_tr), cells, postback, delegate}).

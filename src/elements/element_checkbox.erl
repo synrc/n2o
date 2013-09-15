@@ -6,10 +6,10 @@
 reflect() -> record_info(fields, checkbox).
 
 render_element(Record) -> 
-    Id = Record#checkbox.id,
+    Id = case Record#checkbox.id of undefined -> wf:temp_id(); I->I end,
     case Record#checkbox.postback of
         undefined -> ignore;
-        Postback -> wf:wire(Id, #event { type=change, postback=Postback, validation_group=Id, delegate=Record#checkbox.delegate })
+        Postback -> wf:wire(Id, #event { type=change, postback=Postback, validation_group=Id, source=Record#checkbox.source, delegate=Record#checkbox.delegate })
     end,
 
     Label = [

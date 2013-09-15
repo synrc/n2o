@@ -21,6 +21,7 @@ inner_to_list(F) when is_float(F) ->
 		true -> inner_to_list(round(F));
 		false -> nitro_mochinum:digits(F)
 	end;
+inner_to_list(L) when is_tuple(L) -> lists:flatten(io_lib:format("~p", [L]));
 inner_to_list(L) when is_list(L) -> L.
 
 to_atom(A) when is_atom(A) -> A;
