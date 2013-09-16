@@ -4,9 +4,6 @@
 To run N2O sites you need Erlang R14 or higher and basho rebar installed.
 N2O works on Windows, Mac and Linux.
 
-\paragraph{}
-You also need node.js, npm and  version greater that 0.8 to assemble client-side N2O applications.
-
 \subsection{Kickstart Bootstrap}
 To try N2O you just need to fetch it from Github and build. We don't use
 fancy scripts so building process is OTP compatible: bootstrap site
@@ -14,7 +11,7 @@ is bundled as Erlang release.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        $ git clone https://github.com/5HT/n2o
+        $ git clone https://github.com/5HT/sample
         $ cd n2o/samples
         $ rebar get-deps
         $ rebar compile
@@ -28,7 +25,7 @@ is bundled as Erlang release.
 Now you can try: \footahref{http://localhost:8000}{http://localhost:8000}.
 
 \newpage
-\subsection{Add dependency on N2O core}
+\subsection{Depend on N2O Core}
 If you want start using raw N2O core you can define N2O http and websocket handlers and cowboy static
 handler in Cowboy dispatch parameter:
 
@@ -49,7 +46,6 @@ handler in Cowboy dispatch parameter:
 
 And add a minimal {\bf index.erl} page:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}[caption=index.erl]
 -module(index).
 -compile(export_all).
@@ -57,19 +53,20 @@ And add a minimal {\bf index.erl} page:
 
 main() -> #span{text=<<"Hello">>}.
 \end{lstlisting}
-\vspace{1\baselineskip}
 
-\subsection*{Developer scripts for Sync}
-During development we use some scripts which are needed for linking source
-directories with release lib directories and also link BERT, N2O and jQuery javascript.
-After making release you should run:
+\subsection*{Rich Clients Applications Assembling}
+You also need node.js, npm, less and uglify-js to assemble
+client-side N2O applications by packaging CSS/LESS, JavaScript and HTML templates.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        $ ./nitrogen_static.sh   # before release
-        $ ./release_sync.sh      # after release
+$ sudo apt-get install python-software-properties
+$ sudo add-apt-repository ppa:richarvey/nodejs
+$ sudo apt-get update
+$ sudo apt-get install nodejs npm
+$ sudo npm install uglify-js -g
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Now you can edit site sources and {\bf sync} will automaticaly recompile
-and reload modules in release.
+Having done this you will be able to build N2O App Store
+Demo \newline\footahref{http://github.com/5HT/skyline}{http://skyline.synrc.com}.

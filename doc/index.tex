@@ -44,7 +44,7 @@ telecom streams and web pages as user binary sessions
 you will better undestand the choice of Erlang for Web.
 
 \paragraph{}
-Using Erlang for Web unlocks the full power of telecom systems for
+Using Erlang for Web you unlock the full power of telecom systems for
 web-scale, asynchronuous, non-blocking, sharded, event-driven,
 message-passing, noSQL, reliable, highly-available, high-performance,
 secure, qualative, real-time, clusterable applications. See Erlang: The Movie II.
@@ -55,17 +55,19 @@ HTTP Cowboy performance thus rising rendering performance several
 times in comparison to any other functional web framework and for
 sure it is faster than raw HTTP node.js performance.
 
-\subsection*{Desktop and Lightweight Applications}
+\subsection*{Rich and Lightweight Applications}
 There are two approaches to design communications between client/server.
 The first one is called 'data-on-wire', where only JSON, XML or Binary
 data are transfered on the channel through RPC, REST. All HTML rendering
 is done on the client side. This is mostly suitable for desktops
 applications. The examples are Chaplin/CoffeeScript, Meteor/JavaScript
 and ClojureScript.
+
 \paragraph{}
 The other approach is to send pre-rendered parts of pages and javascript,
 and only replace HTML parts and execute JavaScript on the client side. This approach
 is better suited for mobile applications, where client doesn't have much resources.
+
 \paragraph{}
 With N2O you can create both types of applications: using N2O REST framework
 for first type of application based on Cowboy REST API along with DTL
@@ -83,8 +85,8 @@ like you do with ClojureScript, JScala, Elm, WebSharper or similar
 technologies. N2O covers: REST micro-frameworks, server-side rendering,
 client-side rendering, WebSocket event streaming, JavaScript generation
 and JavaScript macro system along with {\bf AVZ} authorization
-library (Facebook, Google, Twitter, Github, Microsoft), Key-Value Storage
-Framework {\bf KVS} and {\bf MQS} Message Bus Client Library (GProc, RabbitMQ).
+library (Facebook, Google, Twitter, Github, Microsoft), key-value storages
+access library {\bf KVS} and {\bf MQS} Message Bus client library (GProc, RabbitMQ).
 
 \subsection*{DSL and Templates}
 We liked Nitrogen for simple and elegant way of typed HTML page
