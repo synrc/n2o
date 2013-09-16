@@ -1,0 +1,35 @@
+\section{API}
+
+\subsection{Update DOM Events \bf{wf:update}}
+Issue \#update{} action for an element.
+It generates jQuery DOM update script and evaluates it.
+
+\subsection{Wire JavaScript Events \bf{wf:wire}}
+Issue \#wire{} action that sends JavaScript for evaluation on the client.
+
+\subsection{Async Processes \bf{wf:comet}}
+Creates Erlang processes that talks to primary page process by sending messages.
+For redirect all updates and wire actions to page process {\bf wf:flush} should be called.
+Usually you send messages to Async processes using N2O message bus.
+
+\subsection{Message Bus {\bf wf:reg} and {\bf wf:send}}
+For managing pools of async processes N2O uses GProc process registry.
+It is used as PubSub message bus for N2O communications, later you can switch to robust RabbitMQ.
+You can assign a process to the pool with {\bf wf:reg} and send message to a pool with {\bf wf:send}.
+
+\subsection{Parse URL and Context parameters {\bf wf:q} and {\bf wf:qs}}
+For extraction url parameters or reads from process context. {\bf wf:q} extract variables
+from context saved by controls postbacks and {\bf wf:qs} extract variable from HTTP forms.
+
+\subsection{Redirects {\bf wf:redirect}}
+Redirects implemented not as HTTP headers but as {\bf window.location = ...} JavaScript.
+It saves login context information and sends it in first packet after establishing WebSocket connection.
+
+\subsection{Session Information {\bf wf:session}}
+Store any session information in ETS tables. Use {\bf wf:user}, {\bf wf:role} for
+login and authorization purposes. See {\bf AVZ} library.
+
+\subsection{Bridge information {\bf wf:header} and {\bf wf:cookie}}
+You can read and issue cookie and headers information using internal Web-Server routines.
+Also you can read peer IP with {\bf wf:peer}.
+

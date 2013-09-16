@@ -1,0 +1,13 @@
+\section{Erlang JavaScript Compiler}
+
+\subsection{Compilation and Macros}
+Erlang JavaScript Parse Transform has two modes driven by {\bf \-jsmacro} and {\bf \-js}
+Erlang module attributes. First mode is for precompiling Erlang module functions too JavaScript strings,
+second is for export Erlang function to separate JavaScript file ready to run withing Browser or node.js.
+
+\subsection{Erlang Macro Functions}
+Export Erlang function like that \begin{verbatim}-jsmacro([sample/0,fun_args/2])\end{verbatim}}.
+
+\subsection{JavaScript File Compilation}
+Export Erlang function to JavaScript filw with \begin{verbatim}-js([sample/0,fun_args/2])\end{verbatim}.
+You could include function both for {\bf macro} ans {\bf js} definition.

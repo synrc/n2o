@@ -1,0 +1,90 @@
+\section{Elements}
+
+\subsection{Page construction}
+With N2O you usually don't use HTML at all. Instead you define you page
+in the form of Erlang records and thus page is typed and checked at compilation time.
+This is a classical CGI approach for compiled pages and it gives us benefits like
+compilation-time error-checking and great server-side rendering.
+
+\subsection*{Control Elements}
+Nitrogen elements by their nature are control elements primitives
+that you use for Nitrogen page constructon in Erlang-based DSL Langugae.
+They are rendered into HTML and JavaScript.
+All behavior of elements are controlled on server side and all communications
+between browser and server are done via WebSocket channels.
+So no POST requests and HTML forms are used.
+
+\subsection{Static Elements: HTML}
+The core set of HTML elements includes br, headings, links, tables, lists and image.
+Static elements will be transfored into HTML during rendering.
+\paragraph{}
+Also static elements could be used as placeholders for other HTML elements.
+Usually ``static'' means elements that don't use postback parameter:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        #textbox { id=userName, text= <<"Anonymous">> },
+        #panel { id=chatHistory, class=chat_history }
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+This will produce HTML
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        <input value="Anonymous" id="userName" type="text"/>
+        <div id="chatHistory" class="chat_history"></div>
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Active Elements: HTML and JavaScript}
+There are also form elements which provide some information for the server
+and gather user input:  button, radio and check buttons, text box area and password box.
+Form elements usually allow to assign some Erlang postback handler to specify action behavior.
+Such elements are tranformed into HTML and JavaScript. I.e. during rendering some
+Actions are converted into JavaScript and sent to and executed in the Browser.
+You specify in element definition the list of {\bf source} elements that provide data to event callback.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        {ok,Pid} = wf:comet(fun() -> chat_loop() end),
+        #button { id=sendButton, text= <<"Send">>, 
+                  postback={chat,Pid}, source=[userName,message] },
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+This will produce HTML...
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        <input value="Chat" id="sendButton" type="button"/>;
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+... and JavaScript
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    $('#sendButton').bind('click',function anonymous(event) { 
+        ws.send(Bert.encodebuf({
+            source: Bert.binary('sendButton'), 
+            pickle: Bert.binary('g1AAAINQAAAAdX...'),
+            linked: [
+                Bert.tuple(Bert.atom('userName'),
+                utf8.toByteArray($('#userName').val())),
+                Bert.tuple(Bert.atom('message'),
+                utf8.toByteArray($('#message').val()))] })); });
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+When postback action is specified the page module should include a callback which will handle that postback info:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        event({chat,Pid}) ->
+            error_logger:info_msg("Username ~p Message ~p",
+                [wf:q(userName),wf:q(message)]).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+
