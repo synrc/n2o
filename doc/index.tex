@@ -74,11 +74,13 @@ for first type of application based on Cowboy REST API along with DTL
 templates for initial HTML renderings. And also Nitrogen DSL-based approach
 to model parts of the pages as widgets and control elements thanks to rich
 Nitrogen elements collections provided by Nitrogen community. 
+
 \paragraph{}
 In the cases where your system is built around Erlang infrastructure, N2O
 is the best choice that you can make for fast web prototyping, simpicity
 of use and codebase clearity. Despite HTML tranfer over the wire,
 you will still have access to all your erlang services directly.
+
 \paragraph{}
 Also you can create off-line clients using Erlang JavaScript compiler
 like you do with ClojureScript, JScala, Elm, WebSharper or similar
@@ -93,11 +95,13 @@ We liked Nitrogen for simple and elegant way of typed HTML page
 construction with DSL, based on the host language as it is done in Scala Lift,
 OCaml Ocsigen and Haskell Blaze. It helps to develop re-usable control
 elements and components using the host language.
+
 \paragraph{}
 Template-based approach pushes programmers to deal with raw HTML,
 like Yesod, ASP, PHP, JSP, Rails, Yaws, ChicagoBoss. It helps to
 define the page in terms of top-level controls, playholders
 and panels. So N2O combines both approaches.
+
 \paragraph{}
 Main N2O attraction is the fast prototyping. We also use it in large
 scale projects. Here is the complete Web Chat example working with
@@ -157,7 +161,6 @@ chat_loop() -> %% background worker ala comet
 And try to build the similar functionality with your favourite language/framework.
 
 \subsection*{Changes from Nitrogen}
-\paragraph{}
 We feel free to brake some of the compatability with the original
 Nitrogen framework, mostly because we want to have a clean codebase
 and fastest speed. However, it is still possible to easily port
