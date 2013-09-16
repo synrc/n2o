@@ -24,25 +24,26 @@ The function rewrites during Erlang compilation to JavaScript format
 strings ready for embedding. Here is exmaple from N2O pages:
 
 \begin{lstlisting}
-tabshow() ->
-    X = jq("a[data-toggle=tab]"),
-    X:on("show", fun(E) -> T = jq(E:at("target")), tabshow(T:attr("href")) end).
+    tabshow() ->
+        X = jq("a[data-toggle=tab]"),
+        X:on("show", 
+            fun(E) -> T = jq(E:at("target")), tabshow(T:attr("href")) end).
 
-doc_ready(E) ->
-    D = jq(document),
-    D:ready(fun() -> T = jq("a[href=\"#" ++ E ++ "\"]"), T:tab("show") end).
+    doc_ready(E) ->
+        D = jq(document),
+        D:ready(fun() -> T = jq("a[href=\"#" ++ E ++ "\"]"), T:tab("show") end).
 
-event(A,B,C) ->
-    ws:send('Bert':encodebuf(
-        [{source,'Bert':binary(A)}, {x,C},
-         {pickle,'Bert':binary(B)}, {linked,C}])).
+    event(A,B,C) ->
+        ws:send('Bert':encodebuf(
+            [{source,'Bert':binary(A)}, {x,C},
+             {pickle,'Bert':binary(B)}, {linked,C}])).
 
-main() ->
-    Script1 = tabshow(),
-    Script2 = event(1, 2, 3),
-    Script3 = doc_ready(wf:js_list("tab")),
-    io:format("tabshow/0:~n~s~nevent/3:~n~s~ndoc_ready/1:~n~s~n",
-        [Script1,Script2,Script3]).
+    main() ->
+        Script1 = tabshow(),
+        Script2 = event(1, 2, 3),
+        Script3 = doc_ready(wf:js_list("tab")),
+        io:format("tabshow/0:~n~s~nevent/3:~n~s~ndoc_ready/1:~n~s~n",
+            [Script1,Script2,Script3]).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -83,7 +84,9 @@ You will get following output:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
+You see, no source-map needed.
+
 \subsection{JavaScript File Compilation}
-Export Erlang function to JavaScript filw with \begin{verbatim}-js([sample/0,fun_args/2])\end{verbatim}.
+Export Erlang function to JavaScript file with {\bf -js([sample/0,fun\_{args}/2])}.
 You could include function both for {\bf macro} ans {\bf js} definitions.
 
