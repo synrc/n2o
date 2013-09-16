@@ -47,14 +47,14 @@ handler in Cowboy dispatch parameter:
 And add a minimal {\bf index.erl} page:
 
 \begin{lstlisting}[caption=index.erl]
--module(index).
--compile(export_all).
--include_lib("n2o/include/wf.hrl").
+    -module(index).
+    -compile(export_all).
+    -include_lib("n2o/include/wf.hrl").
 
-main() -> #span{text=<<"Hello">>}.
+    main() -> #span{text=<<"Hello">>}.
 \end{lstlisting}
 
-\subsection*{Rich Clients Applications Assembling}
+\subsection{Rich Clients Applications Assembling}
 You also need node.js, npm, less and uglify-js to assemble
 client-side N2O applications by packaging CSS/LESS, JavaScript and HTML templates.
 
