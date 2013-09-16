@@ -1,10 +1,10 @@
 \section{API}
 
-\subsection{Update DOM Events \bf{wf:update}}
+\subsection{Update DOM \bf{wf:update}}
 Issue \#update{} action for an element.
 It generates jQuery DOM update script and evaluates it.
 
-\subsection{Wire JavaScript Events \bf{wf:wire}}
+\subsection{Wire JavaScript \bf{wf:wire}}
 Issue \#wire{} action that sends JavaScript for evaluation on the client.
 
 \subsection{Async Processes \bf{wf:comet}}
@@ -22,7 +22,7 @@ For extraction url parameters or reads from process context. {\bf wf:q} extract 
 from context saved by controls postbacks and {\bf wf:qs} extract variable from HTTP forms.
 
 \subsection{Redirects {\bf wf:redirect}}
-Redirects implemented not as HTTP headers but as {\bf window.location = ...} JavaScript.
+Redirects implemented not with HTTP headers but using JavaScript action that changes {\bf window.location}.
 It saves login context information and sends it in first packet after establishing WebSocket connection.
 
 \subsection{Session Information {\bf wf:session}}
