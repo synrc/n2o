@@ -28,35 +28,40 @@ for HTML and JavaScript saving CPU power on mobile devices or to create rich des
 off-line applications using Erlang JavaScript compiler.
 
 \subsection*{Why Erlang in Web?}
-We've measured all existing modern web frameworks built with functional languages and Cowboy still the king.
-On the chart you can see raw HTTP performance of functional and C-like languages with concurrent primitives (Go, D and Rust)
-on VAIO Z notebook with i7640M processor.
+We've measured all existing modern web frameworks built with functional
+languages and Cowboy still the king. On the chart you can see raw HTTP
+performance of functional and C-like languages with concurrent
+primitives (Go, D and Rust) on VAIO Z notebook with i7640M processor.
 
 \includeimage{connections.png}{Web-Servers raw performance grand congregation}
 
 \newpage
 \paragraph{}
-Erlang was built for streaming binary data for telecom sytsem with low latency.
-It is created with exreamly manageability, scalability and concurrent processing in mind.
-Assuming WebSockets channels as binary telecom streams and web pages as user binary sessions
+Erlang was built for streaming binary data for telecom sytsem with
+low latency. It is created with exreamly manageability, scalability
+and concurrent processing in mind. Assuming WebSockets channels as binary
+telecom streams and web pages as user binary sessions
 you will better undestand the choice of Erlang for Web.
 
 \paragraph{}
-Using Erlang for Web unlocks the full power of telecom systems for web-scale,
-asynchronuous, non-blocking, sharded, event-driven, message-passing, noSQL,
-reliable, highly-available, high-performance, secure, qualative, real-time, clusterable applications.
+Using Erlang for Web unlocks the full power of telecom systems for
+web-scale, asynchronuous, non-blocking, sharded, event-driven,
+message-passing, noSQL, reliable, highly-available, high-performance,
+secure, qualative, real-time, clusterable applications. See Erlang: The Movie II.
 
 \paragraph{}
-N2O outperforms full Nitrogen stack with only 2X downgrade of raw HTTP Cowboy
-performance thus rising rendering performance several times in comparison to
-any other functional web framework and for sure it is faster than raw HTTP node.js performance.
+N2O outperforms full Nitrogen stack with only 2X downgrade of raw
+HTTP Cowboy performance thus rising rendering performance several
+times in comparison to any other functional web framework and for
+sure it is faster than raw HTTP node.js performance.
 
 \subsection*{Desktop and Lightweight Applications}
 There are two approaches to design communications between client/server.
 The first one is called 'data-on-wire', where only JSON, XML or Binary
 data are transfered on the channel through RPC, REST. All HTML rendering
 is done on the client side. This is mostly suitable for desktops
-applications. The examples are Chaplin/CoffeeScript, Meteor/JavaScript and ClojureScript.
+applications. The examples are Chaplin/CoffeeScript, Meteor/JavaScript
+and ClojureScript.
 \paragraph{}
 The other approach is to send pre-rendered parts of pages and javascript,
 and only replace HTML parts and execute JavaScript on the client side. This approach
@@ -73,11 +78,13 @@ is the best choice that you can make for fast web prototyping, simpicity
 of use and codebase clearity. Despite HTML tranfer over the wire,
 you will still have access to all your erlang services directly.
 \paragraph{}
-Also you can create off-line clients using Erlang JavaScript compiler like you do with
-ClojureScript, JScala, Elm, WebSharper or similar technologies. N2O covers: REST micro-frameworks,
-server-side rendering, client-side rendering, WebSocket event streaming, JavaScript generation
-and JavaScript macro system along with {\bf AVZ} authorization library (Facebook, Google, Twitter, Github, Microsoft),
-Key-Value Storage Framework {\bf KVS} and {\bf MQS} Message Bus Client Library (GProc, RabbitMQ).
+Also you can create off-line clients using Erlang JavaScript compiler
+like you do with ClojureScript, JScala, Elm, WebSharper or similar
+technologies. N2O covers: REST micro-frameworks, server-side rendering,
+client-side rendering, WebSocket event streaming, JavaScript generation
+and JavaScript macro system along with {\bf AVZ} authorization
+library (Facebook, Google, Twitter, Github, Microsoft), Key-Value Storage
+Framework {\bf KVS} and {\bf MQS} Message Bus Client Library (GProc, RabbitMQ).
 
 \subsection*{DSL and Templates}
 We liked Nitrogen for simple and elegant way of typed HTML page
@@ -96,10 +103,11 @@ WebSockets that demonstrates the use of Templates, DSL and async
 interprocesses communications:
 
 \subsection*{JSON and BERT}
-N2O is able to use JSON and BERT. All messages that passed over WebSockets are encoded with
-native Erlang External Term Format which is easily parsed in JavaScript
-with {\bf Bert.decode(msg)} and helps to avoid complexity on server-side.
-Please refer to \footahref{http://bert-rpc.org}{http://bert-rpc.org} for more information.
+N2O is able to use JSON and BERT. All messages that passed over
+WebSockets are encoded with native Erlang External Term Format
+which is easily parsed in JavaScript with {\bf Bert.decode(msg)}
+and helps to avoid complexity on server-side. Please refer
+to \footahref{http://bert-rpc.org}{http://bert-rpc.org} for more information.
 
 \newpage
 \begin{lstlisting}[caption=chat.erl]
@@ -170,7 +178,8 @@ using N2O and we are confident that it is the most productive way to
 build Web applications with Erlang.
 
 \paragraph{}
-Original Nitrogen was tested in production under high-load and we decided to drop out
-{\bf nprocreg} process registry along with {\bf{action\_comet}} heavy process creation. N2O now creates
-only one process for async websocket handler, all async operations are handled withing
-Cowboy processes.
+Original Nitrogen was tested in production under high-load and we
+decided to drop out {\bf nprocreg} process registry along 
+with {\bf{action\_comet}} heavy process creation. N2O now creates
+only one process for async websocket handler, all async operations
+are handled withing Cowboy processes.
