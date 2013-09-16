@@ -2,34 +2,34 @@
 
 \subsection*{Overview}
 Nitrogen 2 Optimized, N2O was started as the first Erlang Web Framework
-that fully relies on WebSocket transport. Great compatibility with Nitrogen
+that relies completely on WebSocket transport. Great compatibility with Nitrogen
 was retained and many improvements were made, such as binary page construction,
-binary data transfer, all events wired over WebSocket channel, minumum process spawns,
-work within Cowboy processes. Page renderer in N2O is several times faster
-than in original Nitrogen.
+binary data transfer, all events transmitted over WebSocket channel, minumum process spawns,
+work within Cowboy processes. N2O page renderer is several times faster
+than the original one.
 
 \subsection*{Wide Coverage}
-N2O is unusual framework that struggle to cover all areas of Web Development
-with being small and compact at the same time. Arisen from Nitrogen concept
-as Server-side framework it could also build Client-side off-line applications
-using same site sources. It is possible due to powerful Erlang JavaScript Parse
-Transform that extends Erlang language to JavaScript platform with two-side
-interoperability. You can also use Elixir, LFE and Joxa languages to extend
+N2O is an unusual framework aiming to solve problems at different web development domains
+while staying small and concise at the same time. Started off as a Nitrogen concept
+of server-side framework it can also build client-side offline applications
+using same site sources. This becomes possible with the powerful Erlang JavaScript Parse
+Transform which extends Erlang language to JavaScript platform with two-side
+interoperability. You can as well use Elixir, LFE and Joxa languages to extend
 server parts of your infrastructure.
 
 \paragraph{}
 It also combines DSL and HTML templates approaches allowing to build JavaScript
 control elements using Erlang languge and use inline rendering with DSL using
-same code for client and server side!
+the same code for both client and server sides!
 
 \paragraph{}
-You decide how to use N2O: for mobile application using server-side rendering
-for HTML and JavaScript saving CPU power on mobile devices or to create rich desktop
-off-line applications using Erlang JavaScript compiler.
+You decide how to use N2O, whether for mobile applications development using server-side rendering
+for HTML and JavaScript saving CPU power on mobile devices or for creating rich desktop
+offline applications with Erlang JavaScript compiler.
 
 \subsection*{Why Erlang in Web?}
-We've measured all existing modern web frameworks built with functional
-languages and Cowboy still the king. On the chart you can see raw HTTP
+We've measured all the existing modern web frameworks built with functional
+languages and Cowboy is still the king. On the chart below you can see raw HTTP
 performance of functional and C-like languages with concurrent
 primitives (Go, D and Rust) on VAIO Z notebook with i7640M processor.
 
@@ -37,11 +37,11 @@ primitives (Go, D and Rust) on VAIO Z notebook with i7640M processor.
 
 \newpage
 \paragraph{}
-Erlang was built for streaming binary data for telecom sytsem with
-low latency. It is created with exreamly manageability, scalability
-and concurrent processing in mind. Assuming WebSockets channels as binary
-telecom streams and web pages as user binary sessions
-you will better undestand the choice of Erlang for Web.
+Erlang was built for streaming binary data for telecom systems with
+low latency. It is created with extreme manageability, scalability
+and concurrent processing in mind. Assuming WebSockets channels are binary
+telecom streams and web pages are user binary sessions
+helps for better undestanding the choice of Erlang for Web.
 
 \paragraph{}
 Using Erlang for Web you unlock the full power of telecom systems for
