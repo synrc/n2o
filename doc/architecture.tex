@@ -3,7 +3,7 @@
 \subsection{Reduced Latency}
 The secret of reduced latency is simple. We try to deliver rendered HTML
 as soon as possible and render JavaScript only after WebSocket initialization.
-We use three steps and three erlang processes for achieve that.
+We use three steps and three erlang processes to achieve that.
 
 \includeimage{page-lifetime.png}{Page Lifetime}
 
@@ -15,7 +15,7 @@ Transition Process dies.
 
 \paragraph{}
 Also your page could spawn processes with {\bf wf:comet}. They are also persistent
-processes that acts as regullar Erlang processes. It is common way to organize
+processes that act as regullar Erlang processes. It is a common way to organize
 non-blocking UI for things like file uploads and long-term operations.
 
 \subsection{Page Process}
@@ -41,8 +41,8 @@ At this point initialization phase is done.
 \subsection{Events Process}
 After that all client/server communication is done via
 WebSocket channel. All events that come from the browser are
-handeled by N2O, which renders elements to HTML and actions to
-JavaScript. Each user at a time have only one WebSocket process
+handled by N2O, which renders elements to HTML and actions to
+JavaScript. Each user at a time has only one WebSocket process
 per connection.
 
 \subsection{Async Processes}
@@ -54,16 +54,16 @@ time to proceed like gigabyte file uploads, etc. You can create
 many Async Processes per user.
 
 \section{Endpoints}
-N2O Erlang Processes instantiated and driven by Web Server.
+N2O Erlang Processes are instantiated and driven by Web Server.
 Depending of Web Server endpoint bindings you can specify
-modules wich handles the HTTP requests.
+module wich handles the HTTP requests.
 
 \paragraph{}
 N2O comes with three endpoint handlers you could rely on while building
 applications. However you are not limited to use only this set,
 you can also write your own endpoint handlers, e.g. for usage with
 meteor.js or angular.js and providing Erlang back-end event streming
-from server-side. Here is example of using HTTP, WebSocket and
+from server-side. Here is an example of using HTTP, WebSocket and
 REST endpoint handlers with Cowboy Web Server.
 
 \vspace{1\baselineskip}
@@ -76,7 +76,7 @@ REST endpoint handlers with Cowboy Web Server.
 \end{lstlisting}
 
 \subsection{HTML Pages over HTTP}
-This handler is using for serving initial dynamic HTML page.
+This handler is used for serving initial dynamic HTML page.
 In case you are serving static HTML content this handler is
 not included into running stack. {\bf {n2o}\_{cowboy}} is
 default HTML page handler.
@@ -87,7 +87,7 @@ which {\bf {wf}\_{core}:render} proceed by calling {\bf Module:main} which
 is selected by routing handler.
 
 \subsection{JavaScript Events over WebSocket}
-JavaScript handler share the same router information as the
+JavaScript handler shares the same router information as the
 HTML handler because during its initial phase same chain
 of N2O handlers are called.
 
@@ -98,8 +98,8 @@ and is based on Bullet library created by Loïc Hoguin.
 
 \newpage
 \subsection{HTTP API over REST}
-REST handler use different request context initizlization
-from HTML and JavaScript hanlder. N2O handlers chain are not
+REST handler uses different request context initizlization
+from HTML and JavaScript hanlder. N2O handler chains are not
 applied to REST requests. {\bf {n2o}\_{rest}} is default REST
 handler and is based on FarWest framework.
 
@@ -141,7 +141,7 @@ handler and is based on FarWest framework.
 \vspace{1\baselineskip}
 
 \section{Handlers}
-HTML and JavaScript Web Server HTTP hanlders share the same system
+HTML and JavaScript Web Server HTTP handlers share the same system
 of context initialization. 
 
 \vspace{1\baselineskip}
@@ -155,7 +155,7 @@ of context initialization.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Chain of three N2O hanlders is called
+Chain of three N2O handlers is called
 on each HTTP request. You can redefine each of them.
 
 \vspace{1\baselineskip}
@@ -183,8 +183,8 @@ You could specify routing table with application config:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Remember that routing handler should be kept very simple because it is
-influence on overal initial page load latency and HTTP capacity.
+Remember that routing handler should be kept very simple because it
+influences overal initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
