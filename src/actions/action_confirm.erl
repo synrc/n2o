@@ -4,13 +4,13 @@
 -compile(export_all).
 
 render_action(Record) -> 
-    TriggerPath = Record#confirm.trigger,
-    TargetPath = Record#confirm.target,
+    Control = Record#confirm.target,
     Delegate = Record#confirm.delegate,
-    Ev = #event { postback=Record#confirm.postback, trigger=TriggerPath, target=TargetPath, delegate=Delegate },
+    Postback = Record#confirm.postback,
+    PostbackScript = wf_event:generate_postback_script(Postback, undefined, Control, Delegate, event, "[]"),
     [
         wf:f("if (confirm(\"~s\")) {", [wf:js_escape(Record#confirm.text)]),
-        wf_render_actions:render_action(Ev),
+        PostbackScript,
         "}"
     ].
 
