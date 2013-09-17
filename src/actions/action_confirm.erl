@@ -7,10 +7,10 @@ render_action(Record) ->
     TriggerPath = Record#confirm.trigger,
     TargetPath = Record#confirm.target,
     Delegate = Record#confirm.delegate,
+    Ev = #event { postback=Record#confirm.postback, trigger=TriggerPath, target=TargetPath, delegate=Delegate },
     [
         wf:f("if (confirm(\"~s\")) {", [wf:js_escape(Record#confirm.text)]),
-        #event { postback=Record#confirm.postback, trigger=TriggerPath, target=TargetPath, delegate=Delegate },
-        Record#confirm.actions,
+        wf_render_actions:render_action(Ev),
         "}"
     ].
 
