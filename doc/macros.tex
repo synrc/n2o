@@ -1,0 +1,96 @@
+\section{Erlang JavaScript Compiler}
+
+\subsection{Compilation and Macros}
+Erlang JavaScript Parse Transform has two modes driven
+by {\bf \-jsmacro} and {\bf \-js} Erlang module attributes.
+First mode is for precompiling Erlang module functions
+to JavaScript strings, second is to export Erlang function
+to a separate JavaScript file ready to run within Browser or node.js.
+
+\paragraph{}
+Sample usage of {\bf \-jsmacro} and {\bf \-js}:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -module(sample).
+    -compile({parse_transform, shen}).
+    -jsmacro([tabshow/0,doc_ready/1,event/3]).
+    -js(doc_ready/1).
+\end{lstlisting}
+
+\subsection{Erlang Macro Functions}
+Macro functions are useful when N2O is used as a server-side framework.
+The function gets rewritten during Erlang compilation into a JavaScript format
+string ready for embedding. Here is an example from N2O pages:
+
+\begin{lstlisting}
+    tabshow() ->
+        X = jq("a[data-toggle=tab]"),
+        X:on("show", 
+            fun(E) -> T = jq(E:at("target")), tabshow(T:attr("href")) end).
+
+    doc_ready(E) ->
+        D = jq(document),
+        D:ready(fun() -> T = jq("a[href=\"#" ++ E ++ "\"]"), T:tab("show") end).
+
+    event(A,B,C) ->
+        ws:send('Bert':encodebuf(
+            [{source,'Bert':binary(A)}, {x,C},
+             {pickle,'Bert':binary(B)}, {linked,C}])).
+
+    main() ->
+        Script1 = tabshow(),
+        Script2 = event(1, 2, 3),
+        Script3 = doc_ready(wf:js_list("tab")),
+        io:format("tabshow/0:~n~s~nevent/3:~n~s~ndoc_ready/1:~n~s~n",
+            [Script1,Script2,Script3]).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+Perform compilation and run tests:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        $ erlc sample.erl
+        $ erl
+        > sample:main().
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You will get following output:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        tabshow/0:
+            var x = $('a[data-toggle=tab]');
+            x.on('show',function(e) {
+                var t = $(e['target']);
+                return tabshow(t.attr('href'));
+            });
+
+        event/3:
+            ws.send(Bert.encodebuf({source:Bert.binary(1),
+                                    x:3,
+                                    pickle:Bert.binary(2),
+                                    linked:3}));
+
+        doc_ready/1:
+        var d = $(document);
+        d.ready(function() {
+            var t = $('a[href="#' + 'tab' + '"]');
+            return t.tab('show');
+        });
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You see, no source-map needed.
+
+\subsection{JavaScript File Compilation}
+Export Erlang function to JavaScript file with {\bf -js([sample/0,fun\_{args}/2])}.
+You could include functions for both {\bf macro} and {\bf js} definitions.
+
+\subsection{Mapping Erlang/OTP and JavaScript}
+Following libraries from OTP are supported by Erlang JavaScript Parse Transform: 
+{\bf lists}, {\bf proplists}, {\bf queue}, {\bf string}.
+
