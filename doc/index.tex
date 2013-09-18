@@ -9,7 +9,7 @@ work within Cowboy processes. N2O page renderer is several times faster
 than the original one.
 
 \subsection*{Wide Coverage}
-N2O is an unusual framework aiming to solve problems at different web development domains
+N2O is an unusual framework in that it solves problems at different web development domains
 while staying small and concise at the same time. Started off as a Nitrogen concept
 of server-side framework it can also build client-side offline applications
 using same site sources. This becomes possible with the powerful Erlang JavaScript Parse
@@ -19,7 +19,7 @@ server parts of your infrastructure.
 
 \paragraph{}
 It also combines DSL and HTML templates approaches allowing to build JavaScript
-control elements using Erlang languge and use inline rendering with DSL using
+control elements using Erlang language and use inline rendering with DSL using
 the same code for both client and server sides!
 You decide how to use N2O, whether for mobile applications development using server-side rendering
 for HTML and JavaScript saving CPU power on mobile devices or for creating rich desktop
@@ -35,83 +35,83 @@ primitives (Go, D and Rust) on VAIO Z notebook with i7640M processor.
 
 \newpage
 \paragraph{}
-Erlang was built for streaming binary data for telecom systems with
-low latency. It is created with extreme manageability, scalability
+Erlang was built for low latency binary data streaming in telecom systems.
+It was designed with extreme manageability, scalability
 and concurrent processing in mind. Assuming WebSockets channels are binary
 telecom streams and web pages are user binary sessions
-helps for better undestanding the choice of Erlang for Web.
+helps for better undestanding the choice of Erlang for the Web.
 
 \paragraph{}
-Using Erlang for Web you unlock the full power of telecom systems for
+Using Erlang for the Web you unlock the full power of telecom systems for
 web-scale, asynchronuous, non-blocking, sharded, event-driven,
 message-passing, noSQL, reliable, highly-available, high-performance,
 secure, qualative, real-time, clusterable applications. See Erlang: The Movie II.
 
 \paragraph{}
-N2O outperforms full Nitrogen stack with only 2X downgrade of raw
-HTTP Cowboy performance thus rising rendering performance several
-times in comparison to any other functional web framework and for
-sure it is faster than raw HTTP node.js performance.
+N2O outperforms full Nitrogen stack with only 2X raw HTTP Cowboy
+performance downgrade thus upgrading rendering performance several
+times compared to any other functional web framework. And
+sure it's faster than raw HTTP node.js performance.
 
 \subsection*{Rich and Lightweight Applications}
-There are two approaches to design communications between client/server.
-The first one is called 'data-on-wire', where only JSON, XML or Binary
-data are transfered on the channel through RPC, REST. All HTML rendering
-is done on the client side. This is mostly suitable for desktops
-applications. The examples are Chaplin/CoffeeScript, Meteor/JavaScript
+There are two approaches for designing client/server communication.
+The first one is called 'data-on-wire'. With this approach only JSON, XML or binary
+data are transfered over RPC and REST channels. All HTML rendering
+is performed on the client. This is the most suitable approach for desktop
+applications. Examples include Chaplin/CoffeeScript, Meteor/JavaScript
 and ClojureScript.
 
 \paragraph{}
-The other approach is to send pre-rendered parts of pages and javascript,
-and only replace HTML parts and execute JavaScript on the client side. This approach
-is better suited for mobile applications, where client doesn't have much resources.
+Another approach is sending pre-rendered parts of pages and JavaScript
+and then only replacing HTML and executing JavaScript on the client. This approach
+is better suited for mobile applications development since the client doesn't have much resources.
 
 \paragraph{}
 With N2O you can create both types of applications: using N2O REST framework
-for first type of application based on Cowboy REST API along with DTL
+for the first type of application based on Cowboy REST API along with DTL
 templates for initial HTML renderings. And also Nitrogen DSL-based approach
 to model parts of the pages as widgets and control elements thanks to rich
 Nitrogen elements collections provided by Nitrogen community. 
 
 \paragraph{}
-In the cases where your system is built around Erlang infrastructure, N2O
-is the best choice that you can make for fast web prototyping, simplicity
+In cases where your system is built around Erlang infrastructure, N2O
+is the best choice you can make for the fast web prototyping, simplicity
 of use and codebase clarity. Despite HTML transfers over the wire,
 you will still have access to all your Erlang services directly.
 
 \paragraph{}
-Also you can create off-line clients using Erlang JavaScript compiler
-like you do with ClojureScript, JScala, Elm, WebSharper or similar
-technologies. N2O covers: REST micro-frameworks, server-side rendering,
-client-side rendering, WebSocket event streaming, JavaScript generation
+You can also create off-line clients using Erlang JavaScript compiler
+just the way you'd use ClojureScript, JScala, Elm, WebSharper or similar
+tools. N2O covers: REST micro-frameworks, server-side rendering,
+client-side rendering, WebSocket events streaming, JavaScript generation
 and JavaScript macro system along with {\bf AVZ} authorization
 library (Facebook, Google, Twitter, Github, Microsoft), key-value storages
 access library {\bf KVS} and {\bf MQS} Message Bus client library (GProc, RabbitMQ).
 
-\subsection*{DSL and Templates}
-We liked Nitrogen for simple and elegant way of typed HTML page
-construction with DSL, based on the host language as it is done in Scala Lift,
-OCaml Ocsigen and Haskell Blaze. It helps to develop re-usable control
-elements and components using the host language.
-
-\paragraph{}
-Template-based approach pushes programmers to deal with raw HTML,
-like Yesod, ASP, PHP, JSP, Rails, Yaws, ChicagoBoss. It helps to
-define the page in terms of top-level controls, playholders
-and panels. So N2O combines both approaches.
-
-\paragraph{}
-Main N2O attraction is the fast prototyping. We also use it in large
-scale projects. Here is the complete Web Chat example working with
-WebSockets that demonstrates the use of Templates, DSL and async
-interprocesses communications:
-
 \subsection*{JSON and BERT}
-N2O is able to use JSON and BERT. All messages that passed over
-WebSockets are encoded with native Erlang External Term Format
-which is easily parsed in JavaScript with {\bf Bert.decode(msg)}
-and helps to avoid complexity on server-side. Please refer
+N2O uses JSON and BERT. All messages passed over
+WebSockets are encoded with native Erlang External Term Format.
+It is easy to parse it in JavaScript with {\bf Bert.decode(msg)}
+and it helps to avoid complexity on server side. Please refer
 to \footahref{http://bert-rpc.org}{http://bert-rpc.org} for more information.
+
+\subsection*{DSL and Templates}
+We liked Nitrogen for the simple and elegant way of constructing typed
+HTML with internal DSL which is analgous to Scala Lift,
+OCaml Ocsigen and Haskell Blaze approach. It enables you developing re-usable control
+elements and components in the host language.
+
+\paragraph{}
+Template-based approach requires programmers to deal with raw HTML,
+like with Yesod, ASP, PHP, JSP, Rails, Yaws and ChicagoBoss. It allows
+defining pages in terms of top-level controls, playholders
+and panels. Thus N2O combines both approaches.
+
+\paragraph{}
+The main N2O advantage is fast prototyping. But we also use it for large
+scale projects. Below is the complete Web Chat implementation using
+WebSockets. It demonstrates Templates, DSL and async
+interprocesses communication.
 
 \newpage
 \begin{lstlisting}[caption=chat.erl]
@@ -156,34 +156,34 @@ chat_loop() -> %% background worker ala comet
     chat_loop().
 \end{lstlisting}
 
-And try to build the similar functionality with your favourite language/framework.
+You should try to build that with your favorite language/framework!
 
 \subsection*{Changes from Nitrogen}
-We feel free to brake some of the compatability with the original
+We feel free to break some of the compatability with the original
 Nitrogen framework, mostly because we want to have a clean codebase
-and fastest speed. However, it is still possible to easily port
-Nitrogen web sites to N2O. E.g. N2O returns id and class semantics
+and fastest speed. However, it's still possible to easily port
+Nitrogen web sites to N2O. E.g., N2O returns id and class semantics
 of HTML and not {\bf html\_id}.
 
 \paragraph{}
 We simplified HTML rendering by not using
-{\bf html\_encode} which should be handled by the application layer.
+{\bf html\_encode} which should be handled by application layer.
 
 \paragraph{}
-Nitrogen.js that was originally created by Rusty Klophaus,
-was removed because of pure WebSocket nature of N2O which does not
+Nitrogen.js originally created by Rusty Klophaus
+was removed because of the pure WebSocket nature of N2O which doesn't
 require XHR helper methods on the client. We added XHR fallback
 handling by using 'Bullet' library written by Loïc Hoguin.
 
 \paragraph{}
-We also dropped {\bf simple\_bridge} and optimized N2O at every level to
-archive the maximum performance and simplicity. We hope you will enjoy
-using N2O and we are confident that it is the most productive way to
-build Web applications with Erlang.
+We also removed {\bf simple\_bridge} and optimized N2O at every level to
+achieve the maximum performance and simplicity. We hope you'll enjoy
+using N2O. We are fully convinced it's the most efficient way to
+build Web applications in Erlang.
 
 \paragraph{}
 Original Nitrogen was tested in production under high-load and we
-decided to drop out {\bf nprocreg} process registry along 
-with {\bf{action\_comet}} heavy process creation. N2O now creates
-only one process for async websocket handler, all async operations
+decided to remove {\bf nprocreg} process registry along 
+with {\bf{action\_comet}} heavy process creation. N2O creates a single
+process for async websocket handler, all async operations
 are handled within Cowboy processes.
