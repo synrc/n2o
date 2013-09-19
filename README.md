@@ -306,8 +306,9 @@ Credits
 
 * Maxim Sokhatsky
 * Andrii Zadorozhnii
-* Roman Shestakov
+* Vladimir Kirillov
 * Anton Logvinenko
+* Roman Shestakov
 * Jesse Gumm
 * Rusty Klophaus
 
