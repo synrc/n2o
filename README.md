@@ -305,7 +305,7 @@ Support
 -------
 
 * IRC Channel #n2o on FreeNode 24/7
-* Official N2O Book ![HTML](http://synrc.com/framework/web/) and ![PDF](http://synrc.com/framework/web/n2o/doc/book.pdf)
+* Official N2O Book [HTML](http://synrc.com/framework/web/) and [PDF](http://synrc.com/framework/web/n2o/doc/book.pdf)
 
 Credits
 -------
