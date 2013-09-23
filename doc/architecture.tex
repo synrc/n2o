@@ -54,15 +54,15 @@ time to be processed, like gigabyte file uploads. You can create
 many Async Processes per user.
 
 \section{Endpoints}
-N2O Erlang Processes are instantiated and driven by Web Server.
-Depending of Web Server endpoint bindings you can specify
-module wich handles the HTTP requests.
+N2O Erlang Processes are instantiated and run by Web Server.
+Depending on the Web Server endpoint bindings you can specify
+module for HTTP requests handling.
 
 \paragraph{}
-N2O comes with three endpoint handlers you could rely on while building
-applications. However you are not limited to use only this set,
-you can also write your own endpoint handlers, e.g. for usage with
-meteor.js or angular.js and providing Erlang back-end event streming
+N2O comes with three endpoint handlers you can rely on when building your
+applications. However you are not limited to use any of these.
+You can implement your own endpoint handlers, e.g. for using with
+meteor.js or angular.js and providing Erlang back-end event streaming
 from server-side. Here is an example of using HTTP, WebSocket and
 REST endpoint handlers with Cowboy Web Server.
 
@@ -78,30 +78,30 @@ REST endpoint handlers with Cowboy Web Server.
 \subsection{HTML Pages over HTTP}
 This handler is used for serving initial dynamic HTML page.
 In case you are serving static HTML content this handler is
-not included into running stack. {\bf {n2o}\_{cowboy}} is
-default HTML page handler.
+not included into the running stack. {\bf {n2o}\_{cowboy}} is
+a default HTML page handler.
 
 \paragraph{}
 On initial page load {\bf {wf}\_{core}:run} is started during
-which {\bf {wf}\_{core}:render} proceed by calling {\bf Module:main} which
-is selected by routing handler.
+which {\bf {wf}\_{core}:render} proceeds by calling {\bf Module:main} which
+is selected by the routing handler.
 
 \subsection{JavaScript Events over WebSocket}
 JavaScript handler shares the same router information as the
-HTML handler because during its initial phase same chain
-of N2O handlers are called.
+HTML handler because during its initial phase the same chain
+of N2O handlers is called.
 
 \paragraph{}
 This handler knows how to deal with XHR and WebSocket requests.
-{\bf {n2o}\_{bullet}} is default JavaScript event handler
-and is based on Bullet library created by Loïc Hoguin.
+{\bf {n2o}\_{bullet}} is a default JavaScript event handler
+based on Bullet library created by Loïc Hoguin.
 
 \newpage
 \subsection{HTTP API over REST}
-REST handler uses different request context initizlization
-from HTML and JavaScript hanlder. N2O handler chains are not
-applied to REST requests. {\bf {n2o}\_{rest}} is default REST
-handler and is based on FarWest framework.
+REST handler's request context initizlization differs for the one
+used by HTML and JavaScript handlers. N2O handler chains are not
+applied to REST requests. {\bf {n2o}\_{rest}} is a default REST
+handler based on FarWest framework.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -156,7 +156,7 @@ of context initialization.
 \vspace{1\baselineskip}
 
 Chain of three N2O handlers is called
-on each HTTP request. You can redefine each of them.
+on each HTTP request. You can redefine any of them.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}[caption={wf}\_{core}:fold/3]
@@ -168,14 +168,14 @@ on each HTTP request. You can redefine each of them.
 \vspace{1\baselineskip}
 
 \subsection{Query}
-Query Handler parses URL query and HTTP form information on HTTP request.
+Query Handler parses URL query and HTTP form information from HTTP request.
 
 \subsection{Session}
-Session Handler manages key-value in-memory database ETS table which can be accessed.
+Session Handler manages key-value in-memory database ETS table that can be accessed.
 
 \newpage
 \subsection{Router}
-You could specify routing table with application config:
+You can specify routing table with application config:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
