@@ -6,7 +6,7 @@
 -export([allowed_methods/2]).
 -export([is_authorized/2]).
 -export([content_types_provided/2]).
--export([charsets_provided/2]).
+%-export([charsets_provided/2]).
 -export([resource_exists/2]).
 -export([content_types_accepted/2]).
 -export([is_conflict/2]).
@@ -46,7 +46,7 @@ is_authorized(Req, State=#state{auth=AuthOpts}) ->
 content_types_provided(Req, State=#state{collection=true}) -> {[ {<<"text/html">>, collection_to_html}, {<<"application/json">>, collection_to_json} ], Req, State};
 content_types_provided(Req, State=#state{collection=false}) -> {[ {<<"text/html">>, userdata_to_html}, {<<"application/json">>, userdata_to_json} ], Req, State}.
 
-charsets_provided(Req, State) -> {[{<<"utf-8">>, 1000}, {<<"*">>, 0}], Req, State}.
+%charsets_provided(Req, State) -> {[{<<"utf-8">>, 1000}, {<<"*">>, 0}], Req, State}.
 
 resource_exists(Req, State=#state{collection=true}) -> {true, Req, State};
 resource_exists(Req, State=#state{collection=false}) ->
