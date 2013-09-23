@@ -301,11 +301,19 @@ and jQuery javascript. After making release you should run:
 Now you can edit site sources and sync will automaticaly recompile
 and reload modules in release.
 
+Support
+-------
+
+* IRC Channel #n2o on FreeNode 24/7
+* Official N2O Book [HTML](http://synrc.com/framework/web/) and [PDF](http://synrc.com/framework/web/n2o/doc/book.pdf)
+
 Credits
 -------
 
 * Maxim Sokhatsky
 * Andrii Zadorozhnii
+* Vladimir Kirillov
+* Anton Logvinenko
 * Roman Shestakov
 * Jesse Gumm
 * Rusty Klophaus

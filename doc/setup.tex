@@ -1,13 +1,13 @@
 \section{Setup}
 
 \subsection{Prerequisites}
-To run N2O sites you need Erlang R14 or higher and basho rebar installed.
+To run N2O websites you will need Erlang R14 or higher and basho rebar installed.
 N2O works on Windows, Mac and Linux.
 
 \subsection{Kickstart Bootstrap}
-To try N2O you just need to fetch it from Github and build. We don't use
+To try N2O you only need to fetch it from Github and build. We don't use
 fancy scripts so building process is OTP compatible: bootstrap site
-is bundled as Erlang release.
+is bundled as an Erlang release.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -25,26 +25,26 @@ is bundled as Erlang release.
 Now you can try: \footahref{http://localhost:8000}{http://localhost:8000}.
 
 \newpage
-\subsection{Depend on N2O Core}
-If you want start using raw N2O core you can define N2O http and websocket handlers and cowboy static
-handler in Cowboy dispatch parameter:
+\subsection{Adding N2O Core dependency}
+If you want to start using raw N2O core you can use Cowboy dispatch parameter
+for passing N2O http and websocket handlers and cowboy static handler:
 
 \begin{lstlisting}[caption=web\_sup.erl]
- cowboy:start_http(http, 100, [{port, wf:config(port)}],
-                              [{env, [{dispatch, dispatch_rules()}]}]),
+    cowboy:start_http(http, 100, [{port, wf:config(port)}],
+                                 [{env, [{dispatch, dispatch_rules()}]}]),
 
- dispatch_rules() ->
-    cowboy_router:compile(
-       [{'_', [
-            {["/static/[...]"], cowboy_static,
-                [{directory, {priv_dir, ?APP, [<<"static">>]}},
-                 {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]}, 
-            {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
-            {'_', n2o_cowboy, []}
-    ]}]).
+    dispatch_rules() ->
+        cowboy_router:compile(
+            [{'_', [
+                {["/static/[...]"], cowboy_static,
+                    [{directory, {priv_dir, ?APP, [<<"static">>]}},
+                     {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]}, 
+                {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
+                {'_', n2o_cowboy, []}
+        ]}]).
 \end{lstlisting}
 
-And add a minimal {\bf index.erl} page:
+And then add a minimal {\bf index.erl} page:
 
 \begin{lstlisting}[caption=index.erl]
     -module(index).
@@ -55,7 +55,7 @@ And add a minimal {\bf index.erl} page:
 \end{lstlisting}
 
 \subsection{Rich Clients Applications Assembling}
-You also need node.js, npm, less and uglify-js to assemble
+You will also need node.js, npm, less and uglify-js to assemble
 client-side N2O applications by packaging CSS/LESS, JavaScript and HTML templates.
 
 \vspace{1\baselineskip}
@@ -68,5 +68,5 @@ client-side N2O applications by packaging CSS/LESS, JavaScript and HTML template
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Having done this you will be able to build N2O App Store
+Having accomplished that you will be able to build N2O App Store
 Demo \newline\footahref{http://github.com/5HT/skyline}{http://skyline.synrc.com}.

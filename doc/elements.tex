@@ -1,25 +1,25 @@
 \section{Elements}
 
 \subsection{Page construction}
-With N2O you usually don't use HTML at all. Instead you define you page
+With N2O you usually don't use HTML at all. Instead you define your page
 in the form of Erlang records and thus page is typed and checked at compilation time.
 This is a classical CGI approach for compiled pages and it gives us benefits like
 compilation-time error-checking and great server-side rendering.
 
 \subsection{Control Elements}
 Nitrogen elements by their nature are control elements primitives
-that you use for Nitrogen page constructon in Erlang-based DSL Langugae.
+that you use for Nitrogen page constructon in Erlang-based DSL Language.
 They are rendered into HTML and JavaScript.
-All behavior of elements are controlled on server side and all communications
+Behavior of all elements is controlled on server side and all communications
 between browser and server are done via WebSocket channels.
-So no POST requests and HTML forms are used.
+So no POST requests and no HTML forms are used.
 
 \subsection{Static Elements: HTML}
 The core set of HTML elements includes br, headings, links, tables, lists and image.
-Static elements will be transfored into HTML during rendering.
+Static elements will be transformed into HTML during rendering.
 
 \paragraph{}
-Also static elements could be used as placeholders for other HTML elements.
+Static elements could also be used as placeholders for other HTML elements.
 Usually ``static'' means elements that don't use postback parameter:
 
 \vspace{1\baselineskip}
@@ -42,7 +42,7 @@ This will produce HTML
 There are also form elements which provide some information for the server
 and gather user input:  button, radio and check buttons, text box area and password box.
 Form elements usually allow to assign some Erlang postback handler to specify action behavior.
-Such elements are tranformed into HTML and JavaScript. I.e. during rendering some
+Such elements are transformed into HTML and JavaScript. I.e. during rendering some
 Actions are converted into JavaScript and sent to and executed in the Browser.
 You specify in element definition the list of {\bf source} elements that provide data to event callback.
 
@@ -58,7 +58,7 @@ This will produce HTML...
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        <input value="Chat" id="sendButton" type="button"/>;
+        <input value="Chat" id="sendButton" type="button"/>
 \end{lstlisting}
 \vspace{1\baselineskip}
 

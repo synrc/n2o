@@ -1,26 +1,26 @@
 \section{Erlang Processes}
 
 \subsection{Reduced Latency}
-The secret of reduced latency is simple. We try to deliver rendered HTML
-as soon as possible and render JavaScript only after WebSocket initialization.
-We use three steps and three erlang processes for achieve that.
+The secret of reducing latency is simple. We try to deliver rendered HTML
+as soon as possible and render JavaScript only after WebSocket initialization is complete.
+It takes three steps and three Erlang processes to achieve that.
 
 \includeimage{page-lifetime.png}{Page Lifetime}
 
 \paragraph{}
-During lifetime N2O uses HTTP process for serving first HTML page after that it dies
-and spawns Transition process. After that browser initiates WebSocket connections
-to the similar URL endpoint and N2O creates persistent WebSocket process and
-Transition Process dies.
+Starting the page lifetime N2O uses HTTP process to serve the first HTML page.
+After that it dies and spawns Transition process.
+Then the browser initiates WebSocket connections to the similar URL endpoint.
+N2O creates persistent WebSocket process and the Transition process dies.
 
 \paragraph{}
-Also your page could spawn processes with {\bf wf:comet}. They are also persistent
-processes that acts as regullar Erlang processes. It is common way to organize
-non-blocking UI for things like file uploads and long-term operations.
+Your page could also spawn processes with {\bf wf:comet}.
+These are the persistent processes acting like regullar Erlang processes.
+It is a usual approach for organizing non-blocking UI for file uploads and time consuming operations.
 
 \subsection{Page Process}
-In the first HTTP handler we only render HTML and all created
-javascript actions are stored in transition process.
+The first HTTP handler only renders HTML. All created
+JavaScript actions are stored in the transition process.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -30,40 +30,40 @@ javascript actions are stored in transition process.
 
 \paragraph{}
 HTTP handler dies immediately after returning HTML. Transition process
-waits for request from WebSocket handler.
+waits for a request from WebSocket handler.
 
 \subsection{Transition Process}
-Just after receiving HTML browser initiates WebSocket connection
-and this starts WebSocket handler on the server. After returning
-javascript actions transition process dies and only WebSocket handler stays.
-At this point initialization phase is done.
+Right after receiving HTML the browser initiates WebSocket connection
+thus starting WebSocket handler on the server. After returning
+JavaScript actions the Transition process dies and the only process left
+running is WebSocket handler. At this point initialization phase is complete.
 
 \subsection{Events Process}
-After that all client/server communication is done via
-WebSocket channel. All events that come from the browser are
-handeled by N2O, which renders elements to HTML and actions to
-JavaScript. Each user at a time have only one WebSocket process
+After that all client/server communication is performed over
+WebSocket channel. All events coming from the browser are
+handled by N2O, which renders elements to HTML and actions to
+JavaScript. Each user at any time has only one WebSocket process
 per connection.
 
 \subsection{Async Processes}
-These are user processes which are created by {\bf wf:comet}.
-This is the legacy name taken from times where async technology
+These are the user processes created with {\bf wf:comet}.
+That's a legacy name coming from the times when async technology
 was called COMET for XHR channel. Async processes are optional
-and needed only when you have UI event which takes a lot of
-time to proceed like gigabyte file uploads, etc. You can create
+and are only neededed when you have a UI event taking too much
+time to be processed, like gigabyte file uploads. You can create
 many Async Processes per user.
 
 \section{Endpoints}
-N2O Erlang Processes instantiated and driven by Web Server.
+N2O Erlang Processes are instantiated and driven by Web Server.
 Depending of Web Server endpoint bindings you can specify
-modules wich handles the HTTP requests.
+module wich handles the HTTP requests.
 
 \paragraph{}
 N2O comes with three endpoint handlers you could rely on while building
 applications. However you are not limited to use only this set,
 you can also write your own endpoint handlers, e.g. for usage with
 meteor.js or angular.js and providing Erlang back-end event streming
-from server-side. Here is example of using HTTP, WebSocket and
+from server-side. Here is an example of using HTTP, WebSocket and
 REST endpoint handlers with Cowboy Web Server.
 
 \vspace{1\baselineskip}
@@ -76,7 +76,7 @@ REST endpoint handlers with Cowboy Web Server.
 \end{lstlisting}
 
 \subsection{HTML Pages over HTTP}
-This handler is using for serving initial dynamic HTML page.
+This handler is used for serving initial dynamic HTML page.
 In case you are serving static HTML content this handler is
 not included into running stack. {\bf {n2o}\_{cowboy}} is
 default HTML page handler.
@@ -87,7 +87,7 @@ which {\bf {wf}\_{core}:render} proceed by calling {\bf Module:main} which
 is selected by routing handler.
 
 \subsection{JavaScript Events over WebSocket}
-JavaScript handler share the same router information as the
+JavaScript handler shares the same router information as the
 HTML handler because during its initial phase same chain
 of N2O handlers are called.
 
@@ -98,8 +98,8 @@ and is based on Bullet library created by Loïc Hoguin.
 
 \newpage
 \subsection{HTTP API over REST}
-REST handler use different request context initizlization
-from HTML and JavaScript hanlder. N2O handlers chain are not
+REST handler uses different request context initizlization
+from HTML and JavaScript hanlder. N2O handler chains are not
 applied to REST requests. {\bf {n2o}\_{rest}} is default REST
 handler and is based on FarWest framework.
 
@@ -141,7 +141,7 @@ handler and is based on FarWest framework.
 \vspace{1\baselineskip}
 
 \section{Handlers}
-HTML and JavaScript Web Server HTTP hanlders share the same system
+HTML and JavaScript Web Server HTTP handlers share the same system
 of context initialization. 
 
 \vspace{1\baselineskip}
@@ -155,7 +155,7 @@ of context initialization.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Chain of three N2O hanlders is called
+Chain of three N2O handlers is called
 on each HTTP request. You can redefine each of them.
 
 \vspace{1\baselineskip}
@@ -183,8 +183,8 @@ You could specify routing table with application config:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Remember that routing handler should be kept very simple because it is
-influence on overal initial page load latency and HTTP capacity.
+Remember that routing handler should be kept very simple because it
+influences overal initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}

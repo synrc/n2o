@@ -1,14 +1,14 @@
-\section{Erlang JavaScript Compiler}
+\section{Erlang JavaScript/OTP Compiler}
 
 \subsection{Compilation and Macros}
-Erlang JavaScript Parse Transform has two modes driven
+Erlang JavaScript/OTP Parse Transform has two modes driven
 by {\bf \-jsmacro} and {\bf \-js} Erlang module attributes.
 First mode is for precompiling Erlang module functions
-to JavaScript strings, second is for export Erlang function
-to separate JavaScript file ready to run within Browser or node.js.
+to JavaScript strings, second is to export Erlang function
+to a separate JavaScript file ready to run within Browser or node.js.
 
 \paragraph{}
-Sample of using {\bf \-jsmacro} and {\bf \-js}:
+Sample usage of {\bf \-jsmacro} and {\bf \-js}:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -19,9 +19,9 @@ Sample of using {\bf \-jsmacro} and {\bf \-js}:
 \end{lstlisting}
 
 \subsection{Erlang Macro Functions}
-Macro functions are useful when N2O is used as server-side framework.
-The function rewrites during Erlang compilation to JavaScript format
-strings ready for embedding. Here is exmaple from N2O pages:
+Macro functions are useful when N2O is used as a server-side framework.
+The function gets rewritten during Erlang compilation into a JavaScript format
+string ready for embedding. Here is an example from N2O pages:
 
 \begin{lstlisting}
     tabshow() ->
@@ -88,9 +88,38 @@ You see, no source-map needed.
 
 \subsection{JavaScript File Compilation}
 Export Erlang function to JavaScript file with {\bf -js([sample/0,fun\_{args}/2])}.
-You could include function both for {\bf macro} ans {\bf js} definitions.
+You could include functions for both {\bf macro} and {\bf js} definitions.
 
-\subsection{Mapping Erlang/OTP and JavaScript}
-Following libraries from OTP are supported for Erlang JavaScript Parse Transform: 
+\newpage
+\subsection{Mapping Erlang/OTP to JavaScript/OTP}
+Following libraries from OTP are partially supported for Erlang JavaScript Parse Transform: 
 {\bf lists}, {\bf proplists}, {\bf queue}, {\bf string}.
 
+\paragraph{\bf Example 1}\ 
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        S = lists:map(fun(X) -> X * X end,[1,2,3,4]),
+\end{lstlisting}
+
+Transforms to:
+
+\begin{lstlisting}
+        s = [1,2,3,4].map(function(x) {
+            return x * x;
+        });
+\end{lstlisting}
+
+\paragraph{\bf Example 2}\ 
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        M = lists:foldl(fun(X, Acc) -> Acc + X end,0,[1,2,3,4]),
+\end{lstlisting}
+
+Transforms to:
+
+\begin{lstlisting}
+        m = [1,2,3,4].reduce(function(x,acc) {
+            return acc + x;
+        },0);
+\end{lstlisting}
