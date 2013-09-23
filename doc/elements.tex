@@ -1,18 +1,18 @@
 \section{Elements}
 
 \subsection{Page construction}
-With N2O you usually don't use HTML at all. Instead you define your page
-in the form of Erlang records and thus page is typed and checked at compilation time.
-This is a classical CGI approach for compiled pages and it gives us benefits like
-compilation-time error-checking and great server-side rendering.
+With N2O you don't usually use HTML at all. Instead you define your page
+in the form of Erlang records so that the page is type checked at compile time.
+This is a classical CGI approach for compiled pages and it gives us all the benefits of
+compile time error checking and great server-side rendering.
 
 \subsection{Control Elements}
-Nitrogen elements by their nature are control elements primitives
-that you use for Nitrogen page constructon in Erlang-based DSL Language.
+By their nature Nitrogen elements are control primitives
+that you use to construct Nitrogen pages with Erlang internal DSL.
 They are rendered into HTML and JavaScript.
-Behavior of all elements is controlled on server side and all communications
-between browser and server are done via WebSocket channels.
-So no POST requests and no HTML forms are used.
+Behavior of all elements is controlled on server side and all the communication
+between browser and server is performed over WebSocket channels.
+Hence no POST requests and no HTML forms are used.
 
 \subsection{Static Elements: HTML}
 The core set of HTML elements includes br, headings, links, tables, lists and image.
@@ -29,7 +29,7 @@ Usually ``static'' means elements that don't use postback parameter:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-This will produce HTML
+This will produce the following HTML code:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -39,12 +39,12 @@ This will produce HTML
 \vspace{1\baselineskip}
 
 \subsection{Active Elements: HTML and JavaScript}
-There are also form elements which provide some information for the server
-and gather user input:  button, radio and check buttons, text box area and password box.
-Form elements usually allow to assign some Erlang postback handler to specify action behavior.
-Such elements are transformed into HTML and JavaScript. I.e. during rendering some
-Actions are converted into JavaScript and sent to and executed in the Browser.
-You specify in element definition the list of {\bf source} elements that provide data to event callback.
+Also form elements exist that provide information for the server
+and gather user input: button, radio and check buttons, text box area and password box.
+Form elements usually allow assigning some Erlang postback handler to specify action behavior.
+These elements are compiled into HTML and JavaScript. For example, during rendering some
+Actions are converted to JavaScript and sent and executed in the browser.
+Element definition specifies the list of {\bf source} elements providing data to event callback.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -54,7 +54,7 @@ You specify in element definition the list of {\bf source} elements that provide
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-This will produce HTML...
+This will produce the following HTML...
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -62,7 +62,7 @@ This will produce HTML...
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-... and JavaScript
+...and JavaScript code
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -78,7 +78,7 @@ This will produce HTML...
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-When postback action is specified the page module should include a callback which will handle that postback info:
+If postback action is specified the page module must include a callback to handle postback info:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
