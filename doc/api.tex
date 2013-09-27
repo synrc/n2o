@@ -7,10 +7,10 @@ It generates jQuery DOM update script and evaluates it.
 \subsection{Wire JavaScript \bf{wf:wire}}
 Issues \#wire{} action sending JavaScript to be evaluated on the client.
 
-\subsection{Async Processes \bf{wf:comet}}
+\subsection{Async Processes \bf{wf:async}}
 Creates Erlang processes communicating with the primary page process by sending messages.
 For redirecting all updates and wire actions to the page process {\bf wf:flush} should be called.
-Usually you send messages to Async processes over N2O message bus.
+Usually you send messages to Async processes over N2O message bus but you can use any.
 
 \subsection{Message Bus {\bf wf:reg} and {\bf wf:send}}
 N2O uses GProc process registry for managing async processes pools.

@@ -62,25 +62,25 @@ You'll get the following output:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        tabshow/0:
-            var x = $('a[data-toggle=tab]');
-            x.on('show',function(e) {
-                var t = $(e['target']);
-                return tabshow(t.attr('href'));
-            });
-
-        event/3:
-            ws.send(Bert.encodebuf({source:Bert.binary(1),
-                                    x:3,
-                                    pickle:Bert.binary(2),
-                                    linked:3}));
-
-        doc_ready/1:
-        var d = $(document);
-        d.ready(function() {
-            var t = $('a[href="#' + 'tab' + '"]');
-            return t.tab('show');
+    tabshow/0:
+        var x = $('a[data-toggle=tab]');
+        x.on('show',function(e) {
+            var t = $(e['target']);
+            return tabshow(t.attr('href'));
         });
+
+    event/3:
+        ws.send(Bert.encodebuf({source:Bert.binary(1),
+                                x:3,
+                                pickle:Bert.binary(2),
+                                linked:3}));
+
+    doc_ready/1:
+    var d = $(document);
+    d.ready(function() {
+        var t = $('a[href="#' + 'tab' + '"]');
+        return t.tab('show');
+    });
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -98,28 +98,28 @@ Following OTP libraries are partially supported in Erlang JavaScript Parse Trans
 \paragraph{\bf Example 1}\ 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        S = lists:map(fun(X) -> X * X end,[1,2,3,4]),
+    S = lists:map(fun(X) -> X * X end,[1,2,3,4]),
 \end{lstlisting}
 
 Transforms to:
 
 \begin{lstlisting}
-        s = [1,2,3,4].map(function(x) {
-            return x * x;
-        });
+    s = [1,2,3,4].map(function(x) {
+        return x * x;
+    });
 \end{lstlisting}
 
 \paragraph{\bf Example 2}\ 
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        M = lists:foldl(fun(X, Acc) -> Acc + X end,0,[1,2,3,4]),
+    M = lists:foldl(fun(X, Acc) -> Acc + X end,0,[1,2,3,4]),
 \end{lstlisting}
 
 Transforms to:
 
 \begin{lstlisting}
-        m = [1,2,3,4].reduce(function(x,acc) {
-            return acc + x;
-        },0);
+    m = [1,2,3,4].reduce(function(x,acc) {
+        return acc + x;
+    },0);
 \end{lstlisting}

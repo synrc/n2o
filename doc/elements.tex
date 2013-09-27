@@ -24,8 +24,8 @@ Usually ``static'' means elements that don't use postback parameter:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        #textbox { id=userName, text= <<"Anonymous">> },
-        #panel { id=chatHistory, class=chat_history }
+    #textbox { id=userName, text= <<"Anonymous">> },
+    #panel { id=chatHistory, class=chat_history }
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -33,8 +33,8 @@ This will produce the following HTML code:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        <input value="Anonymous" id="userName" type="text"/>
-        <div id="chatHistory" class="chat_history"></div>
+    <input value="Anonymous" id="userName" type="text"/>
+    <div id="chatHistory" class="chat_history"></div>
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -48,9 +48,9 @@ Element definition specifies the list of {\bf source} elements providing data to
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        {ok,Pid} = wf:comet(fun() -> chat_loop() end),
-        #button { id=sendButton, text= <<"Send">>, 
-                  postback={chat,Pid}, source=[userName,message] },
+    {ok,Pid} = wf:comet(fun() -> chat_loop() end),
+    #button { id=sendButton, text= <<"Send">>, 
+              postback={chat,Pid}, source=[userName,message] },
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -58,7 +58,7 @@ This will produce the following HTML...
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        <input value="Chat" id="sendButton" type="button"/>
+    <input value="Chat" id="sendButton" type="button"/>
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -82,9 +82,9 @@ If postback action is specified the page module must include a callback to handl
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        event({chat,Pid}) ->
-            error_logger:info_msg("Username ~p Message ~p",
-                [wf:q(userName),wf:q(message)]).
+    event({chat,Pid}) ->
+        error_logger:info_msg("Username ~p Message ~p",
+            [wf:q(userName),wf:q(message)]).
 \end{lstlisting}
 \vspace{1\baselineskip}
 

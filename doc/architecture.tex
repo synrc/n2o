@@ -24,8 +24,8 @@ JavaScript actions are stored in the transition process.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        transition(Actions) ->
-            receive {'N2O',Pid} -> Pid ! Actions end.
+    transition(Actions) ->
+        receive {'N2O',Pid} -> Pid ! Actions end.
 \end{lstlisting}
 
 \paragraph{}
@@ -146,12 +146,12 @@ of context initialization.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        init_context(Req) -> #context{
-            actions=[], module=index, path=[],
-            req=Req, params=[], session=undefined,
-            handlers= [ {'query', wf:config('query', n2o_query_handler)},
-                        {session, wf:config(session, n2o_session_handler)},
-                        {route,   wf:config(route, n2o_route_handler)} ]}.
+    init_context(Req) -> #context{
+        actions=[], module=index, path=[],
+        req=Req, params=[], session=undefined,
+        handlers= [ {'query', wf:config('query', n2o_query_handler)},
+                    {session, wf:config(session, n2o_session_handler)},
+                    {route,   wf:config(route, n2o_route_handler)} ]}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -188,21 +188,21 @@ influences overal initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        -module(custom_router).
-        -include_lib("n2o/include/wf.hrl").
-        -compile(export_all).
-        finish(State, Ctx) -> {ok, State, Ctx}.
-        init(State, Ctx) -> 
-            Path = wf:path(Ctx#context.req),
-            {Module, PathInfo} = route(Path),
-            {ok, State, Ctx#context{path=PathInfo,module=Module}}.
+    -module(custom_router).
+    -include_lib("n2o/include/wf.hrl").
+    -compile(export_all).
+    finish(State, Ctx) -> {ok, State, Ctx}.
+    init(State, Ctx) -> 
+        Path = wf:path(Ctx#context.req),
+        {Module, PathInfo} = route(Path),
+        {ok, State, Ctx#context{path=PathInfo,module=Module}}.
 
-        route(<<"/">>) -> {index, []};
-        route(<<"/index">>) -> {index, []};
-        route(<<"/login">>) -> {login, []};
-        route(<<"/ws/">>) -> {index, []};
-        route(<<"/ws/index">>) -> {index, []};
-        route(<<"/ws/login">>) -> {login, []};
-        route(<<"/favicon.ico">>) -> {static_file, []};
-        route(_) -> {index, []}.
+    route(<<"/">>) -> {index, []};
+    route(<<"/index">>) -> {index, []};
+    route(<<"/login">>) -> {login, []};
+    route(<<"/ws/">>) -> {index, []};
+    route(<<"/ws/index">>) -> {index, []};
+    route(<<"/ws/login">>) -> {login, []};
+    route(<<"/favicon.ico">>) -> {static_file, []};
+    route(_) -> {index, []}.
 \end{lstlisting}

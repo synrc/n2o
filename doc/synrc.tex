@@ -18,6 +18,10 @@
 
 % include image for HeVeA and LaTeX
 
+\makeatletter
+\def\@seccntformat#1{\llap{\csname the#1\endcsname\quad}}
+\makeatother
+
 \newcommand{\includeimage}[2]
 {\ifhevea
     {\imgsrc{#1}}
