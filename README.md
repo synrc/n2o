@@ -310,12 +310,13 @@ Support
 Credits
 -------
 
-* Maxim Sokhatsky
-* Andrii Zadorozhnii
-* Vladimir Kirillov
-* Anton Logvinenko
-* Roman Shestakov
-* Jesse Gumm
-* Rusty Klophaus
+* Maxim Sokhatsky -- core, shen
+* Dmitry Bushmelev -- endpoints, yaws, cowboy
+* Andrii Zadorozhnii -- elements, actions, handlers
+* Anton Logvinenko -- doc
+* Vladimir Kirillov -- mac, bsd, xen, linux support
+* Roman Shestakov -- advanced elements, ct
+* Jesse Gumm -- nitrogen, help
+* Rusty Klophaus -- original author
 
 OM A HUM

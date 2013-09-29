@@ -27,7 +27,7 @@ wire(Actions) -> wire(undefined, undefined, Actions).
 wire(Target, Actions) -> wire(Target, Target, Actions).
 wire(Trigger, Target, Actions) -> action_wire:wire(Trigger, Target, Actions).
 
-% Spawn async processes wf:comet wf:flush
+% Spawn async processes wf:async, wf:flush
 
 comet(Function) -> async(Function). % legacy name
 async(Function) -> action_comet:comet(Function).
@@ -70,10 +70,10 @@ roles() -> role_handler:get_roles().
 clear_roles() -> role_handler:clear_all().
 logout() -> clear_user(), clear_roles(), clear_session().
 
-% Context Variables and URL Query Strings
+% Context Variables and URL Query Strings wf:q and wf:qs
 
 q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
-qs(Key) -> proplists:get_value(Key,wf_context:params()).
+qs(Key) -> proplists:get_value(Key,?CTX#context.params).
 
 % Bridge Information
 

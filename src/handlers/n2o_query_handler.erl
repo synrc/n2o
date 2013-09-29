@@ -7,7 +7,8 @@
 init(State, Ctx) -> 
     Params = n2o_cowboy:params(Ctx#context.req),
 %    error_logger:info_msg("Params: ~p",[Params]),
-    wf_context:params(Params),
-    {ok, [], Ctx#context{params=Params}}.
+    NewCtx = Ctx#context{params=Params},
+    wf_context:context(NewCtx),
+    {ok, [], NewCtx}.
 
 finish(State, Ctx) ->  {ok, [], Ctx}.

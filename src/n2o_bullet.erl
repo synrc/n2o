@@ -13,7 +13,6 @@ init(_Transport, Req, _Opts, _Active) ->
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
     wf_context:context(NewCtx),
-    put(page_module,NewCtx#context.module),
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
 

@@ -4,16 +4,9 @@
 -export ([validate/0]).
 
 validate() ->
-    % Some values...
     ValidationGroup = wf_context:event_validation_group(),
     Validators = state_handler:get_state(validators, []),
-
-    % Get all validators that match the validation group.
-    % ValidationGroup is a string.
     Validators1 = [X || X={VG, _, _} <- Validators, ValidationGroup == VG],
-
-    % Now, run through each matching validator.
-    % Stop validating a TargetPath when it has failed.
     F2 = fun({_, TargetPath, Record}, FailedPaths) ->
         case lists:member(TargetPath, FailedPaths) of
             true -> 
@@ -31,6 +24,5 @@ validate() ->
                 end
         end
     end,
-
     FailedPaths1 = lists:foldl(F2, [], Validators1),
     {ok, FailedPaths1 == []}.

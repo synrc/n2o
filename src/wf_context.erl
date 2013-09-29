@@ -5,10 +5,6 @@
 
 context() -> get(context).
 context(Ctx) -> put(context,Ctx).
-params() -> get(params).
-params(Params) -> put(params,Params).
-page_module() -> get(page_module).
-page_module(Module) -> put(page_module,Module).
 actions() -> get(actions).
 actions(Actions) -> put(actions,Actions).
 script() -> get(script).
