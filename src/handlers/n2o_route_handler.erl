@@ -6,7 +6,7 @@
 
 finish(State, Ctx) -> {ok, State, Ctx}.
 init(State, Ctx) -> 
-    Path = wf:path(Ctx#context.req),
+    Path = n2o_cowboy:path(Ctx#context.req),
     {Module, PathInfo} = route(Path),
 %    error_logger:info_msg("Route Ctx: ~p",[Ctx]),
     {ok, State, Ctx#context{path=PathInfo,module=Module}}.

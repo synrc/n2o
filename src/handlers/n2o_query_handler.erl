@@ -5,7 +5,7 @@
 -export([init/2, finish/2]).
 
 init(State, Ctx) -> 
-    Params = wf:params(Ctx#context.req),
+    Params = n2o_cowboy:params(Ctx#context.req),
 %    error_logger:info_msg("Params: ~p",[Params]),
     wf_context:params(Params),
     {ok, [], Ctx#context{params=Params}}.

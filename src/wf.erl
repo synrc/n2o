@@ -4,15 +4,15 @@
 -compile (export_all).
 
 % Here is Nitrogen Web Framework compatible API
-% Please read major changes made to N2O and how
-% to port existing nitrogen sites at http://synrc.com/framework/web/
+% Please read major changes made to N2O and
+% how to port existing Nitrogen sites at http://synrc.com/framework/web/
 
-% N2O Core API compatible with Nitrogen
-% =====================================
+% N2O API compatible with Nitrogen
+% ================================
+% http://synrc.com/framework/web/api.htm
 
 % Update DOM wf:update
 
-set(Element, Value) -> action_set:set(Element, Value).
 update(Target, Elements) -> action_update:update(Target, Elements).
 replace(Target, Elements) -> action_update:replace(Target, Elements).
 insert_top(Target, Elements) -> action_update:insert_top(Target, Elements).
@@ -29,17 +29,9 @@ wire(Trigger, Target, Actions) -> action_wire:wire(Trigger, Target, Actions).
 
 % Spawn async processes wf:comet wf:flush
 
-comet(Function) -> action_comet:comet(Function).
+comet(Function) -> async(Function). % legacy name
+async(Function) -> action_comet:comet(Function).
 flush(Key) -> action_comet:flush(Key).
-
-% Parse URL and context parameters wf:q
-
-%q(Key) -> get(Key).
-%mq(KeyList) when is_list(KeyList) -> [q(X) || X<-KeyList].
-%mqs(KeyList) when is_list(KeyList) -> [qs(X) || X<-KeyList].
-%q_pl(KeyList) when is_list(KeyList) -> [{K,q(K)} || K <- KeyList].
-%qs_pl(KeyList) when is_list(KeyList) -> [{K,qs(K)} || K <- KeyList].
-%params() -> query_handler:get_params().
 
 % Redirect and purge connection wf:redirect
 
@@ -47,7 +39,7 @@ redirect(Url) -> action_redirect:redirect(Url).
 redirect_to_login(LoginUrl) -> action_redirect:redirect_to_login(LoginUrl).
 redirect_from_login(DefaultUrl) -> action_redirect:redirect_from_login(DefaultUrl).
 
-% GProc process registration wf:reg wf:send
+% Message Bus communications wf:reg wf:send
 
 -ifndef(REGISTRATOR).
 -define(REGISTRATOR, n2o_gproc).
@@ -76,42 +68,28 @@ role(Role) -> role_handler:get_has_role(Role).
 role(Role, IsInRole) -> role_handler:set_has_role(Role, IsInRole).
 roles() -> role_handler:get_roles().
 clear_roles() -> role_handler:clear_all().
+logout() -> clear_user(), clear_roles(), clear_session().
+
+% Context Variables and URL Query Strings
+
+q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
+qs(Key) -> proplists:get_value(Key,wf_context:params()).
 
 % Bridge Information
 
 -ifndef(BRIDGE).
 -define(BRIDGE, n2o_cowboy).
 -endif.
--define(CTX, (wf_context:context())).
--define(REQ, (wf_context:context())#context.req).
 
-% functions that use the default (current) context
-q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
-qs(Key) -> proplists:get_value(Key,wf_context:params()).
-cookie(Cookie) -> ?BRIDGE:cookie(Cookie, ?REQ).
-params() -> ?BRIDGE:params(?REQ).
-cookies() -> ?BRIDGE:cookies(?REQ).
-headers() -> ?BRIDGE:headers(?REQ).
-peer() -> ?BRIDGE:peer(?REQ).
-path() -> ?BRIDGE:path(?REQ).
-request_body() -> ?BRIDGE:request_body(?REQ).
-delete_cookie(Cookie) -> ?BRIDGE:delete_cookie(Cookie,?REQ).
-header(Name, Val) -> ?BRIDGE:header(Name, Val, ?REQ).
-response(Html) -> ?BRIDGE:response(Html,?REQ).
-reply(Status) -> ?BRIDGE:reply(Status,?REQ).
-
-% functions that need a request context
+cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie, Req).
 params(Req) -> ?BRIDGE:params(Req).
 cookies(Req) -> ?BRIDGE:cookies(Req).
-cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie,Req).
-cookie(Cookie, Value, Req) -> ?BRIDGE:cookie(Cookie, Value, Req).
-cookie(Cookie, Value, Path, MinutesToLive, Req) -> ?BRIDGE:cookie(Cookie, Value, Path, MinutesToLive, Req).
 headers(Req) -> ?BRIDGE:headers(Req).
 peer(Req) -> ?BRIDGE:peer(Req).
 path(Req) -> ?BRIDGE:path(Req).
 request_body(Req) -> ?BRIDGE:request_body(Req).
 delete_cookie(Cookie,Req) -> ?BRIDGE:delete_cookie(Cookie,Req).
-header(Name, Val, Req) -> ?BRIDGE:header(Name, Val, Req).
+header(Name,Val,Req) -> ?BRIDGE:header(Name, Val, Req).
 response(Html,Req) -> ?BRIDGE:response(Html,Req).
 reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
@@ -124,13 +102,8 @@ warning(String) -> error_logger:warning_msg(String).
 error(String, Args) -> error_logger:error_msg(String, Args).
 error(String) -> error_logger:error_msg(String).
 
-% Compatibility Obsolete API
-% ==========================
+% Convert and Utils API
 
-
-% Q: Do we need converting API ?
-
-comet_global(Function, _Pool) -> action_comet:comet(Function).
 f(S) -> _String = wf_utils:f(S).
 f(S, Args) -> _String = wf_utils:f(S, Args).
 coalesce(L) -> _Value = wf_utils:coalesce(L).
@@ -150,36 +123,9 @@ js_escape(String) -> _String = wf_convert:js_escape(String).
 join(List,Delimiter) -> _Result = wf_convert:join(List,Delimiter).
 to_js_id(Path) -> _String = wf_render_actions:to_js_id(Path).
 
-% Q: Why we need state if already has session process dictionary ?
-
-state(Key) -> get(Key).
-state_default(Key, DefaultValue) -> case get(Key) of undefined -> DefaultValue; A -> A end.
-state(Key, Value) -> put(Key,Value).
-clear_state(Key) -> put(Key,undefined).
-
-% Q: Do we really need continuations ? Who using it ?
-
-continue(Tag, Function) -> action_continue:continue(Tag, Function).
-continue(Tag, Function, TimeoutMS) -> action_continue:continue(Tag, Function, TimeoutMS).
-
 % These api are not really API
 
 temp_id() -> _String = wf_render_elements:temp_id().
-normalize_id(Path) -> _String = wf_render_elements:normalize_id(Path).
-send_global(Pool, Message) -> ok = action_comet:send_global(Pool, Message).
-comet(Function, _Pool) ->  action_comet:comet(Function).
-logout() -> clear_user(), clear_roles(), clear_session().
-flash(Elements) -> element_flash:add_flash(Elements).
-flash(FlashID, Elements) -> element_flash:add_flash(FlashID, Elements).
-async_mode() -> wf_context:async_mode().
-async_mode(AsyncMode) -> wf_context:async_mode(AsyncMode).
-switch_to_comet() -> async_mode(comet).
-switch_to_polling(IntervalInMS) -> async_mode({poll, IntervalInMS}).
-debug() -> wf_utils:debug().
-break() -> wf_utils:break().
-assert(true, _) -> ok;
-assert(false, Error) -> erlang:error(Error).
-
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_core:render(X).
 
