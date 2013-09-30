@@ -36,8 +36,6 @@ flush(Key) -> action_comet:flush(Key).
 % Redirect and purge connection wf:redirect
 
 redirect(Url) -> action_redirect:redirect(Url).
-redirect_to_login(LoginUrl) -> action_redirect:redirect_to_login(LoginUrl).
-redirect_from_login(DefaultUrl) -> action_redirect:redirect_from_login(DefaultUrl).
 
 % Message Bus communications wf:reg wf:send
 
