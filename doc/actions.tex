@@ -1,18 +1,69 @@
 \section{Actions}
-
-\subsection{Actions Nature}
 Just like HTML is generated from Elements, Actions are rendered into
 JavaScript to handle events raised in the browser. Actions always
 transformed into JavaScript and sent through WebSockets pipe.
 
-\subsection{Wire}
+\subsection*{Direct Wiring}
+There are two type of actions. First class is direct JavaScript
+strings given directly as Erlang lists or via JavaScript/OTP
+transformations.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire("window.location='http://synrc.com'").
+\end{lstlisting}
+
+\subsection*{Actions Render}
+Second class is actions which are in fact Erlang records being
+rendered during page load, server events or client events.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire(#redirect{url="http://synrc.com"}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+This section describes actions that are presented as Erlang records,
+they are called Nitrogen actions and this set is quite reduced in compare to Nitrogen.
+You don't need to remember a lot of Erlang records, ussually you just
+use JavaScript/OTP.
+
+\paragraph{}
+However basic N2O actions which are a part of N2O API, just like {\bf wf:redirect},
+are implemented as Erlang records as given in example. In case you need deffered
+render of JavaScript you can use Erlang records instead of direct wiring with
+Erlang lists or JavaScript/OTP.
+
+\paragraph{}
+Any action wired with {\bf wf:wire} is enveloped with {\bf \#wire\{actions=[]\}}
+which is also action capable to polymorph render of custom or built-in actions specified in list.
+Following action embedding are also valid:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire(#wire{actions=[#redirect{url="http://synrc.com"}]}).
+\end{lstlisting}
+\vspace{1\baselineskip}
 
 \subsection{Update}
+Update action is main action for manipulating DOM. You have several functions
+which is useful for positioning insertion inside DOM element:
 
-\subsection{Function}
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:update(Target, Elements)
+    wf:insert_top(Target, Elements)
+    wf:insert_bottom(Target, Elements)
+    wf:insert_before(Target, Elements)
+    wf:insert_after(Target, Elements)
+    wf:remove(Target)
+\end{lstlisting}
+\vspace{1\baselineskip}
 
 \subsection{Page Event}
 
 \subsection{Control Event}
 
 \subsection{API Event}
+
+\subsection{Function}

@@ -1,11 +1,55 @@
 \section{API}
 
 \subsection{Update DOM \bf{wf:update}}
-Issues \#update{} action for an element.
-It generates jQuery DOM update script and evaluates it.
+You can update part of the page or DOM element with given element or even raw HTML.
+Also you can use {\bf \#dtl} or {\bf \#eex} template elements for HTML generation to replace.
+Here is example of simple {\bf \#span} or {\bf \#br} elements which are HTML counterparts:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:update(history,[#span{body="Hello"},#br{}]).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+It generates DOM update script and sends it to WebSockets for evaluation.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    $('#history').html('<span>Hello</span><br>').
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Companions are also provided for updating head and tail of the list: {\bf wf:top/2}
+and {\bf wf:bottom/2} along with {\bf wf:before\/2} and {\bf wf:after/2}
+for relative updates. For remove element you should use {\bf wf:remove/2}.
+
+\paragraph{}
+Full lists of elements you can use as second paramenter to update functions you can find in {\bf Section 7}.
 
 \subsection{Wire JavaScript \bf{wf:wire}}
-Issues \#wire{} action sending JavaScript to be evaluated on the client.
+When you need embedding of JavaScript you can use direct wiring
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire("$('#history').scrollTop = $('#history').scrollHeight;").
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Or you can wire actions which are rendered to JavaScript through common render.
+Here is example command that shows debug window at the bottom of the page:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire(#jq{target=n2ostatus,method=[show,select],args=[]}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+which turns to:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    $('#n2ostatus').show(); $('#n2ostatus').select();
+\end{lstlisting}
 
 \subsection{Async Processes \bf{wf:async}}
 Creates Erlang processes communicating with the primary page process by sending messages.
@@ -20,6 +64,9 @@ You can assign a process to the pool with {\bf wf:reg} and send a message to the
 \subsection{Parse URL and Context parameters {\bf wf:q} and {\bf wf:qs}}
 These are used to extract URL parameters or read from the process context. {\bf wf:q} extracts variables
 from the context stored by controls postbacks and {\bf wf:qs} extracts variables from HTTP forms.
+
+\subsection{Render {\bf wf:render}}
+Renders elements or actions with common render.
 
 \subsection{Redirects {\bf wf:redirect}}
 Redirects are not implemented with HTTP headers but with JavaScript action modifying {\bf window.location}.

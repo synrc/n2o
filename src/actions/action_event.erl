@@ -13,7 +13,7 @@ render_action(#event{
       "Bert.tuple("++Key++", utf8.toByteArray($('#"++Id++"').vals()))" end || Src <- Source ],",") ++ "]",
 
     Control = wf:coalesce([ValidationGroup, Trigger]),
-    PostbackScript = wf_event:generate_postback_script(Postback, Anchor, Control, Delegate, event, Data),
+    PostbackScript = wf_event:new(Postback, Anchor, Control, Delegate, event, Data),
 
     [
         wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Control,Type]), PostbackScript, "});"

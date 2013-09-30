@@ -7,7 +7,7 @@ render_action(Record) ->
     Control = Record#confirm.target,
     Delegate = Record#confirm.delegate,
     Postback = Record#confirm.postback,
-    PostbackScript = wf_event:generate_postback_script(Postback, undefined, Control, Delegate, event, "[]"),
+    PostbackScript = wf_event:new(Postback, undefined, Control, Delegate, event, "[]"),
     [
         wf:f("if (confirm(\"~s\")) {", [wf:js_escape(Record#confirm.text)]),
         PostbackScript,

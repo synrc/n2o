@@ -25,7 +25,7 @@ is bundled as an Erlang release.
 Now you can try: \footahref{http://localhost:8000}{http://localhost:8000}.
 
 \newpage
-\subsection{Adding N2O Core dependency}
+\subsection{Depending N2O Core}
 If you want to start using raw N2O core you can use Cowboy dispatch parameter
 for passing N2O http and websocket handlers and cowboy static handler:
 
@@ -40,8 +40,7 @@ for passing N2O http and websocket handlers and cowboy static handler:
                     [{directory, {priv_dir, ?APP, [<<"static">>]}},
                      {mimetypes, {fun mimetypes:path_to_mimes/2, default}}]}, 
                 {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
-                {'_', n2o_cowboy, []}
-        ]}]).
+                {'_', n2o_cowboy, []} ]}]).
 \end{lstlisting}
 
 And then add a minimal {\bf index.erl} page:
@@ -51,7 +50,7 @@ And then add a minimal {\bf index.erl} page:
     -compile(export_all).
     -include_lib("n2o/include/wf.hrl").
 
-    main() -> #span{text=<<"Hello">>}.
+    main() -> #span{text="Hello"}.
 \end{lstlisting}
 
 \subsection{Rich Clients Applications Assembling}
@@ -69,4 +68,4 @@ client-side N2O applications by packaging CSS/LESS, JavaScript and HTML template
 \vspace{1\baselineskip}
 
 Having accomplished that you will be able to build N2O App Store
-Demo \newline\footahref{http://github.com/5HT/skyline}{http://skyline.synrc.com}.
+Demo \footahref{http://github.com/5HT/skyline}{http://skyline.synrc.com}.
