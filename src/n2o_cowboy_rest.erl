@@ -58,6 +58,8 @@ delete_resource(Req,  #st{resource_module = M, resource_id = Id} = State) ->
 default_html_layout(Body) -> [<<"<html><body>">>, Body, <<"</body></html>">>].
 format_data(Data) -> [{binary_to_list(Key), binary_to_list(Value)} || {Key, Value} <- Data].
 
+format_data(Data) -> [{binary_to_list(Key), binary_to_list(Value)} || {Key, Value} <- Data].
+
 rest_module(Module) when is_binary(Module) -> rest_module(binary_to_list(Module));
 rest_module(Module) ->
     try M = list_to_existing_atom(Module),
