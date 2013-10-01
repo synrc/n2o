@@ -3,9 +3,9 @@
 -include_lib("n2o/include/wf.hrl").
 
 pickle(Data) ->
-    Padding = size(term_to_binary({1,Data,now()})) rem 16,
+    Message = term_to_binary({Data,now()}),
+    Padding = size(Message) rem 16,
     Bits = (16-Padding)*8, Key = secret(), IV = crypto:rand_bytes(16),
-    Message = term_to_binary({Padding,Data,now()}),
     Cipher = crypto:block_encrypt(aes_cbc128,Key,IV,<<Message/binary,0:Bits>>),
     Signature = crypto:md5(<<Key/binary,Cipher/binary>>),
     base64:encode(<<IV/binary,Signature/binary,Cipher/binary>>).
@@ -13,11 +13,11 @@ pickle(Data) ->
 secret() -> wf:config(n2o,secret,<<"ThisIsClassified">>).
 
 depickle(PickledData) ->
-    try {Padding,Data, _PickleTime} = inner_depickle(PickledData), Data
+    try {Data, _PickleTime} = inner_depickle(PickledData), Data
     catch _:_ -> undefined end.
 
 depickle(PickledData, TTLSeconds) ->
-    try {_,Data, PickledTime} = inner_depickle(PickledData),
+    try {Data, PickledTime} = inner_depickle(PickledData),
         AgeInSeconds = timer:now_diff(now(), PickledTime) / 1024 / 1024,
         case AgeInSeconds < TTLSeconds of true -> Data; false -> undefined end
     catch _:_ -> undefined end.
