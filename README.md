@@ -14,10 +14,12 @@ Information for Nitrogen users:
 * Proper id and class attributes
 * Several times faster that original Nitrogen
 * GProc process registry instead of nprocreg
+* Much faster ETS Session Handler
 
 New features
 ------------
 
+* Secure Pickling with AES CBC 128 for events protection
 * Twitter Bootstrap compatible rendering
 * Optimized for latency: deffered JavaScript rendering
 * Supports optional Zepto library for non-IE browsers
