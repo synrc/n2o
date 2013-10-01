@@ -49,9 +49,13 @@ reg(Pool) -> ?REGISTRATOR:reg(Pool).
 
 % Pickling wf:pickle
 
-pickle(Data) -> wf_pickle:pickle(Data).
-depickle(SerializedData) -> wf_pickle:depickle(SerializedData).
-depickle(SerializedData, TTLSeconds) -> wf_pickle:depickle(SerializedData, TTLSeconds).
+-ifndef(PICKLER).
+-define(PICKLER, (wf:config(n2o,pickler,wf_secret))).
+-endif.
+
+pickle(Data) -> ?PICKLER:pickle(Data).
+depickle(SerializedData) -> ?PICKLER:depickle(SerializedData).
+depickle(SerializedData, TTLSeconds) -> ?PICKLER:depickle(SerializedData, TTLSeconds).
 
 % Session handling wf:session wf:user wf:role
 
