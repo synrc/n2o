@@ -6,7 +6,7 @@
 render_element(E) when is_list(E) -> E;
 render_element(Element) when is_tuple(Element) ->
     Id = case element(#elementbase.id,Element) of
-        undefined -> undefined; % {_, _, C} = now(), "temp" ++ integer_to_list(C); % uncomment for temp_id
+        undefined -> undefined; % wf:temp_id();
         L when is_list(L) -> L;
         Other -> wf:to_list(Other) end,
     case element(#elementbase.actions,Element) of undefined -> skip; Actions -> wf:wire(Actions) end,
@@ -25,5 +25,3 @@ default_render(Tag, Record) ->
             {<<"title">>, element(#elementbase.title,Record)}],
         element(#elementbase.data_fields,Record),
         element(#elementbase.aria_states,Record)])).
-
-temp_id()-> {_, _, C} = now(), "temp" ++ integer_to_list(C).

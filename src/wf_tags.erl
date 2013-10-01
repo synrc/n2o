@@ -2,12 +2,12 @@
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
--define(VOID(Tag),  (Tag == <<"br">>    orelse Tag == <<"hr">>
-              orelse Tag == <<"link">>  orelse Tag == <<"img">> 
-              orelse Tag == <<"input">> orelse Tag == <<"link">>
-              orelse Tag == <<"meta">>  orelse Tag == <<"param">>
-              orelse Tag == <<"base">>  orelse Tag == <<"area">>
-              orelse Tag == <<"col">>   orelse Tag == <<"command">>
+-define(VOID(Tag),  (Tag == <<"br">>     orelse Tag == <<"hr">>
+              orelse Tag == <<"link">>   orelse Tag == <<"img">> 
+              orelse Tag == <<"input">>  orelse Tag == <<"link">>
+              orelse Tag == <<"meta">>   orelse Tag == <<"param">>
+              orelse Tag == <<"base">>   orelse Tag == <<"area">>
+              orelse Tag == <<"col">>    orelse Tag == <<"command">>
               orelse Tag == <<"keygen">> orelse Tag == <<"source">>)).
 
 emit_tag(TagName, Props) -> [<<"<">>,TagName] ++ write_props(Props) ++ [<<">">>].

@@ -30,8 +30,9 @@ wire(Trigger, Target, Actions) -> action_wire:wire(Trigger, Target, Actions).
 % Spawn async processes wf:async, wf:flush
 
 comet(Function) -> async(Function). % legacy name
-async(Function) -> action_comet:comet(Function).
-flush(Key) -> action_comet:flush(Key).
+async(Function) -> action_async:async(Function).
+async(Name,Function) -> action_async:async(Name,Function).
+flush(Key) -> action_async:flush(Key).
 
 % Redirect and purge connection wf:redirect
 
@@ -123,7 +124,7 @@ to_js_id(Path) -> _String = wf_render_actions:to_js_id(Path).
 
 % These api are not really API
 
-temp_id() -> _String = wf_render_elements:temp_id().
+temp_id() -> {_, _, C} = now(), "temp" ++ integer_to_list(C).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_core:render(X).
 

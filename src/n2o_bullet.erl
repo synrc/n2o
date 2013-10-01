@@ -63,7 +63,7 @@ info(Pro, Req, State) ->
                     Module = State#context.module, Module:event(init),
                     InitActions = get(actions),
                     wf_context:clear_actions(),
-                    Pid = list_to_pid(binary_to_list(Rest)),
+                    Pid = wf:depickle(Rest),
                     X = Pid ! {'N2O',self()},
                     R = receive Actions ->
                         RenderInit = wf_core:render(InitActions),

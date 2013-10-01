@@ -1,12 +1,12 @@
--module (action_comet).
+-module(action_async).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-comet(Fun) -> comet("comet",Fun).
-comet(Name, F) ->
+async(Fun) -> async("comet",Fun).
+async(Name, F) ->
     Pid = case global:whereis_name(Name) of
-        undefined -> 
+        undefined ->
             Closure = fun(Fun) ->
                 R = global:register_name(Name,self()),
                 case R of

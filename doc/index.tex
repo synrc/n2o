@@ -23,6 +23,7 @@ You decide how to use N2O, whether for mobile applications development using ser
 for HTML and JavaScript saving CPU power on mobile devices or for creating rich desktop
 offline applications with Erlang JavaScript compiler.
 
+\newpage
 \subsection*{Why Erlang in Web?}
 We've measured all the existing modern web frameworks built with functional
 languages and Cowboy is still the king. On the chart below you can see raw HTTP
@@ -31,7 +32,6 @@ primitives (Go, D and Rust) on VAIO Z notebook with i7640M processor.
 
 \includeimage{connections.png}{Web-Servers raw performance grand congregation}
 
-\newpage
 \paragraph{}
 Erlang was built for low latency binary data streaming in telecom systems.
 It was designed with extreme manageability, scalability
@@ -116,41 +116,36 @@ interprocesses communication.
     -module(chat).
     -compile(export_all).
     -include_lib("n2o/include/wf.hrl").
-    
-    main() -> 
-        [ #dtl{file = "index", bindings=[{title,"Chat"},{body,body()}]} ].
 
-    body() -> %% area of http handler
-        {ok,Pid} = wf:comet(fun() -> chat_loop() end),
-      [ #span { text= <<"Your chatroom name: ">> }, 
-        #textbox { id=userName, text= <<"Anonymous">> },
-        #panel { id=chatHistory, class=chat_history },
+    main() -> 
+      [ #dtl { file="index", bindings=[{title,"Chat"},{body,body()}] } ].
+
+    body() ->
+        {ok,Pid} = wf:async(fun() -> loop() end),
+
+      [ #span    { id=title,       body="Your chatroom name: " }, 
+        #textbox { id=userName,    body="Anonymous" },
+        #panel   { id=chatHistory, class=chat_history },
         #textbox { id=message },
-        #button { id=sendButton, text= <<"Send">>, 
-                  postback={chat,Pid}, source=[userName,message] },
-        #panel { id=status } ].
-    
-    event({chat,Pid}) -> %% area of websocket handler
+        #button  { id=sendButton,  source=[userName,message],
+                                   body="Send", 
+                                   postback={chat,Pid} } ].
+
+    event({chat,Pid}) ->
         Username = wf:q(userName),
         Message = wf:q(message),
         Terms = [ #span { text="Message sent" }, #br{} ],
-        wf:insert_bottom(chatHistory, Terms),
         wf:reg(room),
-        Pid ! {message, Username, Message};
-    
-    event(Event) -> error_logger:info_msg("Event: ~p", [Event]).
-    
-    chat_loop() -> %% background worker ala comet
-        receive 
-            {message, Username, Message} ->
-                Terms = [ #span { text=Username }, ": ",
-                          #span { text=Message }, #br{} ],
-                wf:insert_bottom(chatHistory, Terms),
-                wf:flush(room);
-            Unknown -> 
-                error_logger:info_msg(
-                    "Unknown Looper Message ~p",[Unknown])
-        end, chat_loop().
+        Pid ! {message, Username, Message}.
+
+    loop() ->
+        receive { message, Username, Message} ->
+                  Terms = [ #span { body=Username }, ": ",
+                            #span { body=Message }, #br{} ],
+                  wf:insert_bottom(chatHistory, Terms),
+                  wf:flush(room);
+             M -> wf:info("Unknown Looper Message ~p",[M])
+        end, loop().
 \end{lstlisting}
 
 You should try to build that with your favorite language/framework!

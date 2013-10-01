@@ -21,4 +21,5 @@ insert_before(Target, Elements) -> update(before, Target, Elements).
 insert_after(Target, Elements) -> update('after', Target, Elements).
 remove(Target) -> update(remove, Target, []).
 
-update(Type, Target, Elements) -> wf_context:add_action(#update{type=Type, target=Target, elements=Elements }).
+update(Type, Target, Elements) ->
+    wf_context:add_action(#update{type=Type, target=Target, elements=Elements }).
