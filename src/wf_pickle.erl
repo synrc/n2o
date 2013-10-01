@@ -5,8 +5,10 @@
 
 pickle(Data) ->
     B = term_to_binary({Data, now()}, [compressed]),
-    <<Signature:4/binary, _/binary>> = B,
+    Signature = wf:to_binary(secret()),
     base64:encode(<<Signature/binary, B/binary>>).
+
+secret() -> wf:config(secret,"n2o").
 
 depickle(PickledData) ->
     try {Data, _PickleTime} = inner_depickle(PickledData), Data
@@ -19,6 +21,7 @@ depickle(PickledData, TTLSeconds) ->
     catch _:_ -> undefined end.
 
 inner_depickle(PickledData) ->
-    try <<S:4/binary, B/binary>> = base64:decode(wf:to_binary(PickledData)),
+    try Secret = wf:to_binary(secret()), Len = size(Secret),
+        <<Secret:Len/binary,B/binary>> = base64:decode(wf:to_binary(PickledData)),
         {_Data, _PickleTime} = binary_to_term(B)
     catch _:_ -> undefined end.
