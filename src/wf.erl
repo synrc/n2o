@@ -13,13 +13,13 @@
 
 % Update DOM wf:update
 
-update(Target, Elements) -> action_update:update(Target, Elements).
-replace(Target, Elements) -> action_update:replace(Target, Elements).
-insert_top(Target, Elements) -> action_update:insert_top(Target, Elements).
-insert_bottom(Target, Elements) -> action_update:insert_bottom(Target, Elements).
-insert_before(Target, Elements) -> action_update:insert_before(Target, Elements).
-insert_after(Target, Elements) -> action_update:insert_after(Target, Elements).
-remove(Target) -> action_update:remove(Target).
+update(Target, Elements) -> wf:wire(#jq{target=Target,method=[html],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
+replace(Target, Elements) -> wf:wire(#jq{target=Target,method=[replaceWith],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
+insert_top(Target, Elements) -> wf:wire(#jq{target=Target,method=[prepend],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
+insert_bottom(Target, Elements) -> wf:wire(#jq{target=Target,method=[append],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
+insert_before(Target, Elements) -> wf:wire(#jq{target=Target,method=[before],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
+insert_after(Target, Elements) -> wf:wire(#jq{target=Target,method=['after'],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
+remove(Target) -> wf:wire(#jq{target=Target,method=[remove],args=[]}).
 
 % Wire JavaScript wf:wire
 
@@ -36,7 +36,7 @@ flush(Key) -> action_async:flush(Key).
 
 % Redirect and purge connection wf:redirect
 
-redirect(Url) -> action_redirect:redirect(Url).
+redirect(Url) -> wf:wire(#redirect{url=Url}).
 
 % Message Bus communications wf:reg wf:send
 
