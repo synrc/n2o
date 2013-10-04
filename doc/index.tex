@@ -143,9 +143,7 @@ interprocesses communication.
                   Terms = [ #span { body=Username }, ": ",
                             #span { body=Message }, #br{} ],
                   wf:insert_bottom(chatHistory, Terms),
-                  wf:flush(room);
-             M -> wf:info("Unknown Looper Message ~p",[M])
-        end, loop().
+                  wf:flush(room) end, loop().
 \end{lstlisting}
 
 You should try to build that with your favorite language/framework!
