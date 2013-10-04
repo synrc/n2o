@@ -19,4 +19,4 @@ encode_ev(Postback, ElementId, Delegate, Name) ->
         payload = Postback,
         trigger = ElementId
     },
-    wf_pickle:pickle(Event).
+    wf:pickle(Event).

@@ -3,11 +3,7 @@
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 
-pickle(Data) ->
-    B = term_to_binary({Data, now()}, [compressed]),
-    Signature = wf:to_binary(secret()),
-    base64:encode(<<Signature/binary, B/binary>>).
-
+pickle(Data) -> base64:encode(term_to_binary({Data, now()}, [compressed])).
 secret() -> wf:config(secret,"n2o").
 
 depickle(PickledData) ->
@@ -21,7 +17,5 @@ depickle(PickledData, TTLSeconds) ->
     catch _:_ -> undefined end.
 
 inner_depickle(PickledData) ->
-    try Secret = wf:to_binary(secret()), Len = size(Secret),
-        <<Secret:Len/binary,B/binary>> = base64:decode(wf:to_binary(PickledData)),
-        {_Data, _PickleTime} = binary_to_term(B)
+    try  {_Data, _PickleTime} = binary_to_term(base64:decode(wf:to_binary(PickledData)))
     catch _:_ -> undefined end.

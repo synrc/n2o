@@ -28,7 +28,7 @@ stream({binary,Info}, Req, State) ->
     Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
-    Depickled = wf_pickle:depickle(Pickled),
+    Depickled = wf:depickle(Pickled),
     case Depickled of
         #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
             case Function of 
