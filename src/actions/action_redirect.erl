@@ -4,5 +4,4 @@
 
 render_action(Record=#redirect{}) ->
     DestinationUrl = Record#redirect.url,
-    wf:f("window.location=\"~s\";", [wf:js_escape(DestinationUrl)]);
-
+    wf:f("window.location=\"~s\";", [wf:js_escape(DestinationUrl)]).
