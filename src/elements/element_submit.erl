@@ -7,16 +7,15 @@ reflect() -> record_info(fields, submit).
 
 render_element(Record) ->
     ID = Record#submit.id,
-    Anchor = Record#submit.anchor,
     case Record#submit.postback of
          undefined -> skip;
-         Postback -> wf:wire(Anchor, #event { type=click, 
+         Postback -> wf:wire(ID, #event { type=click, 
                                               validation_group=ID,
                                               postback=Postback,
                                               source=Record#submit.source }) end,
     case Record#submit.click of
          undefined -> ignore;
-         ClickActions -> wf:wire(Anchor, #event { type=click, actions=ClickActions }) end,
+         ClickActions -> wf:wire(ID, #event { type=click, actions=ClickActions }) end,
   wf_tags:emit_tag(<<"input">>, [
       {<<"id">>, ID},
       {<<"type">>, <<"submit">>},

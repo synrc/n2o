@@ -8,7 +8,7 @@ render_element(R = #rtable{rows=Rows}) ->
   Id = case R#rtable.id of [] -> wf:temp_id(); I -> I end,
   Tid = wf:temp_id(),
   PagingData = "[Bert.tuple(Bert.atom('page'), utf8.toByteArray(page))]",
-  Postback = wf_event:new(Tid, R#rtable.anchor, Id, R#rtable.delegate, control_event, PagingData),
+  Postback = wf_event:new(Tid, Id, R#rtable.delegate, control_event, PagingData),
 
   S = wf:f("$(\".pagination li:not('.disabled') a\").click(function() {var page = $(this).text(); ~s});", [Postback]),
   wf:wire(S),

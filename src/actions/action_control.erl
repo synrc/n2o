@@ -5,7 +5,7 @@
 
 render_action(#control{ 
     actions=Actions, source=Source,
-    anchor=Anchor, trigger=Trigger, target=Target, validation_group=ValidationGroup,
+    trigger=Trigger, target=Target, validation_group=ValidationGroup,
     type=Type, keycode=KeyCode, shift_key=ShiftKey, delay=Delay, delegate=Delegate,
     extra_param=ExtraParam}) ->
 
@@ -13,7 +13,7 @@ render_action(#control{
                      "'), utf8.toByteArray($('#"++atom_to_list(Src)++"').val()))" || Src <- Source ],",") ++ "]",
 
     ValidationGroup1 = wf:coalesce([ValidationGroup, Trigger]),
-    PostbackScript = wf_event:new(ok, Anchor, ValidationGroup1, Delegate, control_event, Data),
+    PostbackScript = wf_event:new(ok, ValidationGroup1, Delegate, control_event, Data),
     WireAction = #wire { trigger=Trigger, target=Target, actions=Actions },
 
     [

@@ -6,10 +6,9 @@ reflect() -> record_info(fields, dropdown).
 
 render_element(Record) -> 
     ID = Record#dropdown.id,
-    Anchor = Record#dropdown.anchor,
     case Record#dropdown.postback of
          undefined -> skip;
-         Postback -> wf:wire(Anchor, #event { type=change,
+         Postback -> wf:wire(ID, #event { type=change,
                                               validation_group=ID,
                                               postback=Postback,
 %                                              source=Record#button.source,

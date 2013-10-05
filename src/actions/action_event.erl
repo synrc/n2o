@@ -5,7 +5,7 @@
 
 render_action(#event{ 
     postback=Postback, actions=Actions, source=Source,
-    anchor=Anchor, trigger=Trigger, target=Target, validation_group=ValidationGroup,
+    trigger=Trigger, target=Target, validation_group=ValidationGroup,
     type=Type, keycode=KeyCode, shift_key=ShiftKey, delay=Delay, delegate=Delegate,
     extra_param=ExtraParam}) ->
     Data = "[" ++ string:join([begin 
@@ -13,7 +13,7 @@ render_action(#event{
       "Bert.tuple("++Key++", utf8.toByteArray($('#"++Id++"').vals()))" end || Src <- Source ],",") ++ "]",
 
     Control = wf:coalesce([ValidationGroup, Trigger]),
-    PostbackScript = wf_event:new(Postback, Anchor, Control, Delegate, event, Data),
+    PostbackScript = wf_event:new(Postback, Control, Delegate, event, Data),
 
     [
         wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Control,Type]), PostbackScript, "});"

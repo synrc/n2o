@@ -4,10 +4,9 @@
 
 render_element(Record = #select{}) ->
   ID = Record#select.id,
-  Anchor = Record#select.anchor,
   case Record#select.postback of
     undefined -> skip;
-    Postback -> wf:wire(Anchor, #event{ type=change,
+    Postback -> wf:wire(ID, #event{ type=change,
                                         validation_group=ID,
                                         postback=Postback,
                                         source=[list_to_atom(ID)],

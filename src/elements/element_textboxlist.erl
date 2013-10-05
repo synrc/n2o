@@ -10,7 +10,6 @@ render_element(R = #textboxlist{}) ->
     false -> [];
     true ->
       Postback = wf_event:new( case R#textboxlist.role of undefined -> ok; Role -> Role end,
-                                                    R#textboxlist.anchor,
                                                     Id,
                                                     R#textboxlist.delegate,
                                                     control_event,

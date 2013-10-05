@@ -4,7 +4,7 @@
 -compile(export_all).
 
 render_action(Action) ->
-    Module = element(3,Action),
+    Module = element(#action.module,Action),
     Res = Module:render_action(Action),
     case Res of
          Res when is_tuple(Res) -> render_action(Res);

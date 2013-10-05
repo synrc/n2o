@@ -1,19 +1,20 @@
 \section{Actions}
+{\bf \#action} record is base for all actions. It means that each action
+has {\bf \#action} as its ancestor.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    #action { is_action,
-              module,
-              anchor,
+    #action { ancestor,
               trigger,
               target,
+              module,
               actions,
-              show_if=true,
               source=[]
             }.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
+{\bf trigger} and {\bf target} signify on which entity action will apply by what.
 
 \subsection{\#jq}
 

@@ -75,7 +75,7 @@ wire(#upload{id=Id} = R) ->
     "deliverSlice: function(msg){~s},"
     "queryFile: function(msg){~s},"
     "complete: function(msg){~s} }); });", [Id, atom_to_list(R#upload.preview), R#upload.value]++ [
-        wf_event:new(Tag, ignore, Id, element_upload, control_event, <<"{'msg': msg}">>) || Tag <- [
+        wf_event:new(Tag, Id, element_upload, control_event, <<"{'msg': msg}">>) || Tag <- [
         {begin_upload, R#upload.root, R#upload.dir, R#upload.delegate, R#upload.post_write, R#upload.img_tool, R#upload.post_target, R#upload.size},
         deliver_slice,
         {query_file, R#upload.root, R#upload.dir, R#upload.delegate_query, R#upload.post_write, R#upload.post_target},

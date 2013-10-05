@@ -7,10 +7,6 @@ reflect() -> record_info(fields, radio).
 
 render_element(Record) -> 
     ID = Record#radio.id,
-    Anchor = case Record#radio.anchor of
-        "." ++ AnchorNoDot -> AnchorNoDot;
-        A -> A
-    end,
     CheckedOrNot = case Record#radio.checked of
         true -> checked;
         _ -> not_checked
@@ -18,7 +14,7 @@ render_element(Record) ->
 
     case Record#radio.postback of
         undefined -> ignore;
-        Postback -> wf:wire(Anchor, #event { type=change, postback=Postback, validation_group=ID, delegate=Record#radio.delegate })
+        Postback -> wf:wire(ID, #event { type=change, postback=Postback, validation_group=ID, delegate=Record#radio.delegate })
     end,
 
     Content = Record#radio.body,
@@ -26,7 +22,7 @@ render_element(Record) ->
     [
         %% Checkbox...
         wf_tags:emit_tag(input, [
-            {id, Anchor},
+            {id, ID},
             {value, Record#radio.value},
 
             %% the emitted name gives priority to html_name, but if it's
@@ -45,6 +41,6 @@ render_element(Record) ->
 
         %% Label for Radio...
         wf_tags:emit_tag(label, Content, [
-            {for, Anchor}
+            {for, ID}
         ])
     ].

@@ -5,13 +5,13 @@
 
 reflect() -> record_info(fields, dtl).
 
-render_element(Record) ->
+render_element(Record=#dtl{}) ->
     ModName = list_to_atom(Record#dtl.file ++ "_view"),
 %    M = 
 %     case code:ensure_loaded(ModName) of {module,Module} -> Module; _ -> 
     File = code:lib_dir(Record#dtl.app) ++ "/" ++ Record#dtl.folder ++ "/" ++ Record#dtl.file ++ "." ++Record#dtl.ext,
-    Module = ModName,
-    Options = [{out_dir,"."}],
+%    Module = ModName,
+%    Options = [{out_dir,"."}],
 %    erlydtl:compile(File, ModName, Options),
 %    error_logger:info_msg("File ~p Module ~p Options ~p",[File, ModName, Options]),
     

@@ -3,6 +3,8 @@
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 
+-define(IS_STRING(Term), (is_list(Term) andalso Term /= [] andalso is_integer(hd(Term)))).
+
 %%% CONVERSION %%%
 
 clean_lower(L) -> string:strip(string:to_lower(to_list(L))).
