@@ -14,7 +14,7 @@ render_element(Element) when is_tuple(Element) ->
     case element(#element.module,Element) of
         undefined -> default_render(Tag, Element);
         Module -> wf:to_binary(Module:render_element(setelement(#element.id,Element,Id))) end;
-render_element(Element) -> error_logger:info_msg("Unknown Element: ~p",[Element]).
+render_element(Element) -> wf:error("Unknown Element: ~p",[Element]).
 
 default_render(Tag, Record) ->
     wf_tags:emit_tag(Tag, wf:render(element(#element.body,Record)),

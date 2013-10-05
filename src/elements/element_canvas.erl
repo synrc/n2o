@@ -2,6 +2,4 @@
 -include("wf.hrl").
 -compile(export_all).
 
-
-render_element(R=#canvas{})->
-  [].
+render_element(R=#canvas{}) -> [].
