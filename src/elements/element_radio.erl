@@ -14,7 +14,7 @@ render_element(Record) ->
 
     case Record#radio.postback of
         undefined -> ignore;
-        Postback -> wf:wire(ID, #event { type=change, postback=Postback, validation_group=ID, delegate=Record#radio.delegate })
+        Postback -> wf:wire(#event{type=change, postback=Postback, target=ID, delegate=Record#radio.delegate })
     end,
 
     Content = Record#radio.body,

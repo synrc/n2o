@@ -10,8 +10,8 @@ render_element(Record) ->
         undefined -> Record#link.id;
         Postback ->
             ID = case Record#link.id of undefined -> wf:temp_id(); I -> I end,
-            wf:wire(ID, #event{ type=click,postback=Postback,validation_group=ID,
-                                source=Record#link.source,delegate=Record#link.delegate}),
+            wf:wire(#event{ type=click,postback=Postback,target=ID,
+                            source=Record#link.source,delegate=Record#link.delegate}),
             ID end,
     List = [{<<"id">>, Id},
         {<<"href">>, Record#link.url},

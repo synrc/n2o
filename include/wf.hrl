@@ -116,9 +116,8 @@
 -record(action, {?ACTION_BASE(undefined)}).
 -record(wire, {?ACTION_BASE(action_wire)}).
 -record(api, {?ACTION_BASE(action_api), name, tag, delegate }).
--record(redirect, {?ACTION_BASE(action_redirect), url, nodrop=false}).
--record(event, {?ACTION_BASE(action_event), type=default, keycode=undefined, shift_key=false, delay=0, postback, validation_group, delegate, extra_param}).
--record(control, {?ACTION_BASE(action_control), type=default, keycode=undefined, shift_key=false, delay=0, validation_group, delegate, extra_param}).
+-record(event, {?ACTION_BASE(action_event), type=default, postback, delegate}).
+-record(control, {?ACTION_BASE(action_control), type=default, delegate}).
 -record(alert, {?ACTION_BASE(action_alert), text}).
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
 -record(jq, {?ACTION_BASE(action_jq), property, method, args=[], right}).

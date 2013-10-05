@@ -3,19 +3,8 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-render_action(#control{ 
-    actions=Actions, source=Source,
-    trigger=Trigger, target=Target, validation_group=ValidationGroup,
-    type=Type, keycode=KeyCode, shift_key=ShiftKey, delay=Delay, delegate=Delegate,
-    extra_param=ExtraParam}) ->
-
+render_action(#control{actions=Actions, source=Source, target=Target, type=Type, delegate=Delegate}) ->
     Data = "[" ++ string:join([ "Bert.tuple(Bert.atom('"++atom_to_list(Src)++
                      "'), utf8.toByteArray($('#"++atom_to_list(Src)++"').val()))" || Src <- Source ],",") ++ "]",
-
-    ValidationGroup1 = wf:coalesce([ValidationGroup, Trigger]),
-    PostbackScript = wf_event:new(ok, ValidationGroup1, Delegate, control_event, Data),
-    WireAction = #wire { trigger=Trigger, target=Target, actions=Actions },
-
-    [
-        wf:f("$('#~s').bind('~s',function anonymous(event) { ", [ValidationGroup1,Type]), PostbackScript, "});"
-    ].
+    PostbackScript = wf_event:new(ok, Target, Delegate, control_event, Data),
+    [wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Target,Type]),PostbackScript,"});"].

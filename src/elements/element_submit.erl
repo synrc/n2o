@@ -9,10 +9,10 @@ render_element(Record) ->
     ID = Record#submit.id,
     case Record#submit.postback of
          undefined -> skip;
-         Postback -> wf:wire(ID, #event { type=click, 
-                                              validation_group=ID,
-                                              postback=Postback,
-                                              source=Record#submit.source }) end,
+         Postback -> wf:wire(#event { type=click, 
+                                      target=ID,
+                                      postback=Postback,
+                                      source=Record#submit.source }) end,
     case Record#submit.click of
          undefined -> ignore;
          ClickActions -> wf:wire(ID, #event { type=click, actions=ClickActions }) end,
