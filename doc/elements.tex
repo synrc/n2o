@@ -4,7 +4,7 @@
 With N2O you don't usually use HTML at all. Instead you define your page
 in the form of Erlang records so that the page is type checked at compile time.
 This is a classical CGI approach for compiled pages and it gives us all the benefits of
-compile time error checking and great server-side rendering.
+compile time error checking and provides DSL for client and server-side rendering.
 
 \subsection{Control Elements}
 By their nature Nitrogen elements are control primitives
@@ -87,4 +87,100 @@ If postback action is specified the page module must include a callback to handl
             [wf:q(userName),wf:q(message)]).
 \end{lstlisting}
 \vspace{1\baselineskip}
+
+
+\subsection{Base Element}
+Each HTML element in N2O DSL have record compatibility with base element.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    #element { ancestor=element,
+               module,
+               id,
+               actions,
+               class=[],
+               style=[],
+               source=[],
+               data_fields=[],
+               aria_states=[],
+               body,
+               role,
+               tabindex,
+               show_if=true,
+               html_tag=Tag,
+               title }.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Most HTML elements defined as base elements. You can choose even element
+name that differs from HTML tag name:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(h6,         ?DEFAULT_BASE).
+    -record(header,     ?DEFAULT_BASE).
+    -record(tbody,      ?DEFAULT_BASE).
+    -record(panel,      ?DEFAULT_BASE_TAG(<<"div">>)).
+    -record('div',      ?DEFAULT_BASE_TAG(<<"div">>)).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+\subsection{DTL Template}
+DTL stands for Django Template Language. DTL element lets you construct HTML
+snippet from template with given placeholders for substitution.
+Fields contains substitution bindings proplist, filename and templates folder.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(dtl, {?ELEMENT_BASE(element_dtl),
+            file="index",
+            bindings=[],
+            app=web,
+            folder="priv/templates",
+            ext="html",
+            bind_script=true }).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Consider we have prod.dtl file in priv/templates folder with two
+placeholders \{\{title\}\}, \{\{body\}\} and default placeholder for JavaScript \{\{script\}\}.
+All pleceholders except \{\{script\}\} should be specified in \#dtl element.
+Here is an example how to use it:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    body() -> "HTML Body".
+    main() ->
+      [ #dtl { file="prod", ext="dtl",
+               bindings=[{title,<<"Title">>},{body,body()}]} ].
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can use templates not only for pages but also for controls. Let say we want
+to use DTL iterators for constructing list elements:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}[caption=table.html]
+    {% for i in items %} <a href="{{i.url}}">{{i.name}}</a><br>
+             {% empty %} <span>No items available :-(</span>
+            {% endfor %}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Here is example how to pass variables to this DTL template:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    #dtl{file="table", bind_script=false, bindings=[{items,
+      [ {[{name, "Apple"},     {url, "http://apple.com"}]},
+        {[{name, "Google"},    {url, "http://google.com"}]},
+        {[{name, "Microsoft"}, {url, "http://microsoft.com"}]} ]}]}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+For page templates bind\_script should be set for true, for control elements rendered from DTL,
+bind\_script should be set to false.
+
+\subsection{Button}
 
