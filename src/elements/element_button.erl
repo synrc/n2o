@@ -11,7 +11,7 @@ render_element(Record) ->
         Postback ->
           ID = case Record#button.id of undefined -> wf:temp_id(); I -> I end,
           wf:wire(#event{type=click, postback=Postback, target=ID,
-                  source=Record#button.source,  delegate=Record#button.delegate }),
+                  source=Record#button.source, delegate=Record#button.delegate }),
           ID end,
     wf_tags:emit_tag(<<"button">>, wf:render(Record#button.body), [
         {<<"id">>, Id},

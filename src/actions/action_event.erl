@@ -3,8 +3,7 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-render_action(#event{postback=Postback, actions=Actions, source=Source,
-                     target=Control, type=Type, delegate=Delegate}) ->
+render_action(#event{postback=Postback,actions=Actions,source=Source,target=Control,type=Type,delegate=Delegate}) ->
     Data = "[" ++ string:join([begin 
         {Key, Id} = if  is_atom(Src)-> S = atom_to_list(Src),
                         {"Bert.atom('"++S++"')", S};
@@ -12,4 +11,4 @@ render_action(#event{postback=Postback, actions=Actions, source=Source,
         "Bert.tuple(" ++ Key ++ ", utf8.toByteArray($('#" ++ Id ++ "').vals()))" end
     || Src <- Source ],",") ++ "]",
     PostbackScript = wf_event:new(Postback, Control, Delegate, event, Data),
-    wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Control,Type]) ++ PostbackScript ++ "});".
+    [ wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Control,Type]),PostbackScript,"});"].
