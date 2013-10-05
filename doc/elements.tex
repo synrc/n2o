@@ -1,13 +1,11 @@
 \section{Elements}
-
-\subsection{Page construction}
 With N2O you don't usually use HTML at all. Instead you define your page
 in the form of Erlang records so that the page is type checked at compile time.
 This is a classical CGI approach for compiled pages and it gives us all the benefits of
 compile time error checking and provides DSL for client and server-side rendering.
 
-\subsection{Control Elements}
-By their nature Nitrogen elements are control primitives
+\paragraph{}
+By their nature Nitrogen elements are UI control primitives
 that you use to construct Nitrogen pages with Erlang internal DSL.
 They are rendered into HTML and JavaScript.
 Behavior of all elements is controlled on server side and all the communication
@@ -30,14 +28,13 @@ Usually ``static'' means elements that don't use postback parameter:
 \vspace{1\baselineskip}
 
 This will produce the following HTML code:
-
 \vspace{1\baselineskip}
 \begin{lstlisting}
     <input value="Anonymous" id="userName" type="text"/>
     <div id="chatHistory" class="chat_history"></div>
 \end{lstlisting}
-\vspace{1\baselineskip}
 
+\newpage
 \subsection{Active Elements: HTML and JavaScript}
 Also form elements exist that provide information for the server
 and gather user input: button, radio and check buttons, text box area and password box.
@@ -50,21 +47,15 @@ Element definition specifies the list of {\bf source} elements providing data to
 \begin{lstlisting}
     {ok,Pid} = wf:comet(fun() -> chat_loop() end),
     #button { id=sendButton, text= <<"Send">>, 
-              postback={chat,Pid}, source=[userName,message] },
+              postback={chat,Pid}, source=[userName,message] }.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-This will produce the following HTML...
-
-\vspace{1\baselineskip}
+This will produce the following HTML:
 \begin{lstlisting}
     <input value="Chat" id="sendButton" type="button"/>
 \end{lstlisting}
-\vspace{1\baselineskip}
-
-...and JavaScript code
-
-\vspace{1\baselineskip}
+and JavaScript code:
 \begin{lstlisting}
     $('#sendButton').bind('click',function anonymous(event) { 
         ws.send(Bert.encodebuf({
@@ -79,16 +70,14 @@ This will produce the following HTML...
 \vspace{1\baselineskip}
 
 If postback action is specified the page module must include a callback to handle postback info:
-
 \vspace{1\baselineskip}
 \begin{lstlisting}
     event({chat,Pid}) ->
-        error_logger:info_msg("Username ~p Message ~p",
-            [wf:q(userName),wf:q(message)]).
+        wf:info("User ~p Msg ~p", [wf:q(userName),wf:q(message)]).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-
+\newpage
 \subsection{Base Element}
 Each HTML element in N2O DSL have record compatibility with base element.
 
@@ -112,21 +101,26 @@ Each HTML element in N2O DSL have record compatibility with base element.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
+Here {\bf module} is Erlang module which contains render function.
+Data and Aria HTML custom fields are common attributtes for all elements.
+In case element name doesn't corresponds to HTML tag {\bf html\_tag} field provided.
+As element contents {\bf body} field used for all elements.
+
+\paragraph{}
 Most HTML elements defined as base elements. You can choose even element
 name that differs from HTML tag name:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    -record(h6,         ?DEFAULT_BASE).
-    -record(header,     ?DEFAULT_BASE).
-    -record(tbody,      ?DEFAULT_BASE).
-    -record(panel,      ?DEFAULT_BASE_TAG(<<"div">>)).
-    -record('div',      ?DEFAULT_BASE_TAG(<<"div">>)).
+    -record(h6,    ?DEFAULT_BASE).
+    -record(tbody, ?DEFAULT_BASE).
+    -record(panel, ?DEFAULT_BASE_TAG(<<"div">>)).
+    -record('div', ?DEFAULT_BASE_TAG(<<"div">>)).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
 \newpage
-\subsection{DTL Template}
+\subsection{DTL Template {\bf \#dtl}}
 DTL stands for Django Template Language. DTL element lets you construct HTML
 snippet from template with given placeholders for substitution.
 Fields contains substitution bindings proplist, filename and templates folder.
@@ -182,5 +176,42 @@ Here is example how to pass variables to this DTL template:
 For page templates bind\_script should be set for true, for control elements rendered from DTL,
 bind\_script should be set to false.
 
-\subsection{Button}
+\subsection{Button {\bf \#button}}
 
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(button, {?ELEMENT_BASE(element_button),
+            type= <<"button">>,
+            name,
+            value,
+            postback,
+            delegate,
+            disabled}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Link {\bf \#link}}
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(link, {?ELEMENT_BASE(element_link),
+            target,
+            url="javascript:void(0);",
+            postback,
+            delegate,
+            name}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Text Editor {\bf \#textarea}}
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(textarea, {?ELEMENT_BASE(element_textarea),
+            placeholder,
+            name,
+            cols,
+            rows,
+            value}).
+\end{lstlisting}
+\vspace{1\baselineskip}

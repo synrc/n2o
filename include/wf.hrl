@@ -121,6 +121,6 @@
 -record(control, {?ACTION_BASE(action_control), type=default, keycode=undefined, shift_key=false, delay=0, validation_group, delegate, extra_param}).
 -record(alert, {?ACTION_BASE(action_alert), text}).
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
--record(jq, {?ACTION_BASE(action_jq), type, method, args=[], class}).
+-record(jq, {?ACTION_BASE(action_jq), property, method, args=[], right}).
 
 -endif.

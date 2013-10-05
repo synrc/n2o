@@ -9,48 +9,58 @@ has {\bf \#action} as its ancestor.
               target,
               module,
               actions,
-              source=[]
-            }.
+              source=[] }.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
 {\bf trigger} and {\bf target} signify on which entity action will apply by what.
 
-\subsection{\#jq}
+\subsection{JavaScript DSL {\bf \#jq}}
+jQuery action provides mimics of JavaScript calls and assignments.
+Depending on filling property or method field specific action performs.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    wf:wire(#jq{target=n2ostatus,method=[show,select]}).
+    -record(jq, {?ACTION_BASE(action_jq),
+            property,
+            method,
+            args=[],
+            right }).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-\vspace{1\baselineskip}
+Here is example of method calls:
+\begin{lstlisting}
+    wf:wire(#jq{target=n2ostatus,method=[show,select]}).
+\end{lstlisting}
+unfolded to calls:
 \begin{lstlisting}
     $('#n2ostatus').show(); $('#n2ostatus').select();
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-\subsection{\#redirect}
-\vspace{1\baselineskip}
+And here is example of property chained assignments:
 \begin{lstlisting}
-    wf:wire(#redirect{url="http://synrc.com"}).
+    wf:wire(#jq{target=history,property=scrollTop,
+        right=#jq{target=history,property=scrollHeight}}).
+\end{lstlisting}
+which transforms to:
+\begin{lstlisting}
+    $('#history').scrollTop = $('#history').scrollHeight;
 \end{lstlisting}
 \vspace{1\baselineskip}
+Part of N2O API implemented using \#jq actions (updates and redirect).
+This action is introduced as transitional from Nitrogen DSL to pure JavaScript transformation.
 
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    window.location = "http://synrc.com"
-\end{lstlisting}
-\vspace{1\baselineskip}
+\newpage
+\subsection{Page Events \#event}
 
-\subsection{\#event}
+\subsection{Control Events \#control}
 
-\subsection{\#control}
+\subsection{API Events \#api}
 
-\subsection{\#api}
+\subsection{Message Box \#alert}
 
-\subsection{\#alert}
-
-\subsection{\#confirm}
+\subsection{Confirmation Box \#confirm}
 
 
