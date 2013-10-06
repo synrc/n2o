@@ -23,15 +23,15 @@ allowed_methods(Req, State)                                -> {[<<"GET">>, <<"PU
 content_types_provided(Req, State) -> {[{<<"text/html">>, to_html}, {<<"application/json">>, to_json}], Req, State}.
 
 to_html(Req, #st{resource_module = M, resource_id = Id} = State) ->
-    Body = case Id of
-               undefined -> [M:to_html(Resource) || Resource <- M:get()];
-               _         -> M:to_html(M:get(Id))
-           end,
-    Html = case erlang:function_exported(M, html_layout, 2) of
-               true  -> M:html_layout(Req, Body);
-               false -> default_html_layout(Body)
-           end,
-    {Html, Req, State}.
+    case erlang:function_exported(M, to_html, 1) of
+         true -> Body = case Id of
+                    undefined -> [M:to_html(Resource) || Resource <- M:get()];
+                    _ -> M:to_html(M:get(Id)) end,
+                 Html = case erlang:function_exported(M, html_layout, 2) of
+                    true  -> M:html_layout(Req, Body);
+                    false -> default_html_layout(Body) end,
+                 {Html, Req, State};
+         false -> to_json(Req,State) end.
 
 default_html_layout(Body) -> [<<"<html><body>">>, Body, <<"</body></html>">>].
 
@@ -57,12 +57,10 @@ handle_json_data(Req, #st{resource_module = M, resource_id = Id} = State) ->
 handle_data(Mod, Id, Data) ->
     Valid = case erlang:function_exported(Mod, validate, 2) of
                 true  -> Mod:validate(Id, Data);
-                false -> default_validate(Mod, Id, Data)
-            end,
+                false -> default_validate(Mod, Id, Data) end,
     case Valid of
         true  -> case Id of undefined -> Mod:post(Data); _ -> put(Mod,Id,Data) end;
-        false -> false
-    end.
+        false -> false end.
 
 put(Mod,Id, Data) ->
     Object = Mod:get(Id),

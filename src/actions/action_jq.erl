@@ -10,4 +10,4 @@ render_action(#jq{target=Target,method=undefined,property=Property,right=undefin
     wf:f("$('#~s').~s;", [Target,Property]);
 
 render_action(#jq{target=Target,method=undefined,property=Property,right=Right}) ->
-    wf:f("$('#~s').~s = ~s", [Target,Property,wf:render(Right)]).
+    wf:f("~s.~s = ~s", [Target,Property,wf:render(Right)]).
