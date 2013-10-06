@@ -60,9 +60,17 @@ handle_data(Mod, Id, Data) ->
                 false -> default_validate(Mod, Id, Data)
             end,
     case Valid of
-        true  -> case Id of undefined -> Mod:post(Data); _ -> Mod:put(Id, Data) end;
+        true  -> case Id of undefined -> Mod:post(Data); _ -> put(Mod,Id,Data) end;
         false -> false
     end.
+
+put(Mod,Id, Data) ->
+    Object = Mod:get(Id),
+    Filled = Mod:fill(Data,Object),
+    case element(2,Object) =/= element(2,Filled) of
+        true  -> Mod:delete(element(2,Object));
+        false -> true end,
+    Mod:post(Data).
 
 default_validate(Mod, Id, Data) ->
     Allowed = case erlang:function_exported(Mod, keys_allowed, 1) of

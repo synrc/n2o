@@ -14,19 +14,10 @@ pickle(Data) ->
 secret() -> wf:config(n2o,secret,<<"ThisIsClassified">>).
 
 depickle(PickledData) ->
-    try {Data, _PickleTime} = inner_depickle(PickledData), Data
-    catch _:_ -> undefined end.
-
-depickle(PickledData, TTLSeconds) ->
-    try {Data, PickledTime} = inner_depickle(PickledData),
-        AgeInSeconds = timer:now_diff(now(), PickledTime) / 1024 / 1024,
-        case AgeInSeconds < TTLSeconds of true -> Data; false -> undefined end
-    catch _:_ -> undefined end.
-
-inner_depickle(PickledData) ->
     try Key = secret(),
         Decoded = base64:decode(wf:to_binary(PickledData)),
         <<IV:16/binary,Signature:16/binary,Cipher/binary>> = Decoded,
         Signature = crypto:md5(<<Key/binary,Cipher/binary>>),
-        binary_to_term(crypto:block_decrypt(aes_cbc128,Key,IV,Cipher))
+        {Data,_Time} = binary_to_term(crypto:block_decrypt(aes_cbc128,Key,IV,Cipher)),
+        Data
     catch _:_ -> undefined end.

@@ -60,8 +60,8 @@ Depending on the Web Server endpoint bindings you can specify
 module for HTTP requests handling.
 
 \paragraph{}
-N2O comes with three endpoint handlers you can rely on when building your
-applications. However you are not limited to use any of these.
+N2O comes with three endpoint handlers for each Web Server supported.
+However you are not limited to use any of these.
 You can implement your own endpoint handlers, e.g. for using with
 meteor.js or angular.js and providing Erlang back-end event streaming
 from server-side. Here is an example of using HTTP, WebSocket and
@@ -69,9 +69,8 @@ REST endpoint handlers with Cowboy Web Server.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:bucket", n2o_rest, []},
-    {"/rest/:bucket/:key", n2o_rest, []},
-    {"/rest/:bucket/:key/[...]", n2o_rest, []},
+    {"/rest/:resource", n2o_cowboy_rest, []},
+    {"/rest/:resource/:id", n2o_cowboy_rest, []},
     {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
     {'_', n2o_cowboy, []}
 \end{lstlisting}
@@ -101,14 +100,13 @@ based on Bullet library created by Loïc Hoguin.
 \subsection{HTTP API over REST}
 REST handler's request context initizlization differs for the one
 used by HTML and JavaScript handlers. N2O handler chains are not
-applied to REST requests. {\bf {n2o}\_{rest}} is a default REST
-handler based on FarWest framework.
+applied to REST requests. {\bf n2o\_cowboy\_rest} is a default REST
+handler.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:bucket", n2o_rest, []},
-    {"/rest/:bucket/:key", n2o_rest, []},
-    {"/rest/:bucket/:key/[...]", n2o_rest, []},
+    {"/rest/:resource", n2o_cowboy_rest, []},
+    {"/rest/:resource/:id", n2o_cowboy_rest, []},
 \end{lstlisting}
 
 \vspace{1\baselineskip}
