@@ -13,12 +13,17 @@
 
 % Update DOM wf:update
 
-update(Target, Elements) -> wf:wire(#jq{target=Target,method=[html],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
-replace(Target, Elements) -> wf:wire(#jq{target=Target,method=[replaceWith],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
-insert_top(Target, Elements) -> wf:wire(#jq{target=Target,method=[prepend],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
-insert_bottom(Target, Elements) -> wf:wire(#jq{target=Target,method=[append],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
-insert_before(Target, Elements) -> wf:wire(#jq{target=Target,method=[before],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
-insert_after(Target, Elements) -> wf:wire(#jq{target=Target,method=['after'],args=[wf:f("'~s'",[wf_core:render(Elements)])]}).
+
+-define(UPDATE_DOM(Method,Target,Elements),
+    wf:wire(#jq{target=Target,method=[Method],
+                args=[wf:f("'~s'",[wf_core:render(Elements)])]})).
+
+update(Target, Elements) ->        ?UPDATE_DOM(html,Target,Elements).
+replace(Target, Elements) ->       ?UPDATE_DOM(replaceWith,Target,Elements).
+insert_top(Target, Elements) ->    ?UPDATE_DOM(prepend,Target,Elements).
+insert_bottom(Target, Elements) -> ?UPDATE_DOM(append,Target,Elements).
+insert_before(Target, Elements) -> ?UPDATE_DOM(before,Target,Elements).
+insert_after(Target, Elements) ->  ?UPDATE_DOM('after',Target,Elements).
 remove(Target) -> wf:wire(#jq{target=Target,method=[remove],args=[]}).
 
 % Wire JavaScript wf:wire
@@ -36,7 +41,8 @@ flush(Key) -> action_async:flush(Key).
 
 % Redirect and purge connection wf:redirect
 
-redirect(Url) -> wf:wire(#jq{target=window,property=location,right=["\"",Url,"\""]}).
+redirect(Url) ->
+    wf:wire(#jq{target=window,property=location,right=["\"",Url,"\""]}).
 
 % Message Bus communications wf:reg wf:send
 
