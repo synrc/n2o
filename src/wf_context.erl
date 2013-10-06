@@ -17,9 +17,9 @@ add_action(Action) ->
 init_context(Req) ->
     #context{
         actions=[], module=index, path=[], req=Req, params=[],
-        handlers= [ {'query', handler_coalecse('query', n2o_query_handler)},
-                    {session, handler_coalecse(session, n2o_session_handler)},
-                    {route,   handler_coalecse(route,   n2o_route_handler)} ]}.
+        handlers= [ {'query', handler_coalecse('query', n2o_query)},
+                    {session, handler_coalecse(session, n2o_session)},
+                    {route,   handler_coalecse(route,   n2o_route)} ]}.
 
 handler_coalecse(Key, Default) -> case application:get_env(n2o,Key) of
                               undefined -> Default;

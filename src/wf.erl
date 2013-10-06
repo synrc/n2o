@@ -41,7 +41,7 @@ redirect(Url) -> wf:wire(#jq{target=window,property=location,right=["\"",Url,"\"
 % Message Bus communications wf:reg wf:send
 
 -ifndef(REGISTRATOR).
--define(REGISTRATOR, n2o_gproc).
+-define(REGISTRATOR, n2o_mq).
 -endif.
 
 send(Pool, Message) -> ?REGISTRATOR:send(Pool,Message).
@@ -50,7 +50,7 @@ reg(Pool) -> ?REGISTRATOR:reg(Pool).
 % Pickling wf:pickle
 
 -ifndef(PICKLER).
--define(PICKLER, (wf:config(n2o,pickler,wf_secret))).
+-define(PICKLER, (wf:config(n2o,pickler,n2o_secret))).
 -endif.
 
 pickle(Data) -> ?PICKLER:pickle(Data).
@@ -59,19 +59,19 @@ depickle(SerializedData, TTLSeconds) -> ?PICKLER:depickle(SerializedData, TTLSec
 
 % Session handling wf:session wf:user wf:role
 
-session(Key) -> session_handler:get_value(Key).
-session(Key, Value) -> session_handler:set_value(Key, Value).
-session_default(Key, DefaultValue) -> session_handler:get_value(Key, DefaultValue).
-clear_session() -> session_handler:clear_all().
-session_id() -> session_handler:session_id().
-user() -> identity_handler:get_user().
-user(User) -> identity_handler:set_user(User).
-clear_user() -> identity_handler:clear().
-role(Role) -> role_handler:get_has_role(Role).
-role(Role, IsInRole) -> role_handler:set_has_role(Role, IsInRole).
-roles() -> role_handler:get_roles().
-clear_roles() -> role_handler:clear_all().
-logout() -> clear_user(), clear_roles(), clear_session().
+-ifndef(SESSION).
+-define(SESSION, (wf:config(n2o,session,n2o_session))).
+-endif.
+
+session(Key) -> ?SESSION:get_value(Key,undefined).
+session(Key, Value) -> ?SESSION:set_value(Key, Value).
+session_default(Key, DefaultValue) -> ?SESSION:get_value(Key, DefaultValue).
+clear_session() -> ?SESSION:clear().
+session_id() -> ?SESSION:session_id().
+user() -> wf:session(<<"user">>).
+user(User) -> wf:session(<<"user">>,User).
+clear_user() -> wf:session(<<"user">>,undefined).
+logout() -> clear_user(), clear_session().
 
 % Context Variables and URL Query Strings wf:q and wf:qs
 
