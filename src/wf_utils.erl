@@ -39,3 +39,8 @@ indexof(_Key, [], _N) -> undefined;
 indexof(Key, [Key|_T], N) -> N;
 indexof(Key, [_|T], N) -> indexof(Key, T, N + 1).
 
+hunmap([],O,_,_) -> O;
+hunmap([{BK,V}|T],O,Keys,0) -> O;
+hunmap([{BK,V}|T],O,Keys,L) ->
+    K = wf:to_atom(BK),
+    hunmap(T, setelement(wf_utils:indexof(K,Keys),O,wf:to_list(V)), Keys--[K],L-1).
