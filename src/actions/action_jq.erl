@@ -9,5 +9,9 @@ render_action(Record=#jq{property=undefined,target=Target,method=Methods}) ->
 render_action(#jq{target=Target,method=undefined,property=Property,right=undefined}) ->
     wf:f("$('#~s').~s;", [Target,Property]);
 
+render_action(#jq{target=Target,method=undefined,property=Property,args=simple,right=Right}) ->
+    wf:f("~s.~s = ~s", [Target,Property,wf:render(Right)]);
+
 render_action(#jq{target=Target,method=undefined,property=Property,right=Right}) ->
-    wf:f("~s.~s = ~s", [Target,Property,wf:render(Right)]).
+    wf:f("$('#~s').~s = ~s", [Target,Property,wf:render(Right)]).
+

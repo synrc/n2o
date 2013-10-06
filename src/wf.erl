@@ -42,7 +42,7 @@ flush(Key) -> action_async:flush(Key).
 % Redirect and purge connection wf:redirect
 
 redirect(Url) ->
-    wf:wire(#jq{target=window,property=location,right=["\"",Url,"\""]}).
+    wf:wire(#jq{target=window,property=location,args=simple,right=["\"",Url,"\""]}).
 
 % Message Bus communications wf:reg wf:send
 
