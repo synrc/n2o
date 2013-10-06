@@ -37,8 +37,8 @@ default_html_layout(Body) -> [<<"<html><body>">>, Body, <<"</body></html>">>].
 
 to_json(Req, #st{resource_module = M, resource_id = Id} = State) ->
     Struct = case Id of
-                 undefined -> {struct, [{M, [{struct, M:to_json(Resource)} || Resource <- M:get()]}]};
-                 _         -> {struct, M:to_json(M:get(Id))}
+                 undefined -> {struct, [{M, [{struct, M:map(Resource)} || Resource <- M:get()]}]};
+                 _         -> {struct, M:map(M:get(Id))}
              end,
     {iolist_to_binary(n2o_json:encode(Struct)), Req, State}.
 
@@ -90,6 +90,6 @@ rest_module(Module) when is_binary(Module) -> rest_module(binary_to_list(Module)
 rest_module(Module) ->
     try M = list_to_existing_atom(Module),
         M:module_info(),
-        true = M:is_rest(),
+        true =  M:is_rest(),
         {ok, M}
     catch error:Error -> {error, Error} end.
