@@ -73,11 +73,11 @@ rendered during page load, server events or client events.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    wf:wire(#redirect{url="http://synrc.com"}).
+    wf:wire(#alert{text="Hello!"}).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-However basic N2O actions which are a part of N2O API, just like {\bf wf:redirect},
+However basic N2O actions which are a part of N2O API, {\bf wf:update} and {\bf wf:redirect},
 are implemented as Erlang records as given in example. In case you need deffered
 render of JavaScript you can use Erlang records instead of direct wiring with
 Erlang lists or JavaScript/OTP.
@@ -89,12 +89,12 @@ Following nested action embedding are also valid:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    wf:wire(#wire{actions=[#redirect{url="http://synrc.com"}]}).
+    wf:wire(#wire{actions=[#alert{text="N2O"}]}).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
 \newpage
-\subsection{Async Processes \bf{wf:async} and \bf{wf:flush}}
+\subsection{Async Processes {\bf wf:async} and {\bf wf:flush}}
 Creates Erlang processes communicating with the primary page
 process by sending messages. For redirecting all updates and
 wire actions to the page process {\bf wf:flush} should be called.

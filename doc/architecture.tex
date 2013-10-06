@@ -110,19 +110,22 @@ handler.
 \end{lstlisting}
 
 \vspace{1\baselineskip}
-\begin{lstlisting}
+\begin{lstlisting}[caption=users.erl]
     -module(users).
+    -include_lib("n2o/include/wf.hrl").
     -include("users.hrl").
     -compile(export_all).
 
-    is_rest() -> true.
+    ?map(user).
+    ?unmap(user).
+    ?rest().
+
     init() -> ets:new(users, [public, named_table, {keypos, #user.id}]).
     populate(Users) -> ets:insert(users, Users).
     exists(Id) -> ets:member(users, wf:to_list(Id)).
     get() -> ets:tab2list(users).
     get(Id) -> [User] = ets:lookup(users, wf:to_list(Id)), User.
-    delete(Id) -> ets:delete(users, Id).
-    post(User=#user{}) -> ets:insert(users, User);
+    delete(Id) -> ets:delete(users, wf:to_list(Id)).
     post(Data) -> ets:insert(users, unmap(Data, #user{})).
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -136,6 +139,7 @@ To add users to in-memory storage perform POST requests:
     curl -i -X GET localhost:8000/rest/users
     curl -i -X PUT -d "id=5HT" localhost:8000/rest/users/vlad
     curl -i -X GET localhost:8000/rest/users/5HT
+    curl -i -X DELETE localhost:8000/rest/users/5HT
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -150,7 +154,7 @@ of context initialization.
         req=Req, params=[], session=undefined,
         handlers= [ {'query', wf:config('query', n2o_query)},
                     {session, wf:config(session, n2o_session)},
-                    {route,   wf:config(route, n2o_route)} ]}.
+                    {route,   wf:config(route,   n2o_route)} ]}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -178,7 +182,7 @@ You can specify routing table with application config:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-         {n2o, [{route,custom_router}]}
+    {n2o, [{route,custom_router}]}
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -186,22 +190,23 @@ Remember that routing handler should be kept very simple because it
 influences overal initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
-\begin{lstlisting}
-    -module(custom_router).
+\begin{lstlisting}[caption=n2o\_route.erl]
+    -module(n2o_route).
+    -author('Maxim Sokhatsky').
     -include_lib("n2o/include/wf.hrl").
-    -compile(export_all).
+    -export(?ROUTING_API).
+
     finish(State, Ctx) -> {ok, State, Ctx}.
     init(State, Ctx) -> 
         Path = wf:path(Ctx#context.req),
-        {Module, PathInfo} = route(Path),
-        {ok, State, Ctx#context{path=PathInfo,module=Module}}.
+        {ok, State, Ctx#context{path=Path,module=route(Path)}}.
 
-    route(<<"/">>) -> {index, []};
-    route(<<"/index">>) -> {index, []};
-    route(<<"/login">>) -> {login, []};
-    route(<<"/ws/">>) -> {index, []};
-    route(<<"/ws/index">>) -> {index, []};
-    route(<<"/ws/login">>) -> {login, []};
-    route(<<"/favicon.ico">>) -> {static_file, []};
-    route(_) -> {index, []}.
+    route(<<"/">>) -> index;
+    route(<<"/index">>) -> index;
+    route(<<"/login">>) -> login;
+    route(<<"/ws/">>) -> index;
+    route(<<"/ws/index">>) -> index;
+    route(<<"/ws/login">>) -> login;
+    route(<<"/favicon.ico">>) -> static_file;
+    route(_) -> index.
 \end{lstlisting}
