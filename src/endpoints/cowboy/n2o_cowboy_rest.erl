@@ -64,7 +64,7 @@ handle_data(Mod, Id, Data) ->
 
 put(Mod,Id, Data) ->
     Object = Mod:get(Id),
-    Filled = Mod:fill(Data,Object),
+    Filled = Mod:unmap(Data,Object),
     case element(2,Object) =/= element(2,Filled) of
         true  -> Mod:delete(element(2,Object));
         false -> true end,
