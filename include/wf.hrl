@@ -138,13 +138,8 @@ hunmap([{BK,V}|T],O,Keys,L) ->
 -define(rest(), is_rest() -> true).
 -define(unmap(Record), unmap(P,R) -> hunmap(P,R,record_info(fields, Record),size(R)-1)).
 -define(map(Record), map(O) ->
-    Y = [ case B of
-            B when is_list(B) ->
-                case lists:nth(1,B) of
-                    X when is_tuple(X) -> B;
-                    X when is_number(X) -> wf:to_binary(B) end;
-            A -> A
-          end || B <- tl(tuple_to_list(O)) ],
+    Y = [ try N=lists:nth(1,B), if is_number(N) -> wf:to_binary(B); true -> B end catch _:_ -> B end
+          || B <- tl(tuple_to_list(O)) ],
     lists:zip(record_info(fields, Record), Y)).
 
 -endif.
