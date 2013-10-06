@@ -128,4 +128,23 @@
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
 -record(jq, {?ACTION_BASE(action_jq), property, method, args=[], right}).
 
+% REST macros
+hunmap([],O,_,_) -> O;
+hunmap([{BK,V}|T],O,Keys,0) -> O;
+hunmap([{BK,V}|T],O,Keys,L) ->
+    K = wf:to_atom(BK),
+    hunmap(T, setelement(wf_utils:indexof(K,Keys),O,wf:to_list(V)), Keys--[K],L-1).
+
+-define(rest(), is_rest() -> true).
+-define(unmap(Record), unmap(P,R) -> hunmap(P,R,record_info(fields, Record),size(R)-1)).
+-define(map(Record), map(O) ->
+    Y = [ case B of
+            B when is_list(B) ->
+                case lists:nth(1,B) of
+                    X when is_tuple(X) -> B;
+                    X when is_number(X) -> wf:to_binary(B) end;
+            A -> A
+          end || B <- tl(tuple_to_list(O)) ],
+    lists:zip(record_info(fields, Record), Y)).
+
 -endif.
