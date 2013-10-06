@@ -112,30 +112,30 @@ handler.
 \vspace{1\baselineskip}
 \begin{lstlisting}
     -module(users).
+    -include("users.hrl").
     -compile(export_all).
-    -record(user, {id,name,email,tokens}).
 
-    -define(USERS, [#user{id="maxim",email="maxim@synrc.com"},
-                    #user{id="doxtop",email="doxtop@synrc.com"},
-                    #user{id="roman",email="roman@github.com"}]).
+    is_rest() -> true.
+    init() -> ets:new(users, [public, named_table, {keypos, #user.id}]).
+    populate(Users) -> ets:insert(users, Users).
+    exists(Id) -> ets:member(users, wf:to_list(Id)).
+    get() -> ets:tab2list(users).
+    get(Id) -> [User] = ets:lookup(users, wf:to_list(Id)), User.
+    delete(Id) -> ets:delete(users, Id).
+    post(User=#user{}) -> ets:insert(users, User);
+    post(Data) -> ets:insert(users, unmap(Data, #user{})).
+\end{lstlisting}
+\vspace{1\baselineskip}
 
-    init() -> ets:new(users, [named_table,{keypos,#user.id}]),
-              ets:insert(users, ?USERS).
-    get([]) -> ets:foldl(fun(C,Acc) -> [C|Acc] end,[],users);
-    get(Id) -> ets:lookup(users,Id).
-    delete(Id) -> ets:delete(users,Id).
-    put(User=#user{}) -> ets:insert(users,User).
-    exists(Id) -> ets:member(users,Id).
-    to_html(User=#user{}) ->
-        [ <<"<tr><td>">>,
-          coalesce(User#user.id),<<"</td><td>">>,
-          coalesce(User#user.email),<<"</td><td>">>,
-          coalesce(User#user.name),<<"</td></tr">>].
+To add users to in-memory storage perform POST requests:
 
-    coalesce(Name) -> 
-        case Name of 
-            undefined -> <<>>;
-            A -> list_to_binary(A) end.
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    curl -i -X POST -d "id=vlad" localhost:8000/rest/users
+    curl -i -X POST -d "id=doxtop" localhost:8000/rest/users
+    curl -i -X GET localhost:8000/rest/users
+    curl -i -X PUT -d "id=5HT" localhost:8000/rest/users/vlad
+    curl -i -X GET localhost:8000/rest/users/5HT
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -148,9 +148,9 @@ of context initialization.
     init_context(Req) -> #context{
         actions=[], module=index, path=[],
         req=Req, params=[], session=undefined,
-        handlers= [ {'query', wf:config('query', n2o_query_handler)},
-                    {session, wf:config(session, n2o_session_handler)},
-                    {route,   wf:config(route, n2o_route_handler)} ]}.
+        handlers= [ {'query', wf:config('query', n2o_query)},
+                    {session, wf:config(session, n2o_session)},
+                    {route,   wf:config(route, n2o_route)} ]}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
