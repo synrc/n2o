@@ -7,7 +7,7 @@
 init2(State, Req) -> {ok, State, Req}.
 
 init(State, Ctx) -> 
-    C = n2o_cowboy:cookie(session_cookie_name(),Ctx#context.req),
+    C = wf:cookie(session_cookie_name(),Ctx#context.req),
     SessionId = case C of
                      undefined -> undefined;
                      A when is_list(A) -> list_to_binary(A);
@@ -38,7 +38,7 @@ finish(State, Ctx) ->
     % wf:info("Finish Cookie Set ~p",[{_Config,State}]),
     NewReq = case Ctx#context.session of
          {{Session,Key},Path,Issued,TTL,Status} -> 
-              n2o_cowboy:cookie(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
+              wf:cookie(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
          _ -> Ctx#context.req end,
     {ok, [], Ctx#context{req=NewReq}}.
 
@@ -50,13 +50,13 @@ lookup_ets(Key) ->
          [Value] -> Value;
          Values -> Values end.
 
-session_id() -> n2o_cowboy:cookie(session_cookie_name(),?REQ).
+session_id() -> wf:cookie(session_cookie_name(),?REQ).
 new_cookie_value() -> base64:encode(erlang:md5(term_to_binary({now(), make_ref()}))).
 new_state() -> #state{unique=new_cookie_value()}.
 session_cookie_name() -> <<"n2o-sid">>.
-set_value(Key, Value) -> ets:insert(cookies,{{n2o_cowboy:cookie(session_cookie_name(),?REQ),Key},Value}), Value.
+set_value(Key, Value) -> ets:insert(cookies,{{session_id(),Key},Value}), Value.
 get_value(Key, DefaultValue) -> 
-    Res = case lookup_ets({wf:cookie(session_cookie_name(),?REQ),Key}) of
+    Res = case lookup_ets({session_id(),Key}) of
                undefined -> DefaultValue;
                {_,Value} -> Value end,
     % wf:info("Session Lookup Key ~p Value ~p",[Key,Res]),

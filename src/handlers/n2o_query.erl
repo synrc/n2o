@@ -4,7 +4,7 @@
 -export(?QUERING_API).
 
 init(State, Ctx) -> 
-    Params = n2o_cowboy:params(Ctx#context.req),
+    Params = wf:params(Ctx#context.req),
     NewCtx = Ctx#context{params=Params},
     {ok, [], NewCtx}.
 

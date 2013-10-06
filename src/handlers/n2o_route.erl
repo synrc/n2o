@@ -5,7 +5,7 @@
 
 finish(State, Ctx) -> {ok, State, Ctx}.
 init(State, Ctx) -> 
-    Path = n2o_cowboy:path(Ctx#context.req),
+    Path = wf:path(Ctx#context.req),
     {ok, State, Ctx#context{path=Path,module=route(Path)}}.
 
 route(<<"/">>) -> index;

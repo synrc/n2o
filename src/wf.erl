@@ -91,6 +91,7 @@ qs(Key) -> proplists:get_value(Key,?CTX#context.params).
 -endif.
 
 cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie, Req).
+cookie(Name, Value, Path, TTL, Req) -> ?BRIDGE:cookie(Name, Value, Path, TTL, Req).
 params(Req) -> ?BRIDGE:params(Req).
 cookies(Req) -> ?BRIDGE:cookies(Req).
 headers(Req) -> ?BRIDGE:headers(Req).
