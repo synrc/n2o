@@ -3,6 +3,7 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
+render_action(#event{source=undefined}) -> [];
 render_action(#event{postback=Postback,actions=Actions,source=Source,target=Control,type=Type,delegate=Delegate}) ->
     Data = "[" ++ string:join([begin 
         {Key, Id} = if  is_atom(Src)-> S = atom_to_list(Src),

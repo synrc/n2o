@@ -41,7 +41,6 @@
 -record(dropdown, {?ELEMENT_BASE(element_dropdown), options, postback, delegate, value, multiple=false, disabled=false, name}).
 -record(select, {?ELEMENT_BASE(element_select), disabled, multiple, name, size, postback, delegate}).
 -record(checkbox, {?ELEMENT_BASE(element_checkbox), checked=false, value="on", postback, delegate, name}).
--record(bind, {?ELEMENT_BASE(element_bind), data=[], map=[], transform, acc=[], empty_body=[]}).
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup)}).
 -record(radio, {?ELEMENT_BASE(element_radio), value, name, checked=false, postback, delegate, html_name}).
 -record(password, {?ELEMENT_BASE(element_password), value, maxlength="", placeholder= <<"password">>, next, postback, delegate, name}).
