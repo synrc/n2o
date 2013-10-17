@@ -3,11 +3,9 @@
 -compile(export_all).
 
 render_action(Record=#jq{property=undefined,target=Target,method=Methods}) ->
-    Args = string:join([
-        case A of
-            A when is_tuple(A) -> wf:f("'~s'",[wf:to_list(iolist_to_binary(wf:render(A)))]);
-            X -> [X] end || A <- Record#jq.args],","),
-    string:join([wf:f("$('#~s').~s(~s);", [Target,Method,Args]) || Method <- Methods],[]);
+    Args = string:join([wf:f(Record#jq.format,[[wf:render(A)]]) 
+        || A <- Record#jq.args],","),
+    string:join([ wf:f("$('#~s').~s(~s);", [Target,Method,Args]) || Method <- Methods],[]);
 
 render_action(#jq{target=Target,method=undefined,property=Property,args=simple,right=Right}) ->
     wf:f("~s.~s = ~s;", [Target,Property,Right]);

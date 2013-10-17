@@ -118,14 +118,14 @@
 -record(htmlbox, {?ELEMENT_BASE(element_htmlbox), html="", script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate, delegate_api, toolbar_class, toolbar_script, root=code:priv_dir(n2o), dir="", post_write, img_tool, post_target, size=[{200, 200}]}).
 
 % Actions
--record(action, {?ACTION_BASE(undefined)}).
--record(wire, {?ACTION_BASE(action_wire)}).
--record(api, {?ACTION_BASE(action_api), name, tag, delegate }).
--record(event, {?ACTION_BASE(action_event), type=default, postback, delegate}).
+-record(action,  {?ACTION_BASE(undefined)}).
+-record(wire,    {?ACTION_BASE(action_wire)}).
+-record(api,     {?ACTION_BASE(action_api), name, tag, delegate }).
+-record(event,   {?ACTION_BASE(action_event), type=default, postback, delegate}).
 -record(control, {?ACTION_BASE(action_control), type=default, delegate}).
--record(alert, {?ACTION_BASE(action_alert), text}).
+-record(alert,   {?ACTION_BASE(action_alert), text}).
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
--record(jq, {?ACTION_BASE(action_jq), property, method, args=[], right}).
+-record(jq,      {?ACTION_BASE(action_jq), property, method, args=[], right, format="~s"}).
 
 % REST macros
 -define(rest(), is_rest() -> true).
