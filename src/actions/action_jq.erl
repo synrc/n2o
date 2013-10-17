@@ -3,8 +3,8 @@
 -compile(export_all).
 
 render_action(Record=#jq{property=undefined,target=Target,method=Methods}) ->
-    Arg = string:join([wf:to_list(A)||A<-Record#jq.args],","),
-    string:join([wf:f("$('#~s').~s(~s);", [Target,Method,Arg]) || Method <- Methods],"");
+    Arg = string:join([wf:to_list(wf:render(A))||A<-Record#jq.args],""),
+    string:join([wf:f("$('#~s').~s('~s');", [Target,Method,Arg]) || Method <- Methods],"");
 
 render_action(#jq{target=Target,method=undefined,property=Property,right=undefined}) ->
     wf:f("$('#~s').~s;", [Target,Property]);
