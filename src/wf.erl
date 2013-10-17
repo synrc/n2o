@@ -56,7 +56,7 @@ reg(Pool) -> ?REGISTRATOR:reg(Pool).
 % Pickling wf:pickle
 
 -ifndef(PICKLER).
--define(PICKLER, (wf:config(n2o,pickler,n2o_secret))).
+-define(PICKLER, (wf:config(n2o,pickler,n2o_pickle))).
 -endif.
 
 pickle(Data) -> ?PICKLER:pickle(Data).
