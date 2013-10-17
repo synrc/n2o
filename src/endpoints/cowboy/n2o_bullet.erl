@@ -20,7 +20,7 @@ stream(<<"ping">>, Req, State) ->
     wf:info("ping received~n"),
     {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->
-    wf:info("Text Received ~p",[Data]),
+%    wf:info("Text Received ~p",[Data]),
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
@@ -78,7 +78,7 @@ info(Pro, Req, State) ->
                 wf:redirect(case QS of <<>> -> ""; _ -> "" ++ "?" ++ wf:to_list(QS) end),
                 []
             end, R;
-            <<"PING">> -> [];
+        <<"PING">> -> [];
         Unknown ->
             M = State#context.module,
             M:event(Unknown),

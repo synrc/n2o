@@ -2,13 +2,17 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-render_action(Record=#jq{property=undefined,target=Target,method=Methods}) ->
-    Args = string:join([wf:f(Record#jq.format,[wf:to_binary(wf:render(A))]) 
-        || A <- Record#jq.args],","),
-    string:join([ wf:f("$('#~s').~s(~s);", [Target,Method,Args]) || Method <- Methods],[]);
+render_action(Record=#jq{property=undefined,target=Target,method=Methods,args=A,format=F}) ->
+    Args = case Record#jq.format of "'~s'" -> [wf:render(A)]; _ -> A end,
+    RenderedArgs = string:join([ case A of 
+        A when is_tuple(A) -> wf:render(A);
+        A when is_list(A) -> A;
+        A when is_integer(A) -> wf:to_list(A);
+        A -> A end || A <- Args],","),
+    string:join([ wf:f("$('#~s').~s("++Record#jq.format++");",
+        [Target,Method,RenderedArgs]) || Method <- Methods],[]);
 
 render_action(#jq{target=Target,method=undefined,property=Property,args=simple,right=Right}) ->
-    wf:info("simple"),
     wf:f("~s.~s = ~s;", [Target,Property,Right]);
 
 render_action(#jq{target=Target,method=undefined,property=Property,right=undefined}) ->
