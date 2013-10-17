@@ -20,16 +20,16 @@ stream(<<"ping">>, Req, State) ->
     wf:info("ping received~n"),
     {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->
-%    wf:info("Text Received ~p",[Data]),
+    % wf:info("Text Received ~p",[Data]),
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
-    wf:info("Binary Received: ~p",[Info]),
+    % wf:info("Binary Received: ~p",[Info]),
     Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
     Depickled = wf:depickle(Pickled),
-    wf:info("Depickled: ~p",[Depickled]),
+    % wf:info("Depickled: ~p",[Depickled]),
     case Depickled of
         #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
             case Function of 
@@ -58,7 +58,7 @@ stream(Data, Req, State) ->
 info(Pro, Req, State) ->
     Render = case Pro of
         {flush,Actions} ->
-            error_logger:info_msg("Comet Actions: ~p",[Actions]),
+            % error_logger:info_msg("Comet Actions: ~p",[Actions]),
             wf:render(Actions);
         <<"N2O,",Rest/binary>> ->
             Module = State#context.module, Module:event(init),
@@ -89,9 +89,8 @@ info(Pro, Req, State) ->
     wf_context:clear_actions(),
     RenderGenActions = wf:render(GenActions),
     wf_context:clear_actions(),
-    wf:info("WS: ~p",[lists:flatten([Render,RenderGenActions])]),
     {reply, [Render,RenderGenActions], Req, State}.
 
 terminate(_Req, _State) ->
-    wf:info("Bullet Terminated~n"),
+    % wf:info("Bullet Terminated~n"),
     ok.
