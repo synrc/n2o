@@ -21,6 +21,5 @@ render_element(Record) ->
 
 apply_name(Name, Terms) -> [do_apply(Name, X) || X <- Terms].
 do_apply(Name, X) when is_record(X, radio) -> X#radio {name = Name};
-do_apply(Name, X) when is_record(X, bind) -> Body2 = apply_name(Name, X#bind.body), X#bind{body = Body2};
 do_apply(Name, List) when is_list(List) -> apply_name(Name,List);
 do_apply(_Name, X) -> X.
