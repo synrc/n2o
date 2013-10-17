@@ -13,7 +13,6 @@ init(_Transport, Req, _Opts, _Active) ->
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
     wf_context:context(NewCtx),
-    put(page_module,NewCtx#context.module),
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
 
@@ -29,7 +28,7 @@ stream({binary,Info}, Req, State) ->
     Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
-    Depickled = wf_pickle:depickle(Pickled),
+    Depickled = wf:depickle(Pickled),
     case Depickled of
         #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
             case Function of 
@@ -64,7 +63,7 @@ info(Pro, Req, State) ->
                     Module = State#context.module, Module:event(init),
                     InitActions = get(actions),
                     wf_context:clear_actions(),
-                    Pid = list_to_pid(binary_to_list(Rest)),
+                    Pid = wf:depickle(Rest),
                     X = Pid ! {'N2O',self()},
                     R = receive Actions ->
                         RenderInit = wf_core:render(InitActions),

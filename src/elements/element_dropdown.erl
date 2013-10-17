@@ -6,13 +6,11 @@ reflect() -> record_info(fields, dropdown).
 
 render_element(Record) -> 
     ID = Record#dropdown.id,
-    Anchor = Record#dropdown.anchor,
     case Record#dropdown.postback of
          undefined -> skip;
-         Postback -> wf:wire(Anchor, #event { type=change,
-                                              validation_group=ID,
+         Postback -> wf:wire(#event { type=change,
+                                              target=ID,
                                               postback=Postback,
-%                                              source=Record#button.source,
                                               delegate=Record#button.delegate }) end,
 
     Opts = [wf_tags:emit_tag(<<"option">>, [O#option.label], [

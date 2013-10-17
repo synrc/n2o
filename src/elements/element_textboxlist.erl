@@ -7,9 +7,8 @@ reflect() -> record_info(fields, textboxlist).
 render_element(R = #textboxlist{}) ->
     Id = case R#textboxlist.id of [] -> wf:temp_id(); I -> I end,
     Plugins = case R#textboxlist.autocomplete of false -> [];
-    true -> Postback = wf_event:generate_postback_script(
+    true -> Postback = wf_event:new(
         case R#textboxlist.role of undefined -> ok; Role -> Role end,
-        R#textboxlist.anchor,
         Id,
         R#textboxlist.delegate,
         control_event,

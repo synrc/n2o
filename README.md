@@ -14,10 +14,12 @@ Information for Nitrogen users:
 * Proper id and class attributes
 * Several times faster that original Nitrogen
 * GProc process registry instead of nprocreg
+* Much faster ETS Session Handler
 
 New features
 ------------
 
+* Secure Pickling with AES CBC 128 for events protection
 * Twitter Bootstrap compatible rendering
 * Optimized for latency: deffered JavaScript rendering
 * Supports optional Zepto library for non-IE browsers
@@ -301,15 +303,22 @@ and jQuery javascript. After making release you should run:
 Now you can edit site sources and sync will automaticaly recompile
 and reload modules in release.
 
+Support
+-------
+
+* IRC Channel #n2o on FreeNode 24/7
+* Official N2O Book [HTML](http://synrc.com/framework/web/) and [PDF](http://synrc.com/framework/web/n2o/doc/book.pdf)
+
 Credits
 -------
 
-* Maxim Sokhatsky
-* Andrii Zadorozhnii
-* Vladimir Kirillov
-* Anton Logvinenko
-* Roman Shestakov
-* Jesse Gumm
-* Rusty Klophaus
+* Maxim Sokhatsky -- core, shen
+* Dmitry Bushmelev -- endpoints, yaws, cowboy
+* Andrii Zadorozhnii -- elements, actions, handlers
+* Anton Logvinenko -- doc
+* Vladimir Kirillov -- mac, bsd, xen, linux support
+* Roman Shestakov -- advanced elements, ct
+* Jesse Gumm -- nitrogen, help
+* Rusty Klophaus -- original author
 
 OM A HUM

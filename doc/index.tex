@@ -1,6 +1,4 @@
-\section{Universal Web Framework for Erlang/OTP}
-
-\subsection*{Overview}
+\section{N2O: Web Framework for Erlang/OTP}
 Nitrogen 2 Optimized, N2O was started as the first Erlang Web Framework
 that relies completely on WebSocket transport. Great compatibility with Nitrogen
 was retained and many improvements were made, such as binary page construction,
@@ -8,7 +6,7 @@ binary data transfer, all events transmitted over WebSocket channel, minumum pro
 work within Cowboy processes. N2O page renderer is several times faster
 than the original one.
 
-\subsection*{Wide Coverage}
+\subsection{Wide Coverage}
 N2O is an unusual framework in that it solves problems at different web development domains
 while staying small and concise at the same time. Started off as a Nitrogen concept
 of server-side framework it can also build client-side offline applications
@@ -25,6 +23,7 @@ You decide how to use N2O, whether for mobile applications development using ser
 for HTML and JavaScript saving CPU power on mobile devices or for creating rich desktop
 offline applications with Erlang JavaScript compiler.
 
+\newpage
 \subsection*{Why Erlang in Web?}
 We've measured all the existing modern web frameworks built with functional
 languages and Cowboy is still the king. On the chart below you can see raw HTTP
@@ -33,7 +32,6 @@ primitives (Go, D and Rust) on VAIO Z notebook with i7640M processor.
 
 \includeimage{connections.png}{Web-Servers raw performance grand congregation}
 
-\newpage
 \paragraph{}
 Erlang was built for low latency binary data streaming in telecom systems.
 It was designed with extreme manageability, scalability
@@ -53,7 +51,7 @@ performance downgrade thus upgrading rendering performance several
 times compared to any other functional web framework. And
 sure it's faster than raw HTTP node.js performance.
 
-\subsection*{Rich and Lightweight Applications}
+\subsection{Rich and Lightweight Applications}
 There are two approaches for designing client/server communication.
 The first one is called 'data-on-wire'. With this approach only JSON, XML or binary
 data are transfered over RPC and REST channels. All HTML rendering
@@ -88,14 +86,14 @@ and JavaScript macro system along with {\bf AVZ} authorization
 library (Facebook, Google, Twitter, Github, Microsoft), key-value storages
 access library {\bf KVS} and {\bf MQS} Message Bus client library (GProc, RabbitMQ).
 
-\subsection*{JSON and BERT}
+\subsection{JSON and BERT}
 N2O uses JSON and BERT. All messages passed over
 WebSockets are encoded with native Erlang External Term Format.
 It is easy to parse it in JavaScript with {\bf Bert.decode(msg)}
 and it helps to avoid complexity on server side. Please refer
 to \footahref{http://bert-rpc.org}{http://bert-rpc.org} for more information.
 
-\subsection*{DSL and Templates}
+\subsection{DSL and Templates}
 We liked Nitrogen for the simple and elegant way of constructing typed
 HTML with internal DSL which is analgous to Scala Lift,
 OCaml Ocsigen and Haskell Blaze approach. It enables you developing re-usable control
@@ -115,45 +113,37 @@ interprocesses communication.
 
 \newpage
 \begin{lstlisting}[caption=chat.erl]
--module(chat).
--compile(export_all).
--include_lib("n2o/include/wf.hrl").
+    -module(chat).
+    -compile(export_all).
+    -include_lib("n2o/include/wf.hrl").
 
-main() -> 
-    [ #dtl{file = "index", bindings=[{title,"Chat"},{body,body()}]} ].
+    main() -> 
+      [ #dtl { file="index", bindings=[{title,"Chat"},{body,body()}] } ].
 
-body() -> %% area of http handler
-    {ok,Pid} = wf:comet(fun() -> chat_loop() end),
-  [ #span { text= <<"Your chatroom name: ">> }, 
-    #textbox { id=userName, text= <<"Anonymous">> },
-    #panel { id=chatHistory, class=chat_history },
-    #textbox { id=message },
-    #button { id=sendButton, text= <<"Send">>, 
-              postback={chat,Pid}, source=[userName,message] },
-    #panel { id=status } ].
+    body() ->
+        {ok,Pid} = wf:async(fun() -> loop() end),
 
-event({chat,Pid}) -> %% area of websocket handler
-    Username = wf:q(userName),
-    Message = wf:q(message),
-    Terms = [ #span { text="Message sent" }, #br{} ],
-    wf:insert_bottom(chatHistory, Terms),
-    wf:reg(room),
-    Pid ! {message, Username, Message};
+      [ #span    { id=title,       body="Your chatroom name: " }, 
+        #textbox { id=userName,    body="Anonymous" },
+        #panel   { id=chatHistory, class=chat_history },
+        #textbox { id=message },
+        #button  { id=sendButton,  source=[userName,message],
+                                   body="Send", 
+                                   postback={chat,Pid} } ].
 
-event(Event) -> error_logger:info_msg("Event: ~p", [Event]).
+    event({chat,Pid}) ->
+        Username = wf:q(userName),
+        Message = wf:q(message),
+        Terms = [ #span { text="Message sent" }, #br{} ],
+        wf:reg(room),
+        Pid ! {message, Username, Message}.
 
-chat_loop() -> %% background worker ala comet
-    receive 
-        {message, Username, Message} ->
-            Terms = [ #span { text=Username }, ": ",
-                      #span { text=Message }, #br{} ],
-            wf:insert_bottom(chatHistory, Terms),
-            wf:flush(room);
-        Unknown -> 
-            error_logger:info_msg(
-                "Unknown Looper Message ~p",[Unknown])
-    end,
-    chat_loop().
+    loop() ->
+        receive { message, Username, Message} ->
+                  Terms = [ #span { body=Username }, ": ",
+                            #span { body=Message }, #br{} ],
+                  wf:insert_bottom(chatHistory, Terms),
+                  wf:flush(room) end, loop().
 \end{lstlisting}
 
 You should try to build that with your favorite language/framework!

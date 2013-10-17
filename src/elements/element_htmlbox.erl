@@ -20,7 +20,7 @@ render_element(R = #htmlbox{})->
     img_tool = R#htmlbox.img_tool,
     post_target = PreviewId,
     size = R#htmlbox.size},
-  UploadPostback = wf_event:generate_postback_script(Up, ignore, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
+  UploadPostback = wf_event:new(Up, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
 
   wf:wire(wf:f(
     "$(function(){"++

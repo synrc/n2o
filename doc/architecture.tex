@@ -18,14 +18,15 @@ Your page could also spawn processes with {\bf wf:comet}.
 These are the persistent processes acting like regullar Erlang processes.
 It is a usual approach for organizing non-blocking UI for file uploads and time consuming operations.
 
+\newpage
 \subsection{Page Process}
 The first HTTP handler only renders HTML. All created
 JavaScript actions are stored in the transition process.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        transition(Actions) ->
-            receive {'N2O',Pid} -> Pid ! Actions end.
+    transition(Actions) ->
+        receive {'N2O',Pid} -> Pid ! Actions end.
 \end{lstlisting}
 
 \paragraph{}
@@ -54,23 +55,22 @@ time to be processed, like gigabyte file uploads. You can create
 many Async Processes per user.
 
 \section{Endpoints}
-N2O Erlang Processes are instantiated and driven by Web Server.
-Depending of Web Server endpoint bindings you can specify
-module wich handles the HTTP requests.
+N2O Erlang Processes are instantiated and run by Web Server.
+Depending on the Web Server endpoint bindings you can specify
+module for HTTP requests handling.
 
 \paragraph{}
-N2O comes with three endpoint handlers you could rely on while building
-applications. However you are not limited to use only this set,
-you can also write your own endpoint handlers, e.g. for usage with
-meteor.js or angular.js and providing Erlang back-end event streming
+N2O comes with three endpoint handlers for each Web Server supported.
+However you are not limited to use any of these.
+You can implement your own endpoint handlers, e.g. for using with
+meteor.js or angular.js and providing Erlang back-end event streaming
 from server-side. Here is an example of using HTTP, WebSocket and
 REST endpoint handlers with Cowboy Web Server.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:bucket", n2o_rest, []},
-    {"/rest/:bucket/:key", n2o_rest, []},
-    {"/rest/:bucket/:key/[...]", n2o_rest, []},
+    {"/rest/:resource", n2o_cowboy_rest, []},
+    {"/rest/:resource/:id", n2o_cowboy_rest, []},
     {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
     {'_', n2o_cowboy, []}
 \end{lstlisting}
@@ -78,65 +78,68 @@ REST endpoint handlers with Cowboy Web Server.
 \subsection{HTML Pages over HTTP}
 This handler is used for serving initial dynamic HTML page.
 In case you are serving static HTML content this handler is
-not included into running stack. {\bf {n2o}\_{cowboy}} is
-default HTML page handler.
+not included into the running stack. {\bf {n2o}\_{cowboy}} is
+a default HTML page handler.
 
 \paragraph{}
 On initial page load {\bf {wf}\_{core}:run} is started during
-which {\bf {wf}\_{core}:render} proceed by calling {\bf Module:main} which
-is selected by routing handler.
+which {\bf {wf}\_{core}:render} proceeds by calling {\bf Module:main} which
+is selected by the routing handler.
 
 \subsection{JavaScript Events over WebSocket}
 JavaScript handler shares the same router information as the
-HTML handler because during its initial phase same chain
-of N2O handlers are called.
+HTML handler because during its initial phase the same chain
+of N2O handlers is called.
 
 \paragraph{}
 This handler knows how to deal with XHR and WebSocket requests.
-{\bf {n2o}\_{bullet}} is default JavaScript event handler
-and is based on Bullet library created by Loïc Hoguin.
+{\bf {n2o}\_{bullet}} is a default JavaScript event handler
+based on Bullet library created by Loïc Hoguin.
 
 \newpage
 \subsection{HTTP API over REST}
-REST handler uses different request context initizlization
-from HTML and JavaScript hanlder. N2O handler chains are not
-applied to REST requests. {\bf {n2o}\_{rest}} is default REST
-handler and is based on FarWest framework.
+REST handler's request context initizlization differs for the one
+used by HTML and JavaScript handlers. N2O handler chains are not
+applied to REST requests. {\bf n2o\_cowboy\_rest} is a default REST
+handler.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:bucket", n2o_rest, []},
-    {"/rest/:bucket/:key", n2o_rest, []},
-    {"/rest/:bucket/:key/[...]", n2o_rest, []},
+    {"/rest/:resource", n2o_cowboy_rest, []},
+    {"/rest/:resource/:id", n2o_cowboy_rest, []},
 \end{lstlisting}
 
 \vspace{1\baselineskip}
-\begin{lstlisting}
+\begin{lstlisting}[caption=users.erl]
     -module(users).
+    -include_lib("n2o/include/wf.hrl").
+    -include("users.hrl").
     -compile(export_all).
-    -record(user, {id,name,email,tokens}).
 
-    -define(USERS, [#user{id="maxim",email="maxim@synrc.com"},
-                    #user{id="doxtop",email="doxtop@synrc.com"},
-                    #user{id="roman",email="roman@github.com"}]).
+    ?map(user).
+    ?unmap(user).
+    ?rest().
 
-    init() -> ets:new(users, [named_table,{keypos,#user.id}]),
-              ets:insert(users, ?USERS).
-    get([]) -> ets:foldl(fun(C,Acc) -> [C|Acc] end,[],users);
-    get(Id) -> ets:lookup(users,Id).
-    delete(Id) -> ets:delete(users,Id).
-    put(User=#user{}) -> ets:insert(users,User).
-    exists(Id) -> ets:member(users,Id).
-    to_html(User=#user{}) ->
-        [ <<"<tr><td>">>,
-          coalesce(User#user.id),<<"</td><td>">>,
-          coalesce(User#user.email),<<"</td><td>">>,
-          coalesce(User#user.name),<<"</td></tr">>].
+    init() -> ets:new(users, [public, named_table, {keypos, #user.id}]).
+    populate(Users) -> ets:insert(users, Users).
+    exists(Id) -> ets:member(users, wf:to_list(Id)).
+    get() -> ets:tab2list(users).
+    get(Id) -> [User] = ets:lookup(users, wf:to_list(Id)), User.
+    delete(Id) -> ets:delete(users, wf:to_list(Id)).
+    post(Data) -> ets:insert(users, unmap(Data, #user{})).
+\end{lstlisting}
+\vspace{1\baselineskip}
 
-    coalesce(Name) -> 
-        case Name of 
-            undefined -> <<>>;
-            A -> list_to_binary(A) end.
+To add users to in-memory storage perform POST requests:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    curl -i -X POST -d "id=vlad" localhost:8000/rest/users
+    curl -i -X POST -d "id=doxtop" localhost:8000/rest/users
+    curl -i -X GET localhost:8000/rest/users
+    curl -i -X PUT -d "id=5HT" localhost:8000/rest/users/vlad
+    curl -i -X GET localhost:8000/rest/users/5HT
+    curl -i -X DELETE localhost:8000/rest/users/5HT
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -146,17 +149,17 @@ of context initialization.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        init_context(Req) -> #context{
-            actions=[], module=index, path=[],
-            req=Req, params=[], session=undefined,
-            handlers= [ {'query', wf:config('query', n2o_query_handler)},
-                        {session, wf:config(session, n2o_session_handler)},
-                        {route,   wf:config(route, n2o_route_handler)} ]}.
+    init_context(Req) -> #context{
+        actions=[], module=index, path=[],
+        req=Req, params=[], session=undefined,
+        handlers= [ {'query', wf:config('query', n2o_query)},
+                    {session, wf:config(session, n2o_session)},
+                    {route,   wf:config(route,   n2o_route)} ]}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
 Chain of three N2O handlers is called
-on each HTTP request. You can redefine each of them.
+on each HTTP request. You can redefine any of them.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}[caption={wf}\_{core}:fold/3]
@@ -168,18 +171,18 @@ on each HTTP request. You can redefine each of them.
 \vspace{1\baselineskip}
 
 \subsection{Query}
-Query Handler parses URL query and HTTP form information on HTTP request.
+Query Handler parses URL query and HTTP form information from HTTP request.
 
 \subsection{Session}
-Session Handler manages key-value in-memory database ETS table which can be accessed.
+Session Handler manages key-value in-memory database ETS table that can be accessed.
 
 \newpage
 \subsection{Router}
-You could specify routing table with application config:
+You can specify routing table with application config:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-         {n2o, [{route,custom_router}]}
+    {n2o, [{route,custom_router}]}
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -187,22 +190,23 @@ Remember that routing handler should be kept very simple because it
 influences overal initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
-\begin{lstlisting}
-        -module(custom_router).
-        -include_lib("n2o/include/wf.hrl").
-        -compile(export_all).
-        finish(State, Ctx) -> {ok, State, Ctx}.
-        init(State, Ctx) -> 
-            Path = wf:path(Ctx#context.req),
-            {Module, PathInfo} = route(Path),
-            {ok, State, Ctx#context{path=PathInfo,module=Module}}.
+\begin{lstlisting}[caption=n2o\_route.erl]
+    -module(n2o_route).
+    -author('Maxim Sokhatsky').
+    -include_lib("n2o/include/wf.hrl").
+    -export(?ROUTING_API).
 
-        route(<<"/">>) -> {index, []};
-        route(<<"/index">>) -> {index, []};
-        route(<<"/login">>) -> {login, []};
-        route(<<"/ws/">>) -> {index, []};
-        route(<<"/ws/index">>) -> {index, []};
-        route(<<"/ws/login">>) -> {login, []};
-        route(<<"/favicon.ico">>) -> {static_file, []};
-        route(_) -> {index, []}.
+    finish(State, Ctx) -> {ok, State, Ctx}.
+    init(State, Ctx) -> 
+        Path = wf:path(Ctx#context.req),
+        {ok, State, Ctx#context{path=Path,module=route(Path)}}.
+
+    route(<<"/">>) -> index;
+    route(<<"/index">>) -> index;
+    route(<<"/login">>) -> login;
+    route(<<"/ws/">>) -> index;
+    route(<<"/ws/index">>) -> index;
+    route(<<"/ws/login">>) -> login;
+    route(<<"/favicon.ico">>) -> static_file;
+    route(_) -> index.
 \end{lstlisting}

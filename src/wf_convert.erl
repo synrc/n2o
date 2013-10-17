@@ -3,6 +3,8 @@
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 
+-define(IS_STRING(Term), (is_list(Term) andalso Term /= [] andalso is_integer(hd(Term)))).
+
 %%% CONVERSION %%%
 
 clean_lower(L) -> string:strip(string:to_lower(to_list(L))).
@@ -35,6 +37,7 @@ to_binary(B) when is_binary(B) -> B;
 to_binary(I) when is_integer(I) -> to_binary(integer_to_list(I));
 to_binary(F) when is_float(F) -> to_binary(nitro_mochinum:digits(F));
 to_binary(L) when is_list(L) -> list_to_binary(L).
+
 
 to_integer(A) when is_atom(A) -> to_integer(atom_to_list(A));
 to_integer(B) when is_binary(B) -> to_integer(binary_to_list(B));

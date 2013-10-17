@@ -1,11 +1,11 @@
 \section{Erlang JavaScript/OTP Compiler}
 
 \subsection{Compilation and Macros}
-Erlang JavaScript/OTP Parse Transform has two modes driven
+Erlang JavaScript/OTP Parse Transform has two modes defined
 by {\bf \-jsmacro} and {\bf \-js} Erlang module attributes.
-First mode is for precompiling Erlang module functions
-to JavaScript strings, second is to export Erlang function
-to a separate JavaScript file ready to run within Browser or node.js.
+The first mode is for precompiling Erlang module functions
+to JavaScript strings, the second one is for exporting Erlang functions
+to a separate JavaScript file ready to run in the browser or Node.js.
 
 \paragraph{}
 Sample usage of {\bf \-jsmacro} and {\bf \-js}:
@@ -58,29 +58,29 @@ Perform compilation and run tests:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You will get following output:
+You'll get the following output:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        tabshow/0:
-            var x = $('a[data-toggle=tab]');
-            x.on('show',function(e) {
-                var t = $(e['target']);
-                return tabshow(t.attr('href'));
-            });
-
-        event/3:
-            ws.send(Bert.encodebuf({source:Bert.binary(1),
-                                    x:3,
-                                    pickle:Bert.binary(2),
-                                    linked:3}));
-
-        doc_ready/1:
-        var d = $(document);
-        d.ready(function() {
-            var t = $('a[href="#' + 'tab' + '"]');
-            return t.tab('show');
+    tabshow/0:
+        var x = $('a[data-toggle=tab]');
+        x.on('show',function(e) {
+            var t = $(e['target']);
+            return tabshow(t.attr('href'));
         });
+
+    event/3:
+        ws.send(Bert.encodebuf({source:Bert.binary(1),
+                                x:3,
+                                pickle:Bert.binary(2),
+                                linked:3}));
+
+    doc_ready/1:
+    var d = $(document);
+    d.ready(function() {
+        var t = $('a[href="#' + 'tab' + '"]');
+        return t.tab('show');
+    });
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -92,34 +92,34 @@ You could include functions for both {\bf macro} and {\bf js} definitions.
 
 \newpage
 \subsection{Mapping Erlang/OTP to JavaScript/OTP}
-Following libraries from OTP are partially supported for Erlang JavaScript Parse Transform: 
+Following OTP libraries are partially supported in Erlang JavaScript Parse Transform: 
 {\bf lists}, {\bf proplists}, {\bf queue}, {\bf string}.
 
 \paragraph{\bf Example 1}\ 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        S = lists:map(fun(X) -> X * X end,[1,2,3,4]),
+    S = lists:map(fun(X) -> X * X end,[1,2,3,4]),
 \end{lstlisting}
 
 Transforms to:
 
 \begin{lstlisting}
-        s = [1,2,3,4].map(function(x) {
-            return x * x;
-        });
+    s = [1,2,3,4].map(function(x) {
+        return x * x;
+    });
 \end{lstlisting}
 
 \paragraph{\bf Example 2}\ 
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-        M = lists:foldl(fun(X, Acc) -> Acc + X end,0,[1,2,3,4]),
+    M = lists:foldl(fun(X, Acc) -> Acc + X end,0,[1,2,3,4]),
 \end{lstlisting}
 
 Transforms to:
 
 \begin{lstlisting}
-        m = [1,2,3,4].reduce(function(x,acc) {
-            return acc + x;
-        },0);
+    m = [1,2,3,4].reduce(function(x,acc) {
+        return acc + x;
+    },0);
 \end{lstlisting}

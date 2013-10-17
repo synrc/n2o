@@ -5,7 +5,7 @@
 render_element(Record = #tr{postback= Postback}) ->
   Id = Record#tr.id,
   Cursor = case Postback of undefined -> "";
-    P -> wf:wire(#event {type=click, postback=P, validation_group=Id, delegate=Record#tr.delegate}), "cursor:pointer;"
+    P -> wf:wire(#event {type=click, postback=P, target=Id, delegate=Record#tr.delegate}), "cursor:pointer;"
   end,
   wf_tags:emit_tag(<<"tr">>, wf:render(Record#tr.cells), [
     {<<"id">>, Record#tr.id},

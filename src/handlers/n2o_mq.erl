@@ -1,5 +1,6 @@
--module(n2o_gproc).
--compile(export_all).
+-module(n2o_mq).
+-include_lib("n2o/include/wf.hrl").
+-export(?MESSAGE_API).
 
 send(Pool, Message) -> gproc:send({p,l,Pool},Message).
 reg(Pool) -> 

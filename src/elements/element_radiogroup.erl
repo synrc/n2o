@@ -6,11 +6,10 @@
 reflect() -> record_info(fields, radiogroup).
 
 render_element(Record) -> 
-    Anchor = Record#radiogroup.anchor,
-    Body = apply_name(Anchor, Record#radiogroup.body),
+    ID = Record#radiogroup.id,
+    Body = apply_name(ID, Record#radiogroup.body),
     element_panel:render_element(#panel {
-        id=Record#radiogroup.id,
-        anchor=Record#radiogroup.anchor,
+        id=ID,
         class=[radiogroup, Record#radiogroup.class],
         style=Record#radiogroup.style,
         body=Body

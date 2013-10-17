@@ -4,5 +4,4 @@
 -compile (export_all).
 
 main() -> [].
-
 event(init) -> [].

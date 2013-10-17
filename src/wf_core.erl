@@ -3,19 +3,16 @@
 -include_lib("n2o/include/wf.hrl").
 -compile (export_all).
 
+transition(Actions) -> receive {init,A} -> transition(A); {'N2O',Pid} -> Pid ! Actions end.
 run(Req) ->
     Pid = spawn(fun() -> transition([]) end),
-    wf_context:script([ "var transition = {pid: '", pid_to_list(Pid),
-                        "', port: '", integer_to_list(wf:config(n2o,port,8000)),"'}"]),
+    wf_context:script(["var transition = {pid: '", wf:pickle(Pid), "', ",
+                                         "port:'", wf:to_list(wf:config(n2o,port,8000)),"'}"]),
     Ctx = wf_context:init_context(Req),
     Ctx1 = fold(init,Ctx#context.handlers,Ctx),
     wf_context:actions(Ctx1#context.actions),
-    Module = Ctx1#context.module,
-    Params = Ctx1#context.params,
-    wf_context:page_module(Module),
-    wf_context:params(Params),
     wf_context:context(Ctx1),
-    Elements = Module:main(),
+    Elements = (Ctx1#context.module):main(),
     Html = render(Elements),
     Actions = wf_context:actions(),
     Pid ! {init,Actions},
@@ -28,15 +25,9 @@ fold(Fun,Handlers,Ctx) ->
         {ok,_,NewCtx} = Module:Fun([],Ctx1),
         NewCtx end,Ctx,Handlers).
 
-transition(Actions) -> 
-    receive
-        {init,A} -> transition(A);
-        {'N2O',Pid} -> Pid ! Actions end.
-
-render_item(E) when element(2,E) == is_element -> wf_render_elements:render_element(E);
-render_item(E) when element(2,E) == is_action  -> wf_render_actions:render_action(E);
+render_item(E) when element(2,E) == element -> wf_render_elements:render_element(E);
+render_item(E) when element(2,E) == action  -> wf_render_actions:render_action(E);
 render_item(E) -> E.
-
 render(<<E/binary>>) -> E;
 render(undefined) -> undefined;
 render(Elements) when is_list(Elements) -> [ render_item(E) || E <- lists:flatten(Elements) ];
