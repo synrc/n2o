@@ -24,11 +24,12 @@ stream({text,Data}, Req, State) ->
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
-    % wf:info("Binary Received: ~p",[Info]),
+    wf:info("Binary Received: ~p",[Info]),
     Pro = binary_to_term(Info,[safe]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
     Depickled = wf:depickle(Pickled),
+    wf:info("Depickled: ~p",[Depickled]),
     case Depickled of
         #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
             case Function of 
@@ -48,7 +49,7 @@ stream({binary,Info}, Req, State) ->
     RenderGenActions = wf:render(GenActions),
     wf_context:clear_actions(),
 
-    {reply,[Render,RenderGenActions], Req, State};
+    {reply, [Render,RenderGenActions], Req, State};
 stream(Data, Req, State) ->
     wf:info("Data Received ~p",[Data]),
     self() ! Data,
@@ -88,6 +89,7 @@ info(Pro, Req, State) ->
     wf_context:clear_actions(),
     RenderGenActions = wf:render(GenActions),
     wf_context:clear_actions(),
+    wf:info("WS: ~p",[lists:flatten([Render,RenderGenActions])]),
     {reply, [Render,RenderGenActions], Req, State}.
 
 terminate(_Req, _State) ->
