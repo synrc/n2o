@@ -15,7 +15,7 @@
 
 
 -define(UPDATE_DOM(Method,Target,Elements),
-    wf:wire(#jq{format="'~s'",target=Target,method=[Method], args=Elements})).
+    wf:wire(#jq{format="'~s'",target=Target,method=[Method], args=[Elements]})).
 
 update(Target, Elements) ->        ?UPDATE_DOM(html,Target,Elements).
 replace(Target, Elements) ->       ?UPDATE_DOM(replaceWith,Target,Elements).
