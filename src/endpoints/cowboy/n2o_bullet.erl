@@ -34,10 +34,10 @@ stream({binary,Info}, Req, State) ->
         #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
             case Function of 
                 control_event   -> lists:map(fun({K,V})-> put(K,V) end,Linked),
-                                    Module:Function(Trigger, Parameter);
+                                   Module:Function(Trigger, Parameter);
                 api_event       -> Module:Function(Parameter,Linked,State);
                 event           -> lists:map(fun({K,V})-> put(K,V) end,Linked),
-                                    Module:Function(Parameter);
+                                   Module:Function(Parameter);
                 UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
           _ -> wf:error("N2O allows only #ev{} events") end,
 
