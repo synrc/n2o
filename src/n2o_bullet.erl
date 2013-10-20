@@ -13,6 +13,9 @@ init(_Transport, Req, _Opts, _Active) ->
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
     wf_context:context(NewCtx),
+    Res = ets:update_counter(globals,onlineusers,{2,1}),
+    wf:reg(broadcast),
+    wf:send(broadcast,{counter,Res}),
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
 
@@ -81,7 +84,7 @@ info(Pro, Req, State) ->
         <<"PING">> -> [];
         Unknown ->
             M = State#context.module,
-            M:event(Unknown),
+            catch M:event(Unknown),
             Actions = get(actions),
             wf_context:clear_actions(),
             wf:render(Actions) end,
@@ -93,4 +96,6 @@ info(Pro, Req, State) ->
 
 terminate(_Req, _State) ->
     % wf:info("Bullet Terminated~n"),
+    Res = ets:update_counter(globals,onlineusers,{2,-1}),
+    wf:send(broadcast,{counter,Res}),
     ok.
