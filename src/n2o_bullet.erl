@@ -61,7 +61,7 @@ stream(Data, Req, State) ->
 info(Pro, Req, State) ->
     Render = case Pro of
         {flush,Actions} ->
-            % error_logger:info_msg("Comet Actions: ~p",[Actions]),
+            error_logger:info_msg("Comet Actions: ~p",[Actions]),
             wf:render(Actions);
         <<"N2O,",Rest/binary>> ->
             Module = State#context.module, Module:event(init),
