@@ -2,6 +2,7 @@
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -export(?SESSION_API).
+-compile(export_all).
 -record(state, {unique, node}).
 
 init2(State, Req) -> {ok, State, Req}.

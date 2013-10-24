@@ -144,3 +144,5 @@ config(App,Key) -> config(App,Key, "").
 config(App, Key, Default) -> case application:get_env(App,Key) of
                               undefined -> Default;
                               {ok,V} -> V end.
+
+version() -> "0.10.0-5HT".
