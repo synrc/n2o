@@ -30,7 +30,7 @@
 -record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates", ext="html", bind_script=true }).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
 -record(label, {?ELEMENT_BASE(element_label), for=""}).
--record(link, {?ELEMENT_BASE(element_link), target, url="javascript:void(0);", postback, delegate, name}).
+-record(link, {?ELEMENT_BASE(element_link), target, url="javascript:void(0);", postback, delegate, name, download}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback, delegate}).
 -record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, delegate, disabled}).
 -record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, delegate, name}).

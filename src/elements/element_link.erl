@@ -20,5 +20,6 @@ render_element(Record) ->
         {<<"style">>, Record#link.style},
         {<<"title">>, Record#link.title},
         {<<"tabindex">>, Record#link.tabindex},
+        {<<"download">>, Record#link.download},
         {<<"name">>, Record#link.name} | Record#link.data_fields ],
     wf_tags:emit_tag(<<"a">>, wf:render(Record#link.body), List).
