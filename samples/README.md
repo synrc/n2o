@@ -14,12 +14,12 @@ with *web* Erlang application which contains modules:
 Run
 ---
 
-To run no fancy scripts needed, just pure rebar
+To run just perform on Windows, Linux, BSD and Mac
 
     $ rebar get-deps
     $ rebar compile
-    $ ./release.sh
-    $ ./start.sh
+    $ ./nitrogen_static.sh
+    $ erl -pa deps/*/ebin -config rels/web/files/sys.config
 
 And open it in browser [http://localhost:8000](http://localhost:8000)
 
