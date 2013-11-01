@@ -77,6 +77,11 @@ user() -> wf:session(<<"user">>).
 user(User) -> wf:session(<<"user">>,User).
 clear_user() -> wf:session(<<"user">>,undefined).
 logout() -> clear_user(), clear_session().
+cache(Key, Value) -> ets:insert(caching,{Key,Value}), Value.
+cache(Key) ->
+    Res = ets:lookup(caching,Key),
+    Val = case Res of [] -> undefined; [Value] -> Value; Values -> Values end,
+    case Val of undefined -> undefined; {_,X} -> X end.
 
 % Context Variables and URL Query Strings wf:q and wf:qs
 
