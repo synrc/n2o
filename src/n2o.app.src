@@ -2,6 +2,7 @@
     {description,  "N2O SXC"},
     {vsn,          "3.0"},
     {applications, [kernel, stdlib, cowboy, ranch, gproc]},
+    {modules, []},
     {registered,   []},
     {mod, { n2o_app, []}},
     {env, []}
