@@ -8,7 +8,7 @@ render_element(R = #htmlbox{})->
   Id = case R#htmlbox.id of undefined-> wf:temp_id(); I -> I end,
   PreviewId = case R#htmlbox.post_target of undefined -> "preview_"++Id; T-> T end, 
   ToolbarId = wf:temp_id(),
-  Html = case R#htmlbox.html of undefined -> ""; H -> H end,
+  Html = case R#htmlbox.html of undefined -> ""; H -> wf:js_escape(H) end,
   Root = case R#htmlbox.root of undefined -> code:priv_dir(n2o); Path -> Path end,
   Up =  #upload{id = wf:temp_id(),
     root = Root,
