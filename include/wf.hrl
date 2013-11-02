@@ -8,7 +8,7 @@
 -define(QUERING_API, [init/2, finish/2]).
 -define(SESSION_API, [init/2, finish/2, get_value/2, set_value/2]).
 -define(PICKLES_API, [pickle/1, depickle/1]).
--define(MESSAGE_API, [send/2, reg/1]).
+-define(MESSAGE_API, [send/2, reg/1, reg/2]).
 
 -record(handler, {name, module, config, state}).
 -record(context, {handlers, actions, req, module, path, session, params}).

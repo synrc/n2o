@@ -14,7 +14,7 @@ init(_Transport, Req, _Opts, _Active) ->
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
     wf_context:context(NewCtx),
     Res = ets:update_counter(globals,onlineusers,{2,1}),
-    wf:reg(broadcast),
+    wf:reg(broadcast,wf:peer(Req)),
     wf:send(broadcast,{counter,Res}),
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
@@ -23,7 +23,7 @@ stream(<<"ping">>, Req, State) ->
     wf:info("ping received~n"),
     {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->
-    % wf:info("Text Received ~p",[Data]),
+    wf:info("Text Received ~p",[Data]),
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
