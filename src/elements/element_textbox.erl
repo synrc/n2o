@@ -13,7 +13,7 @@ render_element(Record) ->
       {<<"style">>,Record#textbox.style},
       {<<"name">>,Record#textbox.name},
       {<<"placeholder">>,Record#textbox.placeholder},
-      {<<"value">>,Record#textbox.value},
+      {<<"value">>,wf:js_escape(Record#textbox.value)},
       {<<"disabled">>,Record#textbox.disabled},
       {<<"class">>,Record#textbox.class} | Record#textbox.data_fields
   ] ++ case Record#textbox.disabled of undefined -> []; _ -> [{<<"disabled">>,<<"disabled">>}] end,
