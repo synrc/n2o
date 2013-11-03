@@ -23,7 +23,7 @@ stream(<<"ping">>, Req, State) ->
     wf:info("ping received~n"),
     {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->
-    wf:info("Text Received ~p",[Data]),
+    %wf:info("Text Received ~p",[Data]),
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->

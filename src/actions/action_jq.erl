@@ -10,13 +10,13 @@ render_action(Record=#jq{property=undefined,target=Target,method=Methods,args=A,
         A when is_integer(A) -> wf:to_list(A);
         A -> A end || A <- Args],","),
     string:join([ wf:f("$('#~s').~s("++Record#jq.format++");",
-        [Target,Method,RenderedArgs]) || Method <- Methods],[]);
+        [wf:to_list(Target),wf:to_list(Method),RenderedArgs]) || Method <- Methods],[]);
 
 render_action(#jq{target=Target,method=undefined,property=Property,args=simple,right=Right}) ->
-    wf:f("~s.~s = ~s;", [Target,Property,wf:render(Right)]);
+    wf:f("~s.~s = ~s;", [wf:to_list(Target),wf:to_list(Property),wf:render(Right)]);
 
 render_action(#jq{target=Target,method=undefined,property=Property,right=undefined}) ->
-    wf:f("$('#~s').~s;", [Target,Property]);
+    wf:f("$('#~s').~s;", [wf:to_list(Target),wf:to_list(Property)]);
 
 render_action(#jq{target=Target,method=undefined,property=Property,right=Right}) ->
-    wf:f("$('#~s').~s = ~s", [Target,Property,wf:render(Right)]).
+    wf:f("$('#~s').~s = ~s", [wf:to_list(Target),wf:to_list(Property),wf:render(Right)]).
