@@ -23,7 +23,7 @@ short_guid() ->
 replace([], _, _) -> [];
 replace(String, S1, S2) when is_list(String), is_list(S1), is_list(S2) ->
     Length = length(S1),
-    case string:substr(String, 1, Length) of 
+    case string:substr(String, 1, Length) of
         S1 -> S2 ++ replace(string:substr(String, Length + 1), S1, S2);
         _ -> [hd(String)|replace(tl(String), S1, S2)]
     end.
@@ -44,3 +44,8 @@ hunmap([{BK,V}|T],O,Keys,0) -> O;
 hunmap([{BK,V}|T],O,Keys,L) ->
     K = wf:to_atom(BK),
     hunmap(T, setelement(wf_utils:indexof(K,Keys),O,wf:to_list(V)), Keys--[K],L-1).
+
+is_char(C) -> is_integer(C) andalso C >= 0 andalso C =< 255.
+
+is_string([N | _] = PossibleString) when is_number(N) -> lists:all(fun is_char/1, PossibleString);
+is_string(_)                                          -> false.
