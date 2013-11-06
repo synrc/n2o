@@ -5,12 +5,12 @@ behaviour_info(callbacks) -> [{exists, 1}, {get, 0}, {get, 1}, {post, 1}, {delet
 behaviour_info(_) -> undefined.
 
 parse_transform(Forms, _Options) ->
-    io:format("~p~n", [Forms]),
+%    io:format("~p~n", [Forms]),
     RecordName = rest_record(Forms),
     RecordFields = record_fields(RecordName, Forms),
     Forms1 = generate({from_json, 2}, RecordName, RecordFields, Forms),
     Forms2 = generate({to_json, 1}, RecordName, RecordFields, Forms1),
-    io:format("~p~n", [Forms2]),
+%    io:format("~p~n", [Forms2]),
     Forms2.
 
 rest_record([]) -> [];
