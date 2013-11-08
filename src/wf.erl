@@ -146,9 +146,7 @@ render(X) -> wf_core:render(X).
 
 config_multiple(Keys) -> [config(Key, "") || Key <- Keys].
 config(Key) -> config(n2o, Key, "").
-config(App,Key) -> config(App,Key, "").
-config(App, Key, Default) -> case application:get_env(App,Key) of
-                              undefined -> Default;
-                              {ok,V} -> V end.
+config(App, Key) -> config(App,Key, "").
+config(App, Key, Default) -> wf_utils:config(App, Key, Default).
 
 version() -> "0.10.0-5HT".
