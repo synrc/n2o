@@ -42,7 +42,7 @@ Compile Image at Erlang on Xen builder:
     $ rebar compile
     $ ./nitrogen_static.sh
     $ rebar ling-build-image
-    $ sudo xl create -c domain_config
+    $ sudo xl create -c xen.config
 
 Inside Ling start n2o_sample application:
 
