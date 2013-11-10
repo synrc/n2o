@@ -38,8 +38,7 @@ Boot into Xen 4.2 Domain-0 and create network bridge:
 
 Compile Image at Erlang on Xen builder:
 
-    $ rebar get-deps
-    $ rebar compile
+    $ rebar get-deps compile
     $ ./nitrogen_static.sh
     $ rebar ling-build-image
     $ sudo xl create -c xen.config
