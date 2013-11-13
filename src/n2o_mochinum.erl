@@ -9,7 +9,7 @@
 %% in Proceedings of the SIGPLAN '96 Conference on Programming Language
 %% Design and Implementation.
 
--module(mochinum).
+-module(n2o_mochinum).
 -author("Bob Ippolito <bob@mochimedia.com>").
 -export([digits/1, frexp/1, int_pow/2, int_ceil/1]).
 
