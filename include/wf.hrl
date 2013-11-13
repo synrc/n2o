@@ -115,7 +115,7 @@
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], delegate, postback}).
 -record(upload, {?ELEMENT_BASE(element_upload), name, value, delegate_query, delegate, delegate_api, root=code:priv_dir(n2o), dir="", post_write, post_target, img_tool, preview=false, size=[{200,200}]}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", delegate, postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
--record(htmlbox, {?ELEMENT_BASE(element_htmlbox), html="", script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate, delegate_api, toolbar_class, toolbar_script, root=code:priv_dir(n2o), dir="", post_write, img_tool, post_target, size=[{200, 200}]}).
+-record(htmlbox, {?ELEMENT_BASE(wf:config(n2o,htmlbox_module,element_htmlbox)), html, script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate, delegate_api, toolbar_class, toolbar_script, root=code:priv_dir(n2o), dir="", post_write, img_tool, post_target, size=[{200, 200}]}).
 
 % Actions
 -record(action,  {?ACTION_BASE(undefined)}).
