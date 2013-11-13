@@ -21,7 +21,7 @@ inner_to_list(I) when is_integer(I) -> integer_to_list(I);
 inner_to_list(F) when is_float(F) -> 
 	case F == round(F) of
 		true -> inner_to_list(round(F));
-		false -> nitro_mochinum:digits(F)
+		false -> n2o_mochinum:digits(F)
 	end;
 inner_to_list(L) when is_tuple(L) -> lists:flatten(io_lib:format("~p", [L]));
 inner_to_list(L) when is_list(L) -> L.
@@ -29,13 +29,13 @@ inner_to_list(L) when is_list(L) -> L.
 to_atom(A) when is_atom(A) -> A;
 to_atom(B) when is_binary(B) -> to_atom(binary_to_list(B));
 to_atom(I) when is_integer(I) -> to_atom(integer_to_list(I));
-to_atom(F) when is_float(F) -> to_atom(nitro_mochinum:digits(F));
+to_atom(F) when is_float(F) -> to_atom(n2o_mochinum:digits(F));
 to_atom(L) when is_list(L) -> list_to_atom(binary_to_list(list_to_binary(L))).
 
 to_binary(A) when is_atom(A) -> to_binary(atom_to_list(A));
 to_binary(B) when is_binary(B) -> B;
 to_binary(I) when is_integer(I) -> to_binary(integer_to_list(I));
-to_binary(F) when is_float(F) -> to_binary(nitro_mochinum:digits(F));
+to_binary(F) when is_float(F) -> to_binary(n2o_mochinum:digits(F));
 to_binary(L) when is_list(L) -> list_to_binary(L).
 
 
@@ -74,7 +74,7 @@ html_encode(L,Fun) when is_function(Fun) -> Fun(L);
 
 html_encode(L,EncType) when is_atom(L) -> html_encode(wf:to_list(L),EncType);
 html_encode(L,EncType) when is_integer(L) -> html_encode(integer_to_list(L),EncType);
-html_encode(L,EncType) when is_float(L) -> html_encode(nitro_mochinum:digits(L),EncType);
+html_encode(L,EncType) when is_float(L) -> html_encode(n2o_mochinum:digits(L),EncType);
 
 html_encode(L, false) -> L; %wf:to_list(lists:flatten([L]));
 html_encode(L, true) -> L; %html_encode(wf:to_list(lists:flatten([L])));
