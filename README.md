@@ -17,7 +17,7 @@ Information for Nitrogen users:
 * Much faster ETS Session Handler
 
 New features
-------------
+-----------
 
 * Secure Pickling with AES CBC 128 for events protection
 * Twitter Bootstrap compatible rendering
