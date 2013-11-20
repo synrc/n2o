@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Warning for Mac users: bash 4.0 needed
 

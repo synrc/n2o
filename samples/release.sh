@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 NODE=${1:-"web"}
 
@@ -20,4 +20,3 @@ else
    echo "Releasing node $NODE..."
    release_node $NODE
 fi
-
