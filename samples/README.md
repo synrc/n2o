@@ -53,3 +53,10 @@ Inside Ling start n2o_sample application:
     1> application:start(n2o_sample).
 
 And open it in browser [http://172.16.42.108:8000](http://172.16.42.108:8000)
+
+Credits
+-------
+
+* Maxim Sokhatsky
+
+OM A HUM
