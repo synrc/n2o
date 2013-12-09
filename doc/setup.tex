@@ -13,12 +13,10 @@ is bundled as an Erlang release.
 \begin{lstlisting}
     $ git clone https://github.com/5HT/n2o
     $ cd n2o/samples
-    $ rebar get-deps
-    $ rebar compile
+    $ rebar get-deps compile
     $ ./nitrogen_static.sh
-    $ ./release.sh
-    $ ./release_sync.sh
-    $ ./start.sh
+    $ erl -pa deps/*/ebin -config rels/web/files/sys.config
+    > application:start(n2o_sample).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
