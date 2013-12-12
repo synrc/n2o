@@ -104,5 +104,5 @@ control_event(Cid, Tag) ->
 
 hash(Filename) ->
   {ok, Content} = file:read_file(Filename),
-  <<Hash:160/integer>> = crypto:sha(Content),
+  <<Hash:160/integer>> = crypto:hash(sha, Content),
   lists:flatten(io_lib:format("~40.16.0b", [Hash])).
