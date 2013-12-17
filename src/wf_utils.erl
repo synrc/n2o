@@ -51,7 +51,7 @@ is_string([N | _] = PossibleString) when is_number(N) -> lists:all(fun is_char/1
 is_string(_)                                          -> false.
 
 config(App, Key, Default) -> case application:get_env(App,Key) of
-                                undefined -> os_env(Key, Default);
+                                undefined -> Default;
                                 {ok,V} -> V end.
 
 os_env(Key) -> os_env(Key, "").
