@@ -87,6 +87,7 @@
 
 % Tables
 -record(tbody,      ?DEFAULT_BASE).
+-record(thead,      ?DEFAULT_BASE).
 
 % Forms
 -record(fieldset,   ?DEFAULT_BASE).
