@@ -5,6 +5,7 @@
 render_element(Record = #table{}) -> 
   Header = case Record#table.header of
     undefined -> "";
+    H when is_tuple(H) -> H;
     _ -> wf_tags:emit_tag(<<"thead">>, wf:render(Record#table.header), [])
   end,
 
