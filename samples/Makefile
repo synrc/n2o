@@ -1,6 +1,6 @@
 RELEASE := skyline
 COOKIE  := sample
-APPS    := kernel stdlib sasl sync n2o_sample
+APPS    := kernel stdlib sasl sync gproc cowboy mimetypes ranch erlydtl n2o n2o_sample
 VER     := 1.0.0
 VM      := rels/web/files/vm.args
 SYS     := rels/web/files/sys.config
