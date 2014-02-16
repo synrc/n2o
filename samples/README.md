@@ -19,6 +19,9 @@ To run just perform on Windows, Linux, BSD and Mac
     $ make && make console
 
 And open it in browser [http://localhost:8000](http://localhost:8000)
+If you want to try pure Single Page Application (SPA) wich
+connects to Erlang N2O Application Server you should use
+[http://localhost:8000/static/spa/spa.htm](http://localhost:8000/static/spa/spa.htm)
 
 Xen
 ---
