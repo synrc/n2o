@@ -5,7 +5,6 @@ comma := $(empty),$(empty)
 VSN   := $(shell expr substr `git rev-parse HEAD` 1 6)
 DATE  := $(shell git show -s --format="%ci" HEAD | sed -e 's/\+/Z/g' -e 's/-/./g' -e 's/ /-/g' -e 's/:/./g')
 ERL_LIBS := $(subst $(space),:,$(ROOTS))
-PLT_NAME := ~/.dialyzer_plt
 relx  := "{release,{$(RELEASE),\"$(VER)\"},[$(subst $(space),$(comma),$(APPS))]}.\\n{include_erts,true}.\
 \\n{extended_start_script,true}.\\n{generate_start_script,true}.\\n{sys_config,\"$(SYS)\"}.\
 \\n{vm_args,\"$(VM)\"}.\\n{overlay,[{mkdir,\"log/sasl\"}]}."
@@ -30,10 +29,9 @@ release:
 stop:
 	kill -9 `ps ax -o pid= -o command=|grep $(RELEASE)|grep $(COOKIE)|awk '{print $$1}'`
 $(PLT_NAME):
-	dialyzer --build_plt -r /usr/lib/erlang/lib/*/ebin --output_plt $(PLT_NAME)
-	dialyzer --add_to_plt --plt $(PLT_NAME) deps/*/ebin
-dialyze: $(PLT_NAME)
-	dialyzer --src deps/*/src -I deps -pa deps/n2o/ebin --plt $(PLT_NAME)
+	ERL_LIBS=deps dialyzer --build_plt --output_plt $(PLT_NAME) --apps $(APPS) || true
+dialyze: $(PLT_NAME) compile
+	dialyzer deps/*/ebin --plt $(PLT_NAME) --no_native -Werror_handling -Wunderspecs -Wrace_conditions
 tar:
 	tar zcvf $(RELEASE)-$(VSN)-$(DATE).tar.gz _rel/lib/*/ebin _rel/lib/*/priv _rel/bin _rel/releases
 eunit:

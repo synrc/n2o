@@ -16,10 +16,7 @@ Run
 
 To run just perform on Windows, Linux, BSD and Mac
 
-    $ rebar get-deps compile
-    $ ./nitrogen_static.sh
-    $ erl -pa deps/*/ebin -config rels/web/files/sys.config
-    > application:start(n2o_sample).
+    $ make && make console
 
 And open it in browser [http://localhost:8000](http://localhost:8000)
 
