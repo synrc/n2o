@@ -68,19 +68,31 @@ info(Pro, Req, State) ->
             InitActions = get(actions),
             wf_context:clear_actions(),
             Pid = wf:depickle(Rest),
-            X = Pid ! {'N2O',self()},
-            R = receive Actions ->
-                RenderInit = wf:render(InitActions),
-                InitGenActions = get(actions),
-                RenderInitGenActions = wf:render(InitGenActions),
-                wf_context:clear_actions(),
-                RenderPage = wf:render(Actions),
-                [RenderInit, RenderPage, RenderInitGenActions]
-            after 100 ->
-                QS = element(14, Req),
-                wf:redirect(case QS of <<>> -> ""; _ -> "" ++ "?" ++ wf:to_list(QS) end),
-                []
-            end, R;
+            wf:info("Transition Pid: ~p",[Pid]),
+            case Pid of
+                undefined -> 
+                    wf:info("Path: ~p",[wf:path(Req)]),
+                    wf:info("Module: ~p",[Module]),
+                    Elements = Module:main(),
+                    wf_core:render(Elements),
+                    Actions = wf_context:actions(),
+                    RenderedActions = wf:render(Actions),
+                    wf_context:clear_actions(),
+                    RenderedActions;
+                Transition ->
+                    X = Pid ! {'N2O',self()},
+                    R = receive Actions ->
+                        RenderInit = wf:render(InitActions),
+                        InitGenActions = get(actions),
+                        RenderInitGenActions = wf:render(InitGenActions),
+                        wf_context:clear_actions(),
+                        RenderPage = wf:render(Actions),
+                        [RenderInit, RenderPage, RenderInitGenActions]
+                    after 100 ->
+                        QS = element(14, Req),
+                        wf:redirect(case QS of <<>> -> ""; _ -> "" ++ "?" ++ wf:to_list(QS) end),
+                        []
+                    end, R end;
         <<"PING">> -> [];
         Unknown ->
             M = State#context.module,
