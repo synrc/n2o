@@ -23,6 +23,8 @@ If you want to try pure Single Page Application (SPA) wich
 connects to Erlang N2O Application Server you should use
 [http://localhost:8000/static/spa/spa.htm](http://localhost:8000/static/spa/spa.htm)
 
+For full features of make please refer to [https://localhost:8000](https://localhost:8000)
+
 Xen
 ---
 

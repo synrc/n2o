@@ -1,4 +1,5 @@
 -module(n2o_rest).
+-author('Dmitry Bushmelev').
 -export([behaviour_info/1, parse_transform/2, generate_to_json/3, generate_from_json/3, from_json/1, to_json/1]).
 
 behaviour_info(callbacks) -> [{exists, 1}, {get, 0}, {get, 1}, {post, 1}, {delete, 1}, {from_json, 2}, {to_json, 1}];
