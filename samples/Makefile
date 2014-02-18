@@ -12,7 +12,7 @@ N2O     := deps/n2o/priv/static
 APP     := deps/n2o_sample/priv/static/nitrogen
 XEN     := apps/n2o_sample/priv
 
-default: compile static-link
+default: get-deps compile static-link
 static-link:
 	rm -rf $(N2O)
 	rm -rf $(APP)
