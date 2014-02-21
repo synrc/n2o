@@ -250,10 +250,8 @@ Kickstart Bootstrap
 To try N2O you just need to clone a N2O repo from Github and build. We don’t use fancy
 scripts so building process is OTP compatible: bootstrap site is bundled as Erlang release.
 
-    $ rebar get-deps compile
-    $ ./nitrogen_static.sh
-    $ erl -pa deps/*/ebin -config rels/web/files/sys.config
-    > application:start(n2o_sample).
+    $ cd n2o/samples
+    $ make && make console
 
 Now you can try: [http://localhost:8000](http://localhost:8000)
 
