@@ -1,6 +1,7 @@
 -module(n2o_session).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
+-include_lib("stdlib/include/ms_transform.hrl").
 -export(?SESSION_API).
 -compile(export_all).
 -record(state, {unique, node}).
@@ -50,6 +51,11 @@ lookup_ets(Key) ->
          [] -> undefined;
          [Value] -> Value;
          Values -> Values end.
+
+clear() -> clear(session_id()).
+clear(Session) ->
+    [ ets:delete(cookies,X) || X <- ets:select(cookies,
+        ets:fun2ms(fun(A) when (element(1,element(1,A)) == Session) -> element(1,A) end)) ].
 
 session_id() -> wf:cookie(session_cookie_name(),?REQ).
 new_cookie_value() -> base64:encode(erlang:md5(term_to_binary({now(), make_ref()}))).
