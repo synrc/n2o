@@ -112,8 +112,9 @@ info(Pro, Req, State) ->
     wf_context:clear_actions(),
     {reply, [Render,RenderGenActions], Req, State}.
 
-terminate(_Req, _State) ->
+terminate(_Req, _State=#context{module=Module}) ->
     % wf:info("Bullet Terminated~n"),
     Res = ets:update_counter(globals,onlineusers,{2,-1}),
     wf:send(broadcast,{counter,Res}),
+    Module:event(terminate),
     ok.
