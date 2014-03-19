@@ -7,12 +7,7 @@
 % Please read major changes made to N2O and
 % how to port existing Nitrogen sites at http://synrc.com/framework/web/
 
-% N2O API compatible with Nitrogen
-% ================================
-% http://synrc.com/framework/web/api.htm
-
 % Update DOM wf:update
-
 
 -define(UPDATE_DOM(Method,Target,Elements),
     wf:wire(#jq{format="'~s'",target=Target,method=[Method], args=[Elements]})).
