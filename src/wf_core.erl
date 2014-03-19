@@ -12,13 +12,19 @@ run(Req) ->
     Ctx1 = fold(init,Ctx#context.handlers,Ctx),
     wf_context:actions(Ctx1#context.actions),
     wf_context:context(Ctx1),
-    Elements = (Ctx1#context.module):main(),
+    Elements = try (Ctx1#context.module):main() catch C:E -> [ error_info(C,E) | stack_info() ] end,
     Html = render(Elements),
     Actions = wf_context:actions(),
     Pid ! {init,Actions},
     Ctx2 = fold(finish,Ctx#context.handlers,Ctx1),
     Req2 = wf:response(Html,Ctx2#context.req),
     {ok, _ReqFinal} = wf:reply(200, Req2).
+
+error_info(Class,Error) -> io_lib:format("ERROR:  ~w:~w~n~n",[Class,Error]).
+stack_info() -> "STACK: " ++ 
+    [ wf:render([io_lib:format("\t~w:~w/~w:~w",
+        [ Module,Function,Arity,proplists:get_value(line, Location) ]),"\n"])
+    ||  { Module,Function,Arity,Location} <- erlang:get_stacktrace() ].
 
 fold(Fun,Handlers,Ctx) ->
     lists:foldl(fun({_,Module},Ctx1) ->

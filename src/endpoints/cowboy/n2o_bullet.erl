@@ -58,6 +58,13 @@ stream(Data, Req, State) ->
     self() ! Data,
     {ok, Req,State}.
 
+render_actions(InitActions) ->
+    RenderInit = wf:render(InitActions),
+    InitGenActions = get(actions),
+    RenderInitGenActions = wf:render(InitGenActions),
+    wf_context:clear_actions(),
+    [RenderInit,RenderInitGenActions].
+
 info(Pro, Req, State) ->
     Render = case Pro of
         {flush,Actions} ->
@@ -73,32 +80,21 @@ info(Pro, Req, State) ->
                 undefined -> 
                     wf:info("Path: ~p",[wf:path(Req)]),
                     wf:info("Module: ~p",[Module]),
-                    Elements = Module:main(),
+                    Elements = try Module:main()
+                             catch C:E -> [wf_core:error_info(C,E)|wf_core:stack_info()] end,
                     wf_core:render(Elements),
-                    Actions = get(actions),
-
-                        RenderInit = wf:render(InitActions),
-                        InitGenActions = get(actions),
-                        RenderInitGenActions = wf:render(InitGenActions),
-                        wf_context:clear_actions(),
-                        [RenderInit,RenderInitGenActions];
+                    render_actions(InitActions);
 
                 Transition ->
                     X = Pid ! {'N2O',self()},
-                    R = receive Actions ->
-
-                        RenderInit = wf:render(InitActions),
-                        InitGenActions = get(actions),
-                        RenderInitGenActions = wf:render(InitGenActions),
-                        wf_context:clear_actions(),
-                        RenderPage = wf:render(Actions),
-                        [RenderInit, RenderPage, RenderInitGenActions]
-
+                    R = receive Actions -> [ render_actions(InitActions) | wf:render(Actions) ]
                     after 100 ->
-                        QS = element(14, Req),
-                        wf:redirect(case QS of <<>> -> ""; _ -> "" ++ "?" ++ wf:to_list(QS) end),
-                        []
-                    end, R end;
+                          QS = element(14, Req),
+                          wf:redirect(case QS of <<>> -> ""; _ -> "" ++ "?" ++ wf:to_list(QS) end),
+                          []
+                    end,
+                    R
+                    end;
         <<"PING">> -> [];
         Unknown ->
             M = State#context.module,
@@ -116,5 +112,5 @@ terminate(_Req, _State=#context{module=Module}) ->
     % wf:info("Bullet Terminated~n"),
     Res = ets:update_counter(globals,onlineusers,{2,-1}),
     wf:send(broadcast,{counter,Res}),
-    Module:event(terminate),
+    catch Module:event(terminate),
     ok.
