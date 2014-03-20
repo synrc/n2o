@@ -58,7 +58,7 @@ pickle(Data) -> ?PICKLER:pickle(Data).
 depickle(SerializedData) -> ?PICKLER:depickle(SerializedData).
 depickle(SerializedData, TTLSeconds) -> ?PICKLER:depickle(SerializedData, TTLSeconds).
 
-% Error handler
+% Error handler wf:error_page
 
 -ifndef(ERRORING).
 -define(ERRORING, (wf:config(n2o,erroring,n2o_error))).
