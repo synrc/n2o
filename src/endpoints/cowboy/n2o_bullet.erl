@@ -68,20 +68,19 @@ render_actions(InitActions) ->
 info(Pro, Req, State) ->
     Render = case Pro of
         {flush,Actions} ->
-            % error_logger:info_msg("Comet Actions: ~p",[Actions]),
+            % wf:info("Comet Actions: ~p",[Actions]),
             wf:render(Actions);
         <<"N2O,",Rest/binary>> ->
             Module = State#context.module, Module:event(init),
             InitActions = get(actions),
             wf_context:clear_actions(),
             Pid = wf:depickle(Rest),
-            wf:info("Transition Pid: ~p",[Pid]),
+            %wf:info("Transition Pid: ~p",[Pid]),
             case Pid of
                 undefined -> 
-                    wf:info("Path: ~p",[wf:path(Req)]),
-                    wf:info("Module: ~p",[Module]),
-                    Elements = try Module:main()
-                             catch C:E -> [wf_core:error_info(C,E)|wf_core:stack_info()] end,
+                    %wf:info("Path: ~p",[wf:path(Req)]),
+                    %wf:info("Module: ~p",[Module]),
+                    Elements = try Module:main() catch C:E -> wf:error_page(C,E) end,
                     wf_core:render(Elements),
                     render_actions(InitActions);
 

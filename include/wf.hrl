@@ -4,6 +4,7 @@
 -define(CTX, (wf_context:context())).
 -define(REQ, (wf_context:context())#context.req).
 -define(HANDLER_API, [init/2, finish/2]).
+-define(FAULTER_API, [error_page/2]).
 -define(ROUTING_API, [init/2, finish/2]).
 -define(QUERING_API, [init/2, finish/2]).
 -define(SESSION_API, [init/2, finish/2, get_value/2, set_value/2, clear/0]).
