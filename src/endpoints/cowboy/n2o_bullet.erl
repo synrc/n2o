@@ -23,12 +23,13 @@ stream(<<"ping">>, Req, State) ->
     wf:info("ping received~n"),
     {reply, <<"pong">>, Req, State};
 stream({text,Data}, Req, State) ->
-    %wf:info("Text Received ~p",[Data]),
+    wf:info("Text Received ~p",[Data]),
     self() ! Data,
     {ok, Req,State};
 stream({binary,Info}, Req, State) ->
     % wf:info("Binary Received: ~p",[Info]),
     Pro = binary_to_term(Info,[safe]),
+    wf:info("N2O Unknown Event: ~p",[Pro]),
     Pickled = proplists:get_value(pickle,Pro),
     Linked = proplists:get_value(linked,Pro),
     Depickled = wf:depickle(Pickled),
@@ -42,7 +43,7 @@ stream({binary,Info}, Req, State) ->
                 event           -> lists:map(fun({K,V})-> put(K,V) end,Linked),
                                    Module:Function(Parameter);
                 UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
-          _ -> wf:error("N2O allows only #ev{} events") end,
+          _Ev -> wf:error("N2O allows only #ev{} events") end,
 
     Actions = get(actions),
     wf_context:clear_actions(),
@@ -52,7 +53,7 @@ stream({binary,Info}, Req, State) ->
     RenderGenActions = wf:render(GenActions),
     wf_context:clear_actions(),
 
-    {reply, [Render,RenderGenActions], Req, State};
+    {reply, [<<"EVAL">>,Render,RenderGenActions], Req, State};
 stream(Data, Req, State) ->
     wf:info("Data Received ~p",[Data]),
     self() ! Data,
@@ -105,7 +106,7 @@ info(Pro, Req, State) ->
     wf_context:clear_actions(),
     RenderGenActions = wf:render(GenActions),
     wf_context:clear_actions(),
-    {reply, [Render,RenderGenActions], Req, State}.
+    {reply, [<<"EVAL">>,Render,RenderGenActions], Req, State}.
 
 terminate(_Req, _State=#context{module=Module}) ->
     % wf:info("Bullet Terminated~n"),
