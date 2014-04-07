@@ -4,14 +4,17 @@
 
 reflect() -> record_info(fields, dropdown).
 
-render_element(Record) -> 
+render_element(Record = #dropdown{}) -> 
     ID = Record#dropdown.id,
     case Record#dropdown.postback of
          undefined -> skip;
-         Postback -> wf:wire(#event { type=change,
-                                              target=ID,
-                                              postback=Postback,
-                                              delegate=Record#button.delegate }) end,
+        %Postback -> %wf:wire(#event{type=click, postback=Postback, target=ID,
+%                  source=Record#button.source, delegate=Record#button.delegate }) end,
+         Postback -> 
+         wf:wire(#event { type=click, postback=Postback, target=ID,
+                  source=Record#dropdown.source, delegate=Record#dropdown.delegate } ) end,
+%                                              target=ID,
+%                                              postback=Record#dropdown.postback }) end,
 
     Opts = [wf_tags:emit_tag(<<"option">>, [O#option.label], [
       {<<"disabled">>, O#option.disabled},
