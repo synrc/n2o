@@ -9,16 +9,35 @@
 
 % Update DOM wf:update
 
--define(UPDATE_DOM(Method,Target,Elements),
-    wf:wire(#jq{format="'~s'",target=Target,method=[Method], args=[Elements]})).
+replace(Target, Elements) -> update(Target,Elements).
 
-update(Target, Elements) ->        ?UPDATE_DOM(html,Target,Elements).
-replace(Target, Elements) ->       ?UPDATE_DOM(replaceWith,Target,Elements).
-insert_top(Target, Elements) ->    ?UPDATE_DOM(prepend,Target,Elements).
-insert_bottom(Target, Elements) -> ?UPDATE_DOM(append,Target,Elements).
-insert_before(Target, Elements) -> ?UPDATE_DOM(before,Target,Elements).
-insert_after(Target, Elements) ->  ?UPDATE_DOM('after',Target,Elements).
-remove(Target) -> wf:wire(#jq{target=Target,method=[remove],args=[]}).
+update(Target, Elements) ->
+    wf:wire(#jq{target=Target,property=outerHTML,right=Elements,format="'~s'"}).
+
+insert_top(Target, Elements) ->
+    wf:wire([
+        io_lib:format("document.querySelector('#~s').insertBefore(",[Target]),
+        io_lib:format("(function(){var div = document.createElement('div');"
+                      "div.innerHTML = '~s'; return div.firstChild; })()",[wf:render(Elements)]),
+        ",",io_lib:format("document.querySelector('#~s').firstChild",[Target]),");"]).
+
+insert_bottom(Target, Elements) ->
+    wf:wire([
+        io_lib:format("document.querySelector('#~s').appendChild(",[Target]),
+        io_lib:format("(function(){var div = document.createElement('div');"
+                      "div.innerHTML = '~s'; return div.firstChild; })()",[wf:render(Elements)]),
+        ");"]).
+
+insert_adjacent(Command,Target, Elements) ->
+    wf:wire(io_lib:format("document.querySelector('#~s').insertAdjacentHTML('~s', '~s');",
+            [Target,Command,wf:render(Elements)])).
+
+insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements).
+insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
+
+remove(Target) ->
+    wf:wire([io_lib:format("document.querySelector('#~s').parentNode.removeChild(",[Target]),
+             io_lib:format("document.querySelector('#~s'));",[Target])]).
 
 % Wire JavaScript wf:wire
 

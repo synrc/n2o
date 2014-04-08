@@ -5,6 +5,6 @@
 
 render_action(#control{actions=Actions, source=Source, target=Target, type=Type, delegate=Delegate}) ->
     Data = "[" ++ string:join([ "Bert.tuple(Bert.atom('"++atom_to_list(Src)++
-                     "'), utf8.toByteArray($('#"++atom_to_list(Src)++"').val()))" || Src <- Source ],",") ++ "]",
+                     "'), utf8.toByteArray(document.querySelector('#"++atom_to_list(Src)++"').value))" || Src <- Source ],",") ++ "]",
     PostbackScript = wf_event:new(ok, Target, Delegate, control_event, Data),
-    [wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Target,Type]),PostbackScript,"});"].
+    [wf:f("document.querySelector('#~s').addEventListener('~s',function anonymous(event) { ", [Target,Type]),PostbackScript,"});"].
