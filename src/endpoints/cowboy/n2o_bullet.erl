@@ -62,7 +62,7 @@ info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
     Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
     wf_core:render(Elements),
     try Module:event(init) catch C:E -> wf:error_page(C,E) end,
-    {reply, wf:json([{eval,iolist_to_binary(render_actions(lists:reverse(get(actions))))}]), Req, State};
+    {reply, wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]), Req, State};
 
 info(Unknown, Req, State) ->
     wf:info("Unknown Message: ~p",[Unknown]),
