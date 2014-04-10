@@ -53,7 +53,7 @@ info({flush,Actions}, Req, State) ->
     {reply, wf:json([{eval,iolist_to_binary(render_actions(Actions))}]), Req, State};
 
 info(<<"PING">> = Ping, Req, State) ->
-    wf:info("Ping Message: ~p",[Ping]),
+%    wf:info("Ping Message: ~p",[Ping]),
     {reply, wf:json([]), Req, State};
 
 info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
