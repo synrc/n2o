@@ -9,35 +9,35 @@
 
 % Update DOM wf:update
 
-replace(Target, Elements) -> update(Target,Elements).
-
 update(Target, Elements) ->
     wf:wire(#jq{target=Target,property=outerHTML,right=Elements,format="'~s'"}).
 
 insert_top(Target, Elements) ->
-    wf:wire([
-        io_lib:format("document.querySelector('#~s').insertBefore(",[Target]),
-        io_lib:format("(function(){var div = document.createElement('div');"
-                      "div.innerHTML = '~s'; return div.firstChild; })()",[wf:render(Elements)]),
-        ",",io_lib:format("document.querySelector('#~s').firstChild",[Target]),");"]).
+    wf:wire(wf:f(
+        "document.querySelector('#~s').insertBefore("
+        "(function(){var div = document.createElement('div');"
+        "div.innerHTML = '~s'; return div.firstChild; })(),"
+        "document.querySelector('#~s').firstChild);",
+        [Target,wf:render(Elements),Target])).
 
 insert_bottom(Target, Elements) ->
-    wf:wire([
-        io_lib:format("document.querySelector('#~s').appendChild(",[Target]),
-        io_lib:format("(function(){var div = document.createElement('div');"
-                      "div.innerHTML = '~s'; return div.firstChild; })()",[wf:render(Elements)]),
-        ");"]).
+    wf:wire(wf:f(
+        "document.querySelector('#~s').appendChild("
+        "(function(){var div = document.createElement('div');"
+        "div.innerHTML = '~s'; return div.firstChild; })());",
+        [Target,wf:render(Elements)])).
 
 insert_adjacent(Command,Target, Elements) ->
-    wf:wire(io_lib:format("document.querySelector('#~s').insertAdjacentHTML('~s', '~s');",
-            [Target,Command,wf:render(Elements)])).
+    wf:wire(wf:f("document.querySelector('#~s').insertAdjacentHTML('~s', '~s');",
+        [Target,Command,wf:render(Elements)])).
 
 insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements).
 insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
 
 remove(Target) ->
-    wf:wire([io_lib:format("document.querySelector('#~s').parentNode.removeChild(",[Target]),
-             io_lib:format("document.querySelector('#~s'));",[Target])]).
+    wf:wire(wf:f(
+        "document.querySelector('#~s').parentNode.removeChild("
+        "document.querySelector('#~s'));",[Target,Target])).
 
 % Wire JavaScript wf:wire
 
@@ -55,7 +55,7 @@ flush(Key) -> action_async:flush(Key).
 % Redirect and purge connection wf:redirect
 
 redirect(Url) ->
-    wf:wire(#jq{target=window,property=location,args=simple,right=["'",Url,"'"]}).
+    wf:wire(#jq{target=window,property=location,args=simple,right=Url}).
 
 % Message Bus communications wf:reg wf:send
 

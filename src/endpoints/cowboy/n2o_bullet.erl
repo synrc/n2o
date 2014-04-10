@@ -77,7 +77,7 @@ info(Pro, Req, State) ->
                 wf:render(Actions);
             <<"N2O,",Rest/binary>> ->
                 Module = State#context.module, Module:event(init),
-                InitActions = get(actions),
+                InitActions = lists:reverse(get(actions)),
                 wf_context:clear_actions(),
                 Pid = wf:depickle(Rest),
                                                 %wf:info("Transition Pid: ~p",[Pid]),
@@ -107,7 +107,7 @@ info(Pro, Req, State) ->
                 Actions = get(actions),
                 wf_context:clear_actions(),
                 wf:render(Actions) end,
-    GenActions = get(actions),
+    GenActions = lists:reverse(get(actions)),
     wf_context:clear_actions(),
     RenderGenActions = wf:render(GenActions),
     wf_context:clear_actions(),
