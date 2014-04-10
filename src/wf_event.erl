@@ -7,7 +7,5 @@ new(undefined, _, _, _, _) -> [];
 new(Postback, Element, Delegate, Name, Data) ->
     Module = wf:coalesce([Delegate, ?CTX#context.module]),
     Event = #ev{name=Name, module=Module, payload=Postback, trigger=Element},
-    wf:f("ws.send(Bert.encodebuf("
-         "{source: Bert.binary('~s'),"
-          "pickle: Bert.binary('~s'),"
-          "linked: ~s}));",[Element,wf:pickle(Event),Data]).
+    wf:f("ws.send(bert.encodebuf(bert.tuple(bert.atom('wf_event'),"
+         "bert.binary('~s'),bert.binary('~s'),~s)));",[Element,wf:pickle(Event),Data]).
