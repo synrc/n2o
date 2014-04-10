@@ -7,7 +7,7 @@
 -export([info/3]).
 -export([terminate/2]).
 
--define(PERIOD, 1000).
+% process spawn
 
 init(_Transport, Req, _Opts, _Active) ->
     put(actions,[]),
@@ -20,102 +20,85 @@ init(_Transport, Req, _Opts, _Active) ->
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
 
-html_events(Pro, State) ->
-    Pickled = proplists:get_value(pickle,Pro),
-    Linked = proplists:get_value(linked,Pro),
-    Depickled = wf:depickle(Pickled),
-    %wf:info("Depickled: ~p",[Depickled]),
-    case Depickled of
-        #ev{module=Module,name=Function,payload=Parameter,trigger=Trigger} ->
-            case Function of 
-                control_event   -> lists:map(fun({K,V})-> put(K,V) end,Linked),
-                                   Module:Function(Trigger, Parameter);
-                api_event       -> Module:Function(Parameter,Linked,State);
-                event           -> lists:map(fun({K,V})-> put(K,V) end,Linked),
-                                   Module:Function(Parameter);
-                UserCustomEvent -> Module:Function(Parameter,Trigger,State) end;
-        _Ev -> wf:error("N2O allows only #ev{} events") end,
-    Actions = get(actions),
-    wf_context:clear_actions(),
-    Render = wf:render(Actions),
-    GenActions = get(actions),
-    RenderGenActions = wf:render(GenActions),
-    wf_context:clear_actions(),
-    JS = iolist_to_binary([Render,RenderGenActions]),
-    wf:json([{eval,JS}]).
+% websocket handler
 
-stream(<<"ping">>, Req, State) ->
-    wf:info("ping received~n"),
-    {reply, <<"pong">>, Req, State};
-stream({text,Data}, Req, State) ->
-    wf:info("Text Received ~p",[Data]),
-    self() ! Data,
-    {ok, Req,State};
-stream({binary,Info}, Req, State) ->
-    Pro = binary_to_term(Info,[safe]),
-    case Pro of
-        {client,M} -> info({client,M},Req,State);
-        {server,M} -> info({server,M},Req,State);
-        _ -> {reply,html_events(Pro,State),Req,State} end;
-stream(Data, Req, State) ->
-    wf:info("Data Received ~p",[Data]),
-    self() ! Data,
-    {ok, Req,State}.
+stream(<<"N2O",Rest/binary>> = Data, Req, State) -> info(Data,Req,State);
+stream({text,Data}, Req, State) -> info(Data,Req,State);
+stream({binary,Info}, Req, State) -> info(binary_to_term(Info,[safe]),Req,State);
+stream(Data, Req, State) when is_binary(Data) -> info(binary_to_term(Data,[safe]),Req,State);
+stream(Data, Req, State) -> info(Data,Req,State).
 
-render_actions(InitActions) ->
-    RenderInit = wf:render(InitActions),
-    InitGenActions = get(actions),
-    RenderInitGenActions = wf:render(InitGenActions),
-    wf_context:clear_actions(),
-    [RenderInit,RenderInitGenActions].
+% WebSocketPid ! Message
 
-info(Pro, Req, State) ->
-    Render = 
-        case Pro of
-            {flush,Actions} ->
-                                                % wf:info("Comet Actions: ~p",[Actions]),
-                wf:render(Actions);
-            <<"N2O,",Rest/binary>> ->
-                Module = State#context.module, Module:event(init),
-                InitActions = lists:reverse(get(actions)),
-                wf_context:clear_actions(),
-                Pid = wf:depickle(Rest),
-                                                %wf:info("Transition Pid: ~p",[Pid]),
-                case Pid of
-                    undefined -> 
-                                                %wf:info("Path: ~p",[wf:path(Req)]),
-                                                %wf:info("Module: ~p",[Module]),
-                        Elements = try Module:main() catch C:E -> wf:error_page(C,E) end,
-                        wf_core:render(Elements),
-                        render_actions(InitActions);
+info({client,Message}, Req, State) ->
+    wf:info("Client Message: ~p",[Message]),
+    Module = State#context.module,
+    try Module:event({client,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]) end,
+    {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
+                    {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
-                    Transition ->
-                        X = Pid ! {'N2O',self()},
-                        R = receive Actions -> [ render_actions(InitActions) | wf:render(Actions) ]
-                            after 100 ->
-                                    QS = element(14, Req),
-                                    wf:redirect(case QS of <<>> -> ""; _ -> "" ++ "?" ++ wf:to_list(QS) end),
-                                    []
-                            end,
-                        R
-                end;
-            <<"PING">> -> [];
-            Unknown ->
-                wf:info("Unknown WS Info Message ~p", [Unknown]),
-                M = State#context.module,
-                catch M:event(Unknown),
-                Actions = get(actions),
-                wf_context:clear_actions(),
-                wf:render(Actions) end,
-    GenActions = lists:reverse(get(actions)),
+info({server,Message}, Req, State) ->
+    wf:info("Server Message: ~p",[Message]),
+    Module = State#context.module,
+    try Module:event({server,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]) end,
+    {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
+                    {data,binary_to_list(term_to_binary(Message))}]),Req,State};
+
+info({wf_event,_,_,_}=Event, Req, State) ->
+    wf:info("N2O Message: ~p",[Event]),
+    {reply,html_events(Event,State),Req,State};
+
+info({flush,Actions}, Req, State) ->
+    wf:info("Flush Message: ~p",[Actions]),
+    {reply, wf:json([{eval,iolist_to_binary(render_actions(Actions))}]), Req, State};
+
+info(<<"PING">> = Ping, Req, State) ->
+    wf:info("Ping Message: ~p",[Ping]),
+    {reply, wf:json([]), Req, State};
+
+info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
+    wf:info("N2O INIT: ~p",[InitMarker]),
+    Module = State#context.module,
+    Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
+    wf_core:render(Elements),
+    try Module:event(init) catch C:E -> wf:error_page(C,E) end,
+    {reply, wf:json([{eval,iolist_to_binary(render_actions(lists:reverse(get(actions))))}]), Req, State};
+
+info(Unknown, Req, State) ->
+    wf:info("Unknown Message: ~p",[Unknown]),
+    Module = State#context.module,
+    try Module:event(Unknown) catch C:E -> wf:error_page(C,E) end,
+    {reply, wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]), Req, State}.
+
+% double render: actions could generate actions
+
+render_actions(Actions) ->
     wf_context:clear_actions(),
-    RenderGenActions = wf:render(GenActions),
+    First  = wf:render(Actions),
+    Second = wf:render(get(actions)),
     wf_context:clear_actions(),
-    JS = iolist_to_binary([Render,RenderGenActions]),
-    {reply, wf:json([{eval,JS}]), Req, State}.
+    [First,Second].
+
+% N2O events
+
+html_events({wf_event,Source,Pickled,Linked}, State) ->
+    Ev = wf:depickle(Pickled),
+    wf:info("Depickled: ~p",[Ev]),
+    case Ev of
+         #ev{} -> render_ev(Ev,Source,Linked,State);
+         CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
+    wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]).
+
+render_ev(#ev{module=M,name=F,payload=P,trigger=T},Source,Linked,State) ->
+    case F of 
+         control_event -> lists:map(fun({K,V})-> put(K,V) end,Linked), M:F(T,P);
+         api_event -> M:F(P,Linked,State);
+         event -> lists:map(fun({K,V})-> put(K,V) end,Linked), M:F(P);
+         UserCustomEvent -> M:F(P,T,State) end.
+
+% process down
 
 terminate(_Req, _State=#context{module=Module}) ->
-    % wf:info("Bullet Terminated~n"),
     Res = ets:update_counter(globals,onlineusers,{2,-1}),
     wf:send(broadcast,{counter,Res}),
     catch Module:event(terminate),
