@@ -37,16 +37,16 @@ info({client,Message}, Req, State) ->
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
-info({binary,Message}, Req, State) ->
+info({bert,Message}, Req, State) ->
     Module = State#context.module,
     Term = try Module:event({binary,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), <<>> end,
     wf:info("Client BERT Binary Message: ~p Result: ~p",[Message,Term]),
     {reply,{binary,term_to_binary(Term)},Req,State};
 
-info({raw,Message}, Req, State) ->
+info({binary,Message}, Req, State) ->
     Module = State#context.module,
     Term = try Module:event({binary,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), <<>> end,
-    wf:info("Client BERT Binary Message: ~p Result: ~p",[Message,Term]),
+    wf:info("Client Raw Binary Message: ~p Result: ~p",[Message,Term]),
     Res = case Term of _ when is_binary(Term) -> Term; _ -> term_to_binary(Term) end,
     {reply,{binary,Res},Req,State};
 
