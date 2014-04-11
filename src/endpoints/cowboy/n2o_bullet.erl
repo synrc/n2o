@@ -37,6 +37,12 @@ info({client,Message}, Req, State) ->
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
+info({binary,Message}, Req, State) ->
+    Module = State#context.module,
+    Term = try Module:event({binary,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), <<>> end,
+    wf:info("Client Binary Message: ~p Result: ~p",[Message,Term]),
+    {reply,{binary,<<1,2,3,4>>},Req,State};
+
 info({server,Message}, Req, State) ->
     wf:info("Server Message: ~p",[Message]),
     Module = State#context.module,
@@ -62,10 +68,10 @@ info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
     Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
     wf_core:render(Elements),
     try Module:event(init) catch C:E -> wf:error_page(C,E) end,
-    {reply, wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]), Req, State};
+    {reply, wf:json([{eval,iolist_to_binary(render_actions(lists:reverse(get(actions))))}]), Req, State};
 
 info(Unknown, Req, State) ->
-    wf:info("Unknown Message: ~p",[Unknown]),
+%    wf:info("Unknown Message: ~p",[Unknown]),
     Module = State#context.module,
     try Module:event(Unknown) catch C:E -> wf:error_page(C,E) end,
     {reply, wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]), Req, State}.

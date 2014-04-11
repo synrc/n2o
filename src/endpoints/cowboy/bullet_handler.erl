@@ -145,6 +145,10 @@ websocket_handle(Data, Req,
 	case Handler:stream(Data, Req, HandlerState) of
 		{ok, Req2, HandlerState2} ->
 			{ok, Req2, State#state{handler_state=HandlerState2}, hibernate};
+		{reply, {binary, Reply}, Req2, HandlerState2} ->
+%		        wf:info("Bullet Handle Binary"),
+			{reply, {binary, Reply}, Req2,
+				State#state{handler_state=HandlerState2}, hibernate};
 		{reply, Reply, Req2, HandlerState2} ->
 			{reply, {text, Reply}, Req2,
 				State#state{handler_state=HandlerState2}, hibernate}
@@ -157,6 +161,10 @@ websocket_info(Info, Req, State=#state{
 	case Handler:info(Info, Req, HandlerState) of
 		{ok, Req2, HandlerState2} ->
 			{ok, Req2, State#state{handler_state=HandlerState2}, hibernate};
+		{reply, {binary, Reply}, Req2, HandlerState2} ->
+%		        wf:info("Bullet Handle Info"),
+			{reply, {binary, Reply}, Req2,
+				State#state{handler_state=HandlerState2}, hibernate};
 		{reply, Reply, Req2, HandlerState2} ->
 			{reply, {text, Reply}, Req2,
 				State#state{handler_state=HandlerState2}, hibernate}
