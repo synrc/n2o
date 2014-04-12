@@ -57,7 +57,7 @@ info({server,Message}, Req, State) ->
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
-info({wf_event,_,_,_}=Event, Req, State) ->
+info({pickle,_,_,_}=Event, Req, State) ->
     wf:info("N2O Message: ~p",[Event]),
     {reply,html_events(Event,State),Req,State};
 
@@ -94,7 +94,7 @@ render_actions(Actions) ->
 
 % N2O events
 
-html_events({wf_event,Source,Pickled,Linked}, State) ->
+html_events({pickle,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
     wf:info("Depickled: ~p",[Ev]),
     case Ev of
