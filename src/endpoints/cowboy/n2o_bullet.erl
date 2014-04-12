@@ -22,6 +22,7 @@ init(_Transport, Req, _Opts, _Active) ->
 
 % websocket handler
 
+stream(<<"PING">> =Ping, Req, State) -> info(Ping,Req,State);
 stream(<<"N2O",Rest/binary>> = Data, Req, State) -> info(Data,Req,State);
 stream({text,Data}, Req, State) -> info(Data,Req,State);
 stream({binary,Info}, Req, State) -> info(binary_to_term(Info,[safe]),Req,State);
@@ -70,7 +71,7 @@ info(<<"PING">> = Ping, Req, State) ->
     {reply, wf:json([]), Req, State};
 
 info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
-    wf:info("N2O INIT: ~p",[InitMarker]),
+    wf:info("N2O INIT: ~p",[Rest]),
     Module = State#context.module,
     Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
     wf_core:render(Elements),
