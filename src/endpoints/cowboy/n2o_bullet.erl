@@ -40,7 +40,7 @@ info({client,Message}, Req, State) ->
 
 info({bert,Message}, Req, State) ->
     Module = State#context.module,
-    Term = try Module:event({binary,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), <<>> end,
+    Term = try Module:event({bert,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), <<>> end,
     wf:info("Client BERT Binary Message: ~p Result: ~p",[Message,Term]),
     {reply,{binary,term_to_binary(Term)},Req,State};
 
