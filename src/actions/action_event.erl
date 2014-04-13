@@ -9,7 +9,9 @@ render_action(#event{postback=Postback,actions=Actions,source=Source,target=Cont
         {Key, Id} = if  is_atom(Src)-> S = atom_to_list(Src),
                         {"Bert.atom('"++S++"')", S};
                     true -> {"utf8.toByteArray('" ++ Src ++ "')", Src} end,
-        "Bert.tuple(" ++ Key ++ ", utf8.toByteArray($('#" ++ Id ++ "').vals()))" end
+        "Bert.tuple(" ++ Key ++ ", utf8.toByteArray(document.querySelector('#" 
+                      ++ Id ++ "').value))" end
     || Src <- Source ],",") ++ "]",
     PostbackScript = wf_event:new(Postback, Control, Delegate, event, Data),
-    [ wf:f("$('#~s').bind('~s',function anonymous(event) { ", [Control,Type]),PostbackScript,"});"].
+    [ wf:f("document.querySelector('#~s').addEventListener('~s',function (event) { ",
+        [Control,Type]),PostbackScript,"});"].

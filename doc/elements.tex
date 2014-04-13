@@ -193,6 +193,46 @@ bind\_script should be set to false.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
+\paragraph{}
+Sample:
+
+\begin{lstlisting}
+#button { id=sendButton, text= <<"Send">>,
+          postback={chat,Pid}, source=[userName,message] }.
+\end{lstlisting}
+
+\subsection{Link {\bf \#dropdown}}
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(dropdown, {?ELEMENT_BASE(element_dropdown),
+            options,
+            postback,
+            delegate,
+            value,
+            multiple=false,
+            disabled=false,
+            name}).
+
+    -record(option, {?ELEMENT_BASE(element_select),
+            label,
+            value,
+            selected=false,
+            disabled}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\paragraph{}
+Sample:
+
+\begin{lstlisting}
+    #dropdown { id=drop, value="2", postback=combo, source=[drop], options=[
+        #option { label= <<"Microsoft">>, value= <<"Windows">> },
+        #option { label= <<"Google">>,    value= <<"Android">> },
+        #option { label= <<"Apple">>,     value= <<"Mac">> }
+    ]},
+\end{lstlisting}
+
 \subsection{Link {\bf \#link}}
 
 \paragraph{}

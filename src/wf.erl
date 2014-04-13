@@ -9,16 +9,35 @@
 
 % Update DOM wf:update
 
--define(UPDATE_DOM(Method,Target,Elements),
-    wf:wire(#jq{format="'~s'",target=Target,method=[Method], args=[Elements]})).
+update(Target, Elements) ->
+    wf:wire(#jq{target=Target,property=outerHTML,right=Elements,format="'~s'"}).
 
-update(Target, Elements) ->        ?UPDATE_DOM(html,Target,Elements).
-replace(Target, Elements) ->       ?UPDATE_DOM(replaceWith,Target,Elements).
-insert_top(Target, Elements) ->    ?UPDATE_DOM(prepend,Target,Elements).
-insert_bottom(Target, Elements) -> ?UPDATE_DOM(append,Target,Elements).
-insert_before(Target, Elements) -> ?UPDATE_DOM(before,Target,Elements).
-insert_after(Target, Elements) ->  ?UPDATE_DOM('after',Target,Elements).
-remove(Target) -> wf:wire(#jq{target=Target,method=[remove],args=[]}).
+insert_top(Target, Elements) ->
+    wf:wire(wf:f(
+        "document.querySelector('#~s').insertBefore("
+        "(function(){var div = document.createElement('div');"
+        "div.innerHTML = '~s'; return div.firstChild; })(),"
+        "document.querySelector('#~s').firstChild);",
+        [Target,wf:render(Elements),Target])).
+
+insert_bottom(Target, Elements) ->
+    wf:wire(wf:f(
+        "document.querySelector('#~s').appendChild("
+        "(function(){var div = document.createElement('div');"
+        "div.innerHTML = '~s'; return div.firstChild; })());",
+        [Target,wf:render(Elements)])).
+
+insert_adjacent(Command,Target, Elements) ->
+    wf:wire(wf:f("document.querySelector('#~s').insertAdjacentHTML('~s', '~s');",
+        [Target,Command,wf:render(Elements)])).
+
+insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements).
+insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
+
+remove(Target) ->
+    wf:wire(wf:f(
+        "document.querySelector('#~s').parentNode.removeChild("
+        "document.querySelector('#~s'));",[Target,Target])).
 
 % Wire JavaScript wf:wire
 
@@ -36,7 +55,7 @@ flush(Key) -> action_async:flush(Key).
 % Redirect and purge connection wf:redirect
 
 redirect(Url) ->
-    wf:wire(#jq{target=window,property=location,args=simple,right=["'",Url,"'"]}).
+    wf:wire(#jq{target=window,property=location,args=simple,right=Url}).
 
 % Message Bus communications wf:reg wf:send
 
@@ -140,6 +159,7 @@ hex_decode(S) -> _String = wf_convert:hex_decode(S).
 js_escape(String) -> _String = wf_convert:js_escape(String).
 join(List,Delimiter) -> _Result = wf_convert:join(List,Delimiter).
 to_js_id(Path) -> _String = wf_render_actions:to_js_id(Path).
+json(Json) -> n2o_json:encode(Json).
 
 % These api are not really API
 

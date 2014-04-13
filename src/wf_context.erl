@@ -12,7 +12,7 @@ script(Script) -> put(script,Script).
 clear_actions() -> put(actions,[]).
 add_action(Action) ->
     Actions = case get(actions) of undefined -> []; E -> E end,
-    put(actions,Actions ++ [Action]).
+    put(actions,[Action|Actions]).
 
 init_context(Req) ->
     #context{

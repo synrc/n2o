@@ -9,14 +9,16 @@ render_action(Record=#jq{property=undefined,target=Target,method=Methods,args=A,
         A when is_list(A) -> A;
         A when is_integer(A) -> wf:to_list(A);
         A -> A end || A <- Args],","),
-    string:join([ wf:f("$('#~s').~s("++Record#jq.format++");",
+    string:join([ wf:f("document.querySelector('#~s').~s("++Record#jq.format++");",
         [wf:to_list(Target),wf:to_list(Method),RenderedArgs]) || Method <- Methods],[]);
 
-render_action(#jq{target=Target,method=undefined,property=Property,args=simple,right=Right}) ->
-    wf:f("~s.~s = ~s;", [wf:to_list(Target),wf:to_list(Property),wf:render(Right)]);
+render_action(#jq{target=T,method=undefined,property=P,args=simple,right=R,format=F}) ->
+    wf:f("~s.~s = '~s';",
+        [wf:to_list(T),wf:to_list(P),binary_to_list(iolist_to_binary(wf:render(R)))]);
 
-render_action(#jq{target=Target,method=undefined,property=Property,right=undefined}) ->
-    wf:f("$('#~s').~s;", [wf:to_list(Target),wf:to_list(Property)]);
+render_action(#jq{target=T,method=undefined,property=P,right=undefined}) ->
+    wf:f("document.querySelector('#~s').~s;", [wf:to_list(T),wf:to_list(P)]);
 
-render_action(#jq{target=Target,method=undefined,property=Property,right=Right}) ->
-    wf:f("$('#~s').~s = ~s", [wf:to_list(Target),wf:to_list(Property),wf:render(Right)]).
+render_action(#jq{target=T,method=undefined,property=P,right=R,format=F}) ->
+    wf:f("document.querySelector('#~s').~s = '~s';",
+        [wf:to_list(T),wf:to_list(P),binary_to_list(iolist_to_binary(wf:render(R)))]).

@@ -29,6 +29,7 @@ render_element(Group = #optgroup{}) ->
   ]);
 render_element(O = #option{}) ->
   wf_tags:emit_tag(<<"option">>, wf:render(O#option.body), [
+    {<<"id">>, O#option.id},
     {<<"disabled">>, O#option.disabled},
     {<<"label">>, O#option.label},
     {<<"title">>, O#option.title},
