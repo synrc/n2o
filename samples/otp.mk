@@ -12,7 +12,7 @@ relx  := "{release,{$(RELEASE),\"$(VER)\"},[$(subst $(space),$(comma),$(APPS))]}
 test: eunit ct
 compile: get-deps static-link
 delete-deps get-deps compile clean update-deps:
-	./mad $@
+	rebar $@
 .applist:
 	./depman.erl $(APPS) > $@
 $(RUN_DIR) $(LOG_DIR):
