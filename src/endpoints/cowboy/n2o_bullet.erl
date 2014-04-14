@@ -33,6 +33,7 @@ stream(Data, Req, State) -> info(Data,Req,State).
 % WebSocketPid ! Message
 
 info({client,Message}, Req, State) ->
+    wf_context:clear_actions(),
     wf:info("Client Message: ~p",[Message]),
     Module = State#context.module,
     try Module:event({client,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]) end,
@@ -40,12 +41,14 @@ info({client,Message}, Req, State) ->
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
 info({bert,Message}, Req, State) ->
+    wf_context:clear_actions(),
     Module = State#context.module,
     Term = try Module:event({bert,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), <<>> end,
     wf:info("Client BERT Binary Message: ~p Result: ~p",[Message,Term]),
     {reply,{binary,term_to_binary(Term)},Req,State};
 
 info({binary,Message}, Req, State) ->
+    wf_context:clear_actions(),
     Module = State#context.module,
     Term = try Module:event({binary,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), <<>> end,
     wf:info("Client Raw Binary Message: ~p Result: ~p",[Message,Term]),
@@ -53,6 +56,7 @@ info({binary,Message}, Req, State) ->
     {reply,{binary,Res},Req,State};
 
 info({server,Message}, Req, State) ->
+    wf_context:clear_actions(),
     wf:info("Server Message: ~p",[Message]),
     Module = State#context.module,
     try Module:event({server,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]) end,
@@ -60,10 +64,12 @@ info({server,Message}, Req, State) ->
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
 info({pickle,_,_,_}=Event, Req, State) ->
+    wf_context:clear_actions(),
     wf:info("N2O Message: ~p",[Event]),
     {reply,html_events(Event,State),Req,State};
 
 info({flush,Actions}, Req, State) ->
+    wf_context:clear_actions(),
     wf:info("Flush Message: ~p",[Actions]),
     {reply, wf:json([{eval,iolist_to_binary(render_actions(Actions))}]), Req, State};
 
@@ -80,14 +86,15 @@ info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
                  [];
           Binary -> Pid = wf:depickle(Binary),
                     X = Pid ! {'N2O',self()},
-                    R = receive Actions -> render_actions(Actions) after 100 ->
+                    R = receive A -> render_actions(A) after 100 ->
                         QS = element(14, Req),
                         wf:redirect(case QS of <<>> -> ""; _ -> "?" ++ wf:to_list(QS) end),
                         []
                     end,
                     R end,
     try Module:event(init) catch C:E -> wf:error_page(C,E) end,
-    {reply, wf:json([{eval,iolist_to_binary([InitActions,wf:render(get(actions))])}]), Req, State};
+    Actions = wf:render(get(actions)),
+    {reply, wf:json([{eval,iolist_to_binary([InitActions,Actions])}]), Req, State};
 
 info(Unknown, Req, State) ->
 %    wf:info("Unknown Message: ~p",[Unknown]),

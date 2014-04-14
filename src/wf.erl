@@ -53,7 +53,9 @@ remove(Target) ->
 
 % Wire JavaScript wf:wire
 
-wire(Actions) -> wf_context:add_action(Actions).
+wire(Actions) ->
+    wf:info("Wire: ~p",[Actions]),
+    action_wire:wire(Actions).
 
 % Spawn async processes wf:async, wf:flush
 
