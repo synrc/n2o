@@ -53,9 +53,7 @@ remove(Target) ->
 
 % Wire JavaScript wf:wire
 
-wire(Actions) -> wire(undefined, undefined, Actions).
-wire(Target, Actions) -> wire(Target, Target, Actions).
-wire(Trigger, Target, Actions) -> action_wire:wire(Trigger, Target, Actions).
+wire(Actions) -> wf_context:add_action(Actions).
 
 % Spawn async processes wf:async, wf:flush
 
