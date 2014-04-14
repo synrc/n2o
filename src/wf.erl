@@ -13,23 +13,35 @@ update(Target, Elements) ->
     wf:wire(#jq{target=Target,property=outerHTML,right=Elements,format="'~s'"}).
 
 insert_top(Target, Elements) ->
+    Pid = self(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
+    {Render,Actions} = receive A -> A end,
     wf:wire(wf:f(
         "document.querySelector('#~s').insertBefore("
         "(function(){var div = document.createElement('div');"
         "div.innerHTML = '~s'; return div.firstChild; })(),"
         "document.querySelector('#~s').firstChild);",
-        [Target,wf:render(Elements),Target])).
+        [Target,Render,Target])),
+    wf:wire(wf:render(Actions)).
 
 insert_bottom(Target, Elements) ->
+    Pid = self(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
+    {Render,Actions} = receive A -> A end,
     wf:wire(wf:f(
         "document.querySelector('#~s').appendChild("
         "(function(){var div = document.createElement('div');"
         "div.innerHTML = '~s'; return div.firstChild; })());",
-        [Target,wf:render(Elements)])).
+        [Target,Render])),
+    wf:wire(wf:render(Actions)).
 
 insert_adjacent(Command,Target, Elements) ->
+    Pid = self(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
+    {Render,Actions} = receive A -> A end,
     wf:wire(wf:f("document.querySelector('#~s').insertAdjacentHTML('~s', '~s');",
-        [Target,Command,wf:render(Elements)])).
+        [Target,Command,Render])),
+    wf:wire(wf:render(Actions)).
 
 insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements).
 insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).

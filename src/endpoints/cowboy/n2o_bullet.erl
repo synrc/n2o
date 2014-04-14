@@ -2,6 +2,7 @@
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 
+-compile(export_all).
 -export([init/4]).
 -export([stream/3]).
 -export([info/3]).
@@ -73,10 +74,20 @@ info(<<"PING">> = Ping, Req, State) ->
 info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
     wf:info("N2O INIT: ~p",[Rest]),
     Module = State#context.module,
-    Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
-    wf_core:render(Elements),
+    InitActions = case Rest of
+         <<>> -> Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
+                 wf_core:render(Elements),
+                 [];
+          Binary -> Pid = wf:depickle(Binary),
+                    X = Pid ! {'N2O',self()},
+                    R = receive Actions -> render_actions(Actions) after 100 ->
+                        QS = element(14, Req),
+                        wf:redirect(case QS of <<>> -> ""; _ -> "?" ++ wf:to_list(QS) end),
+                        []
+                    end,
+                    R end,
     try Module:event(init) catch C:E -> wf:error_page(C,E) end,
-    {reply, wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]), Req, State};
+    {reply, wf:json([{eval,iolist_to_binary([InitActions,render_actions(get(actions))])}]), Req, State};
 
 info(Unknown, Req, State) ->
 %    wf:info("Unknown Message: ~p",[Unknown]),
