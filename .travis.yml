@@ -1,0 +1,10 @@
+language: erlang
+otp_release:
+  - R16B
+notifications:
+  email: 
+    - maxim@synrc.com
+    - doxtop@synrc.com
+  irc: "chat.freenode.net#n2o"
+install: "rebar get-deps compile"
+script: "rebar compile"
