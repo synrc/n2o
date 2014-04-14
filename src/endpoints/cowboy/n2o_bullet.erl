@@ -2,6 +2,7 @@
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 
+-compile(export_all).
 -export([init/4]).
 -export([stream/3]).
 -export([info/3]).
