@@ -1,0 +1,9 @@
+{application, n2o_sample,
+ [
+  {description, "N2O VXZ Sample App"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {mod, { web_app, []}},
+  {env, []}
+ ]}.

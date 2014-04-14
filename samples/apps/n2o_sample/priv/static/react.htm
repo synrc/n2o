@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>Hello React</title>
+    <script src="http://fb.me/react-0.5.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.5.0.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/jsx">
+
+/** @jsx React.DOM */
+
+var User = React.createClass({
+    render: function() {
+        console.log(this.props);
+        props = JSON.stringify(this.props.tokens);
+        nested = JSON.stringify(this.props.nested);
+        return (
+            <div><h2>{this.props.id}</h2>
+            Email: {this.props.email},<br/> Tokens: {props},<br/> Nested: {nested}</div> ); } });
+
+var CommentList = React.createClass({
+    render: function() {
+        var users = this.props.data.map(function (item) {
+            return <User id={item.id} email={item.email} tokens={item.proplist} nested={item.nested_proplists}/>; });
+        return (<div class="commentList">{users}</div>); }
+});
+
+var CommentBox = React.createClass({
+    getInitialState: function() { return {data: []}; },
+    loadData: function() {
+        var p = this;
+        var request = new XMLHttpRequest;
+        request.open('GET', this.props.url, true);
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                data = JSON.parse(request.responseText);
+                request = new XMLHttpRequest;
+                p.setState({data: data.users});
+            } else {
+                console.log("Request: " + request);
+            }
+        };
+        request.send();
+    },
+    componentWillMount: function() { this.loadData(); },
+    render: function() {
+        return (<div><h1>Users</h1><CommentList data={this.state.data}/></div> ); }});
+
+React.renderComponent(
+    <CommentBox url="http://localhost:8000/rest/users" pollInterval={5000}/>,
+    document.getElementById('content'));
+
+    </script>
+  </body>
+</html>
