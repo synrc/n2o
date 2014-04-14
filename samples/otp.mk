@@ -2,7 +2,7 @@ empty :=
 ROOTS := apps deps
 space := $(empty) $(empty)
 comma := $(empty),$(empty)
-VSN   := $(shell expr substr `git rev-parse HEAD` 1 6)
+VSN   := $(shell git rev-parse HEAD | cut -c 1-6)
 DATE  := $(shell git show -s --format="%ci" HEAD | sed -e 's/\+/Z/g' -e 's/-/./g' -e 's/ /-/g' -e 's/:/./g')
 ERL_LIBS := $(subst $(space),:,$(ROOTS))
 relx  := "{release,{$(RELEASE),\"$(VER)\"},[$(subst $(space),$(comma),$(APPS))]}.\\n{include_erts,true}.\
@@ -21,6 +21,7 @@ console: .applist
 	ERL_LIBS=$(ERL_LIBS) erl $(ERL_ARGS) -eval \
 		'[ok = application:ensure_started(A, permanent) || A <- $(shell cat .applist)]'
 start: $(RUN_DIR) $(LOG_DIR) .applist
+	RUN_ERL_LOG_GENERATIONS=1000 RUN_ERL_LOG_MAXSIZE=20000000 \
 	ERL_LIBS=$(ERL_LIBS) run_erl -daemon $(RUN_DIR)/ $(LOG_DIR)/ "exec $(MAKE) console"
 attach:
 	to_erl $(RUN_DIR)/
