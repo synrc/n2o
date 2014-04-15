@@ -34,7 +34,7 @@ stream(Data, Req, State) -> info(Data,Req,State).
 
 info({client,Message}, Req, State) ->
     wf_context:clear_actions(),
-    wf:info("Client Message: ~p",[Message]),
+%    wf:info("Client Message: ~p",[Message]),
     Module = State#context.module,
     try Module:event({client,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]) end,
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
@@ -57,7 +57,7 @@ info({binary,Message}, Req, State) ->
 
 info({server,Message}, Req, State) ->
     wf_context:clear_actions(),
-    wf:info("Server Message: ~p",[Message]),
+%    wf:info("Server Message: ~p",[Message]),
     Module = State#context.module,
     try Module:event({server,Message}) catch E:R -> wf:info("Catch: ~p:~p", [E,R]) end,
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
@@ -65,8 +65,9 @@ info({server,Message}, Req, State) ->
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf_context:clear_actions(),
-    wf:info("N2O Message: ~p",[Event]),
-    {reply,html_events(Event,State),Req,State};
+%    wf:info("N2O Message: ~p",[Event]),
+    Result = try html_events(Event,State) catch E:R -> wf:info("Catch: ~p:~p", [E,R]), wf:json([]) end,
+    {reply,Result,Req,State};
 
 info({flush,Actions}, Req, State) ->
     wf_context:clear_actions(),
@@ -97,7 +98,7 @@ info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
     {reply, wf:json([{eval,iolist_to_binary([InitActions,Actions])}]), Req, State};
 
 info(Unknown, Req, State) ->
-%    wf:info("Unknown Message: ~p",[Unknown]),
+    wf:info("Unknown Message: ~p",[Unknown]),
     Module = State#context.module,
     try Module:event(Unknown) catch C:E -> wf:error_page(C,E) end,
     {reply, wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]), Req, State}.
@@ -115,7 +116,7 @@ render_actions(Actions) ->
 
 html_events({pickle,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
-    wf:info("Depickled: ~p",[Ev]),
+%    wf:info("Depickled: ~p",[Ev]),
     case Ev of
          #ev{} -> render_ev(Ev,Source,Linked,State);
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
