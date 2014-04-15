@@ -13,9 +13,11 @@
 %         wf_core:run/1:15
 
 stack() ->
-    [ 
-        { Module,Function,Arity,proplists:get_value(line, Location) }
-    ||  { Module,Function,Arity,Location} <- erlang:get_stacktrace() ].
+    [    case A of 
+            { Module,Function,Arity,Location} ->
+        { Module,Function,Arity,proplists:get_value(line, Location) };
+            Else -> Else end
+    || A <- erlang:get_stacktrace() ].
 
 
 error_page(Class,Error) ->
