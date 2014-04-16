@@ -6,20 +6,15 @@
 
 render_element(R = #htmlbox{})->
   Id = case R#htmlbox.id of undefined-> wf:temp_id(); I -> I end,
-  PreviewId = case R#htmlbox.post_target of undefined -> "preview_"++Id; T-> T end, 
+  %PreviewId = case R#htmlbox.post_target of undefined -> "preview_"++Id; T-> T end, 
   ToolbarId = wf:temp_id(),
   Html = case R#htmlbox.html of undefined -> ""; H -> wf:js_escape(H) end,
   Root = case R#htmlbox.root of undefined -> code:priv_dir(n2o); Path -> Path end,
-  Up =  #upload{id = wf:temp_id(),
-    root = Root,
+  State = #upload_state{root = Root,
     dir = R#htmlbox.dir,
     delegate = element_htmlbox,
-    delegate_query = element_htmlbox,
-    delegate_api = R#htmlbox.delegate_api,
-    post_write = R#htmlbox.post_write,
-    img_tool = R#htmlbox.img_tool,
-    post_target = PreviewId,
     size = R#htmlbox.size},
+  Up =  #upload{id = wf:temp_id(), state=State},
   UploadPostback = wf_event:new(Up, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
 
   wf:wire(wf:f(
@@ -102,7 +97,7 @@ control_event(Cid, {Root, Dir, File, MimeType, Data, ActionHolder, PostWrite, Im
             ThDir = filename:join([Root, Dir, "thumbnail"]),
             [begin
                 Th = filename:join([ThDir, Name++"_"++integer_to_list(X)++"x"++integer_to_list(Y)++Ext]),
-                En = filelib:ensure_dir(Th),
+                filelib:ensure_dir(Th),
                 M:make_thumb(Full, X, Y, Th) end || {X, Y}<- Size],
                 filename:join([ThDir--Root, Name++Ext]) end,
             post_write(Api, Target, Root, Dir, File, MimeType, Thumb) end,
