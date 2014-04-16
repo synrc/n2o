@@ -85,7 +85,7 @@ info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
          <<>> -> Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
                  wf_core:render(Elements),
                  [];
-          Binary -> Pid = wf:depickle(Binary),
+          Binary -> Pid = wf:depickle(Binary), % FIXME TODO Legacy Nitrogen Compatible Code should be more pretty
                     X = Pid ! {'N2O',self()},
                     R = receive A -> render_actions(A) after 100 ->
                         QS = element(14, Req),
