@@ -124,7 +124,6 @@ html_events({pickle,Source,Pickled,Linked}, State) ->
 
 render_ev(#ev{module=M,name=F,payload=P,trigger=T},Source,Linked,State) ->
     case F of 
-         control_event -> lists:map(fun({K,V})-> put(K,V) end,Linked), M:F(T,P);
          api_event -> M:F(P,Linked,State);
          event -> lists:map(fun({K,V})-> put(K,V) end,Linked), M:F(P);
          UserCustomEvent -> M:F(P,T,State) end.
