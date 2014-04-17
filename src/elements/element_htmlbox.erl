@@ -12,9 +12,8 @@ render_element(R = #htmlbox{})->
   Root = case R#htmlbox.root of undefined -> code:priv_dir(n2o); Path -> Path end,
   State = #upload_state{root = Root,
     dir = R#htmlbox.dir,
-    delegate = element_htmlbox,
     size = R#htmlbox.size},
-  Up =  #upload{id = wf:temp_id(), state=State},
+  Up =  #upload{id = wf:temp_id(), state=State,delegate = element_htmlbox},
   UploadPostback = wf_event:new(Up, Id, element_htmlbox, control_event, <<"{'msg': uid}">>),
 
   wf:wire(wf:f(
