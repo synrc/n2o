@@ -95,7 +95,7 @@ event({Id, complete,_}) ->
   [{pid, Pid}] = wf:q({Id, <<"detail">>}),
   gen_server:cast(list_to_pid(binary_to_list(Pid)), complete);
 
-event(R) -> skip.
+event(_) -> skip.
 
 hash(Filename) ->
   {ok, Content} = file:read_file(Filename),
