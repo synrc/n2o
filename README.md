@@ -8,9 +8,9 @@ Information for Nitrogen users:
 
 * All actions are triggered through single endpoint
 * Dropped support of simple_brigde
-* Dependency on Bert, jQuery and Bullet only
-* no JSON encoding for client/server data transfer, no use of urlencode and Nitrogen.js
-* Enough compatibility with original Nitrogen to convert Nitrogen sites/elements to N2O
+* Dependency on Micro BERT and optional XHR fallback only, no jQuery
+* BERT/MessagePack inside JSON and raw binaries
+* Enough compatibility with original Nitrogen to convert sites/elements to N2O
 * Proper id and class attributes
 * Several times faster that original Nitrogen
 * GProc process registry instead of nprocreg
@@ -20,16 +20,14 @@ New features
 -----------
 
 * Secure Pickling with AES CBC 128 for events protection
-* Twitter Bootstrap compatible rendering
 * Optimized for latency: deffered JavaScript rendering
-* Supports optional Zepto library for non-IE browsers
 * XHR fallback through Bullet for legacy browsers
 * Clean codebase without additional layers
 * One process per page during lifetime
 * Works heavy coupled within Cowboy processes
 * Page construction from Erlang binaries
-* Custom template engines as elements: DTL, SGTE, ET
-* Advanced element collection: Tabs, Grid, Viz.js, Mandala
+* Custom template engines as elements: #dtl
+* Advanced element collection: #upload, #tags, #edit
 * Rapid REST apps prototyping with REST handlers
 
 WebSockets transport
