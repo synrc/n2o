@@ -25,7 +25,7 @@ If you want to start using raw N2O core you can use Cowboy dispatch parameter
 for passing N2O http and websocket handlers and cowboy static handler:
 
 \begin{lstlisting}[caption=web\_sup.erl]
-    cowboy:start_http(http, 100, [{port, 8000}],
+    cowboy:start_http(http, 100, [{port, wf:config(transition_port)}],
                                  [{env, [{dispatch, dispatch_rules()}]}]),
 
     dispatch_rules() ->
@@ -37,6 +37,19 @@ for passing N2O http and websocket handlers and cowboy static handler:
             {"/rest/:resource/:id", rest_cowboy, []},
             {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
             {'_', n2o_cowboy, []} ]}]).
+\end{lstlisting}
+
+N2O uses two ports for SSL and non-SSL connections: 
+
+\begin{lstlisting}
+    wf:config(n2o,port,443)
+    wf:config(n2o,transition_port,80)
+\end{lstlisting}
+
+These ports you can also redefine WS:// port in bullet connection inside template:
+
+\begin{lstlisting}
+    <script>var transition = {pid: '', host: 'localhost', port: '8000' };</script>
 \end{lstlisting}
 
 And then add a minimal {\bf index.erl} page:
