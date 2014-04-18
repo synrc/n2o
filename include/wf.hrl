@@ -19,7 +19,7 @@
 -define(DEFAULT_BASE_TAG(Tag), {?ELEMENT_BASE_TAG(undefined,Tag)}).
 -define(ELEMENT_BASE(Module), ?ELEMENT_BASE_TAG(Module,undefined)).
 -define(ELEMENT_BASE_TAG(Module,Tag),
-        ancestor=element, module=Module, delegate=Module, id, actions, class=[], style=[], source=[],
+        ancestor=element, module=Module, delegate, id, actions, class=[], style=[], source=[],
         data_fields=[], aria_states=[], body, role, tabindex, show_if=true, html_tag=Tag, title).
 
 -define(ACTION_BASE(Module),
