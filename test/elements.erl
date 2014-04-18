@@ -11,6 +11,6 @@ main() ->
 title() -> "N2O Test".
 body() ->
     [
-     #label{text = "test label"},
-     #textbox{text = "test textbox"}
+     #label{body = "test label"},
+     #textbox{body = "test textbox"}
     ].
