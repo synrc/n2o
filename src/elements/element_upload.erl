@@ -68,7 +68,9 @@ render(#upload{id=Id} = R) ->
 wire(#upload{id=Id, state=S, delegate=D}=R) ->
   Callbacks = [{query_file, [Id], S},{start_upload, [], S}, {deliver, [], S}, {complete, [], ok}],
 
-  wf:wire(wf:f("Upload('#~s',{preview:'~s',value:'~s'});", [Id, wf:to_list(S#upload_state.preview), R#upload.value])),
+  wf:wire(wf:f("Upload('#~s',{preview:'~s',value:'~s', block_size:'~s'});",
+    [Id, wf:to_list(S#upload_state.preview), R#upload.value, wf:to_list(S#upload_state.block_size)])),
+
   [wf:wire(#event{postback={Id,T,Arg}, source=Src, target=Id, type=T, delegate=D}) || {T, Src, Arg} <- Callbacks].
 
 event({Id, query_file, #upload_state{}=S}) ->
