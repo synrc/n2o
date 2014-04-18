@@ -117,7 +117,7 @@
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], postback}).
 -record(upload_state, {cid, root=code:priv_dir(n2o), dir="", name, 
   type, room=upload, data= <<>>, preview=false, size=[{200,200}], index=0, block_size=1048576}).
--record(upload, {?ELEMENT_BASE(element_upload), name, value, state=#upload_state{}, delegate=element_upload}).
+-record(upload, {?ELEMENT_BASE(element_upload), name, value, state=#upload_state{}}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 -record(htmlbox, {?ELEMENT_BASE(wf:config(n2o,htmlbox_module,element_htmlbox)), html, script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate_api, toolbar_class, toolbar_script, root=code:priv_dir(n2o), dir="", post_write, img_tool, post_target, size=[{200, 200}]}).
 
