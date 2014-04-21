@@ -16,14 +16,14 @@
 -record(ev,      {module, payload, trigger, name :: api_event | control_event | event | atom() }).
 
 -define(DEFAULT_BASE, {?ELEMENT_BASE(undefined)}).
--define(DEFAULT_BASE_TAG(Tag), {?ELEMENT_BASE_TAG(undefined,Tag)}).
--define(ELEMENT_BASE(Module), ?ELEMENT_BASE_TAG(Module,undefined)).
--define(ELEMENT_BASE_TAG(Module,Tag),
-        ancestor=element, module=Module, delegate, id, actions, class=[], style=[], source=[],
+-define(DEFAULT_BASE_TAG(Tag), {?ELEMENT_BASE(undefined,Tag,undefined)}).
+-define(ELEMENT_BASE(Module), ?ELEMENT_BASE(Module,undefined,undefined)).
+-define(ELEMENT_BASE(Module,Tag,Delegate),
+        ancestor=element, module=Module, delegate=Delegate, id, actions, class=[], style=[], source=[],
         data_fields=[], aria_states=[], body, role, tabindex, show_if=true, html_tag=Tag, title).
-
 -define(ACTION_BASE(Module),
         ancestor=action, trigger, target, module=Module, actions, source=[]).
+-define(CTRL_BASE(Module), ?ELEMENT_BASE(Module,undefined,Module)).
 
 -record(element, {?ELEMENT_BASE(undefined)}).
 -record(range, {?ELEMENT_BASE(element_range), min=0, max=100, step=1, value=0, next, postback}).
@@ -117,7 +117,7 @@
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], postback}).
 -record(upload_state, {cid, root=code:priv_dir(n2o), dir="", name, 
   type, room=upload, data= <<>>, preview=false, size=[{200,200}], index=0, block_size=1048576}).
--record(upload, {?ELEMENT_BASE(element_upload), name, value, state=#upload_state{}}).
+-record(upload, {?CTRL_BASE(element_upload), name, value, state=#upload_state{}}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
 -record(htmlbox, {?ELEMENT_BASE(wf:config(n2o,htmlbox_module,element_htmlbox)), html, script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate_api, toolbar_class, toolbar_script, root=code:priv_dir(n2o), dir="", post_write, img_tool, post_target, size=[{200, 200}]}).
 
