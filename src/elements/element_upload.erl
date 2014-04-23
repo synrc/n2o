@@ -20,7 +20,6 @@ init([#upload_state{root=Root, dir=Dir, name=Name, index=I}=S]) ->
     ReadS =  if S#upload_state.index == 0 -> {ok, S};
       true -> case file:read(D, I) of {ok, Dl} -> {ok, S#upload_state{data=Dl}};_ -> {ok, S} end end,
     file:close(D),
-    wf:reg(S#upload_state.room),
     ReadS;
   {error, enoent}->{ok,S};
   {error,enotdir}->{ok,S};
@@ -67,7 +66,6 @@ render(#upload{id=Id} = R) ->
 
 wire(#upload{id=Id, state=S, delegate=D}=R) ->
   Callbacks = [{query_file, [Id], S},{start_upload, [], S}, {deliver, [], S}, {complete, [], ok}],
-
   wf:wire(wf:f("Upload('#~s',{preview:'~s',value:'~s', block_size:'~s'});",
     [Id, wf:to_list(S#upload_state.preview), R#upload.value, wf:to_list(S#upload_state.block_size)])),
 
@@ -83,7 +81,9 @@ event({Id, start_upload, #upload_state{}=S}) ->
   [{file_name, Name}, {type, MimeType}, {index, Index}] = wf:q({Id, <<"detail">>}),
   UpS=S#upload_state{cid=Id, name=wf:to_list(Name), type=MimeType, index=Index},
   {Ev, Detail} = case gen_server:start(?MODULE, [UpS], []) of
-    {ok, Pid} -> {read_slice,  {pid, list_to_binary(pid_to_list(Pid))}};
+    {ok, Pid} ->
+      wf:reg(S#upload_state.room),
+      {read_slice,  {pid, list_to_binary(pid_to_list(Pid))}};
     {error, R} when is_atom(R) -> {error, {msg, atom_to_list(R)}};
     {error, R} -> {error, {msg, R}} end,
   ?WS_SEND(Id, Ev, Detail);
