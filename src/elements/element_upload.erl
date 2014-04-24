@@ -12,9 +12,6 @@
 -define(TH_DIR, (wf:config(n2o, thumbnail_dir, "thumbnails"))).
 -endif.
 
--define(WS_SEND(Id,Ev,Detail), wf:wire(wf:f("document.getElementById('~s').dispatchEvent("
-  "new CustomEvent('~s', {'detail': ~s}))", [Id,wf:to_list(Ev),wf:json([Detail])]))).
-
 init([#upload_state{root=Root, dir=Dir, name=Name, index=I}=S]) ->
   case file:open(filename:join([Root, Dir, Name]), [raw, binary, write, read]) of {ok, D} ->
     ReadS =  if S#upload_state.index == 0 -> {ok, S};

@@ -14,7 +14,6 @@
 -record(handler, {name, module, config, state}).
 -record(context, {handlers, actions, req, module, path, session, params}).
 -record(ev,      {module, payload, trigger, name :: api_event | control_event | event | atom() }).
-
 -define(DEFAULT_BASE, {?ELEMENT_BASE(undefined)}).
 -define(DEFAULT_BASE_TAG(Tag), {?ELEMENT_BASE(undefined,Tag,undefined)}).
 -define(ELEMENT_BASE(Module), ?ELEMENT_BASE(Module,undefined,undefined)).
@@ -115,11 +114,11 @@
 
 % Synrc Elements
 -record(rtable, {?ELEMENT_BASE(element_rtable), rows=[], postback}).
--record(upload_state, {cid, root=code:priv_dir(n2o), dir="", name, 
+-record(upload_state, {cid, root=code:priv_dir(n2o), dir="", name,
   type, room=upload, data= <<>>, preview=false, size=[{200,200}], index=0, block_size=1048576}).
 -record(upload, {?CTRL_BASE(element_upload), name, value, state=#upload_state{}}).
 -record(textboxlist, {?ELEMENT_BASE(element_textboxlist), placeholder="", postback, unique=true, values=[], autocomplete=true, queryRemote=true, onlyFromValues=true, minLenght=1}).
--record(htmlbox, {?ELEMENT_BASE(wf:config(n2o,htmlbox_module,element_htmlbox)), html, script_url="static/tinymce/tinymce.min.js", theme="n2o", delegate_api, toolbar_class, toolbar_script, root=code:priv_dir(n2o), dir="", post_write, img_tool, post_target, size=[{200, 200}]}).
+-record(htmlbox, {?CTRL_BASE(element_htmlbox), html, state=#upload_state{}}).
 
 % Actions
 -record(action,  {?ACTION_BASE(undefined)}).
@@ -137,5 +136,9 @@
     Y = [ try N=lists:nth(1,B), if is_number(N) -> wf:to_binary(B); true -> B end catch _:_ -> B end
           || B <- tl(tuple_to_list(O)) ],
     lists:zip(record_info(fields, Record), Y)).
+
+% emulate msg ! socket through wire
+-define(WS_SEND(Id,Ev,Detail), wf:wire(wf:f("document.getElementById('~s').dispatchEvent("
+  "new CustomEvent('~s', {'detail': ~s}));", [Id,wf:to_list(Ev),wf:json([Detail])]))).
 
 -endif.
