@@ -7,6 +7,8 @@ context() -> get(context).
 context(Ctx) -> put(context,Ctx).
 actions() -> get(actions).
 actions(Actions) -> put(actions,Actions).
+cookies() -> case get(cookies) of undefined -> []; E -> E end.
+add_cookie(Name,Value,Path,TTL) -> put(cookies,[{Name,Value,Path,TTL}|wf:cookies()]).
 script() -> get(script).
 script(Script) -> put(script,Script).
 clear_actions() -> put(actions,[]).
