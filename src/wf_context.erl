@@ -11,7 +11,7 @@ cookies() -> C = get(cookies), case is_list(C) of true -> C; _ -> [] end.
 add_cookie(Name,Value,Path,TTL) -> 
     C = cookies(),
     Cookies = case lists:keyfind(Name,1,C) of
-        {Name,Value,Path,TTL} -> lists:keyreplace(Name,1,C,{Name,Value,Path,TTL});
+        {Name,_,_,_} -> lists:keyreplace(Name,1,C,{Name,Value,Path,TTL});
         false -> [{Name,Value,Path,TTL}|C] end,
     put(cookies,Cookies).
 

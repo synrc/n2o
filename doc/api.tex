@@ -164,5 +164,16 @@ login and authorization. See {\bf AVZ} library.
 
 \subsection{Bridge information {\bf wf:header} and {\bf wf:cookie}}
 You can read and issue cookie and headers information using internal Web-Server routines.
-You can also read peer IP with {\bf wf:peer}.
+You can also read peer IP with {\bf wf:peer}. Usually you do Bridge operations
+inside handlers or endpoints.
 
+\begin{lstlisting}
+    wf:cookies_req(?REQ),
+    wf:cookies_req(Name,Value,Path,TTL,Req)
+\end{lstlisting}
+
+You can set cookies throught public cookies API in page during initial page render.
+
+\begin{lstlisting}
+    body() -> wf:cookie("user","Joe"), [].
+\end{lstlisting}

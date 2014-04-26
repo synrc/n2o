@@ -67,7 +67,8 @@ info({pickle,_,_,_}=Event, Req, State) ->
     wf_context:clear_actions(),
 %    wf:info(?MODULE,"N2O Message: ~p",[Event]),
     Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]), wf:json([]) end,
-    {reply,Result,Req,State};
+    wf:info(?MODULE,"Pickle Cookies: ~p",[wf_core:set_cookies(wf:cookies(),Req)]),
+    {reply,Result,wf_core:set_cookies(wf:cookies(),Req),State};
 
 info({flush,Actions}, Req, State) ->
     wf_context:clear_actions(),
