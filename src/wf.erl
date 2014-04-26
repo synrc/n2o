@@ -137,7 +137,7 @@ cookie(Name,Value,Path,TTL) -> wf_context:add_cookie(Name,Value,Path,TTL).
 cookie_req(Cookie,Req) -> ?BRIDGE:cookie(Cookie, Req).
 cookie_req(Name, Value, Path, TTL, Req) -> ?BRIDGE:cookie(Name, Value, Path, TTL, Req).
 params(Req) -> ?BRIDGE:params(Req).
-cookies(Req) -> ?BRIDGE:cookies(Req).
+cookies_req(Req) -> ?BRIDGE:cookies(Req).
 headers(Req) -> ?BRIDGE:headers(Req).
 peer(Req) -> ?BRIDGE:peer(Req).
 path(Req) -> ?BRIDGE:path(Req).

@@ -21,7 +21,7 @@ headers(Req) -> cowboy_req:headers(Req).
 header(Name, Value, Req) -> cowboy_req:set_resp_header(Name, Value, Req).
 response(Html,Req) -> cowboy_req:set_resp_body(Html,Req).
 reply(StatusCode,Req) -> cowboy_req:reply(StatusCode, Req).
-cookies(Req) -> {Cookies,Req} = cowboy_req:cookies(Req), Cookies.
+cookies(Req) -> element(1,cowboy_req:cookies(Req)).
 cookie(Cookie,Req) when is_atom(Cookie) -> cookie(list_to_binary(atom_to_list(Cookie)),Req);
 cookie(Cookie,Req) -> {Val,_} = cowboy_req:cookie(Cookie,Req), Val.
 cookie(Cookie, Value, Req) -> cookie(Cookie,Value,"/",0,Req).
