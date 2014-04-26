@@ -169,11 +169,18 @@ inside handlers or endpoints.
 
 \begin{lstlisting}
     wf:cookies_req(?REQ),
-    wf:cookies_req(Name,Value,Path,TTL,Req)
+    wf:cookie_req(Name,Value,Path,TTL,Req)
 \end{lstlisting}
 
 You can set cookies throught public cookies API in page during initial page render.
 
 \begin{lstlisting}
     body() -> wf:cookie("user","Joe"), [].
+\end{lstlisting}
+
+Inside WebSocket events you should use wiring:
+
+\begin{lstlisting}
+    event(_) ->
+        wf:wire(wf:f("document.cookie='~s=~s'",["user","Joe"])).
 \end{lstlisting}
