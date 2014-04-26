@@ -9,7 +9,7 @@
 init2(State, Req) -> {ok, State, Req}.
 
 init(State, Ctx) -> 
-    C = wf:cookie(session_cookie_name(),Ctx#context.req),
+    C = wf:cookie_req(session_cookie_name(),Ctx#context.req),
     SessionId = case C of
                      undefined -> undefined;
                      A when is_list(A) -> list_to_binary(A);
@@ -18,35 +18,35 @@ init(State, Ctx) ->
     SessionCookie = case lookup_ets({SessionId,<<"auth">>}) of 
                  undefined -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
                               ets:insert(cookies,Cookie),
-                              % wf:info(?MODULE,"Cookie New: ~p",[Cookie]),
+                              wf:info(?MODULE,"Cookie New: ~p",[Cookie]),
                               Cookie;
                  {{Session,Key},Path,Issued,TTL,Status} -> case expired(Issued,TTL) of
                      false -> Cookie = {{Session,Key},Path,Issued,TTL,Status},
-                              % wf:info(?MODULE,"Cookie Same: ~p",[Cookie]),
+                              wf:info(?MODULE,"Cookie Same: ~p",[Cookie]),
                               Cookie;
                       true -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
                               ets:insert(cookies,Cookie), 
-                              % wf:info(?MODULE,"Cookie Expired: ~p",[Cookie]),
+                              wf:info(?MODULE,"Cookie Expired: ~p",[Cookie]),
                               Cookie end;
                  _ -> error_logger:info_msg("Cookie Error"), skip
                       end,
-    % wf:info(?MODULE,"State: ~p",[SessionCookie]),
+    wf:info(?MODULE,"State: ~p",[SessionCookie]),
     {ok, State, Ctx#context{session=SessionCookie}}.
 
 expired(Issued,TTL) ->
     false.
 
 finish(State, Ctx) -> 
-    % wf:info(?MODULE,"Finish Cookie Set ~p",[{_Config,State}]),
+    wf:info(?MODULE,"Finish Cookie Set ~p",[State]),
     NewReq = case Ctx#context.session of
          {{Session,Key},Path,Issued,TTL,Status} -> 
-              wf:cookie(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
+              wf:cookie_req(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
          _ -> Ctx#context.req end,
     {ok, [], Ctx#context{req=NewReq}}.
 
 lookup_ets(Key) ->
     Res = ets:lookup(cookies,Key),
-    % wf:info(?MODULE,"Lookup ETS: ~p",[{Res,Key}]),
+    wf:info(?MODULE,"Lookup ETS: ~p",[{Res,Key}]),
     case Res of 
          [] -> undefined;
          [Value] -> Value;
@@ -57,7 +57,7 @@ clear(Session) ->
     [ ets:delete(cookies,X) || X <- ets:select(cookies,
         ets:fun2ms(fun(A) when (element(1,element(1,A)) == Session) -> element(1,A) end)) ].
 
-session_id() -> wf:cookie(session_cookie_name(),?REQ).
+session_id() -> wf:cookie_req(session_cookie_name(),?REQ).
 new_cookie_value() -> base64:encode(erlang:md5(term_to_binary({now(), make_ref()}))).
 new_state() -> #state{unique=new_cookie_value()}.
 session_cookie_name() -> <<"n2o-sid">>.
@@ -66,5 +66,5 @@ get_value(Key, DefaultValue) ->
     Res = case lookup_ets({session_id(),Key}) of
                undefined -> DefaultValue;
                {_,Value} -> Value end,
-    % wf:info(?MODULE,"Session Lookup Key ~p Value ~p",[Key,Res]),
+    wf:info(?MODULE,"Session Lookup Key ~p Value ~p",[Key,Res]),
     Res.

@@ -17,7 +17,8 @@ run(Req) ->
     Actions = wf_context:actions(),
     Pid ! {init,Actions},
     Ctx2 = fold(finish,Ctx#context.handlers,Ctx1),
-    Req2 = wf:response(Html,Ctx2#context.req),
+    Req2 = wf:response(Html,set_cookies(wf:cookies(),Ctx2#context.req)),
+    wf:info(?MODULE,"Cookies Req: ~p",[Req2]),
     {ok, _ReqFinal} = wf:reply(200, Req2).
 
 fold(Fun,Handlers,Ctx) ->
@@ -32,3 +33,7 @@ render(<<E/binary>>) -> E;
 render(undefined) -> [];
 render(Elements) when is_list(Elements) -> [ render_item(E) || E <- lists:flatten(Elements) ];
 render(Elements) -> render_item(Elements).
+
+set_cookies([],Req)-> Req;
+set_cookies([{Name,Value,Path,TTL}|Cookies],Req)->
+    set_cookies(Cookies,wf:cookie_req(Name,Value,Path,TTL,Req)).

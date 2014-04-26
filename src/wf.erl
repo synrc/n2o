@@ -121,14 +121,21 @@ cache(Key) ->
 q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
 qs(Key) -> proplists:get_value(Key,?CTX#context.params).
 
+% Cookies
+
+cookies() -> wf_context:cookies().
+cookie(Name) -> lists:keyfind(Name,1,cookies()).
+cookie(Name,Value) -> cookie(Name,Value,"/", 24 * 60 * 60).
+cookie(Name,Value,Path,TTL) -> wf_context:add_cookie(Name,Value,Path,TTL).
+
 % Bridge Information
 
 -ifndef(BRIDGE).
 -define(BRIDGE, n2o_cowboy).
 -endif.
 
-cookie(Cookie,Req) -> ?BRIDGE:cookie(Cookie, Req).
-cookie(Name, Value, Path, TTL, Req) -> ?BRIDGE:cookie(Name, Value, Path, TTL, Req).
+cookie_req(Cookie,Req) -> ?BRIDGE:cookie(Cookie, Req).
+cookie_req(Name, Value, Path, TTL, Req) -> ?BRIDGE:cookie(Name, Value, Path, TTL, Req).
 params(Req) -> ?BRIDGE:params(Req).
 cookies(Req) -> ?BRIDGE:cookies(Req).
 headers(Req) -> ?BRIDGE:headers(Req).

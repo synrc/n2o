@@ -7,8 +7,14 @@ context() -> get(context).
 context(Ctx) -> put(context,Ctx).
 actions() -> get(actions).
 actions(Actions) -> put(actions,Actions).
-cookies() -> case get(cookies) of undefined -> []; E -> E end.
-add_cookie(Name,Value,Path,TTL) -> put(cookies,[{Name,Value,Path,TTL}|wf:cookies()]).
+cookies() -> C = get(cookies), case is_list(C) of true -> C; _ -> [] end.
+add_cookie(Name,Value,Path,TTL) -> 
+    C = cookies(),
+    Cookies = case lists:keyfind(Name,1,C) of
+        {Name,Value,Path,TTL} -> lists:keyreplace(Name,1,C,{Name,Value,Path,TTL});
+        false -> [{Name,Value,Path,TTL}|C] end,
+    put(cookies,Cookies).
+
 script() -> get(script).
 script(Script) -> put(script,Script).
 clear_actions() -> put(actions,[]).
