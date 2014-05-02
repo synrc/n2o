@@ -75,6 +75,13 @@ info({flush,Actions}, Req, State) ->
     wf:info(?MODULE,"Flush Message: ~p",[Actions]),
     {reply, wf:json([{eval,iolist_to_binary(render_actions(Actions))}]), Req, State};
 
+info({delivery,Route,Message}, Req, State) ->
+    wf_context:clear_actions(),
+    Module = State#context.module,
+    Term = try Module:event({delivery,Route,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]), <<>> end,
+    wf:info(?MODULE,"Delivery: ~p Result: ~p",[Message,Term]),
+    {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]),Req,State};
+
 info(<<"PING">> = Ping, Req, State) ->
 %    wf:info(?MODULE,"Ping Message: ~p",[Ping]),
     {reply, wf:json([]), Req, State};
