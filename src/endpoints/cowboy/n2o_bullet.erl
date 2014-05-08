@@ -109,7 +109,7 @@ info(Unknown, Req, State) ->
     wf:info(?MODULE,"Unknown Message: ~p",[Unknown]),
     Module = State#context.module,
     try Module:event(Unknown) catch C:E -> wf:error_page(C,E) end,
-    {reply, wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]), Req, State}.
+    {reply, wf:json([]), Req, State}.
 
 % double render: actions could generate actions
 
