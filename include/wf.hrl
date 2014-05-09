@@ -104,9 +104,6 @@
 -record(mark,       ?DEFAULT_BASE).
 -record(abbr,       ?DEFAULT_BASE).
 
-% Embedding
--record(canvas,     ?DEFAULT_BASE).
-
 % Actions
 -record(action,  {?ACTION_BASE(undefined)}).
 -record(wire,    {?ACTION_BASE(action_wire)}).
@@ -115,17 +112,5 @@
 -record(alert,   {?ACTION_BASE(action_alert), text}).
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
 -record(jq,      {?ACTION_BASE(action_jq), property, method, args=[], right, format="~s"}).
-
-% REST macros
--define(rest(), is_rest() -> true).
--define(unmap(Record), unmap(P,R) -> wf_utils:hunmap(P,R,record_info(fields, Record),size(R)-1)).
--define(map(Record), map(O) ->
-    Y = [ try N=lists:nth(1,B), if is_number(N) -> wf:to_binary(B); true -> B end catch _:_ -> B end
-          || B <- tl(tuple_to_list(O)) ],
-    lists:zip(record_info(fields, Record), Y)).
-
-% emulate msg ! socket through wire
--define(WS_SEND(Id,Ev,Detail), wf:wire(wf:f("document.getElementById('~s').dispatchEvent("
-  "new CustomEvent('~s', {'detail': ~s}));", [Id,wf:to_list(Ev),wf:json([Detail])]))).
 
 -endif.
