@@ -1,6 +1,7 @@
 #!/usr/bin/env escript
 
-% This script boots up the Reltool Server to order apps in launch order
+% This script boots up the Reltool Server for apps ordering
+% It also could generate reltool.config
 
 -module(orderapps).
 -compile([export_all]).
