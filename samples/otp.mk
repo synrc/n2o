@@ -21,7 +21,7 @@ delete-deps get-deps compile clean update-deps:
 	rebar $@
 .applist:
 	$(eval APPS := $(subst deps/,,$(subst apps/,,$(shell find apps deps -maxdepth 1 -mindepth 1 -type d))))
-	./depman.erl $(APPS) > $@
+	./orderapps.erl $(APPS) > $@
 $(RUN_DIR) $(LOG_DIR):
 	mkdir -p $(RUN_DIR) & mkdir -p $(LOG_DIR)
 console: .applist

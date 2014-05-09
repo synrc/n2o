@@ -3,7 +3,7 @@
   {description, "N2O VXZ Sample App"},
   {vsn, "1"},
   {registered, []},
-  {applications, [kernel, stdlib]},
+  {applications, [kernel, stdlib, n2o]},
   {mod, { web_app, []}},
   {env, []}
  ]}.
