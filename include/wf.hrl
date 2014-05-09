@@ -3,6 +3,7 @@
 
 -define(CTX, (wf_context:context())).
 -define(REQ, (wf_context:context())#context.req).
+
 -define(HANDLER_API, [init/2, finish/2]).
 -define(FAULTER_API, [error_page/2]).
 -define(ROUTING_API, [init/2, finish/2]).
@@ -14,6 +15,7 @@
 -record(handler, {name, module, config, state}).
 -record(context, {handlers, actions, req, module, path, session, params}).
 -record(ev,      {module, payload, trigger, name :: api_event | control_event | event | atom() }).
+
 -define(DEFAULT_BASE, {?ELEMENT_BASE(undefined)}).
 -define(DEFAULT_BASE_TAG(Tag), {?ELEMENT_BASE(undefined,Tag,undefined)}).
 -define(ELEMENT_BASE(Module), ?ELEMENT_BASE(Module,undefined,undefined)).

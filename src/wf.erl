@@ -1,6 +1,7 @@
 -module(wf).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
+-include_lib("n2o/include/api.hrl").
 -compile (export_all).
 
 % Here is Nitrogen Web Framework compatible API
