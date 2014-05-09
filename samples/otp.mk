@@ -11,7 +11,7 @@ comma    := $(empty),$(empty)
 VSN      := $(shell git rev-parse HEAD | cut -c 1-6)
 DATE     := $(shell git show -s --format="%ci" HEAD | sed -e 's/\+/Z/g' -e 's/-/./g' -e 's/ /-/g' -e 's/:/./g')
 ERL_LIBS := $(subst $(space),:,$(ROOTS))
-relx     := "{release,{$(RELEASE),\"$(VER)\"},[$(subst $(space),$(comma),$(APPS))]}.\\n{include_erts,true}.\
+relx     := "{release,{$(RELEASE),\"$(VER)\"},[$(RELEASE)]}.\\n{include_erts,true}.\
 \\n{extended_start_script,true}.\\n{generate_start_script,true}.\\n{sys_config,\"$(SYS)\"}.\
 \\n{vm_args,\"$(VM)\"}.\\n{overlay,[{mkdir,\"log/sasl\"}]}."
 
@@ -32,7 +32,7 @@ start: $(RUN_DIR) $(LOG_DIR) .applist
 attach:
 	to_erl $(RUN_DIR)/
 release:
-	echo $(shell echo $(relx) > relx.config) & relx
+	echo $(relx) > relx.config && relx
 stop:
 	@kill -9 $(shell ps ax -o pid= -o command=|grep $(RELEASE)|grep $(COOKIE)|awk '{print $$1}')
 $(PLT_NAME):

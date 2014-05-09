@@ -2,18 +2,11 @@
 -behaviour(application).
 -export([start/2, stop/1]).
 
+% this is for Erlang on Xen only
+
 start(_StartType, _StartArgs) -> 
-    application:start(crypto),
-    application:start(sasl),
-    application:start(ranch),
-    application:start(cowboy),
-    application:start(gproc),
-    application:start(mimetypes),
-    application:start(syntax_tools),
-    application:start(compiler),
-    application:start(erlydtl),
-    application:start(rest),
-    application:start(n2o),
+    [ application:start(X) || X <-
+        [crypto,sasl,ranch,cowlib,cowboy,gproc,syntax_tools,compiler,erlydtl,rest,n2o]],
 
     web_sup:start_link().
 
