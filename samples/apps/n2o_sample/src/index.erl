@@ -32,6 +32,7 @@ event(init) ->
 event({chat,Pid}) ->
     wf:info("Chat Pid: ~p",[Pid]),
     Username = wf:user(),
+    wf:info(?MODULE,"User: ~p",[Username]),
     Message = wf:q(message),
     wf:update(banner,#panel{id=banner,body=[
         #panel{id=label,body=["Last Message: ",Message]},
