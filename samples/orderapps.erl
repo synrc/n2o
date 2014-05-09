@@ -10,7 +10,7 @@ relconfig(Apps) ->
     {sys, [{lib_dirs,LibDirs}, {rel,"node","1",Apps}, {profile, embedded},
            {boot_rel,"node"}, {app,observer,[{incl_cond,exclude}]} ]}.
 
-main([]) -> io:format("usage: ./orderapps.erl [app1,..]~n", []);
+main([]) -> io:format("usage: ./orderapps.erl apps~n", []);
 main(MainApps) ->
     Relconfig = relconfig([list_to_atom(A) || A <- MainApps]),
     {ok, Server} = reltool:start_server([{config, Relconfig}]),
