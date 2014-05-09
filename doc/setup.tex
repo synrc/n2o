@@ -11,7 +11,7 @@ is bundled as an Erlang release.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    $ git clone https://github.com/5HT/n2o
+    $ git clone git://github.com/5HT/n2o
     $ cd n2o/samples
     $ make && make console
 \end{lstlisting}
@@ -49,7 +49,9 @@ N2O uses two ports for SSL and non-SSL connections:
 These ports you can also redefine WS:// port in bullet connection inside template:
 
 \begin{lstlisting}
-    <script>var transition = {pid: '', host: 'localhost', port: '8000' };</script>
+    <script>
+        var transition = {pid: '', host: 'localhost', port: '8000' };
+    </script>
 \end{lstlisting}
 
 And then add a minimal {\bf index.erl} page:
@@ -61,20 +63,3 @@ And then add a minimal {\bf index.erl} page:
 
     main() -> #span{text="Hello"}.
 \end{lstlisting}
-
-\subsection{Rich Clients Applications Assembling}
-You will also need node.js, npm, less and uglify-js to assemble
-client-side N2O applications by packaging CSS/LESS, JavaScript and HTML templates.
-
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    $ sudo apt-get install python-software-properties
-    $ sudo add-apt-repository ppa:richarvey/nodejs
-    $ sudo apt-get update
-    $ sudo apt-get install nodejs npm
-    $ sudo npm install uglify-js -g
-\end{lstlisting}
-\vspace{1\baselineskip}
-
-Having accomplished that you will be able to build N2O App Store
-Demo \footahref{http://github.com/5HT/skyline}{http://skyline.synrc.com}.

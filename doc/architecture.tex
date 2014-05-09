@@ -14,7 +14,7 @@ Then the browser initiates WebSocket connections to the similar URL endpoint.
 N2O creates persistent WebSocket process and the Transition process dies.
 
 \paragraph{}
-Your page could also spawn processes with {\bf wf:comet}.
+Your page could also spawn processes with {\bf wf:async}.
 These are the persistent processes acting like regullar Erlang processes.
 It is a usual approach for organizing non-blocking UI for file uploads and time consuming operations.
 
@@ -47,7 +47,7 @@ JavaScript. Each user at any time has only one WebSocket process
 per connection.
 
 \subsection{Async Processes}
-These are the user processes created with {\bf wf:comet}.
+These are the user processes created with {\bf wf:async}.
 That's a legacy name coming from the times when async technology
 was called COMET for XHR channel. Async processes are optional
 and are only neededed when you have a UI event taking too much
@@ -69,8 +69,8 @@ REST endpoint handlers with Cowboy Web Server.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:resource", n2o_cowboy_rest, []},
-    {"/rest/:resource/:id", n2o_cowboy_rest, []},
+    {"/rest/:resource", rest_cowboy, []},
+    {"/rest/:resource/:id", rest_cowboy, []},
     {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
     {'_', n2o_cowboy, []}
 \end{lstlisting}
@@ -159,7 +159,8 @@ of context initialization.
 \vspace{1\baselineskip}
 
 Chain of three N2O handlers is called
-on each HTTP request. You can redefine any of them.
+on each HTTP request. You can redefine any of them or plug your own
+additional handler in chain to transform web server requests.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}[caption={wf}\_{core}:fold/3]
@@ -191,22 +192,24 @@ influences overal initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}[caption=n2o\_route.erl]
-    -module(n2o_route).
+    -module (n2o_route).
     -author('Maxim Sokhatsky').
     -include_lib("n2o/include/wf.hrl").
     -export(?ROUTING_API).
 
     finish(State, Ctx) -> {ok, State, Ctx}.
-    init(State, Ctx) -> 
+    init(State, Ctx) ->
         Path = wf:path(Ctx#context.req),
-        {ok, State, Ctx#context{path=Path,module=route(Path)}}.
+        Module = route_prefix(Path),
+        {ok, State, Ctx#context{path=Path,module=Module}}.
 
-    route(<<"/">>) -> index;
-    route(<<"/index">>) -> index;
-    route(<<"/login">>) -> login;
-    route(<<"/ws/">>) -> index;
-    route(<<"/ws/index">>) -> index;
-    route(<<"/ws/login">>) -> login;
-    route(<<"/favicon.ico">>) -> static_file;
+    route_prefix(<<"/ws/",P/binary>>) -> route(P);
+    route_prefix(<<"/",P/binary>>) -> route(P);
+    route_prefix(P) -> route(P).
+
+    route(<<>>)              -> index;
+    route(<<"index">>)       -> index;
+    route(<<"login">>)       -> login;
+    route(<<"favicon.ico">>) -> static_file;
     route(_) -> index.
 \end{lstlisting}

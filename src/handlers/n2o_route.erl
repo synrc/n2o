@@ -1,4 +1,4 @@
--module (n2o_route).
+-module(n2o_route).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -export(?ROUTING_API).

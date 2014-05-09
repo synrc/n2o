@@ -47,7 +47,7 @@ Element definition specifies the list of {\bf source} elements providing data to
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {ok,Pid} = wf:comet(fun() -> chat_loop() end),
+    {ok,Pid} = wf:async(fun() -> chat_loop() end),
     #button { id=sendButton, text= <<"Send">>, 
               postback={chat,Pid}, source=[userName,message] }.
 \end{lstlisting}
