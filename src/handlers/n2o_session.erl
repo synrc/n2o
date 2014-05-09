@@ -34,7 +34,7 @@ init(State, Ctx) ->
     wf:info(?MODULE,"State: ~p",[SessionCookie]),
     {ok, State, Ctx#context{session=SessionCookie}}.
 
-expired(_Issued,{_TTL,Till}) -> Till > calendar:now_to_datetime(now()).
+expired(_Issued,{_TTL,Till}) -> Till < calendar:now_to_datetime(now()).
 
 finish(State, Ctx) -> 
     wf:info(?MODULE,"Finish Cookie Set ~p",[State]),

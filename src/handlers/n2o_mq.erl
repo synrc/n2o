@@ -8,4 +8,4 @@ reg(Pool, Value) ->
     Ctx = get({pool,Pool}),
     case Ctx of
          undefined -> gproc:reg({p,l,Pool},Value), put({pool,Pool},Pool);
-         Defined -> defined end.
+         Defined -> skip end.
