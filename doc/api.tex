@@ -25,14 +25,27 @@ WebSocket channel for evaluation:
 Companions are also provided for updating head and tail
 of the elements list: {\bf wf:insert\_top/2} and
 {\bf wf:insert\_bottom/2}, which turns to approriative
-JavaScript methods {\bf prepend} and {\bf append} during render.
+JavaScript methods {\bf insertBefore} and {\bf appendChild} during render.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:insert_top(history,
+        #panel{id=banner, body= [
+            #span{id=text, body = wf:f("User ~s logged in.",[wf:user()]) },
+            #button{id=logout, body="Logout", postback=logout }, 
+            #br{} ]}),
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Remember to envelop all elements into one root element before inserts.
 
 \paragraph{}
-For relative updates {\bf wf:inser\_before\/2} and {\bf wf:inser\_after/2}.
+For relative updates {\bf wf:inser\_before/2} and {\bf wf:inser\_after/2}.
 For remove element you should use {\bf wf:remove/2}.
 Better understanding of updates you can find in {\bf Section 7}.
 
-\paragraph{\bf Elements Naming.} You can specify element id with Erlang atoms,
+\paragraph{\bf Elements Naming}
+You can specify element id with Erlang atoms,
 lists or binaries. During render the value will be converted
 with {\bf wf:to\_list}. Only if you are using atoms convertation would be consistent,
 otherwise you need to care about illegal symbols for element accessors.

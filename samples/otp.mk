@@ -36,9 +36,10 @@ release:
 stop:
 	@kill -9 $(shell ps ax -o pid= -o command=|grep $(RELEASE)|grep $(COOKIE)|awk '{print $$1}')
 $(PLT_NAME):
-	ERL_LIBS=deps dialyzer --build_plt --output_plt $(PLT_NAME) --apps $(APPS) || true
-dialyze: $(PLT_NAME) compile
-	dialyzer deps/*/ebin --plt $(PLT_NAME) --no_native -Werror_handling -Wunderspecs -Wrace_conditions
+	$(eval APPS := $(subst deps/,,$(subst apps/,,$(shell find apps deps -maxdepth 1 -mindepth 1 -type d))))
+	ERL_LIBS=$(ERL_LIBS) dialyzer --build_plt --output_plt $(PLT_NAME) --apps $(APPS) || true
+dialyze: $(PLT_NAME)
+	dialyzer deps/n2o/ebin --plt $(PLT_NAME) --no_native -Werror_handling -Wunderspecs -Wrace_conditions
 tar:
 	tar zcvf $(RELEASE)-$(VSN)-$(DATE).tar.gz _rel/lib/*/ebin _rel/lib/*/priv _rel/bin _rel/releases
 eunit:
