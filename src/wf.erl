@@ -188,7 +188,6 @@ hex_encode(S) -> _String = wf_convert:hex_encode(S).
 hex_decode(S) -> _String = wf_convert:hex_decode(S).
 js_escape(String) -> _String = wf_convert:js_escape(String).
 join(List,Delimiter) -> _Result = wf_convert:join(List,Delimiter).
-to_js_id(Path) -> _String = wf_render_actions:to_js_id(Path).
 json(Json) -> n2o_json:encode(Json).
 
 % These api are not really API

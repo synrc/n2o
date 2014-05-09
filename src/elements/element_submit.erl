@@ -15,7 +15,7 @@ render_element(Record) ->
                                       source=Record#submit.source }) end,
     case Record#submit.click of
          undefined -> ignore;
-         ClickActions -> wf:wire(ID, #event { type=click, actions=ClickActions }) end,
+         ClickActions -> wf:wire(#event { target=ID, type=click, actions=ClickActions }) end,
   wf_tags:emit_tag(<<"input">>, [
       {<<"id">>, ID},
       {<<"type">>, <<"submit">>},

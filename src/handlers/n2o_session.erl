@@ -12,19 +12,20 @@ init(State, Ctx) ->
     C = wf:cookie_req(session_cookie_name(),Ctx#context.req),
     SessionId = case C of
                      undefined -> undefined;
-                     A when is_list(A) -> list_to_binary(A);
                      _Else -> _Else end,
+    {{D1,D2,D3},{T1,T2,T3}} = calendar:now_to_datetime(now()),
+    Till = {{D1,D2,D3+1},{T1,T2,T3}},
     TTL = 24 * 60 * 60, % 1 day TTL
     SessionCookie = case lookup_ets({SessionId,<<"auth">>}) of 
-                 undefined -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
+                 undefined -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),{TTL,Till},new},
                               ets:insert(cookies,Cookie),
                               wf:info(?MODULE,"Cookie New: ~p",[Cookie]),
                               Cookie;
-                 {{Session,Key},Path,Issued,TTL,Status} -> case expired(Issued,TTL) of
-                     false -> Cookie = {{Session,Key},Path,Issued,TTL,Status},
+                 {{Session,Key},Path,Issued,{_TTL,_Till},Status} -> case expired(Issued,{_TTL,_Till}) of
+                     false -> Cookie = {{Session,Key},Path,Issued,{_TTL,_Till},Status},
                               wf:info(?MODULE,"Cookie Same: ~p",[Cookie]),
                               Cookie;
-                      true -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),TTL,new},
+                      true -> Cookie = {{new_cookie_value(),<<"auth">>},<<"/">>,now(),{TTL,Till},new},
                               ets:insert(cookies,Cookie), 
                               wf:info(?MODULE,"Cookie Expired: ~p",[Cookie]),
                               Cookie end;
@@ -33,13 +34,12 @@ init(State, Ctx) ->
     wf:info(?MODULE,"State: ~p",[SessionCookie]),
     {ok, State, Ctx#context{session=SessionCookie}}.
 
-expired(Issued,TTL) ->
-    false.
+expired(_Issued,{_TTL,Till}) -> Till > calendar:now_to_datetime(now()).
 
 finish(State, Ctx) -> 
     wf:info(?MODULE,"Finish Cookie Set ~p",[State]),
     NewReq = case Ctx#context.session of
-         {{Session,Key},Path,Issued,TTL,Status} -> 
+         {{Session,Key},Path,Issued,{TTL,Till},Status} -> 
               wf:cookie_req(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
          _ -> Ctx#context.req end,
     {ok, [], Ctx#context{req=NewReq}}.
