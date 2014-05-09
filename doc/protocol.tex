@@ -38,7 +38,7 @@ Client messages usually originated at client and represent the Client API Reques
 \begin{lstlisting}
     ws.send(enc(tuple(
         atom('client'),
-        tuple(atom('join_game'),1000001))));</code>
+        tuple(atom('join_game'),1000001))));
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -178,7 +178,7 @@ Erlang RPC protocol interconnection with JavaScript nodes should be transfered a
 Raw images for fastest possible speed should be transfered as binary answers.
 
 \begin{lstlisting}
-    function handle\_web\_socket\_blob(body) { }
+    function handle_web_socket_blob(body) { }
 \end{lstlisting}
 
 \begin{lstlisting}
