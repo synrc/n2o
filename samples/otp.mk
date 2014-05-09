@@ -8,8 +8,8 @@ empty    :=
 ROOTS    := apps deps
 space    := $(empty) $(empty)
 comma    := $(empty),$(empty)
-VSN      := $(shell expr substr `git rev-parse HEAD` 1 6)
-DATE     := $(shell git show -s --format="%ci" HEAD | sed -e 's/\+/Z/g' -e 's/-/./g' -e 's/ /-/g' -e 's/:/./g')
+VSN      := $(shell git rev-parse HEAD | head -c 6)
+DATE     := $(shell date "+%Y%m%d-%H%M%S")
 ERL_LIBS := $(subst $(space),:,$(ROOTS))
 relx     := "{release,{$(RELEASE),\"$(VER)\"},[$(RELEASE)]}.\\n{include_erts,true}.\
 \\n{extended_start_script,true}.\\n{generate_start_script,true}.\\n{sys_config,\"$(SYS)\"}.\
