@@ -1,5 +1,5 @@
 {application, n2o, [
-    {description,  "N2O Web Framework"},
+    {description,  "N2O VXZ WebSocket Application Server"},
     {vsn,          "3.0"},
     {applications, [kernel, stdlib, cowboy, ranch, gproc, erlydtl]},
     {modules, []},
