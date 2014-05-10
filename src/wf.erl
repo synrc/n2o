@@ -202,4 +202,4 @@ config(Key) -> config(n2o, Key, "").
 config(App, Key) -> config(App,Key, "").
 config(App, Key, Default) -> wf_utils:config(App, Key, Default).
 
-version() -> "0.10.0-5HT".
+version() -> "1.5.0".
