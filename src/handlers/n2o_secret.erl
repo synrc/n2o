@@ -16,8 +16,8 @@ secret() -> wf:config(n2o,secret,<<"ThisIsClassified">>).
 depickle(PickledData) ->
     try Key = secret(),
         Decoded = base64:decode(wf:to_binary(PickledData)),
-        <<IV:16/binary,Signature:20/binary,Cipher/binary>> = Decoded,
+        <<IV:16/binary,Signature:32/binary,Cipher/binary>> = Decoded,
         Signature = crypto:hmac(sha256,Key,<<Cipher/binary,IV/binary,Key/binary>>),
-        {Data,_Time} = binary_to_term(crypto:block_decrypt(aes_cbc128,Key,IV,Cipher)),
+        {Data,_Time} = binary_to_term(crypto:block_decrypt(aes_cbc128,Key,IV,Cipher),[safe]),
         Data
-    catch _:_ -> undefined end.
+    catch E:R -> wf:info(?MODULE,"Depicke Error: ~p",[{E,R}]), undefined end.
