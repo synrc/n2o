@@ -4,7 +4,6 @@
 -export(?PICKLES_API).
 
 pickle(Data) ->
-    wf:info(?MODULE,"Secure: ~p",[Data]),
     Message = term_to_binary({Data,now()}),
     Padding = size(Message) rem 16,
     Bits = (16-Padding)*8, Key = secret(), IV = crypto:rand_bytes(16),
