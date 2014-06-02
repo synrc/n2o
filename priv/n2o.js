@@ -52,9 +52,9 @@ function WebSocketsInit(){
 
             } catch (ex) { // try to parse known binary formats
 
-                console.log("JSON parsing failed: " + ex);
-                console.log("MessageEvent: ");
-                console.log(evt.data);
+//                console.log("JSON parsing failed: " + ex);
+//                console.log("MessageEvent: ");
+//                console.log(evt.data);
 
                 var reader = new FileReader();
                 reader.addEventListener("loadend", function() {
@@ -82,7 +82,7 @@ function WebSocketsInit(){
                     }
 
                 });
-                console.log(evt.data);
+//                console.log(evt.data);
                 reader.readAsArrayBuffer(evt.data);
 
             }

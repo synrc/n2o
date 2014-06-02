@@ -147,7 +147,7 @@ function bullet(url) {
         init();
 
         this.onopen = function(){};     this.oninit = function(){};
-        this.onmessage = function(){};  this.ondisconnect = function(){};
+        this.onmessage = function(){};  this.ondisconnect = function(){ initialized = false; };
         this.onclose = function(){};    this.onheartbeat = function(){ return this.send('PING'); };
 
         this.setURL = function(newURL) { url = newURL; };
