@@ -54,6 +54,13 @@ and are only neededed when you have a UI event taking too much
 time to be processed, like gigabyte file uploads. You can create
 many Async Processes per user.
 
+\subsection{SPA Mode}
+In SPA mode you N2O can serve no HTML at all. N2O elements are being
+binded during INIT handshake and thus can be used regullary as in DSL mode.
+
+\includeimage{images/static-serving.png}{Static Serving}
+
+\paragraph{}
 \section{Endpoints}
 N2O Erlang Processes are instantiated and run by Web Server.
 Depending on the Web Server endpoint bindings you can specify
