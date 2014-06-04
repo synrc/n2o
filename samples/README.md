@@ -11,6 +11,13 @@ with *web* Erlang application which contains modules:
 * N2O samples
 * XEN support
 
+Prerequisites
+-------------
+
+* erlang, erlang-reltool
+* rebar
+* relx (optional)
+
 Run
 ---
 
