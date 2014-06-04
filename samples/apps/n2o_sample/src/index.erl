@@ -10,12 +10,15 @@ main() ->
 
 title() -> [ <<"N2O">> ].
 
+log_modules() -> [index].
+
 body() ->
     wf:info("RENDER!"),
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
     [ #span{ body = wf:f("'/index?x=' is ~p",[wf:qs(<<"x">>)]) },
       #panel{ id=history },
       #textbox{ id=message },
+      #button{ id=bin, body= <<"Binary">>, postback={binary,Pid} },
       #button{ id=send, body= <<"Chat">>, postback={chat,Pid}, source=[message] } ].
 
 event(init) ->
@@ -51,8 +54,11 @@ event(logout) ->
 
 event(login) -> login:event(login);
 event(continue) -> wf:info("OK Pressed");
+event({binary,Data}) -> 
+    Depickled = wf:depickle(Data),
+    wf:info(?MODULE,"Binary: ~p",[Depickled]),
+    <<"111">>;
 event(Event) -> wf:info("Event: ~p", [Event]).
-
 chat_loop() ->
     receive 
         {message, Username, Message} ->

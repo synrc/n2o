@@ -4,6 +4,11 @@
 -compile(export_all).
 
 render_action(#event{source=undefined}) -> [];
+
+render_action(#event{postback={binary,Value},target=Control,type=Type}) ->
+    PostbackBin = wf_event:new(binary,Value),
+    [wf:f("document.querySelector('#~s').addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});"];
+
 render_action(#event{postback=Postback,actions=Actions,source=Source,target=Control,type=Type,delegate=Delegate}) ->
     Data = "[" ++ string:join([begin 
         {Key, Id} = if  is_atom(Src)-> S = atom_to_list(Src),
@@ -14,3 +19,4 @@ render_action(#event{postback=Postback,actions=Actions,source=Source,target=Cont
     ++ ["tuple(tuple(utf8.toByteArray('"++ Control ++"'), bin('detail')), event.detail)"],",") ++ "]",
     PostbackBin = wf_event:new(Postback, Control, Delegate, event, Data),
     [wf:f("document.querySelector('#~s').addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});"].
+
