@@ -39,7 +39,7 @@ event({chat,Pid}) ->
         #button{id=logout, body="Logout", postback=logout}
         ]}),
     wf:wire(#jq{target=message,method=[focus,select]}),
-    Pid ! {message, Username, Message};
+    Pid ! {message, Username, wf:js_escape(Message)};
 
 event(logout) -> 
     wf:logout(),

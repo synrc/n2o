@@ -16,7 +16,9 @@ init(_Transport, Req, _Opts, _Active) ->
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
     wf_context:context(NewCtx),
     Res = ets:update_counter(globals,onlineusers,{2,1}),
-    wf:reg(broadcast,wf:peer(Req)),
+%    SessionUser = wf:cookie_req(<<"n2o-name">>,Req),
+%    wf:reg(broadcast,{wf:peer(Req),SessionUser}),
+    wf:reg(broadcast,{wf:peer(Req)}),
     wf:send(broadcast,{counter,Res}),
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
