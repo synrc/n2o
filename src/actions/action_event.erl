@@ -9,7 +9,7 @@ render_action(#event{postback=Postback,actions=Actions,source=Source,target=Cont
         {Key, Id} = if  is_atom(Src)-> S = atom_to_list(Src),
                         {"atom('"++S++"')", S};
                     true -> {"utf8.toByteArray('" ++ Src ++ "')", Src} end,
-        "tuple(" ++ Key ++ ", utf8.toByteArray(document.querySelector('#"
+        "tuple(" ++ Key ++ ", document.querySelector('#" ++ Id ++ "').type == 'checkbox' ? utf8.toByteArray(document.querySelector('#" ++ Id ++ "').checked.toString()) : utf8.toByteArray(document.querySelector('#"
                       ++ Id ++ "').value))" end || Src <- Source] 
     ++ ["tuple(tuple(utf8.toByteArray('"++ Control ++"'), bin('detail')), event.detail)"],",") ++ "]",
     PostbackBin = wf_event:new(Postback, Control, Delegate, event, Data),
