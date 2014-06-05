@@ -63,7 +63,7 @@ function WebSocketsInit(){
 
                         var erlang = dec(reader.result);
                         if (typeof handle_web_socket == 'function')
-                             handle_web_socket(reader.result);
+                             handle_web_socket(erlang);
                         else console.log("Raw BERT Received: " + erlang);
 
                     } catch (x) { // Unknown Binaries
