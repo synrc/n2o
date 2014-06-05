@@ -56,34 +56,65 @@ function WebSocketsInit(){
 //                console.log("MessageEvent: ");
 //                console.log(evt.data);
 
-                var reader = new FileReader();
-                reader.addEventListener("loadend", function() {
+                var header_reader = new FileReader();
+                header_reader.addEventListener("loadend", function() {
 
+                    
+                    header_view = new DataView(header_reader.result);
+                    
                     try { // BERT encoding
 
-                        var erlang = dec(reader.result);
-                        if (typeof handle_web_socket == 'function')
-                             handle_web_socket(erlang);
-                        else console.log("Raw BERT Received: " + erlang);
+                        if (header_view.getUint8(0) !== 131) { throw ("Not a valid BERT header."); }
+                        else {
+                            var bert_reader = new FileReader();
+                            bert_reader.addEventListener("loadend", function() {
+                                var erlang = dec(bert_reader.result);
+                                if (typeof handle_web_socket == 'function')
+                                    handle_web_socket(erlang);
+                                else console.log("Raw BERT Received: " + erlang);
+                            }
+                            bert_reader.readAsArrayBuffer(evt.data);
+                        }
 
                     } catch (x) { // Unknown Binaries
 
-                        if (typeof handle_web_socket_blob == 'function')
-                             handle_web_socket_blob(reader.result);
+                        if (header_view.getUint8(0) == 98 && header_reader.result.length == 12) {
+                            id = header_view.getUint32(1);
+                            type = header_view.getUint8(5);
+                            app = header_view.getUint8(6);
+                            version = header_view.getUint8(7);
+                            meta_length = header_view.getUint32(8);
+                            var meta_reader = new FileReader();
+                            meta_reader.addEventListener("loadend", function() {
+                                if (typeof handle_web_socket_blob_with_header == 'function')
+                                    handle_web_socket_blob_with_header(id, type, app, version, meta_reader.result, evt.data);
+                                else { console.log("Raw Binary With Header Received: " + header_reader.result); }
+                            }
+                            meta_reader.readAsArrayBuffer(evt.data.slice(12, 12 + meta_length));
+                        }
                         else {
-                            if (reader.result.byteLength > 0) {
-                                var dataView = new DataView(reader.result);
-                                var s = dataView.getInt8(0).toString();
-                                for (var i=1;i<reader.result.byteLength;i++)
-                                    s = s + "," + dataView.getInt8(i).toString();
-                                console.log("Unknown Raw Binary Received: [" + s + "]");
+                            
+                            if (typeof handle_web_socket_blob == 'function')
+                                handle_web_socket_blob(evt.data);
+                            else {
+                                var reader = new FileReader();
+                                reader.addEventListener("loadend", function() {
+                                    if (reader.result.byteLength > 0) {
+                                        var dataView = new DataView(reader.result);
+                                        for (var i=1;i<reader.result.byteLength;i++)
+                                            var s = dataView.getInt8(0).toString();
+                                        s = s + "," + dataView.getInt8(i).toString();
+                                        console.log("Unknown Raw Binary Received: [" + s + "]");
+                                    }
+                                }
+                                reader.readAsArrayBuffer(evt.data);
                             }
                         }
                     }
 
                 });
 //                console.log(evt.data);
-                reader.readAsArrayBuffer(evt.data);
+                header_reader.readAsArrayBuffer(evt.data.slice(0, 12));
 
             }
 
