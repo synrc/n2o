@@ -17,6 +17,7 @@ Prerequisites
 * erlang, erlang-reltool
 * rebar
 * relx (optional)
+* inotify-tools (Linux, for filesystem watching)
 
 Run
 ---
