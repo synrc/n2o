@@ -50,12 +50,12 @@ info({bert,Message}, Req, State) ->
     {reply,{binary,term_to_binary(Term)},Req,State};
 
 -record(binary, {
-    id :: integer(),
-    type :: integer(),
-    app :: integer(),
-    version :: integer(),
-    meta :: binary(),
-    data :: binary() }).
+    id = 0 :: integer(),
+    type = 0 :: integer(),
+    app = 0 :: integer(),
+    version = 0 :: integer(),
+    meta = <<>> :: binary(),
+    data = <<>> :: binary() }).
 
 info({binary,Message}, Req, State) ->
     wf_context:clear_actions(),
