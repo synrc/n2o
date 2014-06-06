@@ -49,14 +49,6 @@ info({bert,Message}, Req, State) ->
     wf:info(?MODULE,"Client BERT Binary Message: ~p Result: ~p",[Message,Term]),
     {reply,{binary,term_to_binary(Term)},Req,State};
 
--record(binary, {
-    id = 0 :: integer(),
-    type = 0 :: integer(),
-    app = 0 :: integer(),
-    version = 0 :: integer(),
-    meta = <<>> :: binary(),
-    data = <<>> :: binary() }).
-
 info({binary,Message}, Req, State) ->
     wf_context:clear_actions(),
     Module = State#context.module,
@@ -64,7 +56,8 @@ info({binary,Message}, Req, State) ->
     wf:info(?MODULE,"Client Raw Binary Message: ~p Result: ~p",[Message,Term]),
     Res = case Term of
         #binary{ id=Id, type=Type, app=App, version=Version, meta=Meta, data=Data } ->
-            <<"B"/binary, Id:32/little, Type:8, App:8, Version:8, bit_size(Meta):32/little, Meta/binary, Data/binary>>;
+            MetaSize = bit_size(Meta),
+            <<"B", Id:32/little, Type:8, App:8, Version:8, MetaSize:32/little, Meta/binary, Data/binary>>;
         _ when is_binary(Term) -> Term;
         _ -> term_to_binary(Term)
         end,
