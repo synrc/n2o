@@ -93,11 +93,11 @@ function WebSocketsInit(){
                         var meta_offset = 12
                         
                         if (header_view.getUint8(0) == 66 && header_reader.result.byteLength == meta_offset) {
-                            id = header_view.getUint32(1);
-                            type = header_view.getUint8(5);
-                            app = header_view.getUint8(6);
-                            version = header_view.getUint8(7);
-                            meta_length = header_view.getUint32(8);
+                            var id = header_view.getUint32(1);
+                            var type = header_view.getUint8(5);
+                            var app = header_view.getUint8(6);
+                            var version = header_view.getUint8(7);
+                            var meta_length = header_view.getUint32(8);
                             var meta_reader = new FileReader();
                             var data_offset = meta_offset + meta_length;
                             meta_reader.addEventListener("loadend", function() {
