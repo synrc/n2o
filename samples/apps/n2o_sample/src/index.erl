@@ -18,7 +18,7 @@ body() ->
     [ #span{ body = wf:f("'/index?x=' is ~p",[wf:qs(<<"x">>)]) },
       #panel{ id=history },
       #textbox{ id=message },
-      #button{ id=bin, body= <<"Binary">>, postback={binary,Pid} },
+      #button{ id=bin, body= <<"Binary">>, postback={binary,{raw,Pid}} },
       #button{ id=send, body= <<"Chat">>, postback={chat,Pid}, source=[message] } ].
 
 event(init) ->
