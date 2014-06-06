@@ -26,6 +26,16 @@ utf8.toByteArray = function(str) {
     return byteArray;
 };
 
+function byteArray8toString (byteArray, separator) {
+    if (typeof byteArray == 'undefined' || byteArray.byteLength == 0) { return "" };
+    separator = typeof separator !== 'undefined' ? separator : ',';
+    var dataView = new DataView(byteArray);
+    var s = dataView.getInt8(0).toString();
+    for (var i = 1; i < byteArray.byteLength; i++)
+        s = s + separator + dataView.getInt8(i).toString();
+    return s;
+}
+
 function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
@@ -72,25 +82,35 @@ function WebSocketsInit(){
                                 if (typeof handle_web_socket == 'function')
                                     handle_web_socket(erlang);
                                 else console.log("Raw BERT Received: " + erlang);
-                            }
+                            });
                             bert_reader.readAsArrayBuffer(evt.data);
                         }
 
                     } catch (x) { // Unknown Binaries
 
-                        if (header_view.getUint8(0) == 98 && header_reader.result.length == 12) {
+                        //debugger;
+                        
+                        var meta_offset = 12
+                        
+                        if (header_view.getUint8(0) == 66 && header_reader.result.byteLength == meta_offset) {
                             id = header_view.getUint32(1);
                             type = header_view.getUint8(5);
                             app = header_view.getUint8(6);
                             version = header_view.getUint8(7);
                             meta_length = header_view.getUint32(8);
                             var meta_reader = new FileReader();
+                            var data_offset = meta_offset + meta_length;
                             meta_reader.addEventListener("loadend", function() {
                                 if (typeof handle_web_socket_blob_with_header == 'function')
-                                    handle_web_socket_blob_with_header(id, type, app, version, meta_reader.result, evt.data);
-                                else { console.log("Raw Binary With Header Received: " + header_reader.result); }
-                            }
-                            meta_reader.readAsArrayBuffer(evt.data.slice(12, 12 + meta_length));
+                                    handle_web_socket_blob_with_header(id, type, app, version, meta_reader.result, evt.data.slice(data_offset));
+                                else {
+                                    //debugger;
+                                    console.log("Raw Binary With Header Received: Header [" + byteArray8toString(header_reader.result)
+                                        + "] Meta [" + byteArray8toString(meta_reader.result)
+                                        + "] Data lehgth: " + (evt.data.size - data_offset));
+                                }
+                            });
+                            meta_reader.readAsArrayBuffer(evt.data.slice(meta_offset, data_offset));
                         }
                         else {
                             
@@ -101,12 +121,12 @@ function WebSocketsInit(){
                                 reader.addEventListener("loadend", function() {
                                     if (reader.result.byteLength > 0) {
                                         var dataView = new DataView(reader.result);
+                                        var s = dataView.getInt8(0).toString();
                                         for (var i=1;i<reader.result.byteLength;i++)
-                                            var s = dataView.getInt8(0).toString();
-                                        s = s + "," + dataView.getInt8(i).toString();
+                                            s = s + "," + dataView.getInt8(i).toString();
                                         console.log("Unknown Raw Binary Received: [" + s + "]");
                                     }
-                                }
+                                });
                                 reader.readAsArrayBuffer(evt.data);
                             }
                         }
