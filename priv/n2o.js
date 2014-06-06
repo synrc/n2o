@@ -98,8 +98,8 @@ function WebSocketsInit(){
                             var app = header_view.getUint8(6);
                             var version = header_view.getUint8(7);
                             var meta_length = header_view.getUint32(8);
-                            var meta_reader = new FileReader();
                             var data_offset = meta_offset + meta_length;
+                            var meta_reader = new FileReader();
                             meta_reader.addEventListener("loadend", function() {
                                 if (typeof handle_web_socket_blob_with_header == 'function')
                                     handle_web_socket_blob_with_header(id, type, app, version, meta_reader.result, evt.data.slice(data_offset));
