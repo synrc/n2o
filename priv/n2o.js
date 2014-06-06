@@ -89,7 +89,7 @@ function WebSocketsInit(){
 
                     } catch (x) { // Binaries
                         
-                        if (header_view.getUint8(0) == 132 && header_reader.result.byteLength == META_OFFSET) { // Headered Binaries
+                        if (header_reader.result.byteLength == META_OFFSET && header_view.getUint8(0) == 132) { // Headered Binaries
                             var id = header_view.getUint32(1);
                             var type = header_view.getUint8(5);
                             var app = header_view.getUint8(6);
