@@ -64,10 +64,10 @@ function WebSocketsInit(){
                 
                 var META_OFFSET = 36;
 
-                console.log("JSON parsing failed: " + ex);
-                console.log("MessageEvent: ");
-                console.log(evt.data);
-
+                // console.log("JSON parsing failed: " + ex);
+                // console.log("MessageEvent: ");
+                // console.log(evt.data);
+                
                 var header_reader = new FileReader();
                 header_reader.addEventListener("loadend", function() {
 
