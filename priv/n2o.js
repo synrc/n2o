@@ -30,9 +30,9 @@ function byteArray8toString (byteArray, separator) {
     if (typeof byteArray == 'undefined' || byteArray.byteLength == 0) { return "" };
     separator = typeof separator !== 'undefined' ? separator : ',';
     var dataView = new DataView(byteArray);
-    var s = dataView.getInt8(0).toString();
+    var s = dataView.getUint8(0).toString();
     for (var i = 1; i < byteArray.byteLength; i++)
-        s = s + separator + dataView.getInt8(i).toString();
+        s = s + separator + dataView.getUint8(i).toString();
     return s;
 }
 
@@ -51,25 +51,26 @@ function WebSocketsInit(){
                 msg = JSON.parse(evt.data);
 
                 if (typeof handle_web_socket == 'function' && msg.data) { // Data
-//                    addStatus("Received: " + bert.decodebuf(msg.data));
+                    // addStatus("Received: " + bert.decodebuf(msg.data));
                     handle_web_socket(msg.data);
                 }
 
                 if (msg.eval) { // Eval
-//                    addStatus("Evaluate: " + msg.eval);
+                    // addStatus("Evaluate: " + msg.eval);
                     try{eval(msg.eval);}catch(e){console.log(e); console.log(msg.eval);};
                 }
 
             } catch (ex) { // try to parse known binary formats
+                
+                var META_OFFSET = 36;
 
-//                console.log("JSON parsing failed: " + ex);
-//                console.log("MessageEvent: ");
-//                console.log(evt.data);
+                console.log("JSON parsing failed: " + ex);
+                console.log("MessageEvent: ");
+                console.log(evt.data);
 
                 var header_reader = new FileReader();
                 header_reader.addEventListener("loadend", function() {
 
-                    
                     header_view = new DataView(header_reader.result);
                     
                     try { // BERT encoding
@@ -86,33 +87,34 @@ function WebSocketsInit(){
                             bert_reader.readAsArrayBuffer(evt.data);
                         }
 
-                    } catch (x) { // Unknown Binaries
-
-                        //debugger;
+                    } catch (x) { // Binaries
                         
-                        var meta_offset = 12
-                        
-                        if (header_view.getUint8(0) == 66 && header_reader.result.byteLength == meta_offset) {
+                        if (header_view.getUint8(0) == 132 && header_reader.result.byteLength == META_OFFSET) { // Headered Binaries
                             var id = header_view.getUint32(1);
                             var type = header_view.getUint8(5);
                             var app = header_view.getUint8(6);
                             var version = header_view.getUint8(7);
-                            var meta_length = header_view.getUint32(8);
-                            var data_offset = meta_offset + meta_length;
+                            var from = header_view.getUint32(8);
+                            var to = header_view.getUint32(12);
+                            var user1 = header_view.getFloat64(16);
+                            var user2 = header_view.getFloat64(24);
+                            var data_offset = META_OFFSET + header_view.getUint32(32);
                             var meta_reader = new FileReader();
                             meta_reader.addEventListener("loadend", function() {
                                 if (typeof handle_web_socket_blob_with_header == 'function')
-                                    handle_web_socket_blob_with_header(id, type, app, version, meta_reader.result, evt.data.slice(data_offset));
+                                    handle_web_socket_blob_with_header(id, type, app, version, from, to, user1, user2,
+                                        meta_reader.result, evt.data.slice(data_offset));
                                 else {
-                                    //debugger;
                                     console.log("Raw Binary With Header Received: Header [" + byteArray8toString(header_reader.result)
                                         + "] Meta [" + byteArray8toString(meta_reader.result)
                                         + "] Data lehgth: " + (evt.data.size - data_offset));
+                                    console.log("Header fields { id: " + id + ", type: " + type + ", app: " + app + ", version: " + version
+                                        + ", from: " + from + ", to: " + to + ", user1: " + user1 + ", user2: " + user2 + " }");
                                 }
                             });
-                            meta_reader.readAsArrayBuffer(evt.data.slice(meta_offset, data_offset));
+                            meta_reader.readAsArrayBuffer(evt.data.slice(META_OFFSET, data_offset));
                         }
-                        else {
+                        else { // Unknown Binaries
                             
                             if (typeof handle_web_socket_blob == 'function')
                                 handle_web_socket_blob(evt.data);
@@ -121,9 +123,9 @@ function WebSocketsInit(){
                                 reader.addEventListener("loadend", function() {
                                     if (reader.result.byteLength > 0) {
                                         var dataView = new DataView(reader.result);
-                                        var s = dataView.getInt8(0).toString();
+                                        var s = dataView.getUint8(0).toString();
                                         for (var i=1;i<reader.result.byteLength;i++)
-                                            s = s + "," + dataView.getInt8(i).toString();
+                                            s = s + "," + dataView.getUint8(i).toString();
                                         console.log("Unknown Raw Binary Received: [" + s + "]");
                                     }
                                 });
@@ -133,8 +135,7 @@ function WebSocketsInit(){
                     }
 
                 });
-//                console.log(evt.data);
-                header_reader.readAsArrayBuffer(evt.data.slice(0, 12));
+                header_reader.readAsArrayBuffer(evt.data.slice(0, META_OFFSET));
 
             }
 
