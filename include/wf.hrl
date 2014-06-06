@@ -115,4 +115,13 @@
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
 -record(jq,      {?ACTION_BASE(action_jq), property, method, args=[], right, format="~s"}).
 
+%Binary messaging to browser
+-record(binary, {
+    id = 0 :: integer(),
+    type = 0 :: integer(),
+    app = 0 :: integer(),
+    version = 0 :: integer(),
+    meta = <<>> :: binary(),
+    data = <<>> :: binary() }).
+
 -endif.
