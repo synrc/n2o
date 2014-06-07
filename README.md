@@ -290,7 +290,7 @@ directories with release lib directories and also links to BERT, N2O
 and jQuery javascript. After making release you should run:
 
     $ ./nitrogen_static.sh
-    $ ./release_sync.sh
+    $ ./release_sync.sh - Note to Mac users: you will need to update bash to 4.0 or greater for this script to run successfully.
 
 Now you can edit site sources and sync will automaticaly recompile
 and reload modules in release.
