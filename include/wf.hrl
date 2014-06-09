@@ -115,4 +115,16 @@
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
 -record(jq,      {?ACTION_BASE(action_jq), property, method, args=[], right, format="~s"}).
 
+%Binary messaging to browser
+-record(binary, {
+    id = 0      :: integer(),   % 4 bytes unsigned
+    type = 0    :: integer(),   % 1 byte unsigned
+    app = 0     :: integer(),   % 1 byte unsigned
+    version = 0 :: integer(),   % 1 byte unsigned
+    from = 0    :: integer(),   % 4 bytes unsigned
+    to = 0      :: integer(),   % 4 bytes unsigned
+    user1 = 0   :: integer(),   % 8 bytes signed float, user defined, e.g.: -define(TIMESTAMP, user1).
+    user2 = 0   :: integer(),   % 8 bytes signed float, user defined, e.g.: -define(EXPIRES, user2).
+    meta = <<>> :: binary(),    % binary
+    data = <<>> :: binary() }). % binary
 -endif.
