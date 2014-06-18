@@ -35,7 +35,7 @@
 -record(link, {?ELEMENT_BASE(element_link), target, url="javascript:void(0);", postback, name, download}).
 -record(submit, {?ELEMENT_BASE(element_submit), click, postback}).
 -record(button, {?ELEMENT_BASE(element_button), type= <<"button">>, name, value, postback, disabled}).
--record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, name}).
+-record(textbox, {?ELEMENT_BASE(element_textbox), value, disabled, maxlength="", placeholder="", next, postback, name, autofocus}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), value, html_name, disabled=false}).
 -record(textarea, {?ELEMENT_BASE(element_textarea), placeholder, name, cols, rows, value}).
 -record(optgroup, {?ELEMENT_BASE(element_select), label, disabled}).
