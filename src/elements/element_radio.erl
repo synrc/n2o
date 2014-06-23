@@ -5,8 +5,11 @@
 
 reflect() -> record_info(fields, radio).
 
-render_element(Record) -> 
-    ID = Record#radio.id,
+render_element(Record) ->
+    ID = case Record#radio.id of
+        undefined -> wf:temp_id();
+        RadioID -> RadioID
+    end,
     CheckedOrNot = case Record#radio.checked of
         true -> checked;
         _ -> not_checked
@@ -20,10 +23,15 @@ render_element(Record) ->
     Content = Record#radio.body,
 
     [
+        %% Label for Radio...
+        wf_tags:emit_tag(<<"label">>, Content, [
+            {<<"for">>, ID}
+        ]),
+
         %% Checkbox...
-        wf_tags:emit_tag(input, [
-            {id, ID},
-            {value, Record#radio.value},
+        wf_tags:emit_tag(<<"input">>, [
+            {<<"id">>, ID},
+            {<<"value">>, Record#radio.value},
 
             %% the emitted name gives priority to html_name, but if it's
             %% undefined, then we fall back to the name attribute.
@@ -32,15 +40,10 @@ render_element(Record) ->
             %% semantic meanings.  'html_name' is generally reserved for
             %% RESTful forms, while 'name' will be the more commonly used
             %% attribute.
-            {name, wf:coalesce([Record#radio.html_name,Record#radio.name])},
-            {type, radio},
-            {class, [radio, Record#radio.class]},
-            {style, Record#radio.style},
+            {<<"name">>, wf:coalesce([Record#radio.html_name,Record#radio.name])},
+            {<<"type">>, <<"radio">>},
+            {<<"class">>, Record#radio.class},
+            {<<"style">>, Record#radio.style},
             {CheckedOrNot, true}
-        ]),
-
-        %% Label for Radio...
-        wf_tags:emit_tag(label, Content, [
-            {for, ID}
         ])
     ].
