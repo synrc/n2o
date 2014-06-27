@@ -8,7 +8,8 @@ function querySource(Id){
     var val;
     switch(document.querySelector('#' + Id).type){
         case 'fieldset':
-            val = utf8.toByteArray(document.querySelector('#' + Id + ' :checked').value);
+            val = document.querySelector('#' + Id + ' :checked');
+            val = val ? utf8.toByteArray(val.value): utf8.toByteArray("");
             break;
         case 'checkbox':
             val = utf8.toByteArray(document.querySelector('#' + Id).checked.toString());
