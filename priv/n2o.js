@@ -4,6 +4,21 @@ var utf8 = {};
 
 //WebSocket = undefined; // test XHR fallback
 
+function querySource(Id){
+    var val;
+    switch(document.querySelector('#' + Id).type){
+        case 'fieldset':
+            val = document.querySelector('#' + Id + ' :checked');
+            val = val ? utf8.toByteArray(val.value): utf8.toByteArray("");
+            break;
+        case 'checkbox':
+            val = utf8.toByteArray(document.querySelector('#' + Id).checked.toString());
+            break;
+        default: val = utf8.toByteArray(document.querySelector('#' + Id).value);
+    }
+    return val;
+}
+
 function addStatus(text){
     var date = new Date();
     if (document.getElementById('n2ostatus')) {
