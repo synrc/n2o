@@ -3,7 +3,7 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-reflect() -> record_info(fields, button).
+reflect() -> record_info(fields, password).
 
 render_element(Record) ->
     Id = case Record#password.postback of

@@ -3,7 +3,7 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-reflect() -> record_info(fields, button).
+reflect() -> record_info(fields, iframe).
 
 render_element(Record) ->
     List = [
