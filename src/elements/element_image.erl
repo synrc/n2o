@@ -13,7 +13,7 @@ render_element(Record) ->
     {<<"alt">>, Record#image.alt},
     {<<"width">>, Record#image.width},
     {<<"height">>, Record#image.height},
-    {<<"src">>, Record#image.image} | Record#image.data_fields
+    {<<"src">>, wf:coalesce([Record#image.src, Record#image.image])} | Record#image.data_fields
   ],
 
   wf_tags:emit_tag(<<"img">>, Attributes).

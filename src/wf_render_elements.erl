@@ -12,16 +12,51 @@ render_element(Element) when is_tuple(Element) ->
     case element(#element.actions,Element) of undefined -> skip; Actions -> wf:wire(Actions) end,
     Tag = case element(#element.html_tag,Element) of undefined -> wf:to_binary(element(1, Element)); T -> T end,
     case element(#element.module,Element) of
-        undefined -> default_render(Tag, Element);
-        Module -> wf:to_binary(Module:render_element(setelement(#element.id,Element,Id))) end;
+        undefined -> 
+	    default_render(Tag, Element);
+        Module -> 
+	    wf:to_binary(Module:render_element(setelement(#element.id,Element,Id))) end;
 render_element(Element) -> wf:error("Unknown Element: ~p",[Element]).
 
 default_render(Tag, Record) ->
+    case Tag of 
+        <<"body">> -> BodyList = [
+            {<<"onafterprint">>,    element(#element.onafterprint, Record)},
+            {<<"onbeforeprint">>,   element(#element.onbeforeprint, Record)},
+            {<<"onbeforeunload">>,  element(#element.onbeforeunload, Record)},
+            {<<"onblur">>,          element(#element.onblur, Record)},
+            {<<"onerror">>,         element(#element.onerror, Record)},
+            {<<"onfocus">>,         element(#element.onfocus, Record)},
+            {<<"onhashchange">>,    element(#element.onhashchange, Record)},
+            {<<"onload">>,          element(#element.onload, Record)},
+            {<<"onmessage">>,       element(#element.onmessage, Record)},
+            {<<"onoffline">>,       element(#element.onoffline, Record)},
+            {<<"ononline">>,        element(#element.ononline, Record)},
+            {<<"onpagehide">>,      element(#element.onpagehide, Record)},
+            {<<"onpageshow">>,      element(#element.onpageshow, Record)},
+            {<<"onpopstate">>,      element(#element.onpopstate, Record)},
+            {<<"onresize">>,        element(#element.onresize, Record)},
+            {<<"onstorage">>,       element(#element.onstorage, Record)},
+            {<<"onunload">>,        element(#element.onunload, Record)}
+        ];
+        _ -> BodyList = []
+    end,
     wf_tags:emit_tag(Tag, wf:render(element(#element.body,Record)),
         lists:append([
-           [{<<"id">>,    element(#element.id, Record)},
-            {<<"class">>, element(#element.class, Record)},
-            {<<"style">>, element(#element.style, Record)},
-            {<<"title">>, element(#element.title,Record)}],
-        element(#element.data_fields,Record),
-        element(#element.aria_states,Record)])).
+           [{<<"id">>,              element(#element.id, Record)},
+            {<<"class">>,           element(#element.class, Record)},
+            {<<"style">>,           element(#element.style, Record)},
+            {<<"title">>,           element(#element.title, Record)},
+            {<<"accesskey">>,       element(#element.accesskey, Record)},
+            {<<"contenteditable">>, element(#element.contenteditable, Record)},
+            {<<"contextmenu">>,     element(#element.contextmenu, Record)},
+            {<<"dir">>,             element(#element.dir, Record)},
+            {<<"draggable">>,       element(#element.draggable, Record)},
+            {<<"dropzone">>,        element(#element.dropzone, Record)},
+            {<<"hidden">>,          element(#element.hidden, Record)},
+            {<<"lang">>,            element(#element.lang, Record)},
+            {<<"spellcheck">>,      element(#element.spellcheck, Record)},
+            {<<"translate">>,       element(#element.translate, Record)}],
+            BodyList,
+        element(#element.data_fields, Record),
+        element(#element.aria_states, Record)])).
