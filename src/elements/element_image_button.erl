@@ -5,7 +5,7 @@
 
 reflect() -> record_info(fields, image_button).
 
-render_element(Record) ->.
+render_element(Record) ->
     List = [
       {<<"id">>, Record#image_button.id},
       {<<"type">>, <<"image">>},
