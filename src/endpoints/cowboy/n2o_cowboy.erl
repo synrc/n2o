@@ -6,7 +6,7 @@
 -compile(export_all).
 -record(state, {headers, body}).
 
-% Cowbot HTTP Handler
+% Cowboy HTTP Handler
 
 init(_Transport, Req, Opts) -> {ok, Req, #state{}}.
 terminate(_Reason, _Req, _State) -> ok.
