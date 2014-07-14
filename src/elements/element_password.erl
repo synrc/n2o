@@ -25,7 +25,7 @@ render_element(Record) ->
       {<<"draggable">>, case Record#password.draggable of true -> "true"; false -> "false"; _ -> undefined end},
       {<<"dropzone">>, Record#password.dropzone},
       {<<"hidden">>, case Record#password.hidden of "hidden" -> "hidden"; _ -> undefined end},
-      {<<"id">>, Record#password.id},
+      {<<"id">>, Id},
       {<<"lang">>, Record#password.lang},
       {<<"spellcheck">>, case Record#password.spellcheck of true -> "true"; false -> "false"; _ -> undefined end},
       {<<"style">>, Record#password.style},
