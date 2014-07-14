@@ -23,7 +23,7 @@ render_element(Record = #dropdown{}) ->
         {<<"class">>, Record#dropdown.class},
         {<<"style">>, Record#dropdown.style},
         {<<"name">>, Record#dropdown.name},
-        {<<"data_fields">>, Record#dropdown.data_fields},
         {<<"disabled">>, case Record#dropdown.disabled of true -> <<"disabled">>; _-> undefined end},
-        {<<"multiple">>, case Record#dropdown.multiple of true -> <<"multiple">>; _-> undefined end}
+        {<<"multiple">>, case Record#dropdown.multiple of true -> <<"multiple">>; _-> undefined end}|
+        Record#dropdown.data_fields
     ]).

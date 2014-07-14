@@ -253,6 +253,13 @@ scripts so building process is OTP compatible: bootstrap site is bundled as Erla
 
 Now you can try: [http://localhost:8000](http://localhost:8000)
 
+BSD NOTE: on BSD you should use gmake instead of make
+
+LINUX NOTE: on Linux you should do at first:
+
+    $ sudo apt-get install inotify-tools
+
+
 Start yourself depending N2O core
 ---------------------------------
 

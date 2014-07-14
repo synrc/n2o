@@ -22,9 +22,11 @@ Prerequisites
 Run
 ---
 
-To run just perform on Windows, Linux, BSD and Mac
+To run just perform on Windows, Linux and Mac
 
     $ make && make console
+
+On BSD you should use gmake
 
 And open it in browser [http://localhost:8000](http://localhost:8000)
 If you want to try pure Single Page Application (SPA) wich

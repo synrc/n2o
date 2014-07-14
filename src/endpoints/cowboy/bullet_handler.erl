@@ -122,8 +122,10 @@ info(Message, Req,
 	end.
 
 terminate(_Reason, _Req, undefined) ->
+        wf:info(?MODULE,"bullet_handler terminate",[]),
 	ok;
 terminate(_Reason, Req, #state{handler=Handler, handler_state=HandlerState}) ->
+        wf:info(?MODULE,"bullet_handler state terminate",[]),
 	Handler:terminate(Req, HandlerState).
 
 %% Websocket.
