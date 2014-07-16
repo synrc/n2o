@@ -19,28 +19,6 @@ render_element(Element) when is_tuple(Element) ->
 render_element(Element) -> wf:error("Unknown Element: ~p",[Element]).
 
 default_render(Tag, Record) ->
-    case Tag of 
-        <<"body">> -> BodyList = [
-            {<<"onafterprint">>,    element(#element.onafterprint, Record)},
-            {<<"onbeforeprint">>,   element(#element.onbeforeprint, Record)},
-            {<<"onbeforeunload">>,  element(#element.onbeforeunload, Record)},
-            {<<"onblur">>,          element(#element.onblur, Record)},
-            {<<"onerror">>,         element(#element.onerror, Record)},
-            {<<"onfocus">>,         element(#element.onfocus, Record)},
-            {<<"onhashchange">>,    element(#element.onhashchange, Record)},
-            {<<"onload">>,          element(#element.onload, Record)},
-            {<<"onmessage">>,       element(#element.onmessage, Record)},
-            {<<"onoffline">>,       element(#element.onoffline, Record)},
-            {<<"ononline">>,        element(#element.ononline, Record)},
-            {<<"onpagehide">>,      element(#element.onpagehide, Record)},
-            {<<"onpageshow">>,      element(#element.onpageshow, Record)},
-            {<<"onpopstate">>,      element(#element.onpopstate, Record)},
-            {<<"onresize">>,        element(#element.onresize, Record)},
-            {<<"onstorage">>,       element(#element.onstorage, Record)},
-            {<<"onunload">>,        element(#element.onunload, Record)}
-        ];
-        _ -> BodyList = []
-    end,
     wf_tags:emit_tag(Tag, wf:render(element(#element.body,Record)),
         lists:append([
            [{<<"id">>,              element(#element.id, Record)},
@@ -57,6 +35,5 @@ default_render(Tag, Record) ->
             {<<"lang">>,            element(#element.lang, Record)},
             {<<"spellcheck">>,      element(#element.spellcheck, Record)},
             {<<"translate">>,       element(#element.translate, Record)}],
-            BodyList,
         element(#element.data_fields, Record),
         element(#element.aria_states, Record)])).
