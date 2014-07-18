@@ -41,6 +41,7 @@
 
 -spec send(name(), any()) -> {ok,pid()}.
 -spec reg(name(), any()) -> defined | undefined | any().
+-spec unreg(name()) -> skip | undefined | any().
 
 % query
 
