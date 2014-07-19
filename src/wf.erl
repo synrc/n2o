@@ -77,6 +77,7 @@ redirect(Url) ->
 send(Pool, Message) -> ?REGISTRATOR:send(Pool,Message).
 reg(Pool) -> ?REGISTRATOR:reg(Pool).
 reg(Pool,Value) -> ?REGISTRATOR:reg(Pool,Value).
+unreg(Pool) -> ?REGISTRATOR:unreg(Pool).
 
 % Pickling wf:pickle
 
