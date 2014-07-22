@@ -5,8 +5,10 @@ var utf8 = {};
 //WebSocket = undefined; // test XHR fallback
 
 function querySource(Id){
-    var val;
-    switch(document.querySelector('#' + Id).type){
+    var val, el;
+    el = document.querySelector('#' + Id);
+    if(!el) return atom('undefined');
+    switch(el.type){
         case 'fieldset':
             val = document.querySelector('#' + Id + ' :checked');
             val = val ? utf8.toByteArray(val.value): utf8.toByteArray("");
