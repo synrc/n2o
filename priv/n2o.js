@@ -14,9 +14,11 @@ function querySource(Id){
             val = val ? utf8.toByteArray(val.value): utf8.toByteArray("");
             break;
         case 'checkbox':
-            val = utf8.toByteArray(document.querySelector('#' + Id).checked.toString());
+            val = utf8.toByteArray(el.checked.toString());
             break;
-        default: val = utf8.toByteArray(document.querySelector('#' + Id).value);
+        default:
+            var edit = el.getAttribute('contenteditable');
+            if (edit && edit === 'true'){ val = bin(el.innerHTML);} else { val = utf8.toByteArray(el.value);}
     }
     return val;
 }
