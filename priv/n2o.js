@@ -14,7 +14,7 @@ function querySource(Id){
             val = val ? utf8.toByteArray(val.value): utf8.toByteArray("");
             break;
         case 'checkbox':
-            val = utf8.toByteArray(el.checked.toString());
+            val = el.checked;
             break;
         default:
             var edit = el.getAttribute('contenteditable');
