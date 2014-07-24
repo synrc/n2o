@@ -6,7 +6,7 @@ var utf8 = {};
 
 function querySource(Id){
     var val, el;
-    el = document.querySelector('#' + Id);
+    el = document.getElementById(Id);
     if(!el) return atom('undefined');
     switch(el.type){
         case 'fieldset':
