@@ -5,6 +5,8 @@ var utf8 = {};
 //WebSocket = undefined; // test XHR fallback
 
 function querySource(Id){
+    if (Id.getValue) return bin(Id.getValue())
+
     var val, el;
     el = document.getElementById(Id);
     if(!el) return atom('undefined');
