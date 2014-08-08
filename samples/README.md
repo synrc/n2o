@@ -1,6 +1,8 @@
 N2O: Erlang Web Framework on WebSockets
 =======================================
 
+![ScreenShot](http://synrc.com/images/n2o_sample_screen.png)
+
 Samples
 -------
 
