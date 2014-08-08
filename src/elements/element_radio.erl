@@ -10,10 +10,6 @@ render_element(Record) ->
         undefined -> wf:temp_id();
         RadioID -> RadioID
     end,
-    CheckedOrNot = case Record#radio.checked of
-        true -> checked;
-        _ -> not_checked
-    end,
 
     case Record#radio.postback of
         undefined -> ignore;
@@ -23,12 +19,7 @@ render_element(Record) ->
     Content = Record#radio.body,
 
     [
-        %% Label for Radio...
-        wf_tags:emit_tag(<<"label">>, Content, [
-            {<<"for">>, ID}
-        ]),
-
-        %% Checkbox...
+       %% Checkbox...
         wf_tags:emit_tag(<<"input">>, [
             {<<"id">>, ID},
             {<<"value">>, Record#radio.value},
@@ -43,7 +34,11 @@ render_element(Record) ->
             {<<"name">>, wf:coalesce([Record#radio.html_name,Record#radio.name])},
             {<<"type">>, <<"radio">>},
             {<<"class">>, Record#radio.class},
-            {<<"style">>, Record#radio.style},
-            {CheckedOrNot, true}
+            {<<"style">>, Record#radio.style}
+        ]),
+
+        %% Label for Radio...
+        wf_tags:emit_tag(<<"label">>, Content, [
+            {<<"for">>, ID}
         ])
     ].

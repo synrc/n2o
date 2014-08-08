@@ -15,6 +15,7 @@ function querySource(Id){
             val = document.querySelector('#' + Id + ' :checked');
             val = val ? utf8.toByteArray(val.value): utf8.toByteArray("");
             break;
+        case 'radio':
         case 'checkbox':
             val = el.checked ? el.value : atom('undefined');
             break;
