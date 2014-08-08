@@ -6,5 +6,4 @@ notifications:
     - maxim@synrc.com
     - doxtop@synrc.com
   irc: "chat.freenode.net#n2o"
-install: "./mad get-deps compile"
-script: "./mad"
+install: "rebar get-deps compile"
