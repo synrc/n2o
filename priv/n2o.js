@@ -5,16 +5,22 @@ var utf8 = {};
 //WebSocket = undefined; // test XHR fallback
 
 function querySource(Id){
-    var val;
-    switch(document.querySelector('#' + Id).type){
+    if (Id.getValue) return bin(Id.getValue())
+
+    var val, el;
+    el = document.getElementById(Id);
+    if(!el) return atom('undefined');
+    switch(el.type){
         case 'fieldset':
             val = document.querySelector('#' + Id + ' :checked');
             val = val ? utf8.toByteArray(val.value): utf8.toByteArray("");
             break;
         case 'checkbox':
-            val = utf8.toByteArray(document.querySelector('#' + Id).checked.toString());
+            val = el.checked ? el.value : atom('undefined');
             break;
-        default: val = utf8.toByteArray(document.querySelector('#' + Id).value);
+        default:
+            var edit = el.getAttribute('contenteditable');
+            if (edit && edit === 'true'){ val = bin(el.innerHTML);} else { val = utf8.toByteArray(el.value);}
     }
     return val;
 }
