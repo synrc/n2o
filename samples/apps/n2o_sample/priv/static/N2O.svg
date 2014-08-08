@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="270px" height="140px" viewBox="0 0 270 140" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.0.4 (8054) - http://www.bohemiancoding.com/sketch -->
+    <title>Scene</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="N2O" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Scene" sketch:type="MSLayerGroup" transform="translate(5.000000, 5.000000)" stroke="#FFFFFF" stroke-width="10">
+            <circle id="Oval-2" fill="#D0021B" sketch:type="MSShapeGroup" cx="195" cy="65" r="65"></circle>
+            <circle id="Oval-1" fill="darkblue" sketch:type="MSShapeGroup" cx="130" cy="65" r="65"></circle>
+            <circle id="Oval-3" fill="darkblue" sketch:type="MSShapeGroup" cx="65" cy="65" r="65"></circle>
+        </g>
+    </g>
+</svg>
