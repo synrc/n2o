@@ -15,7 +15,7 @@ title() -> [ <<"N2O">> ].
 log_modules() -> [index]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
 
 body() ->
-    wf:info(?MODULE,"RENDER!", []),
+    wf:info(?MODULE,"RENDER!~n\n\r", []),
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
     [ #span{ body = wf:f("'/index?x=' is ~p",[wf:qs(<<"x">>)]) },
       #panel{ id=history },
@@ -72,7 +72,7 @@ event({binary, {headered,Data}}) ->
 event({binary, Data}) -> 
     wf:info(?MODULE,"Anybody binary: ~p",[Data]),
     Data;
-event(Event) -> wf:info(?MODULE,"Event: ~p", [Event]).
+event(Event) -> wf:info(?MODULE,"Event: ~p\n\r", [Event]).
 chat_loop() ->
     receive 
         {message, Username, Message} ->
