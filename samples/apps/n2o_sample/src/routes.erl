@@ -12,6 +12,7 @@
 finish(State, Ctx) -> {ok, State, Ctx}.
 init(State, Ctx) -> 
     Path = wf:path(Ctx#context.req),
+    wf:info(?MODULE,"Route: ~p~n",[Path]),
     {ok, State, Ctx#context{path=Path,module=route_prefix(Path)}}.
 
 route_prefix(<<"/ws/",P/binary>>) -> route(P);

@@ -7,13 +7,12 @@
 
 main() -> 
     case wf:user() of
-         undefined -> wf:redirect("/login"), #dtl{file="index",app=n2o_sample,bindings=[{title,""},{body,""}]};
-         _ -> #dtl{file = "index", app=n2o_sample,bindings=[{title,title()},{body,body()}]}
-     end.
+         undefined -> wf:redirect("/login"), #dtl{};
+         _ -> #dtl{file = "index", app=n2o_sample,bindings=[{title,title()},{body,body()}]} end.
 
 title() -> [ <<"N2O">> ].
 
-log_modules() -> [index].
+log_modules() -> [index]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
 
 body() ->
     wf:info(?MODULE,"RENDER!", []),

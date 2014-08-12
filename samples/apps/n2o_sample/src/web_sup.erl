@@ -14,7 +14,7 @@ start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
 
-    {ok, _} = cowboy:start_http(http, 100, [{port, wf:config(n2o,transition_port)}],
+    {ok, _} = cowboy:start_http(http, 3, [{port, wf:config(n2o,transition_port)}],
                                            [{env, [{dispatch, dispatch_rules()}]}]),
 
     users:init(),
@@ -25,8 +25,8 @@ init([]) ->
 dispatch_rules() ->
     cowboy_router:compile(
         [{'_', [
-            {"/static/[...]", cowboy_static,
-                {priv_dir, ?APP, <<"static">>,[{mimetypes,cow_mimetypes,all}]}},
+            {"/static/[...]", n2o_dynalo,
+                {priv_dir, ?APP, "static", [{mimetypes,cow_mimetypes,all}]}},
             {"/rest/:resource", rest_cowboy, []},
             {"/rest/:resource/:id", rest_cowboy, []},
             {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
