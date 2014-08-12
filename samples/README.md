@@ -26,7 +26,7 @@ Run
 
 To run just perform on Windows, Linux and Mac
 
-    $ make && make console
+    $ ./mad deps compile repl
 
 On BSD you should use gmake
 
