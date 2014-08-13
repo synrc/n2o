@@ -1,4 +1,4 @@
-RELEASE := n2o_sample
+RELEASE := kakaranet
 COOKIE  := node_runner
 VER     := 1.0.0
 

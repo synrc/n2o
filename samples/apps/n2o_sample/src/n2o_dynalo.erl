@@ -1,4 +1,5 @@
 -module(n2o_dynalo).
+-compile(export_all).
 
 -export([init/3]).
 -export([rest_init/2]).
@@ -51,8 +52,11 @@ rest_init_opts(Req, {priv_dir, App, Path, Extra}) ->
 rest_init_opts(Req, {dir, Path, Extra}) ->
 	rest_init_dir(Req, Path, Extra).
 
-priv_path(App, Path) ->
-    LApp = "apps/" ++ atom_to_list(App) ++ "/priv",
+priv_path(App=n2o_sample, Path) -> priv_path(App, Path, "apps/");
+priv_path(App, Path) -> priv_path(App, Path, "deps/").
+
+priv_path(App, Path, Prefix) ->
+    LApp = Prefix ++ atom_to_list(App) ++ "/priv",
 	case LApp of
 		PrivDir when is_list(Path) ->
 			PrivDir ++ "/" ++ Path;
@@ -68,7 +72,7 @@ absname(Path) when is_binary(Path) ->
 rest_init_dir(Req, Path, Extra) when is_list(Path) ->
 	rest_init_dir(Req, list_to_binary(Path), Extra);
 rest_init_dir(Req, Path, Extra) ->
-	Dir = fullpath(filename:absname(Path)),
+	Dir = fullpath(Path), %filename:absname(Path)),
 	{PathInfo, Req2} = cowboy_req:path_info(Req),
 	Filepath = filename:join([Dir|PathInfo]),
 	Len = byte_size(Dir),
@@ -93,7 +97,9 @@ fullpath([Segment|Tail], Acc) ->
 	fullpath(Tail, [Segment|Acc]).
 
 rest_init_info(Req, Path, Extra) ->
-	Info = file:read_file_info(Path, [{time, universal}]),
+	Info = {ok, #file_info{type=regular,size=size(mad_repl:load_file(binary_to_list(Path)))}},
+%    io:format("File Size Req: ~p ~p~n\r",[Info,Path]),
+	 %file:read_file_info(Path, [{time, universal}]),
 	{ok, Req, {Path, Info, Extra}}.
 
 
@@ -181,11 +187,17 @@ last_modified(Req, State={_, {ok, #file_info{mtime=Modified}}, _}) ->
 	-> {{stream, non_neg_integer(), fun()}, Req, State}
 	when State::state().
 get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
+    StringPath = binary_to_list(Path),
+      Raw = case mad_repl:load_file(StringPath) of
+        <<>> -> {ok,Bin} = file:read_file(absname(StringPath)), Bin;
+        E -> E end,
+%    io:format("Cowboy Requested Static File: ~p~n\r",[Raw]),
 	Sendfile = fun (Socket, Transport) ->
-		case Transport:sendfile(Socket, Path) of
+		case Transport:send(Socket, Raw) of
 			{ok, _} -> ok;
 			{error, closed} -> ok;
-			{error, etimedout} -> ok
+			{error, etimedout} -> ok;
+			_ -> ok
 		end
 	end,
-	{{stream, Size, Sendfile}, Req, State}.
+	{{stream, size(Raw), Sendfile}, Req, State}.
