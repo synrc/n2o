@@ -30,7 +30,7 @@ console: .applist
 	ERL_LIBS=$(ERL_LIBS) erl +pc unicode $(ERL_ARGS) -eval '[application:start(A) || A <- $(shell cat .applist)]'
 start: $(RUN_DIR) $(LOG_DIR) .applist
 	RUN_ERL_LOG_GENERATIONS=1000 RUN_ERL_LOG_MAXSIZE=20000000 \
-	ERL_LIBS=$(ERL_LIBS) run_erl -daemon $(RUN_DIR)/ $(LOG_DIR)/ "exec $(MAKE) console"
+	ERL_LIBS=$(ERL_LIBS) run_erl -daemon $(RUN_DIR)/ $(LOG_DIR)/ "exec ./mad repl"
 attach:
 	to_erl $(RUN_DIR)/
 release:
