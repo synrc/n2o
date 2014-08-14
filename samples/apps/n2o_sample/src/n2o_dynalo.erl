@@ -97,8 +97,8 @@ fullpath([Segment|Tail], Acc) ->
 	fullpath(Tail, [Segment|Acc]).
 
 rest_init_info(Req, Path, Extra) ->
-	Info = {ok, #file_info{type=regular,size=size(mad_repl:load_file(binary_to_list(Path)))}},
-%    io:format("File Size Req: ~p ~p~n\r",[Info,Path]),
+%    io:format("File Requested: ~p ~n\r",[Path]),
+	Info = {ok, #file_info{type=regular,size=0}},
 	 %file:read_file_info(Path, [{time, universal}]),
 	{ok, Req, {Path, Info, Extra}}.
 
@@ -188,9 +188,10 @@ last_modified(Req, State={_, {ok, #file_info{mtime=Modified}}, _}) ->
 	when State::state().
 get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
     StringPath = binary_to_list(Path),
-      Raw = case mad_repl:load_file(StringPath) of
-        <<>> -> {ok,Bin} = file:read_file(absname(StringPath)), Bin;
-        E -> E end,
+	FileName = absname(StringPath),
+    Raw = case file:read_file(FileName) of
+         {ok,Bin} -> Bin;
+         {error,_} -> mad_repl:load_file(StringPath) end,
 %    io:format("Cowboy Requested Static File: ~p~n\r",[Raw]),
 	Sendfile = fun (Socket, Transport) ->
 		case Transport:send(Socket, Raw) of
