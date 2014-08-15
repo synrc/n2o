@@ -17,7 +17,7 @@ init(_Transport, Req, _Opts, _Active) ->
     wf_context:context(NewCtx),
     Res = ets:update_counter(globals,onlineusers,{2,1}),
     wf:reg(broadcast,{wf:peer(Req)}),
-    wf:send(broadcast,{counter,Res}),
+%    wf:send(broadcast,{counter,Res}),
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
 
@@ -153,6 +153,6 @@ render_ev(#ev{module=M,name=F,payload=P,trigger=T},Source,Linked,State) ->
 
 terminate(_Req, _State=#context{module=Module}) ->
     Res = ets:update_counter(globals,onlineusers,{2,-1}),
-    wf:send(broadcast,{counter,Res}),
+%    wf:send(broadcast,{counter,Res}),
     catch Module:event(terminate),
     ok.
