@@ -22,11 +22,13 @@ init([]) ->
 
     {ok, {{one_for_one, 5, 10}, []}}.
 
+mime() -> [{mimetypes,cow_mimetypes,all}].
+
 dispatch_rules() ->
     cowboy_router:compile(
         [{'_', [
-            {"/static/[...]", n2o_dynalo,
-                {priv_dir, ?APP, "static", [{mimetypes,cow_mimetypes,all}]}},
+            {"/static/[...]", n2o_dynalo, {dir, "apps/n2o_sample/priv/static", mime()}},
+            {"/n2o/[...]", n2o_dynalo, {dir, "deps/n2o/priv", mime()}},
             {"/rest/:resource", rest_cowboy, []},
             {"/rest/:resource/:id", rest_cowboy, []},
             {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},

@@ -192,7 +192,7 @@ get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
     Raw = case file:read_file(FileName) of
          {ok,Bin} -> Bin;
          {error,_} -> mad_repl:load_file(StringPath) end,
-%    io:format("Cowboy Requested Static File: ~p~n\r",[Raw]),
+%    io:format("Cowboy Requested Static File: ~p~n\r ~p~n\r",[Raw,absname(StringPath)]),
 	Sendfile = fun (Socket, Transport) ->
 		case Transport:send(Socket, Raw) of
 			{ok, _} -> ok;
