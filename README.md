@@ -134,7 +134,7 @@ and async interprocesses communications:
     body() -> %% area of http handler
         {ok,Pid} = wf:comet(fun() -> chat_loop() end),
       [ #span { body= <<"Your chatroom name: ">> },
-        #textbox { id=userName, text= <<"Anonymous">> },
+        #textbox { id=userName, body= <<"Anonymous">> },
         #panel { id=chatHistory, class=chat_history },
         #textbox { id=message },
         #button { id=sendButton, body= <<"Send">>,
