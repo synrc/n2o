@@ -120,47 +120,28 @@ in large scale projects. Here is the complete Web Chat example
 working with WebSockets that demonstrate the use of Templates, DSL
 and async interprocesses communications:
 
-    -module(chat).
-    -compile(export_all).
-    -include_lib("n2o/include/wf.hrl").
+```erlang
+-module(index).
+-compile(export_all).
+-include_lib("n2o/include/wf.hrl").
 
-    main() ->
-        Title = wf_render_elements:render_elements(title()),
-        Body = wf_render_elements:render_elements(body()),
-        [ #dtl{file = "index", bindings=[{title,Title},{body,Body}]} ].
+peer()    -> io_lib:format("~p",[wf:peer(?REQ)]).
+message() -> wf:js_escape(wf:html_encode(wf:q(message))).
+main()    -> #dtl{file="index",app=n2o_sample,bindings=[{body,body()}]}.
+body() ->
+    {ok,Pid} = wf:comet(fun() -> chat_loop() end),
+    [ #panel{id=history}, #textbox{id=message},
+      #button{id=send,body="Chat",postback={chat,Pid},source=[message]} ].
 
-    title() -> <<"N2O">>.
+event(init) -> wf:reg(room);
+event({chat,Pid}) -> Pid ! {peer(), message()};
+event(Event) -> skip.
 
-    body() -> %% area of http handler
-        {ok,Pid} = wf:comet(fun() -> chat_loop() end),
-      [ #span { body= <<"Your chatroom name: ">> },
-        #textbox { id=userName, body= <<"Anonymous">> },
-        #panel { id=chatHistory, class=chat_history },
-        #textbox { id=message },
-        #button { id=sendButton, body= <<"Send">>,
-                  postback={chat,Pid}, source=[userName,message] },
-        #panel { id=status } ].
-
-    event({chat,Pid}) -> %% area of websocket handler
-        Username = wf:q(userName),
-        Message = wf:q(message),
-        Terms = [ #span { body="Message sent" }, #br{} ],
-        wf:insert_bottom(chatHistory, Terms),
-        wf:reg(room),
-        Pid ! {message, Username, Message};
-
-    event(Event) -> error_logger:info_msg("Unknown Event: ~p", [Event]).
-
-    chat_loop() -> %% background worker ala comet
-        receive
-            {message, Username, Message} ->
-                Terms = [ #span { body=Username }, ": ",
-                          #span { body=Message }, #br{} ],
-                wf:insert_bottom(chatHistory, Terms),
-                wf:flush(room); %% we flush to websocket process by key
-            Unknown -> error_logger:info_msg("Unknown Looper Message ~p",[Unknown])
-        end,
-        chat_loop().
+chat_loop() ->
+    receive {Peer, Message} ->
+       wf:insert_bottom(history,#panel{id=history,body=[Peer,": ",Message,#br{}]}),
+       wf:flush(room) end, chat_loop().
+```
 
 And try to compare how this functionality would be implemented
 with your favourite language/framework.
