@@ -134,17 +134,17 @@ and async interprocesses communications:
     body() -> %% area of http handler
         {ok,Pid} = wf:comet(fun() -> chat_loop() end),
       [ #span { text= <<"Your chatroom name: ">> },
-        #textbox { id=userName, text= <<"Anonymous">> },
+        #textbox { id=userName, body= <<"Anonymous">> },
         #panel { id=chatHistory, class=chat_history },
         #textbox { id=message },
-        #button { id=sendButton, text= <<"Send">>,
+        #button { id=sendButton, body= <<"Send">>,
                   postback={chat,Pid}, source=[userName,message] },
         #panel { id=status } ].
 
     event({chat,Pid}) -> %% area of websocket handler
         Username = wf:q(userName),
         Message = wf:q(message),
-        Terms = [ #span { text="Message sent" }, #br{} ],
+        Terms = [ #span { body="Message sent" }, #br{} ],
         wf:insert_bottom(chatHistory, Terms),
         wf:reg(room),
         Pid ! {message, Username, Message};
@@ -154,8 +154,8 @@ and async interprocesses communications:
     chat_loop() -> %% background worker ala comet
         receive
             {message, Username, Message} ->
-                Terms = [ #span { text=Username }, ": ",
-                          #span { text=Message }, #br{} ],
+                Terms = [ #span { body=Username }, ": ",
+                          #span { body=Message }, #br{} ],
                 wf:insert_bottom(chatHistory, Terms),
                 wf:flush(room); %% we flush to websocket process by key
             Unknown -> error_logger:info_msg("Unknown Looper Message ~p",[Unknown])
