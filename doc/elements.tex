@@ -24,7 +24,7 @@ Usually ``static'' means elements that don't use postback parameter:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    #textbox { id=userName, text= <<"Anonymous">> },
+    #textbox { id=userName, body= <<"Anonymous">> },
     #panel { id=chatHistory, class=chat_history }
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -48,7 +48,7 @@ Element definition specifies the list of {\bf source} elements providing data to
 \vspace{1\baselineskip}
 \begin{lstlisting}
     {ok,Pid} = wf:async(fun() -> chat_loop() end),
-    #button { id=sendButton, text= <<"Send">>, 
+    #button { id=sendButton, body= <<"Send">>, 
               postback={chat,Pid}, source=[userName,message] }.
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -197,7 +197,7 @@ bind\_script should be set to false.
 Sample:
 
 \begin{lstlisting}
-#button { id=sendButton, text= <<"Send">>,
+#button { id=sendButton, body= <<"Send">>,
           postback={chat,Pid}, source=[userName,message] }.
 \end{lstlisting}
 

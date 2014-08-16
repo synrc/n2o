@@ -136,7 +136,7 @@ interprocesses communication.
     event({chat,Pid}) ->
         Username = wf:q(userName),
         Message = wf:q(message),
-        Terms = [ #span { text="Message sent" }, #br{} ],
+        Terms = [ #span { body="Message sent" }, #br{} ],
         wf:reg(room),
         Pid ! {message, Username, Message}.
 
