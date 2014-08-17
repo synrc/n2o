@@ -36,8 +36,7 @@ to_binary(A) when is_atom(A) -> to_binary(atom_to_list(A));
 to_binary(B) when is_binary(B) -> B;
 to_binary(I) when is_integer(I) -> to_binary(integer_to_list(I));
 to_binary(F) when is_float(F) -> to_binary(n2o_mochinum:digits(F));
-to_binary(L) when is_list(L) -> iolist_to_binary(L).
-
+to_binary(L) when is_list(L) ->  unicode:characters_to_binary(L).
 
 to_integer(A) when is_atom(A) -> to_integer(atom_to_list(A));
 to_integer(B) when is_binary(B) -> to_integer(binary_to_list(B));
