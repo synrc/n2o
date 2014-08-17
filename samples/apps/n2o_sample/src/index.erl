@@ -83,3 +83,4 @@ chat_loop() ->
         Unknown -> wf:info(?MODULE,"Unknown Looper Message ~p",[Unknown])
     end,
     chat_loop().
+.
