@@ -61,7 +61,8 @@ function byteArray8toString (byteArray, separator) {
 function WebSocketsInit(){
     if ("MozWebSocket" in window) { WebSocket = MozWebSocket; }
     if ("WebSocket" in window) {
-        ws = new bullet("ws://"+
+        var protocol = window.location.protocol == 'https:' ? "wss://" : "ws://";
+        ws = new bullet(protocol +
           (null == transition.host ? window.location.hostname : transition.host)
                + ":"+ (null == transition.port ? window.location.port : transition.port)
              + "/ws" + window.location.pathname + window.location.search);
