@@ -76,7 +76,7 @@ event(Event) -> wf:info(?MODULE,"Event: ~p", [Event]).
 chat_loop() ->
     receive 
         {message, Username, Message} ->
-            Terms = #panel { body= [ Username,": ",Message,#br{} ] },
+            Terms = #panel { body= [ Username,": ",Message,#br{}, #button{postback=logout} ] },
             wf:insert_bottom(history, Terms),
             wf:wire("document.querySelector('#history').scrollTop = document.querySelector('#history').scrollHeight;"),
             wf:flush(room);

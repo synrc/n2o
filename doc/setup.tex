@@ -13,7 +13,7 @@ is bundled as an Erlang release.
 \begin{lstlisting}
     $ git clone git://github.com/5HT/n2o
     $ cd n2o/samples
-    $ make && make console
+    $ ./mad deps compile repl
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -49,7 +49,6 @@ N2O uses two ports for SSL and non-SSL connections:
 
 \begin{lstlisting}
     wf:config(n2o,port,443)
-    wf:config(n2o,transition_port,80)
 \end{lstlisting}
 
 These ports you can also redefine WS:// port in bullet connection inside template:
