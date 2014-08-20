@@ -16,9 +16,8 @@ with *web* Erlang application which contains modules:
 Prerequisites
 -------------
 
-* erlang, erlang-reltool
-* rebar
-* relx (optional)
+* erlang
+* mad
 * inotify-tools (Linux, for filesystem watching)
 
 Run
@@ -26,7 +25,7 @@ Run
 
 To run just perform on Windows, Linux and Mac
 
-    $ ./mad deps compile repl
+    $ mad deps compile plan repl
 
 On BSD you should use gmake
 
