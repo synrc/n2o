@@ -208,10 +208,10 @@ for each request. So this data shows internal data throughput by wrk:
 Prerequisites
 -------------
 
-To run N2O sites you need Erlang R15 or higher and basho rebar installed.
-N2O works on Windows, Mac and Linux. 
+To run N2O sites you need Erlang R15 or higher.
+N2O works on Windows, Mac and Linux.
 
-NOTE: the work of sync application on Windows is limited.
+Installing Erlang:
 
     $ sudo apt-get install build-essential libncurses5-dev openssl libssl-dev m4
     $ curl -O https://github.com/spawngrid/kerl/blob/master/kerl
@@ -226,20 +226,17 @@ NOTE: the work of sync application on Windows is limited.
 Kickstart Bootstrap
 -------------------
 
-To try N2O you just need to clone a N2O repo from Github and build. We don’t use fancy
-scripts so building process is OTP compatible: bootstrap site is bundled as Erlang release.
+To try N2O you just need to clone a N2O repo from Github and build.
+We use very small and powerfull mad tool designed for our Web Stack.
 
     $ cd n2o/samples
-    $ make && make console
+    $ ./mad deps compile plan repl
 
 Now you can try: [http://localhost:8000](http://localhost:8000)
 
-BSD NOTE: on BSD you should use gmake instead of make
-
-LINUX NOTE: on Linux you should do at first:
+LINUX NOTE: if you want to have online recompilation you should do at first:
 
     $ sudo apt-get install inotify-tools
-
 
 Start yourself depending N2O core
 ---------------------------------
@@ -269,19 +266,6 @@ And put minimal index.erl page:
     -include_lib("n2o/include/wf.hrl").
 
     main() -> [ #span{body = <<"Hello">>} ].
-
-Developer scripts for Sync
---------------------------
-
-For developing we use some scripts which are needed for linking source
-directories with release lib directories and also links to BERT, N2O
-and jQuery javascript. After making release you should run:
-
-    $ ./nitrogen_static.sh
-    $ ./release_sync.sh
-
-Now you can edit site sources and sync will automaticaly recompile
-and reload modules in release.
 
 Support
 -------

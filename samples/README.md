@@ -25,7 +25,7 @@ Run
 
 To run just perform on Windows, Linux and Mac
 
-    $ mad deps compile plan repl
+    $ ./mad deps compile plan repl
 
 On BSD you should use gmake
 
