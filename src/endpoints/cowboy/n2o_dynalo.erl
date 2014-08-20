@@ -9,7 +9,7 @@ rest_init(Req, {dir, Path, Extra}) ->
 	{PathInfo, Req2} = cowboy_req:path_info(Req),
 	Info = {ok, #file_info{type=regular,size=0}},
 	FileName = filename:join([Path|PathInfo]),
-    io:format("Rest Init: ~p~n\r",[FileName]),
+%    io:format("Rest Init: ~p~n\r",[FileName]),
     {ok, Req2, {FileName, Info, Extra}}.
 
 malformed_request(Req, State) -> {State =:= error, Req, State}.
@@ -52,7 +52,7 @@ get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
 %    io:format("Abs Name: ~p~n\r",[FileName]),
     Raw = case file:read_file(FileName) of
          {ok,Bin} -> Bin;
-         {error,_} -> case mad_repl:load_file(FileName) of
+         {error,_} -> case mad_repl:load_file(StringPath) of
                            <<>> -> case file:read_file(filename:join([code:lib_dir(Name)|RestPath])) of
                                         {ok,ReleaseFile} -> ReleaseFile;
                                         {error,_} -> <<>> end;
