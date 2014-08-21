@@ -208,7 +208,7 @@ for each request. So this data shows internal data throughput by wrk:
 Prerequisites
 -------------
 
-To run N2O sites you need Erlang R15 or higher.
+To run N2O sites you need Erlang R17 or higher.
 N2O works on Windows, Mac and Linux.
 
 Installing Erlang:
@@ -276,7 +276,7 @@ Support
 Credits
 -------
 
-* Maxim Sokhatsky -- core, shen
+* Maxim Sokhatsky -- core, shen, windows
 * Dmitry Bushmelev -- endpoints, yaws, cowboy
 * Andrii Zadorozhnii -- elements, actions, handlers
 * Anton Logvinenko -- doc
