@@ -133,7 +133,7 @@ cookie(Name,Value,Path,TTL) -> wf_context:add_cookie(Name,Value,Path,TTL).
 % Bridge Information
 
 -ifndef(BRIDGE).
--define(BRIDGE, n2o_cowboy).
+-define(BRIDGE, (wf:config(n2o,bridge,n2o_cowboy))).
 -endif.
 
 cookie_req(Cookie,Req) -> ?BRIDGE:cookie(Cookie, Req).
