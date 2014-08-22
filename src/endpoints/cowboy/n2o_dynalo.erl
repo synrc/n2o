@@ -51,20 +51,19 @@ get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
 	FileName = filename:absname(StringPath),
 %    io:format("Abs Name: ~p~n\r",[FileName]),
     Raw = case file:read_file(FileName) of
-         {ok,Bin} -> Bin;
-         {error,_} -> case mad_repl:load_file(StringPath) of
-                           <<>> -> case file:read_file(filename:join([code:lib_dir(Name)|RestPath])) of
-                                        {ok,ReleaseFile} -> ReleaseFile;
-                                        {error,_} -> <<>> end;
-                           ETSFile -> ETSFile end 
-    end,
+    {ok,Bin} -> Bin;
+    {error,_} ->
+        case mad_repl:load_file(StringPath) of
+        {ok,ETSFile} -> ETSFile;
+        {error,_} ->
+            case file:read_file(filename:join([code:lib_dir(Name)|RestPath])) of
+            {ok,ReleaseFile} -> ReleaseFile;
+            {error,_} -> <<>> end end end,
 %    io:format("Cowboy Requested Static File: ~p~n\r ~p~n\r",[Raw,absname(StringPath)]),
 	Sendfile = fun (Socket, Transport) ->
 		case Transport:send(Socket, Raw) of
 			{ok, _} -> ok;
 			{error, closed} -> ok;
 			{error, etimedout} -> ok;
-			_ -> ok
-		end
-	end,
+			_ -> ok end end,
 	{{stream, size(Raw), Sendfile}, Req, State}.
