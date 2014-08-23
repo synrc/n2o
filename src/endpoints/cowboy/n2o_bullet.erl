@@ -36,14 +36,14 @@ info({client,Message}, Req, State) ->
     wf_context:clear_actions(),
 %    wf:info(?MODULE,"Client Message: ~p",[Message]),
     Module = State#context.module,
-    try Module:event({client,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]) end,
+    try Module:event({client,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,wf:stack()]) end,
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
 info({bert,Message}, Req, State) ->
     wf_context:clear_actions(),
     Module = State#context.module,
-    Term = try Module:event({bert,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]), <<>> end,
+    Term = try Module:event({bert,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,wf:stack()]), <<>> end,
     wf:info(?MODULE,"Client BERT Binary Message: ~p Result: ~p",[Message,Term]),
     {reply,{binary,term_to_binary(Term)},Req,State};
 
@@ -54,7 +54,7 @@ info({binary,Message}, Req, State) ->
         undefined -> Message;
         Depickled -> Depickled
     end,
-    Term = try Module:event({binary,DpkldMessage}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]), <<>> end,
+    Term = try Module:event({binary,DpkldMessage}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,wf:stack()]), <<>> end,
     wf:info(?MODULE,"Client Raw Binary Message: ~p Result: ~p",[Message,Term]),
     Res = case Term of
         #binary{
@@ -72,14 +72,14 @@ info({server,Message}, Req, State) ->
     wf_context:clear_actions(),
 %    wf:info(?MODULE,"Server Message: ~p",[Message]),
     Module = State#context.module,
-    try Module:event({server,Message}),[] catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]) end,
+    try Module:event({server,Message}),[] catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,wf:stack()]) end,
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))},
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf_context:clear_actions(),
 %    wf:info(?MODULE,"N2O Message: ~p",[Event]),
-    Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]), wf:json([]) end,
+    Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,wf:stack()]), wf:json([]) end,
     wf:info(?MODULE,"Pickle Cookies: ~p",[wf_core:set_cookies(wf:cookies(),Req)]),
     {reply,Result,wf_core:set_cookies(wf:cookies(),Req),State};
 
@@ -91,7 +91,7 @@ info({flush,Actions}, Req, State) ->
 info({delivery,Route,Message}, Req, State) ->
     wf_context:clear_actions(),
     Module = State#context.module,
-    Term = try Module:event({delivery,Route,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,n2o_error:stack()]), <<>> end,
+    Term = try Module:event({delivery,Route,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", [E,R,wf:stack()]), <<>> end,
     wf:info(?MODULE,"Delivery: ~p Result: ~p",[Message,Term]),
     {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]),Req,State};
 
@@ -144,7 +144,7 @@ html_events({pickle,Source,Pickled,Linked}, State) ->
     wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]).
 
 render_ev(#ev{module=M,name=F,payload=P,trigger=T},Source,Linked,State) ->
-    case F of 
+    case F of
          api_event -> M:F(P,Linked,State);
          event -> lists:map(fun({K,V})-> put(K,V) end,Linked), M:F(P);
          UserCustomEvent -> M:F(P,T,State) end.
