@@ -95,8 +95,8 @@ depickle(SerializedData, TTLSeconds) -> ?PICKLER:depickle(SerializedData, TTLSec
 -define(ERRORING, (wf:config(n2o,erroring,n2o_error))).
 -endif.
 
-stack() -> ?ERRORING:stack().
-error_page(Class,Error) -> ?ERRORING:error_page(Class,Error).
+stack(Error, Reason)    -> ?ERRORING:stack(Error, Reason).
+error_page(Class,Error) -> ?ERRORING:error_page(Class, Error).
 
 % Session handling wf:session wf:user wf:role
 
