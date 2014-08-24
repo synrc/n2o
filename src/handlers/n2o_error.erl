@@ -12,17 +12,18 @@
 %         index:main/0:8
 %         wf_core:run/1:15
 
-stack() ->
-    [    case A of 
-            { Module,Function,Arity,Location} ->
-        { Module,Function,Arity,proplists:get_value(line, Location) };
-            Else -> Else end
-    || A <- erlang:get_stacktrace() ].
+stack(Error, Reason) ->
+    Stacktrace = [case A of
+         { Module,Function,Arity,Location} ->
+             { Module,Function,Arity,proplists:get_value(line, Location) };
+         Else -> Else end
+    || A <- erlang:get_stacktrace()],
+    [Error, Reason, Stacktrace].
 
 
 error_page(Class,Error) ->
     io_lib:format("ERROR:  ~w:~w~n~n",[Class,Error]) ++
-    "STACK: " ++ 
+    "STACK: " ++
     [ wf:render([io_lib:format("\t~w:~w/~w:~w",
         [ Module,Function,Arity,proplists:get_value(line, Location) ]),"\n"])
     ||  { Module,Function,Arity,Location} <- erlang:get_stacktrace() ].
