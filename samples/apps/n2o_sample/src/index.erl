@@ -12,7 +12,7 @@ main() ->
 
 title() -> [ <<"N2O">> ].
 
-log_modules() -> [index]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
+log_modules() -> [index,index2]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
 
 body() ->
     wf:info(?MODULE,"RENDER!", []),
