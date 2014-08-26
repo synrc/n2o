@@ -11,7 +11,8 @@ body() ->
             #span{body="Password: "}, #password{id=pass},
             #button{id=login,body="Login",postback=login,source=[user,pass]} ].
 
-event(init) -> [];
+event(terminate) -> wf:info(?MODULE,"event(terminate) called~n",[]);
+event(init) -> wf:info(?MODULE,"event(init) called~n",[]);
 event(login) ->
     User = wf:q(user),
     wf:update(display,User),

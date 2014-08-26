@@ -12,7 +12,7 @@ main() ->
 
 title() -> [ <<"N2O">> ].
 
-log_modules() -> [index,index2]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
+log_modules() -> [index,index2,n2o_bullet,login]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
 
 body() ->
     wf:info(?MODULE,"RENDER!", []),
@@ -25,7 +25,10 @@ body() ->
       #button{ id=h_bin, body= <<"Binary with header">>, postback={binary,{headered,Pid}} },
       #button{ id=bin_text, body= <<"Send text from browser">>, postback={send_text, "from browser test"} } ].
 
+event(terminate) ->
+    wf:info(?MODULE,"event(terminate) called~n",[]);
 event(init) ->
+    wf:info(?MODULE,"event(init) called~n",[]),
     User = wf:user(),
     wf:reg(room),
     X = wf:qs(<<"x">>),
@@ -35,6 +38,7 @@ event(init) ->
              #button{id=logout, body="Logout", postback=logout}, 
              #br{}]}),
     wf:insert_top(history,"-1-");
+
 
 event({chat,Pid}) ->
     wf:info(?MODULE,"Chat Pid: ~p",[Pid]),
