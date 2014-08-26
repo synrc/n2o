@@ -167,7 +167,8 @@ function WebSocketsInit(){
             }
 
         };
-        ws.onopen = function() { if (!initialized) { ws.send(['N2O', transition.pid]); initialized = true; } };
+        ws.onopen = function() { if (!initialized) { console.log('Connect'); ws.send(['N2O', '']); initialized = true; } };
+        ws.ondisconnect = function() { initialized = false; console.log('Disconnect'); };
         ws.onclose = function() { addStatus("websocket was closed"); };
     } else {
         addStatus("sorry, your browser does not support websockets.");
