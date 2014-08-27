@@ -1,4 +1,4 @@
--module(enc_json).
+-module(n2o_client).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 
