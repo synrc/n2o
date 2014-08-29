@@ -10,7 +10,7 @@ stream({text,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]
 stream({binary,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]).
 info(Message, Req, State) -> push(Message,Req,State,protocols(),[]).
 terminate(_Req, _State=#context{module=Module}) -> catch Module:event(terminate).
-init(_Transport, Req, _Opts, _Active) ->
+init(Req) ->
     put(actions,[]),
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
@@ -21,10 +21,9 @@ init(_Transport, Req, _Opts, _Active) ->
 
 % N2O top level protocol
 
-nop() -> {reply,<<>>,Req,State}.
+nop(R,S) -> {reply,<<>>,R,S}.
 reply(M,R,S) -> {reply,M,R,S}.
-push(Message, Req, State, [], Acc) -> nop();
-push(Message, Req, State, [H|T]=Protocols, Acc) ->
+push(Message, Req, State, [], Acc) -> nop(Req, State);
 push(Message, Req, State, [H|T]=Protocols, Acc) ->
     case H:info(Message,Req,State) of
          {unknown,_,_,_} -> push(Message,Req,State,T,Acc);

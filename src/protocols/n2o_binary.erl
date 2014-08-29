@@ -23,6 +23,6 @@ info({binary,Message}, Req, State) ->
                   MetaSize:32,Meta/binary,Data/binary>>;
         _ when is_binary(Term) -> Term;
         _ -> term_to_binary(Term) end,
-    {reply,{binary,Res},Req,State}.
+    {reply,{binary,Res},Req,State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.

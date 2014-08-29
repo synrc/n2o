@@ -22,6 +22,6 @@ info({text,<<"N2O,",Rest/binary>> = InitMarker}, Req, State) ->
                     R end,
     try Module:event(init) catch C:E -> wf:error_page(C,E) end,
     Actions = wf:render(get(actions)),
-    {reply, wf:json([{eval,iolist_to_binary([InitActions,Actions])}]), Req, State}.
+    {reply, wf:json([{eval,iolist_to_binary([InitActions,Actions])}]), Req, State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.
