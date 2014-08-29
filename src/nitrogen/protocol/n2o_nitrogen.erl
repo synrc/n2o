@@ -6,10 +6,10 @@
 % Nitrogen pickle handler
 
 info({text,Message},Req,State) -> 
-    wf:info(?MODULE,"n2o_nitrogen:text ~p",[Message]),
+%    wf:info(?MODULE,"n2o_nitrogen:text ~w",[Message]),
     info(binary_to_term(Message,[safe]),Req,State);
 info({binary,Message},Req,State) -> 
-    wf:info(?MODULE,"n2o_nitrogen:binary ~p",[Message]),
+%    wf:info(?MODULE,"n2o_nitrogen:binary ~w",[Message]),
     info(binary_to_term(Message,[safe]),Req,State);
 
 info({pickle,_,_,_}=Event, Req, State) ->

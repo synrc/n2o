@@ -6,7 +6,6 @@
 info({binary,Message}, Req, State) -> info(binary_to_term(Message,[safe]),Req,State);
 
 info({client,Message}, Req, State) ->
-    wf_context:clear_actions(),
 %    wf:info(?MODULE,"Client Message: ~p",[Message]),
     Module = State#context.module,
     try Module:event({client,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)) end,
@@ -14,7 +13,6 @@ info({client,Message}, Req, State) ->
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State};
 
 info({server,Message}, Req, State) ->
-    wf_context:clear_actions(),
 %    wf:info(?MODULE,"Server Message: ~p",[Message]),
     Module = State#context.module,
     try Module:event({server,Message}),[] catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)) end,
