@@ -25,10 +25,6 @@ add_action(Action) ->
 init_context(Req) ->
     #context{
         actions=[], module=index, path=[], req=Req, params=[],
-        handlers= [ {'query', handler_coalecse('query', n2o_query)},
-                    {session, handler_coalecse(session, n2o_session)},
-                    {route,   handler_coalecse(route,   n2o_route)} ]}.
-
-handler_coalecse(Key, Default) -> case application:get_env(n2o,Key) of
-                              undefined -> Default;
-                              {ok,V} -> V end.
+        handlers= [ {'query', wf:config(n2o,'query', n2o_query)},
+                    {session, wf:config(n2o,session, n2o_session)},
+                    {route,   wf:config(n2o,route,   n2o_route)} ]}.

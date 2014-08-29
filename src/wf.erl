@@ -1,4 +1,5 @@
 -module(wf).
+-author('Rusty Klophaus').
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -include_lib("n2o/include/api.hrl").
