@@ -1,15 +1,38 @@
 \section{WebSocket Protocols}
 
-I made this for you to be happy.
+We made this for you to be happy.
 You can plug any binary formatting protocol like BERT, BED, MessagePack
 or even textual ones like TXT JSON or Custom Binary Protocols
-
 Nitrogen-support here is just thre protocol messages: pickle, flush and delivery.
 N2O provides also basic heartbeat protocol that can be formatted at your whim.
 
-\subsection*{Requests}
+\subsection{Heartbeat}
 
-\subsection{Nitrogen Events {\bf pickle}}
+Heartbeat protocol is essential WebSocket application level protocol for
+PING and N2O initialization. It ping every 4 seconds from client side to server
+thus allowing to determine client online presence. On reconnection or initial connect
+client sends N2O init marker telling to server to reinitialize the context.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    ws.send('PING');
+    ws.send('N2O,');
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can try manually send this messages in web console to see whats happening,
+also you can enable logging the heartbeat protocol by including its module in log_modules.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    log_modules() -> [n2o_heart].
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Heartbean protocol PING request return empty message NOP binary response and N2O
+messages returns JSON with EVAL fieds of rendered actions if any.
+
+\subsection{Nitrogen}
 
 Picled messaged are used if you send messages over unencrypted
 channel and want to hide the content of the message,
@@ -34,10 +57,11 @@ Where Base64 represents the N2O EVENT:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-This is Nitrogen-based messaging model.
-This request will return JSON with EVAL field only.
+This is Nitrogen-based messaging model. Nitrogen WebSocket processes receive also
+flush and delivery protocol messages, but originated from server. These are internal Nitrogen
+protocol messages. This request will return JSON with EVAL field only.
 
-\subsection{Client Requests {\bf client}}
+\subsection{Client}
 
 Client messages usually originated at client and represent the Client API Requests:
 
@@ -49,35 +73,20 @@ Client messages usually originated at client and represent the Client API Reques
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-NOTE: This request may return JSON with EVAL and DATA fields.
-
-\newpage
-\subsection{Erlang Term Requests {\bf bert}}
-
-When you want to receive \footahref{http://bert-rpc.org}{BERT} messages on client you usually ask the
-server by sending:
+Server service usually places server messages:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     ws.send(enc(tuple(
-        atom('bert'),
-        binary('API Request'));
+        atom('server'),
+        tuple(atom('attach'),1000001))));
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-This messages could be handled as this:
+But it is up to your application and client/server handlers how to handle these messages
+NOTE: This request may return JSON with EVAL and DATA fields.
 
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    event({bert,Message}) ->
-        wf:info("This API will return BERT enveloped echo"),
-        {answer,echo,Message};
-\end{lstlisting}
-\vspace{1\baselineskip}
-
-NOTE: you will always receive BERT messages.
-
-\subsection{Binary Requests {\bf binary}}
+\subsection{Binary}
 
 When you need raw binary Blob on client side,
 for images or other raw data you can ask server like this:

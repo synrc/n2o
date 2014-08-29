@@ -27,4 +27,4 @@ init_context(Req) ->
         actions=[], module=index, path=[], req=Req, params=[],
         handlers= [ {'query', wf:config(n2o,'query', n2o_query)},
                     {session, wf:config(n2o,session, n2o_session)},
-                    {route,   wf:config(n2o,route,   n2o_route)} ]}.
+                    {route,   wf:config(n2o,route,   n2o_dynroute)} ]}.

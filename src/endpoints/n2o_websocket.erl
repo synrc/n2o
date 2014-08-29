@@ -19,13 +19,18 @@ init(Req) ->
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
 
-% N2O top level protocol
+% N2O top level protocol NOP REPLY TRY
 
-nop(R,S) -> {reply,<<>>,R,S}.
-reply(M,R,S) -> {reply,M,R,S}.
+nop(R,S) ->
+    wf:info(?MODULE,"NOP",[]),
+    {reply,<<>>,R,S}.
+reply(M,R,S) ->
+    wf:info(?MODULE,"REPLY ~p",[M]),
+    {reply,M,R,S}.
+
 push(Message, Req, State, [], Acc) -> nop(Req, State);
 push(Message, Req, State, [H|T]=Protocols, Acc) ->
-%    wf:info(?MODULE,"call ~p message ~p",[H,Message]),
+    wf:info(?MODULE,"TRY ~p message ~p",[H,Message]),
     case H:info(Message,Req,State) of
          {unknown,_,_,_} -> push(Message,Req,State,T,Acc);
          {reply,M,R,S}   -> reply(M,R,S);

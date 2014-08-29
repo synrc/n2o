@@ -13,7 +13,7 @@ info({binary,Message}, Req, State) ->
         Depickled -> Depickled
     end,
     Term = try Module:event({binary,DpkldMessage}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
-    wf:info(?MODULE,"Client Raw Binary Message: ~p Result: ~p",[Message,Term]),
+    wf:info(?MODULE,"Raw Binary Message: ~p Result: ~p",[Message,Term]),
     Res = case Term of
         #binary{
             id=Id, type=Type, app=App, version=Version,

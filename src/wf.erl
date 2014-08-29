@@ -199,7 +199,7 @@ json(Json) -> n2o_json:encode(Json).
 
 temp_id() -> {_, _, C} = now(), "temp" ++ integer_to_list(C).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
-render(X) -> wf_core:render(X).
+render(X) -> wf_render:render(X).
 
 config_multiple(Keys) -> [config(Key, "") || Key <- Keys].
 config(Key) -> config(n2o, Key, "").

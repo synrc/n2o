@@ -59,19 +59,20 @@ The first one is called 'data-on-wire'. With this approach only JSON, XML or bin
 data are transfered over RPC and REST channels. All HTML rendering
 is performed on the client-side. This is the most suitable approach for desktop
 applications. Examples include Chaplin/CoffeeScript, Meteor/JavaScript
-and ClojureScript.
+and ClojureScript. This approach is suitable also for mobile clients.
 
 \paragraph{}
 Another approach is sending pre-rendered parts of pages and JavaScript
 and then only replacing HTML and executing JavaScript on the client-side. This approach
-is better suited for mobile applications development since the client doesn't have much resources.
+is better suited for mobile HTML applications development since the
+client doesn't have much resources.
 
 \paragraph{}
 With N2O you can create both types of applications: using N2O REST framework
 for the first type of application based on Cowboy REST API along with DTL
 templates for initial HTML renderings. And also Nitrogen DSL-based approach
 to model parts of the pages as widgets and control elements thanks to rich
-Nitrogen elements collections provided by Nitrogen community. 
+Nitrogen elements collections provided by Nitrogen community.
 
 \paragraph{}
 In cases where your system is built around Erlang infrastructure, N2O
@@ -91,7 +92,7 @@ access library {\bf KVS} and {\bf MQS} Message Bus client library (GProc, Rabbit
 \subsection{JSON and BERT}
 N2O uses JSON and BERT. All messages passed over
 WebSockets are encoded with native Erlang External Term Format.
-It is easy to parse it in JavaScript with {\bf Bert.decode(msg)}
+It is easy to parse it in JavaScript with {\bf dec(msg)}
 and it helps to avoid complexity on server side. Please refer
 to \footahref{http://bert-rpc.org}{http://bert-rpc.org} for more information.
 
@@ -178,3 +179,9 @@ decided to remove {\bf nprocreg} process registry along
 with {\bf{action\_comet}} heavy process creation. N2O creates a single
 process for async websocket handler, all async operations
 are handled within Cowboy processes.
+
+\paragraph{}
+Also in N2O we introduce new levels of abstraction. Now you can extend
+protocols (Nitrogen, Heartbeat, Binary), change protocol formatters (BERT,
+JSON, MessagePack, BED), inject you code almost at any level. The code structure
+is very clean and Nitrogen compatibility layer is detachable from N2O.
