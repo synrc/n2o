@@ -86,6 +86,7 @@ Credits
 
 * Maxim Sokhatsky -- core, shen, windows
 * Dmitry Bushmelev -- endpoints, yaws, cowboy
+* Andrew Martemianov -- binary protocols
 * Andrii Zadorozhnii -- elements, actions, handlers
 * Anton Logvinenko -- doc
 * Vladimir Kirillov -- mac, bsd, xen, linux support
