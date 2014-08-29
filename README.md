@@ -37,7 +37,7 @@ event(Event) -> skip.
 
 chat_loop() ->
     receive {Peer, Message} ->
-       wf:insert_bottom(history,#panel{id=history,body=[Peer,": ",Message,#br{}]}),
+       wf:insert_bottom(history,#panel{body=[Peer,": ",Message,#br{}]}),
        wf:flush(room) end, chat_loop().
 ```
 
