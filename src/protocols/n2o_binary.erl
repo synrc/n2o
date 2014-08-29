@@ -1,6 +1,8 @@
--module(enc_binary).
--author('Maxim Sokhatsky').
+-module(n2o_binary).
+-author('Andrew Martemianov').
 -include_lib("n2o/include/wf.hrl").
+
+info({binary,Message}, Req, State) -> info(binary_to_term(Message,[safe]),Req,State);
 
 info({binary,Message}, Req, State) ->
     wf_context:clear_actions(),
@@ -23,3 +25,4 @@ info({binary,Message}, Req, State) ->
         _ -> term_to_binary(Term) end,
     {reply,{binary,Res},Req,State}.
 
+info(Message, Req, State) -> {unknown,Message, Req, State}.

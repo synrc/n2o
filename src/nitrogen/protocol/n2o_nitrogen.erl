@@ -4,6 +4,8 @@
 
 % Nitrogen pickle handler
 
+info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,State);
+
 info({pickle,_,_,_}=Event, Req, State) ->
     wf_context:clear_actions(),
 %    wf:info(?MODULE,"N2O Message: ~p",[Event]),
@@ -21,7 +23,9 @@ info({delivery,Route,Message}, Req, State) ->
     Module = State#context.module,
     Term = try Module:event({delivery,Route,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
     wf:info(?MODULE,"Delivery: ~p Result: ~p",[Message,Term]),
-    {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]),Req,State}.
+    {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]),Req,State};
+
+info(Message,Req,State) -> {unknown,Message,Req,State}.
 
 % double render: actions could generate actions
 

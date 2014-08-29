@@ -2,6 +2,8 @@
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 
+info({binary,Message}, Req, State) -> info(binary_to_term(Message,[safe]),Req,State);
+
 info({client,Message}, Req, State) ->
     wf_context:clear_actions(),
 %    wf:info(?MODULE,"Client Message: ~p",[Message]),
@@ -18,3 +20,4 @@ info({server,Message}, Req, State) ->
     {reply,wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(get(actions)))},
                     {data,binary_to_list(term_to_binary(Message))}]),Req,State}.
 
+info(Message, Req, State) -> {unknown,Message, Req, State}.

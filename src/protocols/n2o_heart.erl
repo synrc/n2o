@@ -1,16 +1,11 @@
 -module(n2o_heart).
+-author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-info(<<"PING">> = Ping, Req, State) ->
-%    wf:info(?MODULE,"Ping Message: ~p",[Ping]),
-    {reply, wf:json([]), Req, State};
-
-info(<<"N2O,",Rest/binary>>=InitMarker,Req,State) ->
-%    wf:info(?MODULE,"Ping Message: ~p",[Ping]),
-    {reply, wf:json([]), Req, State};
-
-info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
+info({text,<<"PING">> = Ping}, Req, State) -> {reply, wf:json([]), Req, State};
+info({text,<<"N2O,",Rest/binary>>=InitMarker},Req,State) -> {reply, wf:json([]), Req, State};
+info({text,<<"N2O,",Rest/binary>> = InitMarker}, Req, State) ->
     wf:info(?MODULE,"N2O INIT: ~p",[Rest]),
     Module = State#context.module,
     InitActions = case Rest of
@@ -28,3 +23,5 @@ info(<<"N2O,",Rest/binary>> = InitMarker, Req, State) ->
     try Module:event(init) catch C:E -> wf:error_page(C,E) end,
     Actions = wf:render(get(actions)),
     {reply, wf:json([{eval,iolist_to_binary([InitActions,Actions])}]), Req, State}.
+
+info(Message, Req, State) -> {unknown,Message, Req, State}.
