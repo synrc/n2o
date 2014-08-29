@@ -1,0 +1,62 @@
+\section{Erlang Processes}
+
+\subsection{Reduced Latency}
+The secret of reducing latency is simple. We try to deliver rendered HTML
+as soon as possible and render JavaScript only after WebSocket initialization is complete.
+It takes three steps and three Erlang processes to achieve that.
+
+\includeimage{images/page-lifetime.png}{Page Lifetime}
+
+\paragraph{}
+Starting the page lifetime N2O uses HTTP process to serve the first HTML page.
+After that it dies and spawns Transition process.
+Then the browser initiates WebSocket connections to the similar URL endpoint.
+N2O creates persistent WebSocket process and the Transition process dies.
+
+\paragraph{}
+Your page could also spawn processes with {\bf wf:async}.
+These are the persistent processes acting like regullar Erlang processes.
+It is a usual approach for organizing non-blocking UI for file uploads and time consuming operations.
+
+\newpage
+\subsection{Page Process}
+The first HTTP handler only renders HTML. All created
+JavaScript actions are stored in the transition process.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    transition(Actions) ->
+        receive {'N2O',Pid} -> Pid ! Actions end.
+\end{lstlisting}
+
+\paragraph{}
+HTTP handler dies immediately after returning HTML. Transition process
+waits for a request from WebSocket handler.
+
+\subsection{Transition Process}
+Right after receiving HTML the browser initiates WebSocket connection
+thus starting WebSocket handler on the server. After returning
+JavaScript actions the Transition process dies and the only process left
+running is WebSocket handler. At this point initialization phase is complete.
+
+\subsection{Events Process}
+After that all client/server communication is performed over
+WebSocket channel. All events coming from the browser are
+handled by N2O, which renders elements to HTML and actions to
+JavaScript. Each user at any time has only one WebSocket process
+per connection.
+
+\subsection{Async Processes}
+These are the user processes created with {\bf wf:async}.
+That's a legacy name coming from the times when async technology
+was called COMET for XHR channel. Async processes are optional
+and are only neededed when you have a UI event taking too much
+time to be processed, like gigabyte file uploads. You can create
+many Async Processes per user.
+
+\subsection{SPA Mode}
+In SPA mode you N2O can serve no HTML at all. N2O elements are being
+binded during INIT handshake and thus can be used regullary as in DSL mode.
+
+% \includeimage{images/static-serving.png}{Static Serving}
+

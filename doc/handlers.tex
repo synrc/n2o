@@ -1,0 +1,71 @@
+
+\section{Handlers}
+HTML and JavaScript Web Server HTTP handlers share the same system
+of context initialization. 
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    init_context(Req) -> #context{
+        actions=[], module=index, path=[],
+        req=Req, params=[], session=undefined,
+        handlers= [ {'query', wf:config('query', n2o_query)},
+                    {session, wf:config(session, n2o_session)},
+                    {route,   wf:config(route,   n2o_route)} ]}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Chain of three N2O handlers is called
+on each HTTP request. You can redefine any of them or plug your own
+additional handler in chain to transform web server requests.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}[caption={wf}\_{core}:fold/3]
+    fold(Fun,Handlers,Ctx) ->
+        lists:foldl(fun({_,Module},Ctx1) ->
+            {ok,_,NewCtx} = Module:Fun([],Ctx1),
+            NewCtx end,Ctx,Handlers).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Query}
+Query Handler parses URL query and HTTP form information from HTTP request.
+
+\subsection{Session}
+Session Handler manages key-value in-memory database ETS table that can be accessed.
+
+\newpage
+\subsection{Router}
+You can specify routing table with application config:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    {n2o, [{route,custom_router}]}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Remember that routing handler should be kept very simple because it
+influences overal initial page load latency and HTTP capacity.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}[caption=n2o\_route.erl]
+    -module (n2o_route).
+    -author('Maxim Sokhatsky').
+    -include_lib("n2o/include/wf.hrl").
+    -export(?ROUTING_API).
+
+    finish(State, Ctx) -> {ok, State, Ctx}.
+    init(State, Ctx) ->
+        Path = wf:path(Ctx#context.req),
+        Module = route_prefix(Path),
+        {ok, State, Ctx#context{path=Path,module=Module}}.
+
+    route_prefix(<<"/ws/",P/binary>>) -> route(P);
+    route_prefix(<<"/",P/binary>>) -> route(P);
+    route_prefix(P) -> route(P).
+
+    route(<<>>)              -> index;
+    route(<<"index">>)       -> index;
+    route(<<"login">>)       -> login;
+    route(<<"favicon.ico">>) -> static_file;
+    route(_) -> index.
+\end{lstlisting}

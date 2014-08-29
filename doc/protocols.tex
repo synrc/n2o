@@ -1,15 +1,15 @@
-\section{WebSocket Protocols}
+\section{Protocols}
 
 We made this for you to be happy.
 You can plug any binary formatting protocol like BERT, BED, MessagePack
-or even textual ones like TXT JSON or Custom Binary Protocols
+or even textual ones like TXT JSON or Custom Binary Protocols.
 Nitrogen-support here is just thre protocol messages: pickle, flush and delivery.
 N2O provides also basic heartbeat protocol that can be formatted at your whim.
 
 \subsection{Heartbeat}
 
 Heartbeat protocol is essential WebSocket application level protocol for
-PING and N2O initialization. It ping every 4 seconds from client side to server
+PING and N2O initialization. It ping every 4-5 seconds from client side to server
 thus allowing to determine client online presence. On reconnection or initial connect
 client sends N2O init marker telling to server to reinitialize the context.
 
@@ -21,7 +21,7 @@ client sends N2O init marker telling to server to reinitialize the context.
 \vspace{1\baselineskip}
 
 You can try manually send this messages in web console to see whats happening,
-also you can enable logging the heartbeat protocol by including its module in log_modules.
+also you can enable logging the heartbeat protocol by including its module in log\_modules:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -29,10 +29,10 @@ also you can enable logging the heartbeat protocol by including its module in lo
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Heartbean protocol PING request return empty message NOP binary response and N2O
-messages returns JSON with EVAL fieds of rendered actions if any.
+Heartbean protocol PING request returns empty message NOP binary response;
+N2O messages returns JSON with EVAL fieds of rendered actions.
 
-\subsection{Nitrogen}
+\subsection{Nitrogen Compatibility Layer}
 
 Picled messaged are used if you send messages over unencrypted
 channel and want to hide the content of the message,
@@ -61,7 +61,7 @@ This is Nitrogen-based messaging model. Nitrogen WebSocket processes receive als
 flush and delivery protocol messages, but originated from server. These are internal Nitrogen
 protocol messages. This request will return JSON with EVAL field only.
 
-\subsection{Client}
+\subsection{Client/Server}
 
 Client messages usually originated at client and represent the Client API Requests:
 
@@ -73,7 +73,25 @@ Client messages usually originated at client and represent the Client API Reques
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Server service usually places server messages:
+Server messages are usually being sent to client originated on the
+server by sending {\bf info} notifications directly to Web Socket process:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > WebSocketPid ! {server, Message}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can obtain this Pid like here:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    event(init) -> wf:info("Web Socket Pid: ~p",[self()]);
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can also send server messages from client relays and vice versa.
+But it is up to your application and client/server handlers how to handle these messages
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -83,8 +101,41 @@ Server service usually places server messages:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-But it is up to your application and client/server handlers how to handle these messages
-NOTE: This request may return JSON with EVAL and DATA fields.
+NOTE: client/server request may return JSON with EVAL and DATA fields.
+
+\subsection*{JSON enveloped EVAL and DATA}
+
+Each message from Web Socket channel to Client encoded as JSON object.
+\footahref{https://github.com/5HT/n2o/blob/master/priv/n2o.js}{N2O.js}
+is used to decode WebSocket binary messages from JSON container.
+
+\begin{lstlisting}
+    { "eval": "ws.send("Send Back This String");",
+      "data": [ 131,104,2,100,0,7,109,101,115,115,
+                97,103,101,107,0,5,72,101,108,108,111 ] }
+\end{lstlisting}
+
+EVAL values evaluated immediately and DATA values passed
+to handle\_web\_socket(data) function if exists.
+
+\begin{lstlisting}
+    function handle_web_socket(body) { console.log(body); }
+\end{lstlisting}
+
+\subsection*{JSON enveloped BERT}
+
+Usually in DATA come BERT messages (Binary Erlang Term Format).
+\footahref{https://github.com/5HT/n2o/blob/master/priv/bert.js}{BERT.js}
+is used to decode application protocol message.
+
+\begin{lstlisting}
+    function handle_web_socket(body) {
+        console.log(String(dec(body))); }
+\end{lstlisting}
+
+\begin{lstlisting}
+    E> Received: {message,"Hello"}
+\end{lstlisting}
 
 \subsection{Binary}
 
@@ -111,76 +162,7 @@ And handle also in binary clause:
 
 NOTE: if event returns not the binary client will recieve BERT encoded message.
 
-\newpage
-\subsection{Server Requests {\bf server}}
-
-Server messages are usually being sent to client originated on the
-server by sending <b>info</b> notifications directly to Web Socket process:
-
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    > WebSocketPid ! {server, Message}
-\end{lstlisting}
-\vspace{1\baselineskip}
-
-You can obtain this Pid like here:
-
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    event(init) -> wf:info("Web Socket Pid: ~p",[self()]);
-\end{lstlisting}
-\vspace{1\baselineskip}
-
-You can also send server messages from client relays:
-
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    ws.send(enc(tuple(
-        atom('server'),
-        binary('Binary Message'));
-\end{lstlisting}
-\vspace{1\baselineskip}
-
-NOTE: This request may return JSON with EVAL and DATA fields.
-
-\newpage
-\subsection*{Responses}
-
-\subsection{JSON enveloped EVAL and DATA}
-
-Each message from Web Socket channel to Client encoded as JSON object.
-\footahref{https://github.com/synrc/n2o\_scripts/blob/master/n2o/n2o.js}{N2O.js}
-is used to decode WebSocket binary messages from JSON container.
-
-\begin{lstlisting}
-    { "eval": "ws.send("Send Back This String");",
-      "data": [ 131,104,2,100,0,7,109,101,115,115,
-                97,103,101,107,0,5,72,101,108,108,111 ] }
-\end{lstlisting}
-
-EVAL values evaluated immediately and DATA values passed
-to handle\_web\_socket(data) function if exists.
-
-\begin{lstlisting}
-    function handle_web_socket(body) { console.log(body); }
-\end{lstlisting}
-
-\subsection{JSON enveloped BERT}
-
-Usually in DATA come BERT messages (Binary Erlang Term Format).
-\footahref{http://github.com/5HT/n2o/blob/master/priv/bert.js}{BERT.js}
-is used to decode application protocol message.
-
-\begin{lstlisting}
-    function handle_web_socket(body) {
-        console.log(String(dec(body))); }
-\end{lstlisting}
-
-\begin{lstlisting}
-    E> Received: {message,"Hello"}
-\end{lstlisting}
-
-\subsection{BERT Binary}
+\subsection*{BERT}
 
 Erlang RPC protocol interconnection with JavaScript nodes should be transfered as bert answrers.
 
@@ -189,7 +171,7 @@ Erlang RPC protocol interconnection with JavaScript nodes should be transfered a
         console.log(String(dec(body))); }
 \end{lstlisting}
 
-\subsection{RAW Binary}
+\subsection*{RAW Binary}
 
 Raw images for fastest possible speed should be transfered as binary answers.
 
@@ -200,3 +182,4 @@ Raw images for fastest possible speed should be transfered as binary answers.
 \begin{lstlisting}
     E> Unknown Raw Binary Received: [72,101,108,108,111]
 \end{lstlisting}
+
