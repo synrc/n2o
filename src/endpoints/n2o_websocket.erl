@@ -3,9 +3,13 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
+protocols() -> wf:config(n2o,protocols,[ n2o_heart,
+                                         n2o_nitrogen,
+                                         n2o_client,
+                                         n2o_binary    ]).
+
 % web server callbacks
 
-protocols() -> wf:config(n2o,protocols,[ n2o_heart,n2o_nitrogen,n2o_client,n2o_binary ]).
 stream({text,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]);
 stream({binary,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]).
 info(Message, Req, State) -> push(Message,Req,State,protocols(),[]).

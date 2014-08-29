@@ -31,18 +31,21 @@ If you want to start using raw N2O core you can use Cowboy dispatch parameter
 for passing N2O http and websocket handlers and cowboy static handler:
 
 \begin{lstlisting}[caption=web\_sup.erl]
-    cowboy:start_http(http, 100, [{port, wf:config(transition_port)}],
+    cowboy:start_http(http, 100, [{port, wf:config(n2o,port)}],
                                  [{env, [{dispatch, dispatch_rules()}]}]),
 
+    mime() -> [{mimetypes,cow_mimetypes,all}].
+
     dispatch_rules() ->
-        cowboy_router:compile(
-            [{'_', [
-            {"/static/[...]", cowboy_static,
-                {priv_dir, ?APP, <<"static">>,[{mimetypes,cow_mimetypes,all}]}},
-            {"/rest/:resource", rest_cowboy, []},
-            {"/rest/:resource/:id", rest_cowboy, []},
-            {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
-            {'_', n2o_cowboy, []} ]}]).
+      cowboy_router:compile(
+        [{'_', [
+      {"/static/[...]", n2o_dynalo, {dir, "apps/n2o_sample/priv/static", mime()}},
+      {"/n2o/[...]", n2o_dynalo, {dir, "deps/n2o/priv", mime()}},
+      {"/rest/:resource", rest_cowboy, []},
+      {"/rest/:resource/:id", rest_cowboy, []},
+      {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
+      {'_', n2o_cowboy, []}
+        ]}]).
 \end{lstlisting}
 
 N2O uses two ports for SSL and non-SSL connections: 
