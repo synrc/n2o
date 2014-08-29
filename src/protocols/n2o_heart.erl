@@ -4,7 +4,7 @@
 -compile(export_all).
 
 info({text,<<"PING">> = Ping}, Req, State) -> {reply, wf:json([]), Req, State};
-info({text,<<"N2O,",Rest/binary>>=InitMarker},Req,State) -> {reply, wf:json([]), Req, State};
+%info({text,<<"N2O,",Rest/binary>>=InitMarker},Req,State) -> {reply, wf:json([]), Req, State};
 info({text,<<"N2O,",Rest/binary>> = InitMarker}, Req, State) ->
     wf:info(?MODULE,"N2O INIT: ~p",[Rest]),
     Module = State#context.module,

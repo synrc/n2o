@@ -12,7 +12,7 @@
 %% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 %% OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--module(bullet_cowboy).
+-module(bullet_handler).
 -behaviour(cowboy_http_handler).
 -behaviour(cowboy_websocket_handler).
 

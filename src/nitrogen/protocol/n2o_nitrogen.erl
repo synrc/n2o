@@ -1,16 +1,22 @@
 -module(n2o_nitrogen).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 
 % Nitrogen pickle handler
 
-info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,State);
+info({text,Message},Req,State) -> 
+    wf:info(?MODULE,"n2o_nitrogen:text ~p",[Message]),
+    info(binary_to_term(Message,[safe]),Req,State);
+info({binary,Message},Req,State) -> 
+    wf:info(?MODULE,"n2o_nitrogen:binary ~p",[Message]),
+    info(binary_to_term(Message,[safe]),Req,State);
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf_context:clear_actions(),
 %    wf:info(?MODULE,"N2O Message: ~p",[Event]),
     Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), wf:json([]) end,
-    wf:info(?MODULE,"Pickle Cookies: ~p",[wf_core:set_cookies(wf:cookies(),Req)]),
+%    wf:info(?MODULE,"Pickle Cookies: ~p",[wf_core:set_cookies(wf:cookies(),Req)]),
     {reply,Result,wf_core:set_cookies(wf:cookies(),Req),State};
 
 info({flush,Actions}, Req, State) ->

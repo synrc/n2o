@@ -1,6 +1,7 @@
 -module(n2o_client).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 
 info({binary,Message}, Req, State) -> info(binary_to_term(Message,[safe]),Req,State);
 

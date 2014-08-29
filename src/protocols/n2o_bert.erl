@@ -1,6 +1,7 @@
 -module(n2o_bert).
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 
 info({binary,{bert,Message}}, Req, State) -> info({bert,Message}, Req, State);
 

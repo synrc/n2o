@@ -10,7 +10,7 @@
 
 init(_Transport, Req, Opts) -> {ok, Req, #state{}}.
 terminate(_Reason, _Req, _State) -> ok.
-handle(Req, State) -> {ok, NewReq} = wf_core:run(Req), {ok, NewReq, State}.
+handle(Req, State) ->  {ok, NewReq} =wf_core:run(Req), {ok, NewReq, State}.
 
 % Cowboy Bridge Abstraction
 
