@@ -8,8 +8,22 @@ Nitrogen-support here is just thre protocol messages: {\bf pickle}, {\bf flush} 
 N2O provides also basic heartbeat protocol that can be formatted at your whim.
 Currently N2O supports 4 protocols: Hearbeat, Nitrogen, Client/Server, Binary.
 
-\includeimage{images/wheel.png}{Messaging Pipeline}  
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    nop(R,S)                   -> {reply,<<>>,R,S}.
+    reply(M,R,S)               -> {reply,M,R,S}.
 
+    push(M,R,S,[],Acc)         -> nop(R,S);
+    push(M,R,S,[H|T],Acc)      -> 
+        case H:info(M,R,S) of
+               {unknown,_,_,_} -> push(M,R,S,T,Acc);
+         {reply,Msg,Req,State} -> reply(Msg,Req,State);
+                           Ans -> push(M,R,S,T,[Ans|Acc]) end.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\includeimage{images/n2o_protocols.png}{Messaging Pipeline}  
+\
 For example in Skyline (DSL) application you use only nitrogen and binary:
 
 \vspace{1\baselineskip}

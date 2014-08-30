@@ -31,15 +31,16 @@ If you want to start using raw N2O core you can use Cowboy dispatch parameter
 for passing N2O http and websocket handlers and cowboy static handler:
 
 \begin{lstlisting}[caption=web\_sup.erl]
-    cowboy:start_http(http, 100, [{port, wf:config(n2o,port)}],
-                                 [{env, [{dispatch, dispatch_rules()}]}]),
+    cowboy:start_http(http, 100, 
+         [{port, wf:config(n2o,port)}],
+         [{env, [{dispatch, dispatch_rules()}]}]),
 
     mime() -> [{mimetypes,cow_mimetypes,all}].
 
     dispatch_rules() ->
       cowboy_router:compile(
         [{'_', [
-      {"/static/[...]", n2o_dynalo, {dir, "apps/n2o_sample/priv/static", mime()}},
+      {"/css/[...]", n2o_dynalo, {dir, "apps/hello/priv", mime()}},
       {"/n2o/[...]", n2o_dynalo, {dir, "deps/n2o/priv", mime()}},
       {"/rest/:resource", rest_cowboy, []},
       {"/rest/:resource/:id", rest_cowboy, []},
