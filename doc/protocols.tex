@@ -1,3 +1,4 @@
+
 \section{Protocols}
 
 We made this for you to be happy.
@@ -6,6 +7,26 @@ or even textual ones like TXT, JSON or custom binary protocols like MQTT, AMQP o
 Nitrogen-support here is just thre protocol messages: {\bf pickle}, {\bf flush} and {\bf delivery}.
 N2O provides also basic heartbeat protocol that can be formatted at your whim.
 Currently N2O supports 4 protocols: Hearbeat, Nitrogen, Client/Server, Binary.
+
+\includeimage{images/wheel.png}{Messaging Pipeline}  
+
+For example in Skyline (DSL) application you use only nitrogen and binary:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > wf:config(n2o,protocols).
+    [n2o_heart,n2o_nitrogen,n2o_binary]
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+And in Games (SPA) application you need only client/server protocol:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > wf:config(n2o,protocols).
+    [n2o_heart,n2o_client]
+\end{lstlisting}
+\vspace{1\baselineskip}
 
 \subsection{Heartbeat}
 
@@ -183,4 +204,4 @@ Raw images for fastest possible speed should be transfered as binary answers.
 \begin{lstlisting}
     E> Unknown Raw Binary Received: [72,101,108,108,111]
 \end{lstlisting}
-
+ 

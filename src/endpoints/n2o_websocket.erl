@@ -23,19 +23,14 @@ init(Req) ->
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
     {ok, Req1, NewCtx}.
 
-% N2O top level protocol NOP REPLY TRY
+% N2O top level protocol NOP REPLY PUSH
 
-nop(R,S) ->
-    wf:info(?MODULE,"NOP",[]),
-    {reply,<<>>,R,S}.
-reply(M,R,S) ->
-    wf:info(?MODULE,"REPLY ~p",[M]),
-    {reply,M,R,S}.
+nop(R,S) ->       wf:info(?MODULE,"NOP",[]),          {reply,<<>>,R,S}.
+reply(M,R,S) ->   wf:info(?MODULE,"REPLY ~p",[M]),    {reply,M,R,S}.
 
-push(Message, Req, State, [], Acc) -> nop(Req, State);
-push(Message, Req, State, [H|T]=Protocols, Acc) ->
-    wf:info(?MODULE,"TRY ~p message ~p",[H,Message]),
-    case H:info(Message,Req,State) of
-         {unknown,_,_,_} -> push(Message,Req,State,T,Acc);
-         {reply,M,R,S}   -> reply(M,R,S);
-              UnkAnswer  -> push(Message,Req,State,T,[UnkAnswer|Acc]) end.
+push(M,R,S,[],Acc)               -> nop(R,S);
+push(M,R,S,[H|T]=Protocols,Acc)  -> wf:info(?MODULE,"PUSH ~p message ~p",[H,M]),
+    case H:info(M,R,S) of
+         {unknown,_,_,_}         -> push(M,R,S,T,Acc);
+         {reply,Msg,Req,State}   -> reply(Msg,Req,State);
+                    Ans          -> push(M,R,S,T,[Ans|Acc]) end.
