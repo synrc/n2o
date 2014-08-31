@@ -3,8 +3,8 @@
 \subsection{Compilation and Macros}
 Erlang JavaScript/OTP Parse Transform has two modes defined
 by {\bf \-jsmacro} and {\bf \-js} Erlang module attributes.
-The first mode is for precompiling Erlang module functions
-to JavaScript strings, the second one is for exporting Erlang functions
+The first mode precompiles Erlang module functions
+to JavaScript strings. The second one exports Erlang functions
 to a separate JavaScript file ready to run in the browser or Node.js.
 
 \paragraph{}
@@ -18,8 +18,8 @@ Sample usage of {\bf \-jsmacro} and {\bf \-js}:
 \end{lstlisting}
 
 \subsection{Erlang Macro Functions}
-Macro functions are useful when N2O is used as a server-side framework.
-The function gets rewritten during Erlang compilation into a JavaScript format
+Macro functions are useful when using N2O as a server-side framework.
+Functions get rewritten during Erlang compilation into a JavaScript format
 string ready for embedding. Here is an example from N2O pages:
 
 \begin{lstlisting}
@@ -102,7 +102,7 @@ Following OTP libraries are partially supported in Erlang JavaScript Parse Trans
     S = lists:map(fun(X) -> X * X end,[1,2,3,4]),
 \end{lstlisting}
 
-Transforms to:
+transforms to:
 
 \begin{lstlisting}
     s = [1,2,3,4].map(function(x) {
