@@ -181,7 +181,6 @@ bind\_script should be set to false.
 \subsection{Button {\bf \#button}}
 
 \paragraph{}
-\vspace{1\baselineskip}
 \begin{lstlisting}
     -record(button, {?ELEMENT_BASE(element_button),
             type= <<"button">>,
@@ -191,7 +190,6 @@ bind\_script should be set to false.
             delegate,
             disabled}).
 \end{lstlisting}
-\vspace{1\baselineskip}
 
 \paragraph{}
 Sample:
@@ -203,7 +201,6 @@ Sample:
 
 \subsection{Link {\bf \#dropdown}}
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
     -record(dropdown, {?ELEMENT_BASE(element_dropdown),
             options,
@@ -220,13 +217,15 @@ Sample:
             selected=false,
             disabled}).
 \end{lstlisting}
-\vspace{1\baselineskip}
 
 \paragraph{}
 Sample:
 
 \begin{lstlisting}
-    #dropdown { id=drop, value="2", postback=combo, source=[drop], options=[
+    #dropdown { id=drop,
+                value="2",
+                postback=combo,
+                source=[drop], options=[
         #option { label= <<"Microsoft">>, value= <<"Windows">> },
         #option { label= <<"Google">>,    value= <<"Android">> },
         #option { label= <<"Apple">>,     value= <<"Mac">> }
@@ -236,7 +235,6 @@ Sample:
 \subsection{Link {\bf \#link}}
 
 \paragraph{}
-\vspace{1\baselineskip}
 \begin{lstlisting}
     -record(link, {?ELEMENT_BASE(element_link),
             target,

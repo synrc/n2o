@@ -10,7 +10,6 @@ to a separate JavaScript file ready to run in the browser or Node.js.
 \paragraph{}
 Sample usage of {\bf \-jsmacro} and {\bf \-js}:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
     -module(sample).
     -compile({parse_transform, shen}).
@@ -27,11 +26,14 @@ string ready for embedding. Here is an example from N2O pages:
     tabshow() ->
         X = jq("a[data-toggle=tab]"),
         X:on("show", 
-            fun(E) -> T = jq(E:at("target")), tabshow(T:attr("href")) end).
+            fun(E) -> T = jq(E:at("target")),
+            tabshow(T:attr("href")) end).
 
     doc_ready(E) ->
         D = jq(document),
-        D:ready(fun() -> T = jq("a[href=\"#" ++ E ++ "\"]"), T:tab("show") end).
+        D:ready(fun() ->
+            T = jq("a[href=\"#" ++ E ++ "\"]"),
+            T:tab("show") end).
 
     event(A,B,C) ->
         ws:send('Bert':encodebuf(
@@ -45,7 +47,6 @@ string ready for embedding. Here is an example from N2O pages:
         io:format("tabshow/0:~n~s~nevent/3:~n~s~ndoc_ready/1:~n~s~n",
             [Script1,Script2,Script3]).
 \end{lstlisting}
-\vspace{1\baselineskip}
 
 \newpage
 Perform compilation and run tests:

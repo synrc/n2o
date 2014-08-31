@@ -2,13 +2,13 @@
 
 \usepackage{ifthen}
 \usepackage{hevea}
+\usepackage[english]{babel}
 \usepackage{palatino}
 \usepackage{graphicx}
 \usepackage{cite}
 \usepackage[utf8]{inputenc}
 \usepackage{moreverb}
 \usepackage{listings}
-\usepackage[english]{babel}
 \usepackage{hevea}
 \usepackage[none]{hyphenat}
 \usepackage{caption}
@@ -27,9 +27,9 @@
     {\imgsrc{#1}}
 \else{
     \begin{figure}[h!]
-    \caption{#2}
     \centering
     \includegraphics[width=\textwidth]{#1}
+    \caption{#2}
     \end{figure}}
 \fi}
 
@@ -56,6 +56,7 @@
 \newcommand*{\titleWF}
 {
     \begingroup
+   \thispagestyle{empty}
     \hbox{
         \hspace*{0.2\textwidth}
         \rule{1pt}{\textheight}
@@ -68,9 +69,9 @@
                 Sane Framework\\[0.5\baselineskip]
                 for Wild Web}}\\[4\baselineskip]
             \vspace{0.5\textheight}
-            {\Large \textit{Namdak Tonpa}}\\[2\baselineskip]
-            {\large {\bf {\color{Blue}syn}{\color{OrangeRed}rc} research center}
-            {\copyright} 2013-2014}\\[1\baselineskip]
+%            {\Large \textit{Maxim Sokhatsky}}\\[2\baselineskip]
+%            {\large {\bf {\color{Blue}syn}{\color{OrangeRed}rc} research center}
+%            {\copyright} 2013-2014}\\[1\baselineskip]
         }
     }
     \endgroup
@@ -93,12 +94,18 @@
     basicstyle=\bf\ttfamily\footnotesize,
     columns=fixed}
 
-\headsep = 5pt
-\voffset = 0pt
-\topmargin = 0pt
-\textheight = 600pt
-\footskip = 30pt
-\parindent = 0pt
+\headsep = 0cm
+\voffset = -1.5cm
+\hoffset = -0.5cm
+\topmargin = 0cm
+% \oddsidemargin = 0cm
+\textwidth = 11cm
+\textheight = 17.5cm
+\footskip = 1cm
+\parindent = 0cm
+
+\hyphenpenalty=5000
+  \tolerance=1000
 
 \newenvironment{dedication}
 {
@@ -113,3 +120,4 @@
    \vspace*{\stretch{3}}
    \clearpage
 }
+

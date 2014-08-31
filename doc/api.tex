@@ -18,7 +18,8 @@ WebSocket channel for evaluation:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    document.querySelector('#history').outerHTML = '<span>Hello</span>';
+    document.querySelector('#history')
+            .outerHTML = '<span>Hello</span>';
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -31,7 +32,8 @@ JavaScript methods {\bf insertBefore} and {\bf appendChild} during render.
 \begin{lstlisting}
     wf:insert_top(history,
         #panel{id=banner, body= [
-            #span{id=text, body = wf:f("User ~s logged in.",[wf:user()]) },
+            #span{ id=text, 
+                   body = wf:f("User ~s logged in.",[wf:user()]) },
             #button{id=logout, body="Logout", postback=logout }, 
             #br{} ]}),
 \end{lstlisting}
@@ -63,7 +65,6 @@ JavaScript/OTP and server pages
 List of elements you can use is given in Section 7. You can also create
 you own elements with custom render.
 
-\newpage
 \subsection{Wire JavaScript \bf{wf:wire}}
 Just like HTML is generated from Elements, Actions are rendered into
 JavaScript to handle events raised in the browser. Actions always
@@ -105,7 +106,6 @@ Following nested action embedding are also valid:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-\newpage
 \subsection{Async Processes {\bf wf:async} and {\bf wf:flush}}
 Creates Erlang processes communicating with the primary page
 process by sending messages. For redirecting all updates and

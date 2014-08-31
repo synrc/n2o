@@ -44,7 +44,7 @@ helps for better undestanding the choice of Erlang for the Web.
 \paragraph{}
 Using Erlang for the web allows you to unleash the full power of telecom systems for
 web-scale, asynchronuous, non-blocking, sharded, event-driven,
-message-passing, NoSQL, reliable, highly-available, high-performance,
+message-passing, NoSQL, reliable, highly-available,
 secure, qualative, real-time, clusterable applications. See Erlang: The Movie II.
 
 \paragraph{}
@@ -62,8 +62,8 @@ applications. Examples include Chaplin/CoffeeScript, Meteor
 and ClojureScript. This approach is suitable also for mobile clients.
 
 \paragraph{}
-Another approach is sending pre-rendered parts of pages and JavaScript
-and then only replacing HTML and executing JavaScript on the client-side. This approach
+Another approach is sending pre-rendered parts of pages and JS
+and then only replacing HTML and executing JavaScript on the client. This approach
 is better suited for mobile HTML applications development since the
 client doesn't have much resources.
 
@@ -121,7 +121,8 @@ interprocesses communication.
     -include_lib("n2o/include/wf.hrl").
 
     main() -> 
-      [ #dtl { file="index", bindings=[{title,"Chat"},{body,body()}] } ].
+      [ #dtl { file="index", 
+               bindings=[{title,"Chat"},{body,body()}] } ].
 
     body() ->
         {ok,Pid} = wf:async(fun() -> loop() end),
