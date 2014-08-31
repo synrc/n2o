@@ -1,7 +1,7 @@
 \section{Elements}
 
 \paragraph{}
-With N2O you don't usually use HTML at all. Instead you define your page
+With N2O you don't normally use HTML at all. Instead you define your page
 in the form of Erlang records so that the page is type checked at compile time.
 This is a classical CGI approach for compiled pages and it gives us all the benefits of
 compile time error checking and provides DSL for client and server-side rendering.
@@ -9,14 +9,14 @@ compile time error checking and provides DSL for client and server-side renderin
 \paragraph{}
 By their nature Nitrogen elements are UI control primitives
 that you use to construct Nitrogen pages with Erlang internal DSL.
-They are rendered into HTML and JavaScript.
+They are compiled to HTML and JavaScript.
 Behavior of all elements is controlled on server side and all the communication
 between browser and server is performed over WebSocket channels.
 Hence no POST requests and no HTML forms are used.
 
 \subsection{Static Elements: HTML}
 The core set of HTML elements includes br, headings, links, tables, lists and image.
-Static elements will be transformed into HTML during rendering.
+Static elements are transformed to HTML during rendering.
 
 \paragraph{}
 Static elements could also be used as placeholders for other HTML elements.
@@ -40,10 +40,10 @@ This will produce the following HTML code:
 \subsection{Active Elements: HTML and JavaScript}
 Also form elements exist that provide information for the server
 and gather user input: button, radio and check buttons, text box area and password box.
-Form elements usually allow assigning some Erlang postback handler to specify action behavior.
+Form elements usually allow to assign an Erlang postback handler to specify action behavior.
 These elements are compiled into HTML and JavaScript. For example, during rendering some
-Actions are converted to JavaScript and sent and executed in the browser.
-Element definition specifies the list of {\bf source} elements providing data to event callback.
+Actions are converted to JavaScript and sent to be executed in the browser.
+Element definition specifies the list of {\bf source} elements that provide data for event's callback.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -71,7 +71,7 @@ and JavaScript code:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-If postback action is specified the page module must include a callback to handle postback info:
+If postback action is specified then the page module must include a callback to handle postback info:
 \vspace{1\baselineskip}
 \begin{lstlisting}
     event({chat,Pid}) ->
@@ -81,7 +81,7 @@ If postback action is specified the page module must include a callback to handl
 
 \newpage
 \subsection{Base Element}
-Each HTML element in N2O DSL have record compatibility with base element.
+Each HTML element in N2O DSL has record compatibility with the base element.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -103,14 +103,14 @@ Each HTML element in N2O DSL have record compatibility with base element.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Here {\bf module} is Erlang module which contains render function.
+Here {\bf module} is an Erlang module that contains a render function.
 Data and Aria HTML custom fields are common attributes for all elements.
-In case element name doesn't corresponds to HTML tag {\bf html\_tag} field provided.
+In case element name doesn't correspond to HTML tag {\bf html\_tag} field provided.
 As element contents {\bf body} field used for all elements.
 
 \paragraph{}
-Most HTML elements defined as base elements. You can choose even element
-name that differs from HTML tag name:
+Most HTML elements are defined as basic elements. You can even choose element's
+name different from its original HTML tag name:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -123,9 +123,9 @@ name that differs from HTML tag name:
 
 \newpage
 \subsection{DTL Template {\bf \#dtl}}
-DTL stands for Django Template Language. DTL element lets you construct HTML
-snippet from template with given placeholders for substitution.
-Fields contains substitution bindings proplist, filename and templates folder.
+DTL stands for Django Template Language. A DTL element lets you construct HTML
+snippet from template with given placeholders for further substitution.
+Fields contain substitution bindings proplist, filename and templates folder.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -141,8 +141,8 @@ Fields contains substitution bindings proplist, filename and templates folder.
 
 Consider we have prod.dtl file in priv/templates folder with two
 placeholders \{\{title\}\}, \{\{body\}\} and default placeholder for JavaScript \{\{script\}\}.
-All pleceholders except \{\{script\}\} should be specified in \#dtl element.
-Here is an example how to use it:
+All placeholders except \{\{script\}\} should be specified in \#dtl element.
+Here is an example of how to use it:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -153,7 +153,7 @@ Here is an example how to use it:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You can use templates not only for pages but also for controls. Let say we want
+You can use templates not only for pages but also for controls. Let's say we want
 to use DTL iterators for constructing list elements:
 
 \vspace{1\baselineskip}
@@ -164,7 +164,7 @@ to use DTL iterators for constructing list elements:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Here is example how to pass variables to this DTL template:
+Here is an example of how to pass variables to the DTL template we've just defined:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -175,7 +175,7 @@ Here is example how to pass variables to this DTL template:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-For page templates bind\_script should be set for true, for control elements rendered from DTL,
+bind\_script should be set to true for page templates. In case of control elements rendered from DTL,
 bind\_script should be set to false.
 
 \subsection{Button {\bf \#button}}
