@@ -42,8 +42,8 @@ of Erlang over other alternatives for web development.
 
 \paragraph{}
 Using Erlang for web allows you to unleash the full power of telecom systems for
-building web-scale, event-driven, message-passing, NoSQL, asynchronuous, non-blocking,
-reliable, highly-available, secure, real-time, distributed applications.
+building web-scale, event-driven, message-passing, NoSQL, asynchronous, non-blocking,
+reliable, highly-available, high-performance, secure, real-time, distributed applications.
 See Erlang: The Movie II.
 
 \paragraph{}
@@ -62,7 +62,7 @@ and ClojureScript. This approach can also be used for building mobile clients.
 
 \paragraph{}
 Another approach is sending pre-rendered parts of pages and JavaScript
-and then replacing HTML and executing JavaScript on the client. This approach
+and then replacing HTML and executing JavaScript on the client-side. This approach
 is better suited for mobile web development since the
 client doesn't have much resources.
 
@@ -179,7 +179,7 @@ build Web applications in Erlang.
 Original Nitrogen was tested in production under high load and we
 decided to remove {\bf nprocreg} process registry along 
 with {\bf{action\_comet}} heavy process creation. N2O creates a single
-process for async websocket handler, all async operations
+process for async WebSocket handler, all async operations
 are handled within Cowboy processes.
 
 \paragraph{}
