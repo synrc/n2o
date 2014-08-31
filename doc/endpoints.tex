@@ -1,6 +1,6 @@
 \section{Endpoints}
 N2O Erlang Processes are instantiated and run by Web Server.
-Depending on the Web Server endpoint bindings you can specify
+Depending on Web Server endpoint bindings you can specify
 module for HTTP requests handling.
 
 \paragraph{}
@@ -26,9 +26,9 @@ not included into the running stack. {\bf {n2o}\_{cowboy}} is
 a default HTML page handler.
 
 \paragraph{}
-On initial page load {\bf {n2o}\_{document}:run} of page document endpoint is started during
-which {\bf {wf}\_{render}:render} proceeds by calling {\bf Module:main} which
-is selected by the routing handler.
+On initial page load {\bf {n2o}\_{document}:run} of page document endpoint is started.
+During its execution {\bf {wf}\_{render}:render} proceeds
+by calling {\bf Module:main} selected by the routing handler.
 
 \subsection{JavaScript Events over WebSocket}
 JavaScript handler shares the same router information as the
