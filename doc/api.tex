@@ -1,10 +1,10 @@
 \section{API}
 
 \subsection{Update DOM \bf{wf:update}}
-You can update part of the page or DOM element with given
-element or even raw HTML. Also you can use {\bf \#dtl}
+You can update part of the page or DOM element with a given
+element or even raw HTML. You can also use {\bf \#dtl}
 or {\bf \#eex} template elements for HTML generation to
-replace. Here is example of simple {\bf \#span} element
+replace. Here is an example of simple {\bf \#span} element
 with an HTML counterpart:
 
 \vspace{1\baselineskip}
@@ -25,8 +25,8 @@ WebSocket channel for evaluation:
 
 Companions are also provided for updating head and tail
 of the elements list: {\bf wf:insert\_top/2} and
-{\bf wf:insert\_bottom/2}, which turns to approriative
-JavaScript methods {\bf insertBefore} and {\bf appendChild} during render.
+{\bf wf:insert\_bottom/2}. These are translated to appropriate
+JavaScript methods {\bf insertBefore} and {\bf appendChild} during rendering.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -39,40 +39,40 @@ JavaScript methods {\bf insertBefore} and {\bf appendChild} during render.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Remember to envelop all elements into one root element before inserts.
+Remember to envelop all elements in common root element before inserts.
 
 \paragraph{}
-For relative updates {\bf wf:inser\_before/2} and {\bf wf:inser\_after/2}.
-For remove element you should use {\bf wf:remove/2}.
-Better understanding of updates you can find in {\bf Section 7}.
+For relative updates use {\bf wf:inser\_before/2} and {\bf wf:inser\_after/2}.
+To remove an element use {\bf wf:remove/2}.
+Updates are covered in detail in {\bf Section 7}.
 
 \paragraph{\bf Elements Naming}
-You can specify element id with Erlang atoms,
-lists or binaries. During render the value will be converted
-with {\bf wf:to\_list}. Only if you are using atoms conversion would be consistent,
-otherwise you need to care about illegal symbols for element accessors.
+You can specify element's id with Erlang atoms,
+lists or binaries. During rendering the value will be converted
+with {\bf wf:to\_list}. Conversion will be consistent only if you use atoms.
+Otherwise you need to care about illegal symbols for element accessors.
 
 \paragraph{}
 During page updates you can create additional elements with
 run-time generated event handlers, process HTML render from
 template elements or even use distributed map/reduce to calculate view.
-You should know that heavy operations will consume
-more power in browser, however you can save it by rendering
+You must be aware that heavy operations will consume
+more power in the browser, but you can save it by rendering
 HTML on server side. All DOM updates API works both using
-JavaScript/OTP and server pages 
+JavaScript/OTP and server pages.
 
 \paragraph{}
 List of elements you can use is given in Section 7. You can also create
-you own elements with custom render.
+your own elements with custom render.
 
 \subsection{Wire JavaScript \bf{wf:wire}}
 Just like HTML is generated from Elements, Actions are rendered into
-JavaScript to handle events raised in the browser. Actions always
+JavaScript to handle events raised in the browser. Actions are always
 transformed into JavaScript and sent through WebSockets pipe.
 
 \subsection*{Direct Wiring}
-There are two type of actions. First class is direct JavaScript
-strings given directly as Erlang lists or via JavaScript/OTP
+There are two types of actions. First class are direct JavaScript
+strings provided directly as Erlang lists or via JavaScript/OTP
 transformations.
 
 \vspace{1\baselineskip}
@@ -81,7 +81,7 @@ transformations.
 \end{lstlisting}
 
 \subsection*{Actions Render}
-Second class is actions which are in fact Erlang records being
+Second class actions are in fact Erlang records
 rendered during page load, server events or client events.
 
 \vspace{1\baselineskip}
@@ -90,15 +90,15 @@ rendered during page load, server events or client events.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-However basic N2O actions which are a part of N2O API, {\bf wf:update} and {\bf wf:redirect},
-are implemented as Erlang records as given in example. In case you need deffered
-render of JavaScript you can use Erlang records instead of direct wiring with
+However basic N2O actions that are part of N2O API, {\bf wf:update} and {\bf wf:redirect},
+are implemented as Erlang records as given in the example. If you need deferred
+rendering of JavaScript you can use Erlang records instead of direct wiring with
 Erlang lists or JavaScript/OTP.
 
 \paragraph{}
-Any action wired with {\bf wf:wire} is enveloped with {\bf \#wire\{actions=[]\}}
-which is also action capable to polymorph render of custom or built-in actions specified in list.
-Following nested action embedding are also valid:
+Any action wired with {\bf wf:wire} is enveloped in {\bf \#wire\{actions=[]\}}
+which is also an action capable of polymorphic rendering of custom or built-in actions specified in the list.
+Following nested action embedding is also valid:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -107,11 +107,11 @@ Following nested action embedding are also valid:
 \vspace{1\baselineskip}
 
 \subsection{Async Processes {\bf wf:async} and {\bf wf:flush}}
-Creates Erlang processes communicating with the primary page
+These create Erlang processes communicating with the primary page
 process by sending messages. For redirecting all updates and
 wire actions to the page process {\bf wf:flush} should be called.
 Usually you send messages to Async processes over N2O
-message bus but you can use any.
+message bus but you can use any of these options.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -129,14 +129,14 @@ message bus but you can use any.
 \end{lstlisting}
 
 \paragraph{\bf Process Naming.} The name of async process is globally unique. There are two
-versions {\bf wf:async/1} and {\bf wf:async/2}. In given example
-the name of async process is specified as ``looper'', otherwise default name
-``comet'' would apply when first parameter is not specified.
+versions, {\bf wf:async/1} and {\bf wf:async/2}. In the given example
+the name of async process is specified as ``looper'', otherwise
+if the first parameter was not specified the default name ``comet'' would be used.
 
 \subsection{Message Bus {\bf wf:reg} and {\bf wf:send}}
 N2O uses GProc process registry for managing async processes pools.
 It is used as a PubSub message bus for N2O communications, but later you can switch to robust RabbitMQ.
-You can assign a process to the pool with {\bf wf:reg} and send a message to the pool with {\bf wf:send}.
+You can associate a process with the pool with {\bf wf:reg} and send a message to the pool with {\bf wf:send}.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -152,7 +152,7 @@ Now you can test it
     > wf:send(topic,"Hello").
 \end{lstlisting}
 
-It should prints in REPL something like:
+It should print in REPL something like:
 
 \begin{lstlisting}
     > [info] P: <0.2012.0>, M: "Hello"
@@ -161,7 +161,7 @@ It should prints in REPL something like:
 
 \subsection{Parse URL and Context parameters {\bf wf:q} and {\bf wf:qs}}
 These are used to extract URL parameters or read from the process context. {\bf wf:q} extracts variables
-from the context stored by controls postbacks and {\bf wf:qs} extracts variables from HTTP forms.
+from the context stored by controls postbacks. {\bf wf:qs} extracts variables from HTTP forms.
 
 \subsection{Render {\bf wf:render}}
 Renders elements or actions with common render.
@@ -172,7 +172,7 @@ This saves login context information and sends it in the first packet upon estab
 
 \subsection{Session Information {\bf wf:session}}
 Stores any session information in ETS tables. Use {\bf wf:user}, {\bf wf:role} for
-login and authorization. See {\bf AVZ} library.
+login and authorization. Consult {\bf AVZ} library documentation.
 
 \subsection{Bridge information {\bf wf:header} and {\bf wf:cookie}}
 You can read and issue cookie and headers information using internal Web-Server routines.
@@ -184,13 +184,13 @@ inside handlers or endpoints.
     wf:cookie_req(Name,Value,Path,TTL,Req)
 \end{lstlisting}
 
-You can set cookies throught public cookies API in page during initial page render.
+You can set cookies for the page using public cookies API during initial page rendering.
 
 \begin{lstlisting}
     body() -> wf:cookie("user","Joe"), [].
 \end{lstlisting}
 
-Inside WebSocket events you should use wiring:
+You should use wiring inside WebSocket events:
 
 \begin{lstlisting}
     event(_) ->
