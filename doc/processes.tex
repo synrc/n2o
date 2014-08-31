@@ -8,7 +8,7 @@ It takes three steps and three Erlang processes to do that.
 \includeimage{images/page-lifetime.png}{Page Lifetime}
 
 \paragraph{}
-Starting the page lifetime N2O uses HTTP process to serve the first HTML page.
+N2O request lifetime begins with the start of HTTP process serving the first HTML page.
 After that it dies and spawns Transition process.
 Then the browser initiates WebSocket connections to the similar URL endpoint.
 N2O creates persistent WebSocket process and the Transition process dies.
