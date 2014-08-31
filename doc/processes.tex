@@ -15,7 +15,7 @@ N2O creates persistent WebSocket process and the Transition process dies.
 
 \paragraph{}
 Your page could also spawn processes with {\bf wf:async}.
-These are the persistent processes acting like regullar Erlang processes.
+These are the persistent processes acting like regular Erlang processes.
 It is a usual approach for organizing non-blocking UI for file uploads and time consuming operations.
 
 \newpage
@@ -50,13 +50,13 @@ per connection.
 These are the user processes created with {\bf wf:async}.
 That's a legacy name coming from the times when async technology
 was called COMET for XHR channel. Async processes are optional
-and are only neededed when you have a UI event taking too much
+and are only needed when you have a UI event taking too much
 time to be processed, like gigabyte file uploads. You can create
 many Async Processes per user.
 
 \subsection{SPA Mode}
 In SPA mode you N2O can serve no HTML at all. N2O elements are being
-binded during INIT handshake and thus can be used regullary as in DSL mode.
+bound during INIT handshake and thus can be used regularly as in DSL mode.
 
 %\paragraph{}
 %\includeimage{images/static-serving.png}{Static Serving}
