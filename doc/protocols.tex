@@ -4,9 +4,9 @@
 We made this for you to be happy.
 You can plug any binary formatting protocol like BERT, BED, MessagePack
 or even textual ones like TXT, JSON or custom binary protocols like MQTT, AMQP or legacy XMPP.
-Nitrogen-support here is just thre protocol messages: {\bf pickle}, {\bf flush} and {\bf delivery}.
+Nitrogen-support here is just three protocol messages: {\bf pickle}, {\bf flush} and {\bf delivery}.
 N2O provides also basic heartbeat protocol that can be formatted at your whim.
-Currently N2O supports 4 protocols: Hearbeat, Nitrogen, Client/Server, Binary.
+Currently N2O supports 4 protocols: Heartbeat, Nitrogen, Client/Server, Binary.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -60,7 +60,7 @@ also you can enable logging the heartbeat protocol by including its module in lo
 \vspace{1\baselineskip}
 
 Heartbeat protocol PING request returns empty message NOP binary response;
-N2O messages returns JSON with EVAL fieds of rendered actions.
+N2O messages returns JSON with EVAL fields of rendered actions.
 
 \subsection{Nitrogen Compatibility Layer}
 
@@ -190,11 +190,11 @@ And handle also in binary clause:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-NOTE: if event returns not the binary client will recieve BERT encoded message.
+NOTE: if event returns not the binary client will receive BERT encoded message.
 
 \subsection*{BERT}
 
-Erlang RPC protocol interconnection with JavaScript nodes should be transfered as bert answrers.
+Erlang RPC protocol interconnection with JavaScript nodes should be transferred as bert answers.
 
 \begin{lstlisting}
     function handle_web_socket(body) {
@@ -203,7 +203,7 @@ Erlang RPC protocol interconnection with JavaScript nodes should be transfered a
 
 \subsection*{RAW Binary}
 
-Raw images for fastest possible speed should be transfered as binary answers.
+Raw images for fastest possible speed should be transferred as binary answers.
 
 \begin{lstlisting}
     function handle_web_socket_blob(body) { }

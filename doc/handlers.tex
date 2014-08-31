@@ -14,9 +14,9 @@ of context initialization.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Chain of three N2O handlers is called
+Chain of three N2O handlers that are always called
 on each HTTP request. You can redefine any of them or plug your own
-additional handler in chain to transform web server requests.
+additional handler in the chain to transform web server requests.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}[caption={wf}\_{core}:fold/3]
@@ -31,7 +31,7 @@ additional handler in chain to transform web server requests.
 Query Handler parses URL query and HTTP form information from HTTP request.
 
 \subsection{Session}
-Session Handler manages key-value in-memory database ETS table that can be accessed.
+Session Handler manages key-value in-memory database ETS table.
 
 \newpage
 \subsection{Router}
@@ -44,7 +44,7 @@ You can specify routing table with application config:
 \vspace{1\baselineskip}
 
 Remember that routing handler should be kept very simple because it
-influences overal initial page load latency and HTTP capacity.
+influences overall initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}[caption=n2o\_route.erl]
