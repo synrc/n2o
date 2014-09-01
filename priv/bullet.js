@@ -38,7 +38,7 @@ function bullet(url) {
                     request.setRequestHeader('Content-Type',
                         'application/x-www-form-urlencoded; charset=utf-8');
                     request.setRequestHeader('X-Socket-Transport','xhrPolling');
-                    request.onload = function() { fake.receive(request.response); }
+                    request.onload = function() { fake.receive(request.response); };
                     request.send(data);
                     return true;
                 },
@@ -61,8 +61,8 @@ function bullet(url) {
                 request.setRequestHeader('Content-Type',
                     'application/x-www-form-urlencoded; charset=utf-8');
                 request.setRequestHeader('X-Socket-Transport','xhrPolling');
-                request.onload = function() { fake.receive(request.response); }
-                request.onerror = function() { fake.onerror(); }
+                request.onload = function() { fake.receive(request.response); };
+                request.onerror = function() { fake.onerror(); };
                 request.send({});
             }
 

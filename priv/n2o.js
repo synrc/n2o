@@ -27,7 +27,6 @@ function querySource(Id){
 }
 
 function addStatus(text){
-    var date = new Date();
     if (document.getElementById('n2ostatus')) {
         document.getElementById('n2ostatus').innerHTML =
             document.getElementById('n2ostatus').innerHTML + "E> " + text + "<br/>";
