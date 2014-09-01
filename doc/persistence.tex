@@ -29,10 +29,10 @@ Additional secondary indexes could be applied for stores that
 supports 2i, e.g. kai, mnesia, riak.
 
 \begin{lstlisting}
-       Rec = {user,"maxim@synrc.com",[]}.
+            Rec = {user,"maxim@synrc.com",[]}.
 
-RecordName = element(1, Rec).
-        Id = element(2, Rec).
+     RecordName = element(1, Rec).
+             Id = element(2, Rec).
 \end{lstlisting}
 
 \newpage
@@ -42,11 +42,11 @@ All record could be chained into the double-linked lists in the database.
 So you can inherit from the ITERATOR record just like that:
 
 \begin{lstlisting}
--record(access, {?ITERATOR(acl),
-    entry_id,
-    acl_id,
-    accessor,
-    action}).
+    -record(access, {?ITERATOR(acl),
+        entry_id,
+        acl_id,
+        accessor,
+        action}).
 \end{lstlisting}
 
 \begin{lstlisting}
@@ -146,8 +146,8 @@ System service functions of starting/stopping.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
--spec start() -> ok | {error,any()}.
--spec stop() -> stopped.
+    -spec start() -> ok | {error,any()}.
+    -spec stop() -> stopped.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -157,10 +157,10 @@ Depending on database the format and/or featureset may differ.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
--spec destroy() -> ok.
--spec join() -> ok | {error,any()}.
--spec join(Node :: string()) -> [{atom(),any()}].
--spec init(Backend :: atom(), Module :: atom()) -> list(#table{}).
+    -spec destroy() -> ok.
+    -spec join() -> ok | {error,any()}.
+    -spec join(string()) -> [{atom(),any()}].
+    -spec init(atom(), atom()) -> list(#table{}).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -169,11 +169,11 @@ This API allows you to builds form from table metainfo.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
--spec modules() -> list(atom()).
--spec containers() -> list(tuple(atom(),list(atom()))).
--spec tables() -> list(#table{}).
--spec table(atom()) -> #table{}.
--spec version() -> {version,string()}.
+    -spec modules() -> list(atom()).
+    -spec containers() -> list(tuple(atom(),list(atom()))).
+    -spec tables() -> list(#table{}).
+    -spec table(atom()) -> #table{}.
+    -spec version() -> {version,string()}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -183,12 +183,12 @@ You can create/1 the container, remove/add the the nodes from lists.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
--spec create(atom()) -> integer().
--spec remove(tuple()) -> ok | {error,any()}.
--spec remove(atom(), any()) -> ok | {error,any()}.
--spec add(tuple()) -> {ok,tuple()} | 
-                                {error,exist} | 
-                                {error,no_container}.
+    -spec create(atom()) -> integer().
+    -spec remove(tuple()) -> ok | {error,any()}.
+    -spec remove(atom(), any()) -> ok | {error,any()}.
+    -spec add(tuple()) -> {ok,tuple()} | 
+                          {error,exist} | 
+                          {error,no_container}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -198,8 +198,8 @@ This functions will patch the Erlang record inside database.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
--spec put(tuple()) -> ok | {error,any()}.
--spec delete(atom(), any()) -> ok | {error,any()}.
+    -spec put(tuple()) -> ok | {error,any()}.
+    -spec delete(atom(), any()) -> ok | {error,any()}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -209,11 +209,11 @@ recrods with given secondary indexes.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
--spec get(atom(), any()) -> {ok,any()} | 
-                            {error,duplicated} |
-                            {error,not_found}.
--spec get(atom(),any(), any()) -> {ok,any()}.
--spec index(atom(), any(), any()) -> list(tuple()).
+    -spec get(atom(),any(), any()) -> {ok,any()}.
+    -spec index(atom(), any(), any()) -> list(tuple()).
+    -spec get(atom(), any()) -> {ok,any()} | 
+                                {error,duplicated} |
+                                {error,not_found}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -221,7 +221,7 @@ recrods with given secondary indexes.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
--spec load_db(string()) -> list(ok | {error,any()}).
--spec save_db(string()) -> ok | {error,any()}.
+    -spec load_db(string()) -> list(ok | {error,any()}).
+    -spec save_db(string()) -> ok | {error,any()}.
 \end{lstlisting}
 \vspace{1\baselineskip}
