@@ -75,7 +75,8 @@ If postback action is specified then the page module must include a callback to 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     event({chat,Pid}) ->
-        wf:info("User ~p Msg ~p", [wf:q(userName),wf:q(message)]).
+        wf:info(?MODULE, "User ~p Msg ~p", 
+                [wf:q(userName),wf:q(message)]).
 \end{lstlisting}
 \vspace{1\baselineskip}
 

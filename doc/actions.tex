@@ -86,7 +86,7 @@ implemented using api\_event:
 \begin{lstlisting}
     api_event(appLogin, Args, Term) ->
         Struct = n2o_json:decode(Args),
-        wf:info("Granted Access"),
+        wf:info(?MODULE, "Granted Access"),
         wf:redirect("/account").
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -119,6 +119,6 @@ organize this type of logic.
     event(confirm) ->
         wf:wire(#confirm{text="Are you happy?",postback=continue}),
 
-    event(continue) -> wf:info("Yes, you're right!");
+    event(continue) -> wf:info(?MODULE, "Yes, you're right!", []);
 \end{lstlisting}
 \vspace{1\baselineskip}
