@@ -64,7 +64,7 @@ Kickstart Bootstrap
 -------------------
 
 To try N2O you just need to clone a N2O repo from Github and build.
-We use very small and powerfull mad tool designed for our Web Stack.
+We use very small and powerful mad tool designed for our Web Stack.
 
     $ git clone git://github.com/5HT/n2o
     $ cd n2o/samples
