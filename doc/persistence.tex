@@ -1,5 +1,19 @@
 \section{KVS: Abstract Erlang Database}
 
+KVS is an Erlang abstraction over various native Erlang Key-Value databases,
+like MBnesia. Its meta-schema includes only concept
+of iterators (persisted linked lists) which locked or guarded by
+containers (list head holders). All write operations to list are
+passed through some Erlang process that guards the container. The application
+which starts Erlang processes per container called \footahref{https://github.com/synrc/feeds}{feeds}.
+
+\paragraph{}
+The best use-case for KVS and Key-Value storages is to store operational data.
+This data should back up to SQL warehouses for analysis. Operational data
+should be scalable, protected, replicated, fail-tolerant, available. That is why
+we store work-in-process data in Key-Value storages.
+
+\paragraph{}
 All write operations that are made to data with secondary indexes,
 i.e. not like linked lists could be potentially handled without
 feeds server. But some KV storages are not supporting secondary
@@ -21,6 +35,7 @@ RecordName = element(1, Rec).
         Id = element(2, Rec).
 \end{lstlisting}
 
+\newpage
 \subsection{Iterators}
 
 All record could be chained into the double-linked lists in the database.
@@ -124,9 +139,9 @@ And on database init
 
 It will create your custom schema.
 
-\subsection*{KVS API}
+\subsection{KVS API}
 
-\subsection*{Service}
+\subsection{Service}
 System service functions of starting/stopping.
 
 \vspace{1\baselineskip}
