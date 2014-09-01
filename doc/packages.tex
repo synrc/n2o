@@ -1,4 +1,4 @@
-\section{MAD: Erlang Build and Deploy Tool}
+\section{MAD: Build and Packaging Tool}
 
 \subsection{History}
 
@@ -14,6 +14,7 @@ the whole project. That's the story how \footahref{https://github.com/synrc/acti
 Under the hood active is a client subscriber
 of \footahref{https://github.com/synrc/fs}{fs} library, native filesystem listener for Linux, Windows and Mac.
 
+\paragraph{}
 De-facto standard in Erlang world is rebar.
 We love rebar interface despite its implementation.
 First we plugged rebar into active and then decided to drop its support,
@@ -22,6 +23,7 @@ It was designed to be a stand-alone tool, so it has some
 glitches while using as embedded library.
 Later we switched to Makefile-based build tool \footahref{https://github.com/synrc/otp.mk}{otp.mk}.
 
+\paragraph{}
 The idea to build rebar replacement was up in the air for a long time.
 The best minimal approach was picked up by \footahref{https://github.com/s1n4}{Sina~Samavati},
 who implemented the first prototype called 'mad'. Initially mad
