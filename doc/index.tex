@@ -1,6 +1,5 @@
 \section{N2O: Web Framework}
 
-\paragraph{}
 N2O was started as the first Erlang Web Framework
 that uses WebSocket protocol only. We saved great compatibility with Nitrogen
 and added many improvements, such as binary page construction,
@@ -61,7 +60,7 @@ applications. Examples include Chaplin/CoffeeScript, Meteor
 and ClojureScript. This approach can also be used for building mobile clients.
 
 \paragraph{}
-Another approach is sending pre-rendered parts of pages and JavaScript
+Another approach is sending pre-rendered parts of pages and JS
 and then replacing HTML and executing JavaScript on the client-side. This approach
 is better suited for mobile web development since the
 client doesn't have much resources.
@@ -83,7 +82,7 @@ you will still have access to all your Erlang services directly.
 \paragraph{}
 You can also create offline applications using Erlang JavaScript compiler
 just the way you would use ClojureScript, JScala, Elm, WebSharper
-or any other similar tool. N2O includes: REST micro-frameworks,
+or any other similar tool. N2O includes: REST micro frameworks,
 server-side and client-side rendering engines,
 WebSocket events streaming, JavaScript generation
 and JavaScript macro system along with {\bf AVZ} authorization
@@ -110,10 +109,10 @@ defining pages in terms of top-level controls, placeholders
 and panels. Thus N2O combines both approaches.
 
 \paragraph{}
-The main N2O advantage is combining both fast prototyping and suitability for large
-scale projects. Below is an example of complete Web Chat implementation using
-WebSockets. It demonstrates Templates, DSL and asynchronous
-inter-process communication.
+The main N2O advantage is its sutability for large-scale projects without sacrificing simplicity and comfort of prototyping solutions in fast and dynamic manner.
+Below is an example of complete Web Chat implementation using
+WebSockets that shows how  Templates, DSL and asynchronous
+inter-process communication work in N2O.
 
 \newpage
 \vspace{1\baselineskip}
@@ -152,13 +151,13 @@ inter-process communication.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You should try to build that with your favorite language/framework!
+Just try to build the similar functionality with your favorite language/framework and feel the difference!
 
 \subsection*{Changes from Nitrogen}
-We feel free to break some compatibility with the original
-Nitrogen framework, mostly because we want to have a clean codebase
-and achieve the best performance. However, it's still possible to easily port
-Nitrogen web sites to N2O. E.g., N2O returns id and class semantics
+We took a liberty to break some compatibility with the original
+Nitrogen framework, mostly because we wanted to have a clean codebase
+and achieve better performance. However, it's still possible to port
+Nitrogen web sites to N2O quite esily. E.g., N2O returns id and class semantics
 of HTML and not {\bf html\_id}.
 
 \paragraph{}
@@ -166,26 +165,26 @@ We simplified HTML rendering by not using
 {\bf html\_encode} which should be handled by application layer.
 
 \paragraph{}
-We removed Nitrogen.js originally created by Rusty Klophaus
-because of the pure WebSocket nature of N2O, which doesn't
-require XHR helper methods on the client-side. We added XHR fallback
-handling by using 'Bullet' library written by Loïc Hoguin.
+Nitrogen.js, originally created by Rusty Klophaus, was removed
+because of the pure WebSocket nature of N2O which doesn't
+require XHR helper methods on the client-side anymore. XHR fallback
+handling by using 'Bullet' library written by Loïc Hoguin was added as the replacemnt.
 
 \paragraph{}
 We also removed {\bf simple\_bridge} and optimized N2O on each level to
-achieve maximum performance and simplicity. We hope you will enjoy
+unlock maximum performance and simplicity. We hope you will enjoy
 using N2O. We are fully convinced it is the most efficient way to
 build Web applications in Erlang.
 
 \paragraph{}
-Original Nitrogen was tested in production under high load and we
+Original Nitrogen already was tested in production under high load and we
 decided to remove {\bf nprocreg} process registry along
 with {\bf{action\_comet}} heavy process creation. N2O creates a single
-process for async WebSocket handler, all async operations
-are handled within Cowboy processes.
+process for an async WebSocket handler, all asynchronous operations
+ are handled within Cowboy processes.
 
 \paragraph{}
 Also, we introduced new levels of abstraction. You can extend
-protocols (Nitrogen, Heartbeat, Binary), change protocol formatters (BERT,
+the set of available protocols (Nitrogen, Heartbeat, Binary), change protocol formatters (BERT,
 JSON, MessagePack, BED), inject your code on almost any level. The code structure
-is clean and Nitrogen compatibility layer is detachable from N2O.
+is clean and Nitrogen compatibility layer is fully detachable from N2O.

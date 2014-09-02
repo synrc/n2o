@@ -141,7 +141,8 @@ You can associate a process with the pool with {\bf wf:reg} and send a message t
 \vspace{1\baselineskip}
 \begin{lstlisting}
     loop() ->
-        receive M -> wf:info("P: ~p, M: ~p",[self(),M]) end, loop().
+        receive M -> 
+            wf:info(?MODULE, "P: ~p, M: ~p",[self(),M]) end, loop().
 \end{lstlisting}
 
 Now you can test it

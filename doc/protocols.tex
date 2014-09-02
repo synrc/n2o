@@ -116,7 +116,7 @@ You can obtain this Pid like here:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    event(init) -> wf:info("Web Socket Pid: ~p",[self()]);
+    event(init) -> wf:info(?MODULE, "Web Socket Pid: ~p",[self()]);
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -185,7 +185,7 @@ And handle also in binary clause:
 \vspace{1\baselineskip}
 \begin{lstlisting}
     event({binary,Message}) ->
-        wf:info("This API will return Raw Binary"),
+        wf:info(?MODULE, "This API will return Raw Binary", []),
         <<84,0,0,0,108>>;
 \end{lstlisting}
 \vspace{1\baselineskip}
