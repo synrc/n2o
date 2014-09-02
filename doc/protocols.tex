@@ -5,12 +5,12 @@ We made this for you to be happy.
 You can plug any binary formatting protocol like BERT, BED, MessagePack
 or even textual ones like TXT, JSON or custom binary protocols like MQTT, AMQP or legacy XMPP.
 Nitrogen-support here is just three protocol messages: {\bf pickle}, {\bf flush} and {\bf delivery}.
-N2O provides also basic heartbeat protocol that can be formatted at your whim.
+N2O also provides basic heartbeat protocol that can be formatted at your whim.
 Currently N2O supports 4 protocols: Heartbeat, Nitrogen, Client/Server, Binary.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    protocols() -> 
+    protocols() ->
        wf:config(n2o,protocols,[ n2o_heart,
                                  n2o_nitrogen,
                                  n2o_client,
@@ -19,7 +19,7 @@ Currently N2O supports 4 protocols: Heartbeat, Nitrogen, Client/Server, Binary.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-\includeimage{images/n2o_protocols.png}{Messaging Pipeline}  
+\includeimage{images/n2o_protocols.png}{Messaging Pipeline}
 \
 
 For example in Skyline (DSL) application you use only nitrogen and binary:
@@ -39,7 +39,7 @@ And in Games (SPA) application you need only client/server protocol:
 \subsection{Heartbeat}
 
 Heartbeat protocol is essential WebSocket application level protocol for
-PING and N2O initialization. It ping every 4-5 seconds from client side to server
+PING and N2O initialization. It pings every 4-5 seconds from client side to server
 thus allowing to determine client online presence. On reconnection or initial connect
 client sends N2O init marker telling to server to reinitialize the context.
 
@@ -50,7 +50,7 @@ client sends N2O init marker telling to server to reinitialize the context.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You can try manually send this messages in web console to see whats happening,
+You can try manually send these messages in web console to see whats happening,
 also you can enable logging the heartbeat protocol by including its module in log\_modules:
 
 \vspace{1\baselineskip}
@@ -212,4 +212,4 @@ Raw images for fastest possible speed should be transferred as binary answers.
 \begin{lstlisting}
     E> Unknown Raw Binary Received: [72,101,108,108,111]
 \end{lstlisting}
- 
+
