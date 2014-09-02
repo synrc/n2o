@@ -115,14 +115,17 @@ represented as modules with handle\_notice API.
 
     metainfo() -> 
         #schema{name=kvs,tables=[
-            #table{ name=feed,container=true,
-                    fields=record_info(fields,feed)},
-            #table{ name=entry,container=feed,
-                    fields=record_info(fields,entry),
-                    keys=[feed_id,entry_id,from]},
-            #table{ name=comment,container=feed,
-                    fields=record_info(fields,comment),
-                    keys=[entry_id,author_id]} ]}.
+
+            #table{ name = feed, container = true,
+                    fields = record_info(fields,feed)},
+
+            #table{ name = entry, container = feed,
+                    fields = record_info(fields,entry),
+                    keys = [feed_id,entry_id,from] },
+
+            #table{ name = comment, container = feed,
+                    fields = record_info(fields,comment),
+                    keys = [entry_id,author_id] } ]}.
 \end{lstlisting}
 
 And plug it into schema sys.config:
@@ -131,7 +134,7 @@ And plug it into schema sys.config:
     {kvs, {schema,[kvs_user,kvs_acl,kvs_feed,kvs_subscription]}},
 \end{lstlisting}
 
-And on database init
+After run you can create schema on local node with:
 
 \begin{lstlisting}
     1> kvs:join().
@@ -153,7 +156,8 @@ System service functions of starting/stopping.
 
 \subsection{Schema Change}
 This API allows you to create, initialize and destroy the database schema.
-Depending on database the format and/or featureset may differ.
+Depending on database the format and/or featureset may differ. join/1 function
+is for initializing database replicated from remote node along with its shema.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -165,7 +169,8 @@ Depending on database the format and/or featureset may differ.
 \vspace{1\baselineskip}
 
 \subsection{Meta Info}
-This API allows you to builds form from table metainfo.
+This API allows you to builds forms from table metainfo.
+Also you can use this api for metainfo introspection.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -186,12 +191,11 @@ You can create/1 the container, remove/add the the nodes from lists.
     -spec create(atom()) -> integer().
     -spec remove(tuple()) -> ok | {error,any()}.
     -spec remove(atom(), any()) -> ok | {error,any()}.
-    -spec add(tuple()) -> {ok,tuple()} | 
-                          {error,exist} | 
+    -spec add(tuple()) -> {ok,tuple()} |
+                          {error,exist} |
                           {error,no_container}.
 \end{lstlisting}
 \vspace{1\baselineskip}
-
 
 \subsection{Raw Ops}
 This functions will patch the Erlang record inside database.
@@ -206,11 +210,12 @@ This functions will patch the Erlang record inside database.
 \subsection{Read Ops}
 Allow you to read the Value by Key and list
 recrods with given secondary indexes.
+get/3 API is used for specifying default value.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    -spec get(atom(),any(), any()) -> {ok,any()}.
     -spec index(atom(), any(), any()) -> list(tuple()).
+    -spec get(atom(),any(), any()) -> {ok,any()}.
     -spec get(atom(), any()) -> {ok,any()} | 
                                 {error,duplicated} |
                                 {error,not_found}.
@@ -218,6 +223,8 @@ recrods with given secondary indexes.
 \vspace{1\baselineskip}
 
 \subsection{Import/Export}
+This API you can use for storing all database
+in single file when this is possible. It is rather development API.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
