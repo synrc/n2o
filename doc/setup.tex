@@ -26,9 +26,9 @@ On Linux you should do at first:
 \end{lstlisting}
 
 \newpage
-\subsection{Depending N2O Core}
-If you want to start using raw N2O core you can use Cowboy dispatch parameter
-for passing N2O http and WebSocket handlers and cowboy static handler:
+\subsection{Manual Setup}
+If you want to start using N2O inside your application, you can use Cowboy dispatch parameter
+for passing HTTP, REST, WebSocket and Static N2O endpoints:
 
 \begin{lstlisting}[caption=web\_sup.erl]
     cowboy:start_http(http, 100, 
@@ -58,12 +58,12 @@ N2O uses two ports for SSL and non-SSL connections:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You can also redefine these ports as WS:// port in bullet connection inside template:
+You can also redefine these ports in bullet connection inside template:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     <script>
-        var transition = {pid: '', host: 'localhost', port: '8000' };
+        var transition = {pid: '', host: 'localhost', port: '443' };
     </script>
 \end{lstlisting}
 \vspace{1\baselineskip}
