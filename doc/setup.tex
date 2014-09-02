@@ -6,7 +6,7 @@ N2O works on Windows, Mac and Linux.
 
 \subsection{Kickstart Bootstrap}
 To try N2O you only need to fetch it from Github and build. We don't use
-fancy scripts so building process is OTP compatible: bootstrap site
+fancy scripts, so building process is OTP compatible: bootstrap site
 is bundled as an Erlang release.
 
 \vspace{1\baselineskip}
@@ -26,12 +26,12 @@ On Linux you should do at first:
 \end{lstlisting}
 
 \newpage
-\subsection{Depending N2O Core}
+\subsection{Using N2O Core}
 If you want to start using raw N2O core you can use Cowboy dispatch parameter
 for passing N2O http and WebSocket handlers and cowboy static handler:
 
 \begin{lstlisting}[caption=web\_sup.erl]
-    cowboy:start_http(http, 100, 
+    cowboy:start_http(http, 100,
          [{port, wf:config(n2o,port)}],
          [{env, [{dispatch, dispatch_rules()}]}]),
 
@@ -50,7 +50,7 @@ for passing N2O http and WebSocket handlers and cowboy static handler:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-N2O uses two ports for SSL and non-SSL connections: 
+N2O uses two ports for SSL and non-SSL connections:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
