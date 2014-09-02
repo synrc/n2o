@@ -64,7 +64,7 @@ N2O messages returns JSON with EVAL fields of rendered actions.
 
 \subsection{Nitrogen Compatibility Layer}
 
-Pickled messaged are used if you send messages over unencrypted
+Pickled messages are used if you send messages over unencrypted
 channel and want to hide the content of the message,
 that was generated on server. You can use BASE64 pickling mechanisms
 with optional AES/RIPEMD160 encrypting.
@@ -135,7 +135,7 @@ NOTE: client/server request may return JSON with EVAL and DATA fields.
 
 \subsection*{JSON enveloped EVAL and DATA}
 
-Each message from Web Socket channel to Client encoded as JSON object.
+Each message from Web Socket channel to Client is encoded as JSON object.
 \footahref{https://github.com/5HT/n2o/blob/master/priv/n2o.js}{N2O.js}
 is used to decode WebSocket binary messages from JSON container.
 
@@ -145,8 +145,8 @@ is used to decode WebSocket binary messages from JSON container.
                 97,103,101,107,0,5,72,101,108,108,111 ] }
 \end{lstlisting}
 
-EVAL values evaluated immediately and DATA values passed
-to handle\_web\_socket(data) function if exists.
+EVAL values are evaluated immediately and DATA values are passed
+to handle\_web\_socket(data) function if it exists.
 
 \begin{lstlisting}
     function handle_web_socket(body) { console.log(body); }
