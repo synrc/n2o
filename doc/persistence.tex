@@ -1,32 +1,28 @@
 \section{KVS: Abstract Erlang Database}
 
-KVS is an Erlang abstraction over various native Erlang Key-Value databases,
-like MBnesia. Its meta-schema includes only concept
-of iterators (persisted linked lists) which locked or guarded by
-containers (list head holders). All write operations to list are
-passed through some Erlang process that guards the container. The application
+KVS is an Erlang abstraction over various native Erlang key-value databases,
+like Mnesia. Its meta-schema includes only concept
+of iterators (persisted linked lists) that are locked or guarded by
+containers (list head pointers). All write operations to the list are
+serialized using a single Erlang process to provide sequential consistency. The application
 which starts Erlang processes per container called \footahref{https://github.com/synrc/feeds}{feeds}.
 
 \paragraph{}
-The best use-case for KVS and Key-Value storages is to store operational data.
-This data should back up to SQL warehouses for analysis. Operational data
-should be scalable, protected, replicated, fail-tolerant, available. That is why
-we store work-in-process data in Key-Value storages.
+The best use-case for KVS and key-value storages is to store operational data.
+This data should be later fed to SQL data warehouses for analysis. Operational data
+stores should be scalable, secure, fault-tolerant and available. That is why
+we store work-in-progress data in key-value storages.
 
 \paragraph{}
-All write operations that are made to data with secondary indexes,
-i.e. not like linked lists could be potentially handled without
-feeds server. But some KV storages are not supporting secondary
-indexes. Add those backends carefully. Currently kvs includes
-following store backends: Mnesia, Riak and KAI.
+KVS also supports queries that require secondary indexes, which
+are not supported by all backends.
+Currently KVS includes following storage backends: Mnesia, Riak and \footahref{https://github.com/synrc/kai}{KAI}.
 
 \subsection{Polymorphic Records}
 
-The data in KVS represented as plain Erlang records.
+Any data in KVS is represented using regular Erlang records.
 The first element of the tuple as usual indicates the name of bucket.
 And the second element usually corresponds to the index key field.
-Additional secondary indexes could be applied for stores that
-supports 2i, e.g. kai, mnesia, riak.
 
 \begin{lstlisting}
             Rec = {user,"maxim@synrc.com",[]}.
