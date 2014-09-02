@@ -4,8 +4,8 @@
 Erlang JavaScript/OTP Parse Transform has two modes defined
 by {\bf \-jsmacro} and {\bf \-js} Erlang module attributes.
 The first mode precompiles Erlang module functions
-to JavaScript strings. The second one exports Erlang functions
-to a separate JavaScript file ready to run in the browser or Node.js.
+into JavaScript strings. The second one exports Erlang functions
+into a separate JavaScript file ready to run in the browser or Node.js.
 
 \paragraph{}
 Sample usage of {\bf \-jsmacro} and {\bf \-js}:
@@ -25,7 +25,7 @@ string ready for embedding. Here is an example from N2O pages:
 \begin{lstlisting}
     tabshow() ->
         X = jq("a[data-toggle=tab]"),
-        X:on("show", 
+        X:on("show",
             fun(E) -> T = jq(E:at("target")),
             tabshow(T:attr("href")) end).
 
@@ -85,7 +85,7 @@ You'll get the following output:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You see, no source-map needed.
+As you see, no source-map needed.
 
 \subsection{JavaScript File Compilation}
 Export Erlang function to JavaScript file with {\bf -js([sample/0,fun\_{args}/2])}.
@@ -93,10 +93,10 @@ You could include functions for both {\bf macro} and {\bf js} definitions.
 
 \newpage
 \subsection{Mapping Erlang/OTP to JavaScript/OTP}
-Following OTP libraries are partially supported in Erlang JavaScript Parse Transform: 
+Following OTP libraries are partially supported in Erlang JavaScript Parse Transform:
 {\bf lists}, {\bf proplists}, {\bf queue}, {\bf string}.
 
-\paragraph{\bf Example 1}\ 
+\paragraph{\bf Example 1}\
 \vspace{1\baselineskip}
 \begin{lstlisting}
     S = lists:map(fun(X) -> X * X end,[1,2,3,4]),
@@ -110,14 +110,14 @@ transforms to:
     });
 \end{lstlisting}
 
-\paragraph{\bf Example 2}\ 
+\paragraph{\bf Example 2}\
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     M = lists:foldl(fun(X, Acc) -> Acc + X end,0,[1,2,3,4]),
 \end{lstlisting}
 
-Transforms to:
+transforms to:
 
 \begin{lstlisting}
     m = [1,2,3,4].reduce(function(x,acc) {
