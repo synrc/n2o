@@ -4,7 +4,7 @@
 You can update part of the page or DOM element with a given
 element or even raw HTML. You can also use {\bf \#dtl}
 or {\bf \#eex} template elements for HTML generation to
-replace. Here is an example of simple {\bf \#span} element
+replace DOM. Here is an example of simple {\bf \#span} element
 with an HTML counterpart:
 
 \vspace{1\baselineskip}
@@ -32,9 +32,9 @@ JavaScript methods {\bf insertBefore} and {\bf appendChild} during rendering.
 \begin{lstlisting}
     wf:insert_top(history,
         #panel{id=banner, body= [
-            #span{ id=text, 
+            #span{ id=text,
                    body = wf:f("User ~s logged in.",[wf:user()]) },
-            #button{id=logout, body="Logout", postback=logout }, 
+            #button{id=logout, body="Logout", postback=logout },
             #br{} ]}),
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -46,7 +46,7 @@ For relative updates use {\bf wf:inser\_before/2} and {\bf wf:inser\_after/2}.
 To remove an element use {\bf wf:remove/2}.
 Updates are covered in detail in {\bf Section 7}.
 
-\paragraph{\bf Elements Naming}
+\paragraph{\bf Element Naming}
 You can specify element's id with Erlang atoms,
 lists or binaries. During rendering the value will be converted
 with {\bf wf:to\_list}. Conversion will be consistent only if you use atoms.
@@ -62,7 +62,7 @@ HTML on server side. All DOM updates API works both using
 JavaScript/OTP and server pages.
 
 \paragraph{}
-List of elements you can use is given in Section 7. You can also create
+List of elements you can use is given in {\bf Section 7}. You can also create
 your own elements with a custom render function.
 
 \subsection{Wire JavaScript \bf{wf:wire}}
@@ -92,12 +92,12 @@ rendered during page load, server events or client events.
 
 However basic N2O actions that are part of N2O API, {\bf wf:update} and {\bf wf:redirect},
 are implemented as Erlang records as given in the example. If you need deferred
-rendering of JavaScript you can use Erlang records instead of direct wiring with
+rendering of JavaScript, you can use Erlang records instead of direct wiring with
 Erlang lists or JavaScript/OTP.
 
 \paragraph{}
-Any action wired with {\bf wf:wire} is enveloped in {\bf \#wire\{actions=[]\}}
-which is also an action capable of polymorphic rendering of custom or built-in actions specified in the list.
+Any action, wired with {\bf wf:wire}, is enveloped in {\bf \#wire\{actions=[]\}},
+which is also an action capable of polymorphic rendering of custom or built-in actions, specified in the list.
 Following nested action embedding is also valid:
 
 \vspace{1\baselineskip}
@@ -107,11 +107,11 @@ Following nested action embedding is also valid:
 \vspace{1\baselineskip}
 
 \subsection{Async Processes {\bf wf:async} and {\bf wf:flush}}
-These create Erlang processes communicating with the primary page
-process by sending messages. For redirecting all updates and
-wire actions to the page process {\bf wf:flush} should be called.
+These create Erlang processes, which communicate with the primary page
+process by sending messages. {\bf wf:flush} should be called to redirect all updates and
+wire actions to the page process.
 Usually you send messages to Async processes over N2O
-message bus but you can use any of these options.
+message bus, but you can use any of these options.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -130,8 +130,8 @@ message bus but you can use any of these options.
 
 \paragraph{\bf Process Naming.} The name of async process is globally unique. There are two
 versions, {\bf wf:async/1} and {\bf wf:async/2}. In the given example
-the name of async process is specified as ``looper'', otherwise
-if the first parameter was not specified the default name ``comet'' would be used.
+the name of async process is specified as ``looper'', otherwise,
+if the first parameter was not specified, the default name ``comet'' would be used.
 
 \subsection{Message Bus {\bf wf:reg} and {\bf wf:send}}
 N2O uses GProc process registry for managing async processes pools.
@@ -141,7 +141,7 @@ You can associate a process with the pool with {\bf wf:reg} and send a message t
 \vspace{1\baselineskip}
 \begin{lstlisting}
     loop() ->
-        receive M -> 
+        receive M ->
             wf:info(?MODULE, "P: ~p, M: ~p",[self(),M]) end, loop().
 \end{lstlisting}
 
@@ -168,8 +168,8 @@ from the context stored by controls postbacks. {\bf wf:qs} extracts variables fr
 Renders elements or actions with common render.
 
 \subsection{Redirects {\bf wf:redirect}}
-Redirects are not implemented with HTTP headers but with JavaScript action modifying {\bf window.location}.
-This saves login context information and sends it in the first packet upon establishing a WebSocket connection.
+Redirects are implemented not with HTTP headers, but with JavaScript action modifying {\bf window.location}.
+This saves login context information which is sent in the first packet upon establishing a WebSocket connection.
 
 \subsection{Session Information {\bf wf:session}}
 Stores any session information in ETS tables. Use {\bf wf:user}, {\bf wf:role} for
