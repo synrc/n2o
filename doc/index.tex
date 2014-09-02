@@ -9,7 +9,7 @@ and work within Cowboy processes. N2O renders pages several times faster than Ni
 \subsection{Wide Coverage}
 N2O is unusual in that it solves problems in different web development domains
 and stays small and concise at the same time. Started as a Nitrogen concept
-of server-side framework it can also build client-side offline applications
+of server-side framework it can also build offline client-side applications
 using the same source code. This became possible with powerful Erlang JavaScript Parse
 Transform which lets Erlang run on JavaScript platform and enables Erlang and JavaScript
 interoperability. You can use Elixir, LFE and Joxa languages for backend development, as well.
@@ -104,12 +104,12 @@ elements and components in the host language.
 
 \paragraph{}
 Template-based approach (Yesod, ASP, PHP, JSP, Rails, Yaws and ChicagoBoss)
-requires programmers to deal with raw HTML. It allows
+requires developers to deal with raw HTML. It allows
 defining pages in terms of top-level controls, placeholders
 and panels. Thus N2O combines both approaches.
 
 \paragraph{}
-The main N2O advantage is its sutability for large-scale projects without sacrificing simplicity and comfort of prototyping solutions in fast and dynamic manner. 
+The main N2O advantage is its sutability for large-scale projects without sacrificing simplicity and comfort of prototyping solutions in fast and dynamic manner.
 Below is an example of complete Web Chat implementation using
 WebSockets that shows how  Templates, DSL and asynchronous
 inter-process communication work in N2O.
@@ -121,19 +121,19 @@ inter-process communication work in N2O.
     -compile(export_all).
     -include_lib("n2o/include/wf.hrl").
 
-    main() -> 
-      [ #dtl { file="index", 
+    main() ->
+      [ #dtl { file="index",
                bindings=[{title,"Chat"},{body,body()}] } ].
 
     body() ->
         {ok,Pid} = wf:async(fun() -> loop() end),
 
-      [ #span    { id=title,       body="Your chatroom name: " }, 
+      [ #span    { id=title,       body="Your chatroom name: " },
         #textbox { id=userName,    body="Anonymous" },
         #panel   { id=chatHistory, class=chat_history },
         #textbox { id=message },
         #button  { id=sendButton,  source=[userName,message],
-                                   body="Send", 
+                                   body="Send",
                                    postback={chat,Pid} } ].
 
     event({chat,Pid}) ->
@@ -165,7 +165,7 @@ We simplified HTML rendering by not using
 {\bf html\_encode} which should be handled by application layer.
 
 \paragraph{}
-Nitrogen.js, originally created by Rusty Klophaus, was removed 
+Nitrogen.js, originally created by Rusty Klophaus, was removed
 because of the pure WebSocket nature of N2O which doesn't
 require XHR helper methods on the client-side anymore. XHR fallback
 handling by using 'Bullet' library written by Loïc Hoguin was added as the replacemnt.
@@ -178,7 +178,7 @@ build Web applications in Erlang.
 
 \paragraph{}
 Original Nitrogen already was tested in production under high load and we
-decided to remove {\bf nprocreg} process registry along 
+decided to remove {\bf nprocreg} process registry along
 with {\bf{action\_comet}} heavy process creation. N2O creates a single
 process for an async WebSocket handler, all asynchronous operations
  are handled within Cowboy processes.
