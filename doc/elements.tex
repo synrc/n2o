@@ -2,21 +2,21 @@
 
 \paragraph{}
 With N2O you don't normally use HTML at all. Instead you define your page
-in the form of Erlang records so that the page is type checked at compile time.
-This is a classical CGI approach for compiled pages and it gives us all the benefits of
+in the form of Erlang records so that the page is type checked at the compile time.
+This is a classic CGI approach for compiled pages and it gives us all the benefits of
 compile time error checking and provides DSL for client and server-side rendering.
 
 \paragraph{}
-By their nature Nitrogen elements are UI control primitives
-that you use to construct Nitrogen pages with Erlang internal DSL.
-They are compiled to HTML and JavaScript.
+Nitrogen elements, by their nature, are UI control primitives
+that can be used to construct Nitrogen pages with Erlang internal DSL.
+They are compiled into HTML and JavaScript.
 Behavior of all elements is controlled on server side and all the communication
-between browser and server is performed over WebSocket channels.
-Hence no POST requests and no HTML forms are used.
+between browser and server side is performed over WebSocket channels.
+Hence there is no need to use POST requests or HTML forms.
 
 \subsection{Static Elements: HTML}
-The core set of HTML elements includes br, headings, links, tables, lists and image.
-Static elements are transformed to HTML during rendering.
+The core set of HTML elements includes br, headings, links, tables, lists and image tags.
+Static elements are transformed into HTML during rendering.
 
 \paragraph{}
 Static elements could also be used as placeholders for other HTML elements.
@@ -48,7 +48,7 @@ Element definition specifies the list of {\bf source} elements that provide data
 \vspace{1\baselineskip}
 \begin{lstlisting}
     {ok,Pid} = wf:async(fun() -> chat_loop() end),
-    #button { id=sendButton, body= <<"Send">>, 
+    #button { id=sendButton, body= <<"Send">>,
               postback={chat,Pid}, source=[userName,message] }.
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -59,9 +59,9 @@ This will produce the following HTML:
 \end{lstlisting}
 and JavaScript code:
 \begin{lstlisting}
-    $('#sendButton').bind('click',function anonymous(event) { 
+    $('#sendButton').bind('click',function anonymous(event) {
         ws.send(Bert.encodebuf({
-            source: Bert.binary('sendButton'), 
+            source: Bert.binary('sendButton'),
             pickle: Bert.binary('g1AAAINQAAAAdX...'),
             linked: [
                 Bert.tuple(Bert.atom('userName'),
@@ -75,7 +75,7 @@ If postback action is specified then the page module must include a callback to 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     event({chat,Pid}) ->
-        wf:info(?MODULE, "User ~p Msg ~p", 
+        wf:info(?MODULE, "User ~p Msg ~p",
                 [wf:q(userName),wf:q(message)]).
 \end{lstlisting}
 \vspace{1\baselineskip}
