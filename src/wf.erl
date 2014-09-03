@@ -124,6 +124,7 @@ cache(Key) ->
 
 q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
 qs(Key) -> proplists:get_value(Key,?CTX#context.params).
+dqs(Key) -> proplists:get_value(Key,?CTX#context.form).
 
 % Cookies
 
@@ -141,6 +142,7 @@ cookie(Name,Value,Path,TTL) -> wf_context:add_cookie(Name,Value,Path,TTL).
 cookie_req(Cookie,Req) -> ?BRIDGE:cookie(Cookie, Req).
 cookie_req(Name, Value, Path, TTL, Req) -> ?BRIDGE:cookie(Name, Value, Path, TTL, Req).
 params(Req) -> ?BRIDGE:params(Req).
+form(Req) -> ?BRIDGE:form(Req).
 cookies_req(Req) -> ?BRIDGE:cookies(Req).
 headers(Req) -> ?BRIDGE:headers(Req).
 peer(Req) -> ?BRIDGE:peer(Req).
