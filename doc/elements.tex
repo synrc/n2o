@@ -38,10 +38,10 @@ This will produce the following HTML code:
 
 \newpage
 \subsection{Active Elements: HTML and JavaScript}
-Also form elements exist that provide information for the server
+There are form elements that provide information for the server
 and gather user input: button, radio and check buttons, text box area and password box.
 Form elements usually allow to assign an Erlang postback handler to specify action behavior.
-These elements are compiled into HTML and JavaScript. For example, during rendering some
+These elements are compiled into HTML and JavaScript. For example, during rendering, some
 Actions are converted to JavaScript and sent to be executed in the browser.
 Element definition specifies the list of {\bf source} elements that provide data for event's callback.
 
@@ -106,7 +106,7 @@ Each HTML element in N2O DSL has record compatibility with the base element.
 
 Here {\bf module} is an Erlang module that contains a render function.
 Data and Aria HTML custom fields are common attributes for all elements.
-In case element name doesn't correspond to HTML tag {\bf html\_tag} field provided.
+In case element name doesn't correspond to HTML tag, {\bf html\_tag} field provided.
 {\bf body} field is used as element contents for all elements.
 
 \paragraph{}
@@ -124,7 +124,7 @@ name different from its original HTML tag name:
 
 \newpage
 \subsection{DTL Template {\bf \#dtl}}
-DTL stands for Django Template Language. A DTL element lets you construct HTML
+DTL stands for Django Template Language. A DTL element lets to construct HTML
 snippet from template with given placeholders for further substitution.
 Fields contain substitution bindings proplist, filename and templates folder.
 
@@ -140,7 +140,7 @@ Fields contain substitution bindings proplist, filename and templates folder.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Consider we have prod.dtl file in priv/templates folder with two
+Consider we have {\bf prod.dtl} file in {\bf priv/templates} folder with two
 placeholders \{\{title\}\}, \{\{body\}\} and default placeholder for JavaScript \{\{script\}\}.
 All placeholders except \{\{script\}\} should be specified in \#dtl element.
 Here is an example of how to use it:
@@ -154,7 +154,7 @@ Here is an example of how to use it:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You can use templates not only for pages but also for controls. Let's say we want
+You can use templates not only for pages, but for controls as well. Let's say we want
 to use DTL iterators for constructing list elements:
 
 \vspace{1\baselineskip}
@@ -176,7 +176,7 @@ Here is an example of how to pass variables to the DTL template we've just defin
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-bind\_script should be set to true for page templates. In case of control elements rendered from DTL,
+bind\_script should be set to true for page templates. When control elements are rendered from DTL,
 bind\_script should be set to false.
 
 \subsection{Button {\bf \#button}}
