@@ -164,3 +164,20 @@ function de_tuple(S, Count) {
     for (i = 0; i < Size; i++) { El = de_inner(S); Arr.push(El.value); S = El.rest; }
     return { value: tuple(Arr), rest: S }; };
 function de_nil(S) { return { value: [], rest: S }; };
+
+var $bert = {};
+
+$bert.on = function onbert(evt, callback) // BERT formatter
+{
+    console.log("Bert On");
+    var reader = new FileReader();
+    reader.addEventListener("loadend", function() {
+        try {
+            var erlang = dec(reader.result);
+            if (typeof callback  == 'function') callback(erlang);
+        } catch (e) { return { status: "error", desc: e }; }
+    });
+    reader.readAsArrayBuffer(evt.data);
+
+    return { status: "ok" };
+};

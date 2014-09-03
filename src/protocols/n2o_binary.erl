@@ -5,7 +5,7 @@
 
 info({binary,Message}, Req, State) -> info(binary_to_term(Message,[safe]),Req,State);
 
-info({binary,Message}, Req, State) ->
+info({bin,Message}, Req, State) ->
     wf_context:clear_actions(),
     Module = State#context.module,
     DpkldMessage = case wf:depickle(Message) of

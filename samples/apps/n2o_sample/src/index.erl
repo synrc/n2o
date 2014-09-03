@@ -21,8 +21,8 @@ body() ->
       #panel{ id=history },
       #textbox{ id=message },
       #button{ id=send, body= <<"Chat">>, postback={chat,Pid}, source=[message] },
-      #button{ id=bin, body= <<"Binary">>, postback={binary,{raw,Pid}} },
-      #button{ id=h_bin, body= <<"Binary with header">>, postback={binary,{headered,Pid}} },
+      #button{ id=bin, body= <<"Binary">>, postback={bin,{raw,Pid}} },
+      #button{ id=h_bin, body= <<"Binary with header">>, postback={bin,{headered,Pid}} },
       #button{ id=bin_text, body= <<"Send text from browser">>, postback={send_text, "from browser test"} } ].
 
 event(terminate) ->
@@ -64,7 +64,7 @@ event(login) -> login:event(login);
 event(continue) -> wf:info(?MODULE,"OK Pressed");
 event({send_text, Text}) -> 
     wf:info(?MODULE,"Send text: ~p",[binary_from_browser]),
-    wf:wire("ws.send(enc(tuple(atom('binary'),'" ++ Text ++ "')));");
+    wf:wire("ws.send(enc(tuple(atom('bin'),'" ++ Text ++ "')));");
 event({binary, {raw,Data}}) ->
     wf:info(?MODULE,"Binary: ~p",[Data]),
     <<"just raw binary">>;

@@ -7,7 +7,7 @@
 
 info({text,Message},Req,State) -> 
 %    wf:info(?MODULE,"n2o_nitrogen:text ~w",[Message]),
-    info(binary_to_term(Message,[safe]),Req,State);
+    info(Message,Req,State);
 info({binary,Message},Req,State) -> 
 %    wf:info(?MODULE,"n2o_nitrogen:binary ~w",[Message]),
     info(binary_to_term(Message,[safe]),Req,State);

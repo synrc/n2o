@@ -10,7 +10,6 @@ function bullet(url) {
         websocket: function() {
             var transport = null;
             if (window.WebSocket) { transport = window.WebSocket; }
-            if (window.MozWebSocket) { transport = window.MozWebSocket; }
             if (transport) { return {'heart': true, 'transport': transport}; }
             return null;
         },

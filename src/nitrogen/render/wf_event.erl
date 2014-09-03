@@ -3,8 +3,8 @@
 -include_lib ("n2o/include/wf.hrl").
 -compile(export_all).
 
-new(binary,Data) ->
-    wf:f("ws.send(enc(tuple(atom('binary'),bin('~s'))));",[wf:pickle(Data)]).
+new(bin,Data) ->
+    wf:f("ws.send(enc(tuple(atom('bin'),bin('~s'))));",[wf:pickle(Data)]).
 
 new(undefined, _, _, _, _) -> [];
 new(Postback, Element, Delegate, Name, Data) ->
