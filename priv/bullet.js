@@ -1,3 +1,6 @@
+
+// N2O Bullet
+
 function bullet(url) {
 
     var CONNECTING = 0;

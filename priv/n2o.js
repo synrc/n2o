@@ -1,4 +1,6 @@
 
+// N2O CORE
+
 var active      = false,
     protocol    = window.location.protocol == 'https:' ? "wss://" : "ws://",
     querystring = window.location.pathname + window.location.search,

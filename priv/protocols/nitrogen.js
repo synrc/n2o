@@ -1,4 +1,6 @@
 
+// Nitrogen Compatibility Layer
+
 function querySource(Id)
 {
     if (Id.getValue) return bin(Id.getValue());
