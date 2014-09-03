@@ -5,7 +5,7 @@
 reflect() -> record_info(fields, dropdown).
 
 render_element(Record = #dropdown{}) -> 
-    ID = Record#dropdown.id,
+    ID = case Record#dropdown.id of undefined -> wf:temp_id(); I->I end,
     case Record#dropdown.postback of
          undefined -> skip;
          Postback -> wf:wire(#event { type=click, postback=Postback, target=ID,
