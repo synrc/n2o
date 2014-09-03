@@ -14,7 +14,7 @@ handle(Req, State) ->  {ok, NewReq} = n2o_document:run(Req), {ok, NewReq, State}
 
 % Cowboy Bridge Abstraction
 
-params(Req) -> {Params,NewReq} = cowboy_req:qs_vals(Req), Params.
+params(Req) -> cowboy_req:qs_vals(Req).
 path(Req) -> {Path,NewReq} = cowboy_req:path(Req), Path.
 request_body(Req) -> cowboy_req:body(Req).
 headers(Req) -> cowboy_req:headers(Req).

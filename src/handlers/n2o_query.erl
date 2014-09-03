@@ -4,8 +4,9 @@
 -export(?QUERING_API).
 
 init(State, Ctx) -> 
-    Params = wf:params(Ctx#context.req),
-    NewCtx = Ctx#context{params=Params},
+    {Params,NewReq} = wf:params(Ctx#context.req),
+    wf:info(?MODULE,"params = ~p ~p",[Params,NewReq]),
+    NewCtx = Ctx#context{params=Params,req=NewReq},
     {ok, [], NewCtx}.
 
 finish(State, Ctx) ->  {ok, [], Ctx}.
