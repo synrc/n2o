@@ -1,3 +1,6 @@
+
+// N2O Simple Template
+
 function template(html, data) { // template("{this.name}",{name:"Maxim"})
     var re = /{([^}]+)?}/g, code = 'var r=[];', cursor = 0;
     var add = function(line,js) {
@@ -10,3 +13,5 @@ function template(html, data) { // template("{this.name}",{name:"Maxim"})
     add(html.substr(cursor, html.length - cursor));
     code += 'return r.join("");';
     return new Function(code.replace(/[\r\t\n]/g, '')).apply(data); }
+
+function dom(html) { return new DOMParser().parseFromString(html, "text/xml").firstChild; }
