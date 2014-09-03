@@ -124,8 +124,9 @@ message bus, but you can use any of these options.
 
     loop(Counter) ->
         Body = wf:to_list(Counter),
-        receive inc -> wf:update(counter, #span { body=Body }),
-                       wf:flush(room) end, loop(Counter+1).
+        receive inc -> 
+             wf:update(counter, #span { id=counter, body=Body }),
+             wf:flush(room) end, loop(Counter+1).
 \end{lstlisting}
 
 \paragraph{\bf Process Naming.} The name of async process is globally unique. There are two
