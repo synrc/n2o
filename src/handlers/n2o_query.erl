@@ -5,8 +5,8 @@
 
 init(State, Ctx) -> 
     {Params,NewReq} = wf:params(Ctx#context.req),
-    wf:info(?MODULE,"params = ~p ~p",[Params,NewReq]),
-    NewCtx = Ctx#context{params=Params,req=NewReq},
+    {Form,NewReq2} = wf:form(NewReq),
+    NewCtx = Ctx#context{params=Params,req=NewReq2,form=Form},
     {ok, [], NewCtx}.
 
 finish(State, Ctx) ->  {ok, [], Ctx}.
