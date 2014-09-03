@@ -32,8 +32,8 @@ $binary.on = function onbinary(evt, callback) //
 
             else {
                  console.log("Raw Binary With Header Received: Header [" + 
-                      byteArray8toString(header_reader.result) + "] Meta [" + 
-                      byteArray8toString(meta_reader.result) + "] Data lehgth: " +
+                      utf8_fromByteArray(reader.result) + "] Meta [" + 
+                      utf8_fromByteArray(meta_reader.result) + "] Data lehgth: " +
                        (evt.data.size - data_offset));
 
                  console.log("Header fields { id: " + id + ", type: " + type + ", app: " + 
