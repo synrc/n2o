@@ -3,7 +3,7 @@
 -compile(export_all).
 
 render_element(Record = #tr{postback= Postback}) ->
-  Id = Record#tr.id,
+  Id = case Record#tr.id of undefined -> wf:temp_id(); I->I end,
   Cursor = case Postback of undefined -> "";
     P -> wf:wire(#event {type=click, postback=P, target=Id, delegate=Record#tr.delegate}), "cursor:pointer;"
   end,
