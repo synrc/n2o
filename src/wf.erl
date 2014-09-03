@@ -7,7 +7,7 @@
 
 % Here is Nitrogen Web Framework compatible API
 % Please read major changes made to N2O and
-% how to port existing Nitrogen sites at http://synrc.com/framework/web/
+% how to port existing Nitrogen sites at https://synrc.com/apps/n2o
 
 % Update DOM wf:update
 
