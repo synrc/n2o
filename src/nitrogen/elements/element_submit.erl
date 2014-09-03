@@ -6,7 +6,7 @@
 reflect() -> record_info(fields, submit).
 
 render_element(Record) ->
-    ID = Record#submit.id,
+    ID = case Record#submit.id of undefined -> wf:temp_id(); I->I end,
     case Record#submit.postback of
          undefined -> skip;
          Postback -> wf:wire(#event { type=click, 

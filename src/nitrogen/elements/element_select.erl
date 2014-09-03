@@ -3,13 +3,13 @@
 -compile(export_all).
 
 render_element(Record = #select{}) ->
-  ID = Record#select.id,
+  ID = case Record#select.id of undefined -> wf:temp_id(); I->I end,
   case Record#select.postback of
     undefined -> skip;
     Postback -> wf:wire(#event{ type=change,
                                 target=ID,
                                 postback=Postback,
-                                source=[list_to_atom(ID)],
+                                source=[wf:to_atom(ID)],
                                 delegate=Record#select.delegate }) end,
   Props = [
     {<<"id">>, Record#select.id},
