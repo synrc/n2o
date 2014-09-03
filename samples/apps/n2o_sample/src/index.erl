@@ -6,13 +6,15 @@
 -define(MAX_TEMP, user2).
 
 main() -> 
+%    wf:info(?MODULE,"dqs(x) = ~p",[wf:dqs(<<"x">>)]),
+%    wf:info(?MODULE,"form() = ~p",[?REQ]),
     case wf:user() of
          undefined -> wf:redirect("/login"), #dtl{};
          _ -> #dtl{file = "index", app=n2o_sample,bindings=[{title,title()},{body,body()}]} end.
 
 title() -> [ <<"N2O">> ].
 
-log_modules() -> [index,index2,n2o_bullet,login,n2o_dynroute]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
+log_modules() -> [index,n2o_query,index2,n2o_bullet,login,n2o_dynroute]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
 
 body() ->
     wf:info(?MODULE,"RENDER!", []),
