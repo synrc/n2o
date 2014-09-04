@@ -8,7 +8,9 @@ info({binary,Message},Req,State) ->  info(binary_to_term(Message,[safe]),Req,Sta
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf_context:clear_actions(),
-    Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), wf:json([]) end,
+    {Result,NewState} = 
+         try rails_events(Event,State) 
+         catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), {<<>>,State} end,
     {reply,Result,wf_core:set_cookies(wf:cookies(),Req),State};
 
 info({flush,Actions}, Req, State) ->
@@ -25,18 +27,18 @@ render_actions(Actions) ->
     wf_context:clear_actions(),
     [First,Second].
 
-html_events({pickle,Source,Pickled,Linked}, State) ->
+rails_events({pickle,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
     case Ev of
-         #ev{} -> render_ev(Ev,Source,Linked,State);
-         CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
-    wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]).
+         #ev{}         -> render_ev(Ev,Source,Linked,State);
+         CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]),
+                          {<<>>,State} end.
 
 render_ev(#ev{module=Controller,name=Action,payload=P,trigger=T}=Ev,Source,Linked,State) ->
     case Controller:Action(Ev,State#context{params=Linked}) of
-         {json,Proplist} -> ok;
-         {binary,Proplist} -> ok;
-         {render,Proplist} -> ok;
-         {file,Proplist} -> ok;
-         {redirect,Proplist} -> ok
+         {json,Dictionary,NewState} -> {wf:json(Dictionary),NewState};
+         {binary,Raw,NewState} -> {{binary,Raw},NewState};
+         {render,Elements,NewState} -> {[],NewState};
+         {file,FileName,NewState} -> {<<>>,NewState};
+         {redirect,Address,NewState} -> {<<>>,NewState}
     end.
