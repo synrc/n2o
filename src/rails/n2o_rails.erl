@@ -7,6 +7,7 @@ info({text,Message},Req,State) ->    info(Message,Req,State);
 info({binary,Message},Req,State) ->  info(binary_to_term(Message,[safe]),Req,State);
 
 info({pickle,_,_,_}=Event, Req, State) ->
+    wf:info(?MODULE,"n2o_rails:pickle: ~p",[Event]),
     wf_context:clear_actions(),
     {Result,NewState} = 
          try rails_events(Event,State) 
@@ -16,19 +17,13 @@ info({pickle,_,_,_}=Event, Req, State) ->
 info({flush,Actions}, Req, State) ->
     wf_context:clear_actions(),
     wf:info(?MODULE,"Flush Message: ~p",[Actions]),
-    {reply, wf:json([{eval,iolist_to_binary(render_actions(Actions))}]), Req, State};
+    {reply, wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(Actions))}]), Req, State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
 
-render_actions(Actions) ->
-    wf_context:clear_actions(),
-    First  = wf:render(Actions),
-    Second = wf:render(get(actions)),
-    wf_context:clear_actions(),
-    [First,Second].
-
 rails_events({pickle,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
+    wf:info(?MODULE,"n2o_rails:rails_events: ~p",[Ev]),
     case Ev of
          #ev{}         -> render_ev(Ev,Source,Linked,State);
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]),
@@ -38,7 +33,8 @@ render_ev(#ev{module=Controller,name=Action,payload=P,trigger=T}=Ev,Source,Linke
     case Controller:Action(Ev,State#context{params=Linked}) of
          {json,Dictionary,NewState} -> {wf:json(Dictionary),NewState};
          {binary,Raw,NewState} -> {{binary,Raw},NewState};
-         {render,Elements,NewState} -> {[],NewState};
+         {actions,Elements,NewState} -> {wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(get(actions)))}]),NewState};
          {file,FileName,NewState} -> {<<>>,NewState};
-         {redirect,Address,NewState} -> {<<>>,NewState}
+         {redirect,Address,NewState} -> {<<>>,NewState};
+         _ -> {<<>>,State}
     end.
