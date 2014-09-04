@@ -120,6 +120,11 @@ cache(Key) ->
     Val = case Res of [] -> undefined; [Value] -> Value; Values -> Values end,
     case Val of undefined -> undefined; {_,X} -> X end.
 
+% Process State
+
+state(Key) -> erlang:get(Key).
+state(Key,Value) -> erlang:put(Key,Value).
+
 % Context Variables and URL Query Strings wf:q and wf:qs
 
 q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
