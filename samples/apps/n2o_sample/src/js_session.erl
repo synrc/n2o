@@ -45,7 +45,7 @@ ensure_sid(State, Ctx) ->
     {{ID,_},_,_,_,_} = SessionCookie,
     put(session_id,ID),
     wf:info(?MODULE,"State: ~p",[SessionCookie]),
-    {ok, State, Ctx#context{session=SessionCookie}}.
+    {ok, State, Ctx#cx{session=SessionCookie}}.
 
 expired(_Issued,{_TTL,Till}) -> false. % Till < calendar:now_to_datetime(now()).
 

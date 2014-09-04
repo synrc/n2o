@@ -10,7 +10,7 @@ body() ->
       #button{id=send,body="Chat",postback={chat,Pid},source=[message]} ].
 
 event(init) -> wf:reg(room).
-event(#ev{payload={chat,Pid}},#context{req=Req}=Cx) -> Pid ! {peer(), wf:qp(message,Cx)};
+event(#ev{payload={chat,Pid}},#cx{req=Req}=Cx) -> Pid ! {peer(), wf:qp(message,Cx)};
 event(Event,_) -> skip.
 
 chat_loop() ->
