@@ -20,9 +20,9 @@ Currently KVS includes following storage backends: Mnesia, Riak and \footahref{h
 
 \subsection{Polymorphic Records}
 
-Any data in KVS is represented using regular Erlang records.
+Any data in KVS is represented by regular Erlang records.
 The first element of the tuple as usual indicates the name of bucket.
-And the second element usually corresponds to the index key field.
+The second element usually corresponds to the index key field.
 
 \begin{lstlisting}
             Rec = {user,"maxim@synrc.com",[]}.
@@ -34,7 +34,7 @@ And the second element usually corresponds to the index key field.
 \newpage
 \subsection{Iterators}
 
-All record could be chained into the double-linked lists in the database.
+All records could be chained into the double-linked lists in the database.
 So you can inherit from the ITERATOR record just like that:
 
 \begin{lstlisting}
@@ -101,15 +101,15 @@ of containers:
 
 \subsection{Extending Schema}
 
-Usually you need only specify custom mnesia indexes and tables tuning.
-Riak and KAI backends don't need it. Group you table into table packages
+Usually you only need to specify custom Mnesia indexes and tables tuning.
+Riak and KAI backends don't need it. Group your table into table packages
 represented as modules with handle\_notice API.
 
 \begin{lstlisting}
     -module(kvs_feed).
     -inclue_lib("kvs/include/kvs.hrl").
 
-    metainfo() -> 
+    metainfo() ->
         #schema{name=kvs,tables=[
 
             #table{ name = feed, container = true,
@@ -141,7 +141,7 @@ It will create your custom schema.
 \subsection{KVS API}
 
 \subsection{Service}
-System service functions of starting/stopping.
+System functions to start and stop service:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -152,8 +152,8 @@ System service functions of starting/stopping.
 
 \subsection{Schema Change}
 This API allows you to create, initialize and destroy the database schema.
-Depending on database the format and/or featureset may differ. join/1 function
-is for initializing database replicated from remote node along with its shema.
+Depending on database the format and/or feature set may differ. {\bf join/1} function
+is used to initialize database, replicated from remote node along with its schema.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -165,8 +165,8 @@ is for initializing database replicated from remote node along with its shema.
 \vspace{1\baselineskip}
 
 \subsection{Meta Info}
-This API allows you to builds forms from table metainfo.
-Also you can use this api for metainfo introspection.
+This API allows you to build forms from table metainfo.
+You can also use this API for metainfo introspection.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -179,8 +179,9 @@ Also you can use this api for metainfo introspection.
 \vspace{1\baselineskip}
 
 \subsection{Chain Ops}
-This API alows you to modify the data, chained lists.
-You can create/1 the container, remove/add the the nodes from lists.
+This API allows you to modify the data, chained lists.
+You can use {\bf create/1} to create the container.
+You can add and remove nodes from lists.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -194,7 +195,7 @@ You can create/1 the container, remove/add the the nodes from lists.
 \vspace{1\baselineskip}
 
 \subsection{Raw Ops}
-This functions will patch the Erlang record inside database.
+These functions will patch the Erlang record inside database.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -204,23 +205,22 @@ This functions will patch the Erlang record inside database.
 \vspace{1\baselineskip}
 
 \subsection{Read Ops}
-Allow you to read the Value by Key and list
-recrods with given secondary indexes.
-get/3 API is used for specifying default value.
+Allows you to read the Value by Key and list records with given secondary indexes.
+{\bf get/3] API is used to specify default value.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     -spec index(atom(), any(), any()) -> list(tuple()).
     -spec get(atom(),any(), any()) -> {ok,any()}.
-    -spec get(atom(), any()) -> {ok,any()} | 
+    -spec get(atom(), any()) -> {ok,any()} |
                                 {error,duplicated} |
                                 {error,not_found}.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
 \subsection{Import/Export}
-This API you can use for storing all database
-in single file when this is possible. It is rather development API.
+You can use this API to store all database
+in a single file when it is possible. It's ok for development but not very good for production API.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
