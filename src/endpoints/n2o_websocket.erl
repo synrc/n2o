@@ -15,14 +15,14 @@ protocols() -> wf:config(n2o,protocols,[ n2o_heart,
 stream({text,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]);
 stream({binary,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]).
 info(Message, Req, State) -> push(Message,Req,State,protocols(),[]).
-terminate(_Req, _State=#context{module=Module}) -> catch Module:event(terminate).
+terminate(_Req, _State=#cx{module=Module}) -> catch Module:event(terminate).
 init(Req) ->
     put(actions,[]),
     Ctx = wf_context:init_context(Req),
-    NewCtx = wf_core:fold(init,Ctx#context.handlers,Ctx),
+    NewCtx = wf_core:fold(init,Ctx#cx.handlers,Ctx),
     wf_context:context(NewCtx),
     wf:reg(broadcast,{wf:peer(Req)}),
-    Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#context.req),
+    Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#cx.req),
     {ok, Req1, NewCtx}.
 
 % N2O top level protocol NOP REPLY PUSH

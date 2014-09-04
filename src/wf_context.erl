@@ -23,7 +23,7 @@ add_action(Action) ->
     put(actions,Actions++[Action]).
 
 init_context(Req) ->
-    #context{
+    #cx{
         actions=[], module=index, path=[], req=Req, params=[],
         handlers= [ {'query', wf:config(n2o,'query', n2o_query)},
                     {session, wf:config(n2o,session, n2o_session)},

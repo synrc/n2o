@@ -9,7 +9,7 @@
 init2(State, Req) -> {ok, State, Req}.
 
 init(State, Ctx) -> 
-    C = wf:cookie_req(session_cookie_name(),Ctx#context.req),
+    C = wf:cookie_req(session_cookie_name(),Ctx#cx.req),
     SessionId = case C of
                      undefined -> undefined;
                      _Else -> _Else end,
@@ -32,17 +32,17 @@ init(State, Ctx) ->
                  _ -> error_logger:info_msg("Cookie Error"), skip
                       end,
     wf:info(?MODULE,"State: ~p",[SessionCookie]),
-    {ok, State, Ctx#context{session=SessionCookie}}.
+    {ok, State, Ctx#cx{session=SessionCookie}}.
 
 expired(_Issued,{_TTL,Till}) -> false. %Till < calendar:now_to_datetime(now()).
 
 finish(State, Ctx) -> 
     wf:info(?MODULE,"Finish Cookie Set ~p",[State]),
-    NewReq = case Ctx#context.session of
+    NewReq = case Ctx#cx.session of
          {{Session,Key},Path,Issued,{TTL,Till},Status} -> 
-              wf:cookie_req(session_cookie_name(),Session,Path,TTL,Ctx#context.req);
-         _ -> Ctx#context.req end,
-    {ok, [], Ctx#context{req=NewReq}}.
+              wf:cookie_req(session_cookie_name(),Session,Path,TTL,Ctx#cx.req);
+         _ -> Ctx#cx.req end,
+    {ok, [], Ctx#cx{req=NewReq}}.
 
 lookup_ets(Key) ->
     Res = ets:lookup(cookies,Key),

@@ -6,8 +6,8 @@
 
 finish(State, Ctx) -> {ok, State, Ctx}.
 init(State, Ctx) -> 
-    Path = wf:path(Ctx#context.req),
-    {ok, State, Ctx#context{path=Path,module=route_prefix(Path)}}.
+    Path = wf:path(Ctx#cx.req),
+    {ok, State, Ctx#cx{path=Path,module=route_prefix(Path)}}.
 
 route_prefix(<<"/ws/",P/binary>>) -> route(P);
 route_prefix(<<"/",P/binary>>) -> route(P);

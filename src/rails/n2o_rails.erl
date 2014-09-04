@@ -30,7 +30,7 @@ rails_events({rails,Source,Pickled,Linked}, State) ->
                           {<<>>,State} end.
 
 render_ev(#ev{module=Controller,name=Action,payload=P,trigger=T}=Ev,Source,Linked,State) ->
-    case Controller:Action(Ev,State#context{params=Linked}) of
+    case Controller:Action(Ev,State#cx{params=Linked}) of
          {json,Dictionary,NewState} -> {wf:json(Dictionary),NewState};
          {binary,Raw,NewState} -> {{binary,Raw},NewState};
          {actions,Elements,NewState} -> {wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(get(actions)))}]),NewState};

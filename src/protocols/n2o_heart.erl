@@ -8,7 +8,7 @@ info({text,<<"PING">> = Ping}=Message, Req, State) ->
     {reply, wf:json([]), Req, State};
 info({text,<<"N2O,",Rest/binary>> = InitMarker}=Message, Req, State) ->
     wf:info(?MODULE,"N2O INIT: ~p",[Message]),
-    Module = State#context.module,
+    Module = State#cx.module,
     InitActions = case Rest of
          <<>> -> Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
                  wf_render:render(Elements),

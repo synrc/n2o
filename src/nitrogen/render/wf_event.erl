@@ -8,7 +8,7 @@ new(bin,Data) ->
 
 new(undefined, _, _, _, _) -> [];
 new(Postback, Element, Delegate, Name, Data) ->
-    Module = wf:coalesce([Delegate, ?CTX#context.module]),
+    Module = wf:coalesce([Delegate, ?CTX#cx.module]),
     Event = #ev{name=Name, module=Module, payload=Postback, trigger=Element},
     wf:f("ws.send(enc(tuple(atom('~w'),bin('~s'),bin('~s'),~s)));",
         [wf:config(n2o,event,pickle),Element,wf:pickle(Event),Data]).

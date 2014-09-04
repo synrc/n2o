@@ -128,9 +128,9 @@ state(Key,Value) -> erlang:put(Key,Value).
 % Context Variables and URL Query Strings wf:q and wf:qs
 
 q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
-qp(Key,Ctx) -> proplists:get_value(Key,Ctx#context.params).
-qs(Key) -> proplists:get_value(Key,?CTX#context.params).
-dqs(Key) -> proplists:get_value(Key,?CTX#context.form).
+qp(Key,Ctx) -> proplists:get_value(Key,Ctx#cx.params).
+qs(Key) -> proplists:get_value(Key,?CTX#cx.params).
+dqs(Key) -> proplists:get_value(Key,?CTX#cx.form).
 
 % Cookies
 
