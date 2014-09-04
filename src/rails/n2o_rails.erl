@@ -6,7 +6,7 @@
 info({text,Message},Req,State) ->    info(Message,Req,State);
 info({binary,Message},Req,State) ->  info(binary_to_term(Message,[safe]),Req,State);
 
-info({pickle,_,_,_}=Event, Req, State) ->
+info({rails,_,_,_}=Event, Req, State) ->
     wf:info(?MODULE,"n2o_rails:pickle: ~p",[Event]),
     wf_context:clear_actions(),
     {Result,NewState} = 
@@ -21,7 +21,7 @@ info({flush,Actions}, Req, State) ->
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
 
-rails_events({pickle,Source,Pickled,Linked}, State) ->
+rails_events({rails,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
     wf:info(?MODULE,"n2o_rails:rails_events: ~p",[Ev]),
     case Ev of
