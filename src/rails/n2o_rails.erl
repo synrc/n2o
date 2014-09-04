@@ -29,7 +29,7 @@ rails_events({rails,Source,Pickled,Linked}, State) ->
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]),
                           {<<>>,State} end.
 
-render_ev(#ev{module=Controller,name=Action,payload=P,trigger=T}=Ev,Source,Linked,State) ->
+render_ev(#ev{module=Controller,name=Action,msg=P,trigger=T}=Ev,Source,Linked,State) ->
     case Controller:Action(Ev,State#cx{params=Linked}) of
          {json,Dictionary,NewState} -> {wf:json(Dictionary),NewState};
          {binary,Raw,NewState} -> {{binary,Raw},NewState};

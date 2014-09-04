@@ -52,7 +52,7 @@ html_events({pickle,Source,Pickled,Linked}, State) ->
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
     wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]).
 
-render_ev(#ev{module=M,name=F,payload=P,trigger=T},Source,Linked,State) ->
+render_ev(#ev{module=M,name=F,msg=P,trigger=T},Source,Linked,State) ->
     case F of
          api_event -> M:F(P,Linked,State);
          event -> lists:map(fun({K,V})-> put(K,V) end,Linked), M:F(P);
