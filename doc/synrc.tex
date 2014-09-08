@@ -1,6 +1,7 @@
 % Copyright (c) 2010 Synrc Research Center
 
-\usepackage{ifthen}
+\usepackage{afterpage}
+
 \usepackage{hevea}
 \usepackage[english]{babel}
 \usepackage{palatino}
@@ -14,6 +15,12 @@
 \usepackage[none]{hyphenat}
 \usepackage{caption}
 \usepackage[usenames,dvipsnames]{color}
+\usepackage[top=18mm, bottom=25.4mm,
+            inner=16mm,outer=18mm,
+            paperwidth=142mm, paperheight=200mm]{geometry}
+
+%left=18mm, right=18mm,
+
 % \usepackage[hmarginratio=3:2]{geometry}
 
 \hyphenation{framework nitrogen javascript facebook streaming JavaScript micro-frameworks}
@@ -23,7 +30,7 @@
 % include image for HeVeA and LaTeX
 
 \makeatletter
-\def\@seccntformat#1{\llap{\csname the#1\endcsname\quad}}
+\def\@seccntformat#1{\llap{\csname the#1\endcsname\hskip0.7em\relax}}
 \makeatother
 
 \newcommand{\includeimage}[2]
@@ -98,20 +105,21 @@
     basicstyle=\bf\ttfamily\footnotesize,
     columns=fixed}
 
-\headsep = 0cm
-\voffset = -1.5cm
-\hoffset = -0.7cm
-\topmargin = 0cm
-\textwidth = 11cm
-\textheight = 17.5cm
-\footskip = 1cm
-\parindent = 0cm
+%\headsep = 0cm
+%\voffset = -1.5cm
+%\hoffset = -0.7cm
+%\topmargin = 0cm
+%\textwidth = 12cm
+%\textheight = 17.5cm
+%\footskip = 1cm
+%\parindent = 0cm
 
 \hyphenpenalty=5000
   \tolerance=1000
 
 \newenvironment{dedication}
 {
+   \thispagestyle{empty}
    \cleardoublepage
    \thispagestyle{empty}
    \vspace*{\stretch{1}}
@@ -124,3 +132,7 @@
    \clearpage
 }
 
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \newpage}

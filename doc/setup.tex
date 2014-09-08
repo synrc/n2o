@@ -48,25 +48,20 @@ for passing HTTP, REST, WebSocket and Static N2O endpoints:
       {'_', n2o_cowboy, []}
         ]}]).
 \end{lstlisting}
-\vspace{1\baselineskip}
 
 N2O uses two ports for SSL and non-SSL connections:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
     wf:config(n2o,port,443)
 \end{lstlisting}
-\vspace{1\baselineskip}
 
 You can also redefine these ports in bullet connection inside template:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
     <script>
         var transition = {pid: '', host: 'localhost', port: '443' };
     </script>
 \end{lstlisting}
-\vspace{1\baselineskip}
 
 And then add a minimal {\bf index.erl} page:
 
