@@ -12,7 +12,7 @@ finish(State,Ctx) -> {ok,State,Ctx}.
 
 ensure_sid(State, Ctx) -> 
     SessionUser = wf:cookie_req(<<"n2o-name">>,?REQ),
-    SessionId   = wf:cookie_req(<<"n2o-sid">>, ?REQ),
+    SessionId   = wf:cookie_req(wf:config(n2o, session_cookie_name, <<"n2o-sid">>), ?REQ),
     wf:info(?MODULE,"Session Init n2o-sid: ~p",[SessionId]),
     {{D1,D2,D3},{T1,T2,T3}} = calendar:now_to_datetime(now()),
     Till = {{D1,D2,D3+1},{T1,T2,T3}},
@@ -86,7 +86,7 @@ new_cookie_value(SessionKey) ->
     SessionKey.
 
 new_state() -> #state{unique=new_cookie_value()}.
-session_cookie_name() -> <<"n2o-sid">>.
+session_cookie_name() -> wf:config(n2o, session_cookie_name, <<"n2o-sid">>).
 set_value(Key, Value) -> ets:insert(cookies,{{session_id(),Key},Value}), Value.
 get_value(Key, DefaultValue) -> 
     Res = case lookup_ets({session_id(),Key}) of
