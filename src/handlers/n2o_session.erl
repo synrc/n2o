@@ -60,7 +60,7 @@ clear(Session) ->
 session_id() -> wf:cookie_req(session_cookie_name(),?REQ).
 new_cookie_value() -> base64:encode(erlang:md5(term_to_binary({now(), make_ref()}))).
 new_state() -> #state{unique=new_cookie_value()}.
-session_cookie_name() -> <<"n2o-sid">>.
+session_cookie_name() -> wf:config(n2o, session_cookie_name, <<"n2o-sid">>).
 set_value(Key, Value) -> ets:insert(cookies,{{session_id(),Key},Value}), Value.
 get_value(Key, DefaultValue) -> 
     Res = case lookup_ets({session_id(),Key}) of
