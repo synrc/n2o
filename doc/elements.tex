@@ -1,7 +1,7 @@
 \section{Elements}
 
 \paragraph{}
-With N2O you don't normally use HTML at all. Instead you define your page
+With N2O you don't need to use HTML at all. Instead you define your page
 in the form of Erlang records so that the page is type checked at the compile time.
 This is a classic CGI approach for compiled pages and it gives us all the benefits of
 compile time error checking and provides DSL for client and server-side rendering.
@@ -10,8 +10,8 @@ compile time error checking and provides DSL for client and server-side renderin
 Nitrogen elements, by their nature, are UI control primitives
 that can be used to construct Nitrogen pages with Erlang internal DSL.
 They are compiled into HTML and JavaScript.
-Behavior of all elements is controlled on server side and all the communication
-between browser and server side is performed over WebSocket channels.
+Behavior of all elements is controlled on server-side and all the communication
+between browser and server-side is performed over WebSocket channels.
 Hence there is no need to use POST requests or HTML forms.
 
 \subsection{Static Elements: HTML}
