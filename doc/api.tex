@@ -54,11 +54,11 @@ Otherwise you need to care about illegal symbols for element accessors.
 
 \paragraph{}
 During page updates you can create additional elements with
-run-time generated event handlers, perform HTML rendering for
+runtime generated event handlers, perform HTML rendering for
 template elements or even use distributed map/reduce to calculate view.
-You must be aware that heavy operations will consume
+You have to be aware that heavy operations will consume
 more power in the browser, but you can save it by rendering
-HTML on server side. All DOM updates API works both using
+HTML on server-side. All DOM updates API works both using
 JavaScript/OTP and server pages.
 
 \paragraph{}
@@ -132,7 +132,7 @@ message bus, but you can use any of these options.
 \paragraph{\bf Process Naming.} The name of async process is globally unique. There are two
 versions, {\bf wf:async/1} and {\bf wf:async/2}. In the given example
 the name of async process is specified as ``looper'', otherwise,
-if the first parameter was not specified, the default name ``comet'' would be used.
+if the first parameter was not specified, the default name ``comet'' will be used.
 
 \subsection{Message Bus {\bf wf:reg} and {\bf wf:send}}
 N2O uses GProc process registry for managing async processes pools.
@@ -166,14 +166,14 @@ These are used to extract URL parameters or read from the process context. {\bf 
 from the context stored by controls postbacks. {\bf wf:qs} extracts variables from HTTP forms.
 
 \subsection{Render {\bf wf:render}}
-Renders elements or actions with common render.
+Render elements or actions with common render.
 
 \subsection{Redirects {\bf wf:redirect}}
 Redirects are implemented not with HTTP headers, but with JavaScript action modifying {\bf window.location}.
 This saves login context information which is sent in the first packet upon establishing a WebSocket connection.
 
 \subsection{Session Information {\bf wf:session}}
-Stores any session information in ETS tables. Use {\bf wf:user}, {\bf wf:role} for
+Store any session information in ETS tables. Use {\bf wf:user}, {\bf wf:role} for
 login and authorization. Consult {\bf AVZ} library documentation.
 
 \subsection{Bridge information {\bf wf:header} and {\bf wf:cookie}}

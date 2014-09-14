@@ -15,16 +15,16 @@ Transform which lets Erlang run on JavaScript platform and enables Erlang and Ja
 interoperability. You can use Elixir, LFE and Joxa languages for backend development, as well.
 
 \paragraph{}
-N2O supports DSL and HTML templates. This lets you build JavaScript
+N2O supports DSL and HTML templates. It lets you build JavaScript
 control elements in Erlang and perform inline rendering with DSL using
-the same code base for both client and server side.
+the same code base for both client and server-side.
 How to use N2O is up to you. You can build mobile applications using server-side rendering
 for both HTML and JavaScript thus reducing CPU cycles and saving the battery of a mobile device.
 Or you can create rich offline desktop applications using Erlang JavaScript compiler.
 
 \newpage
 \subsection*{Why Erlang in Web?}
-We have benchmarked all the existing modern web frameworks built using functional
+We have benchmarked all the existing modern web frameworks that were built using functional
 languages and Cowboy was still the winner. The chart below shows raw HTTP
 performance of functional and C-based languages with concurrent
 primitives (Go, D and Rust) on a VAIO Z notebook with i7640M processor.
@@ -33,7 +33,7 @@ primitives (Go, D and Rust) on a VAIO Z notebook with i7640M processor.
 
 \paragraph{}
 Erlang was built for low latency streaming of binary data in telecom systems.
-It's fundamental design goals included high manageability, scalability
+It's fundamental design goal included high manageability, scalability
 and extreme concurrency. Thinking of WebSocket channels as binary
 telecom streams and web pages as user binary sessions
 helps to get an understanding of the choice
@@ -52,7 +52,7 @@ times compared to any other functional web framework. And
 sure it's faster than raw HTTP performance of Node.js.
 
 \subsection{Rich and Lightweight Applications}
-There exists two approaches for designing client/server communication.
+There are two approaches for designing client/server communication.
 The first one is called 'data-on-wire'. With this approach only JSON, XML or binary
 data are transferred over RPC and REST channels. All HTML rendering
 is performed on the client-side. This is the most suitable approach for building desktop
@@ -77,7 +77,7 @@ Nitrogen elements collections provided by Nitrogen community.
 In cases where your system is built around Erlang infrastructure, N2O
 is the best choice for fast web prototyping, simplicity
 of use and clean codebase. Despite HTML transfers over the wire,
-you will still have access to all your Erlang services directly.
+you still have access to all your Erlang services directly.
 
 \paragraph{}
 You can also create offline applications using Erlang JavaScript compiler
@@ -93,11 +93,11 @@ access library {\bf KVS} and {\bf MQS} Message Bus client library (GProc, Rabbit
 N2O uses JSON and BERT. All messages passed over
 WebSockets are encoded in native Erlang External Term Format.
 It is easy to parse it in JavaScript with {\bf dec(msg)}
-and it helps to avoid complexity on the server side. Please refer
+and it helps to avoid complexity on the server-side. Please refer
 to \footahref{http://bert-rpc.org}{http://bert-rpc.org} for detailed information.
 
 \subsection{DSL and Templates}
-We liked Nitrogen for the simple and elegant way it constructs typed
+We like Nitrogen for the simple and elegant way it constructs typed
 HTML with internal DSL. This is analogous to Scala Lift,
 OCaml Ocsigen and Haskell Blaze approach. It lets you develop reusable control
 elements and components in the host language.
@@ -161,7 +161,7 @@ Nitrogen web sites to N2O quite esily. E.g., N2O returns id and class semantics
 of HTML and not {\bf html\_id}.
 
 \paragraph{}
-We simplified HTML rendering by not using
+We simplified HTML rendering without using
 {\bf html\_encode} which should be handled by application layer.
 
 \paragraph{}

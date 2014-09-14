@@ -3,7 +3,7 @@
 \subsection{Reduced Latency}
 The secret to reducing latency is simple. We try to deliver rendered HTML
 as soon as possible and render JavaScript only when WebSocket initialization is complete.
-It takes three steps and three Erlang processes to do that.
+It takes three steps and three Erlang processes for doing that.
 
 \includeimage{images/page-lifetime.png}{Page Lifetime}
 
@@ -29,7 +29,7 @@ JavaScript actions are stored in the transition process.
 \end{lstlisting}
 
 \paragraph{}
-HTTP handler dies immediately after returning HTML. Transition process
+HTTP handler will die immediately after returning HTML. Transition process
 waits for a request from a WebSocket handler.
 
 \subsection{Transition Process}
@@ -40,16 +40,16 @@ running is WebSocket handler. At this point initialization phase is complete.
 
 \subsection{Events Process}
 After that all client/server communication is performed over
-WebSocket channel. All events coming from the browser are
+WebSocket channel. All events are coming from the browser are
 handled by N2O, which renders elements to HTML and actions to
 JavaScript. Each user at any time has only one WebSocket process
 per connection.
 
 \subsection{Async Processes}
-These are user processes created with {\bf wf:async} invocation.
+These are user processes that were created with {\bf wf:async} invocation.
 This is a legacy name from the times when async technology
 was called COMET for XHR channel. Async Processes are optional
-and are only needed when you have a UI event taking too much
+and only needed when you have a UI event taking too much
 time to be processed, like gigabyte file uploads. You can create
 multiple Async Processes per user.
 
