@@ -2,8 +2,8 @@
 -behaviour(supervisor).
 -export([start_link/0, init/1]).
 -compile(export_all).
--include_lib ("n2o/include/wf.hrl").
--include("users.hrl").
+-include_lib("n2o/include/wf.hrl").
+-include_lib("kvs/include/user.hrl").
 -define(APP, n2o_sample).
 
 start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
