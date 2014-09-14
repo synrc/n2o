@@ -6,9 +6,7 @@
 render_element(E) when is_list(E) -> E;
 render_element(Element) when is_tuple(Element) ->
     Id = case element(#element.id,Element) of
-        undefined -> case element(#element.postback,Element) of 
-                          undefined -> undefined;
-                          _ -> wf:temp_id() end;
+        undefined -> undefined; % wf:temp_id();
         L when is_list(L) -> L;
         Other -> wf:to_list(Other) end,
     case element(#element.actions,Element) of undefined -> skip; Actions -> wf:wire(Actions) end,

@@ -205,7 +205,7 @@ json(Json) -> n2o_json:encode(Json).
 
 % These api are not really API
 
-temp_id() -> {_, _, C} = now(), "temp" ++ integer_to_list(C).
+temp_id() -> {_, _, C} = now(), "auto" ++ integer_to_list(C).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 
