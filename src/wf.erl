@@ -213,6 +213,8 @@ actions() -> wf_context:actions().
 actions(Ac) -> wf_context:actions(Ac).
 context() -> wf_context:context().
 context(Cx) -> wf_context:context(Cx).
+context(Cx,Proto) -> wf_context:context(Cx,Proto).
+context(Cx,Proto,UserCx) -> wf_context:context(Cx,Proto,UserCx).
 script() -> wf_context:script().
 script(Script) -> wf_context:script(Script).
 add_action(Action) -> wf_context:add_action(Action).
@@ -228,3 +230,4 @@ setkey(Name,Pos,List,New) ->
     case lists:keyfind(Name,Pos,List) of
         false -> [New|List];
         Element -> lists:keyreplace(Name,Pos,List,New) end.
+

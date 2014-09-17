@@ -7,6 +7,11 @@ actions() -> get(actions).
 actions(Ac) -> put(actions,Ac).
 context() -> get(context).
 context(Cx) -> put(context,Cx).
+context(Cx,Proto) -> lists:keyfind(Proto,1,Cx#cx.state).
+context(Cx,Proto,UserCx) -> 
+   NewCx = Cx#cx{state=wf:setkey(Proto,1,Cx#cx.state,{Proto,UserCx})},
+   wf:context(NewCx),
+   NewCx.
 clear_actions() -> put(actions,[]).
 add_action(Action) ->
     Actions = case get(actions) of undefined -> []; E -> E end,

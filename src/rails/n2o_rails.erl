@@ -11,7 +11,7 @@ info({init,Rest},Req,State) ->
          true -> Controller:init(Req,State);
          false -> [] end,
     wf:info(?MODULE,"n2o_rails:init ~w\r\n",[UserCx]),
-    {cont,Rest,Req,State#cx{state=wf:setkey(?MODULE,1,State#cx.state,{?MODULE,UserCx})}};
+    {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
 
 info({text,Message},Req,State) ->    info(Message,Req,State);
 info({binary,Message},Req,State) ->  info(binary_to_term(Message,[safe]),Req,State);
