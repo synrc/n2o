@@ -26,6 +26,11 @@ add_cookie(Name,Value,Path,TTL) ->
         false -> [{Name,Value,Path,TTL}|C] end,
     put(cookies,Cookies).
 
+fold(Fun,Handlers,Ctx) ->
+    lists:foldl(fun({_,Module},Ctx1) ->
+        {ok,_,NewCtx} = Module:Fun([],Ctx1),
+        NewCtx end,Ctx,Handlers).
+
 init_context(Req) ->
     #cx{
         actions=[], module=index, path=[], req=Req, params=[],

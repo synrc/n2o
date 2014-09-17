@@ -10,7 +10,7 @@
 %
 % STACK:  index:body/0:18
 %         index:main/0:8
-%         wf_core:run/1:15
+%         n2o_document:run/1:15
 
 stack(Error, Reason) ->
     Stacktrace = [case A of

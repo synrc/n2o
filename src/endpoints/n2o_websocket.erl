@@ -1,4 +1,5 @@
 -module(n2o_websocket).
+-description('WebSocket endpoint handler').
 -author('Maxim Sokhatsky').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
@@ -23,7 +24,7 @@ terminate(_Req, _State=#cx{module=Module}) -> catch Module:event(terminate).
 init(Req) ->
     wf:actions([]),
     Ctx = wf_context:init_context(Req),
-    NewCtx = wf_core:fold(init,Ctx#cx.handlers,Ctx),
+    NewCtx = wf_context:fold(init,Ctx#cx.handlers,Ctx),
     wf:context(NewCtx),
     wf:reg(broadcast,{wf:peer(Req)}),
     Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#cx.req),
@@ -38,6 +39,5 @@ push(M,R,S,[],Acc)               -> nop(R,S);
 push(M,R,S,[H|T]=Protocols,Acc)  -> wf:info(?MODULE,"PUSH ~p message ~p",[H,M]),
     case H:info(M,R,S) of
          {unknown,_,_,_}         -> push(M,R,S,T,Acc);
-         {cont,P,Req,State}      -> push({init,P},Req,State,T,Acc);
          {reply,Msg,Req,State}   -> reply(Msg,Req,State);
                     Ans          -> push(M,R,S,T,[Ans|Acc]) end.

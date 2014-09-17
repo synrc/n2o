@@ -28,6 +28,6 @@ flush(Pool) ->
 init_context(undefined) -> [];
 init_context(Req) ->
     Ctx = wf_context:init_context(Req),
-    NewCtx = wf_core:fold(init, Ctx#cx.handlers, Ctx),
+    NewCtx = wf_context:fold(init, Ctx#cx.handlers, Ctx),
     wf:actions(NewCtx#cx.actions),
     wf:context(NewCtx).
