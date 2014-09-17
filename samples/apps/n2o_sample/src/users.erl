@@ -17,8 +17,8 @@ delete(Id) -> ets:delete(users, wf:to_list(Id)).
 %put(#user{} = User) -> kvs:add(User#user{id=crypto:rand_uniform(1,10)}), true.
 post(#user{} = User) -> 
   U = User#user{id=now()},
-  kvs:add(U),
-%  io:format("POST: ~w~n",[U]),
-  true;
-%  ets:insert(users, User);
+%  kvs:put(U),
+%  io:format("POST: ~w~n\n\r",[U]),
+%  true;
+  ets:insert(users, User);
 post(Data) -> post(from_json(Data, #user{})).
