@@ -4,12 +4,12 @@
 -compile(export_all).
 
 info({init,Rest},Req,State) ->
-    % you may call here your own INIT API in Page Controllers
-    self() ! {init_reply,<<>>},
     Controller = State#cx.module,
     UserCx = case erlang:function_exported(Controller,init,2) of
          true -> Controller:init(Req,State);
          false -> [] end,
+    % you may send here init results back to websocket
+    self() ! {init_reply,<<>>},
     wf:info(?MODULE,"n2o_rails:init ~w\r\n",[UserCx]),
     {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
 
