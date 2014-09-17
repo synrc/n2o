@@ -9,7 +9,7 @@ body() ->
  [ #span{id=display}, #br{},
             #span{body="Login: "}, #textbox{id=user,autofocus=true}, #br{},
             #span{body="Password: "}, #password{id=pass},
-            #button{id=login,body="Login",postback=login,source=[user,pass]} ].
+            #button{body="Login",postback=login,source=[user,pass]} ].
 
 event(terminate) -> wf:info(?MODULE,"event(terminate) called~n",[]);
 event(init) -> wf:info(?MODULE,"event(init) called~n",[]);
