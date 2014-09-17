@@ -5,7 +5,7 @@
 
 info({init,Rest},Req,State) ->
     % you may call here your own INIT API in Page Controllers
-    self() ! {init_rep,<<>>},
+    self() ! {init_reply,<<>>},
     Controller = State#cx.module,
     UserCx = case erlang:function_exported(Controller,init,2) of
          true -> Controller:init(Req,State);

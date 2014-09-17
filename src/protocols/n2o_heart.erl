@@ -5,9 +5,10 @@
 
 info({text,<<"PING">> = Ping}=Message, Req, State) ->
     wf:info(?MODULE,"PING: ~p",[Message]),
-    {reply, wf:json([]), Req, State};
+    {reply, <<>>, Req, State};
 info({text,<<"N2O,",Process/binary>> = InitMarker}=Message, Req, State) ->
     wf:info(?MODULE,"N2O INIT: ~p",[Message]),
-    {init, Process, Req, State};
+    self() ! {init_n2o,Process},
+    {reply, <<>>, Req, State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.

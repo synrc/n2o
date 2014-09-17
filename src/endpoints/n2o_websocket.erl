@@ -3,10 +3,10 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-protocols() -> wf:config(n2o,protocols,[ n2o_heart,
-                                         n2o_binary,
+protocols() -> wf:config(n2o,protocols,[ n2o_binary,
                                          n2o_rails,
                                          n2o_nitrogen,
+                                         n2o_heart,
                                          n2o_client
                                           ]).
 
@@ -15,7 +15,7 @@ protocols() -> wf:config(n2o,protocols,[ n2o_heart,
 stream({text,Data}=Message, Req, State)   -> push(Message,Req,State,protocols(),[]);
 stream({binary,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]).
 
-info({init_rep,Message}, Req, State)      -> reply(Message,Req,State);
+info({init_reply,Message}, Req, State)    -> reply(Message,Req,State);
 info({init_n2o,P}, Req, State)            -> push({init,P},Req,State,protocols(),[]);
 info(Message, Req, State)                 -> push(Message,Req,State,protocols(),[]).
 
@@ -38,7 +38,6 @@ push(M,R,S,[],Acc)               -> nop(R,S);
 push(M,R,S,[H|T]=Protocols,Acc)  -> wf:info(?MODULE,"PUSH ~p message ~p",[H,M]),
     case H:info(M,R,S) of
          {unknown,_,_,_}         -> push(M,R,S,T,Acc);
-         {init,P,Req,State}      -> self() ! {init_n2o,P}, nop(Req,State);
          {cont,P,Req,State}      -> push({init,P},Req,State,T,Acc);
          {reply,Msg,Req,State}   -> reply(Msg,Req,State);
                     Ans          -> push(M,R,S,T,[Ans|Acc]) end.

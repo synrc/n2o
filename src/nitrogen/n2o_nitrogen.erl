@@ -25,7 +25,7 @@ info({init,Rest},Req,State) ->
                     receive_actions(Req) end,
     UserCx = try Module:event(init) catch C:E -> wf:error_page(C,E) end,
     Actions = wf:render(wf:actions()),
-    self() ! {init_rep,wf:json([{eval,iolist_to_binary([InitActions,Actions])}])},
+    self() ! {init_reply,wf:json([{eval,iolist_to_binary([InitActions,Actions])}])},
     wf:info(?MODULE,"n2o_nitrogen:event(init) ~w\r\n",[UserCx]),
     {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
 
@@ -34,7 +34,7 @@ info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,Stat
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf:actions([]),
-    wf:info(?MODULE,"N2O Message: ~p",[Event]),
+    wf:info(?MODULE,"N2O Message: ~p\n\r",[Event]),
     Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
     {reply,Result,wf_core:set_cookies(wf:cookies(),Req),State};
 
