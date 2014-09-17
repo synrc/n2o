@@ -3,19 +3,29 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
+info({init,Rest},Req,State) ->
+    % you may call here your own INIT API in Page Controllers
+    self() ! {init_rep,<<>>},
+    Controller = State#cx.module,
+    UserCx = case erlang:function_exported(Controller,init,2) of
+         true -> Controller:init(Req,State);
+         false -> [] end,
+    wf:info(?MODULE,"n2o_rails:init ~w\r\n",[UserCx]),
+    {cont,Rest,Req,State#cx{state=wf:setkey(?MODULE,1,State#cx.state,{?MODULE,UserCx})}};
+
 info({text,Message},Req,State) ->    info(Message,Req,State);
 info({binary,Message},Req,State) ->  info(binary_to_term(Message,[safe]),Req,State);
 
 info({rails,_,_,_}=Event, Req, State) ->
     wf:info(?MODULE,"n2o_rails:pickle: ~p",[Event]),
-    wf_context:clear_actions(),
+    wf:actions([]),
     {Result,NewState} = 
          try events(Event,State) 
          catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), {<<>>,State} end,
     {reply,Result,wf_core:set_cookies(wf:cookies(),Req),NewState};
 
 info({flush,Actions}, Req, State) ->
-    wf_context:clear_actions(),
+    wf:actions([]),
     wf:info(?MODULE,"Flush Message: ~p",[Actions]),
     {reply, wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(Actions))}]), Req, State};
 

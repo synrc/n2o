@@ -10,5 +10,5 @@ render_element(Record=#dtl{}) ->
                 A -> A end ++ "/" ++ wf:to_list(Record#dtl.folder)
          ++ "/" ++ wf:to_list(Record#dtl.file) ++ "." ++ wf:to_list(Record#dtl.ext),
     {ok,R} = M:render([{K,wf:render(V)} || {K,V} <- Record#dtl.bindings] ++ 
-        if Record#dtl.bind_script==true -> [{script,wf_context:script()}]; true-> [] end),
+        if Record#dtl.bind_script==true -> [{script,wf:script()}]; true-> [] end),
     R.

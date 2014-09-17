@@ -3,8 +3,6 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-info({binary,Message}, Req, State) -> info(binary_to_term(Message,[safe]),Req,State);
-
 info({client,Message}, Req, State) ->
     wf:info(?MODULE,"Client Message: ~p",[Message]),
     Module = State#cx.module,

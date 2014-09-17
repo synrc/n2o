@@ -209,9 +209,22 @@ temp_id() -> {_, _, C} = now(), "auto" ++ integer_to_list(C).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 
+actions() -> wf_context:actions().
+actions(Ac) -> wf_context:actions(Ac).
+context() -> wf_context:context().
+context(Cx) -> wf_context:context(Cx).
+script() -> wf_context:script().
+script(Script) -> wf_context:script(Script).
+add_action(Action) -> wf_context:add_action(Action).
+
 config_multiple(Keys) -> [config(Key, "") || Key <- Keys].
 config(Key) -> config(n2o, Key, "").
 config(App, Key) -> config(App,Key, "").
 config(App, Key, Default) -> wf_utils:config(App, Key, Default).
 
-version() -> "1.9.0".
+version() -> "1.10.0".
+
+setkey(Name,Pos,List,New) ->
+    case lists:keyfind(Name,Pos,List) of
+        false -> [New|List];
+        Element -> lists:keyreplace(Name,Pos,List,New) end.

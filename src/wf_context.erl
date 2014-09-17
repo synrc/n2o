@@ -3,10 +3,16 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-context() -> get(context).
-context(Ctx) -> put(context,Ctx).
 actions() -> get(actions).
-actions(Actions) -> put(actions,Actions).
+actions(Ac) -> put(actions,Ac).
+context() -> get(context).
+context(Cx) -> put(context,Cx).
+clear_actions() -> put(actions,[]).
+add_action(Action) ->
+    Actions = case get(actions) of undefined -> []; E -> E end,
+    put(actions,Actions++[Action]).
+script() -> get(script).
+script(Script) -> put(script,Script).
 cookies() -> C = get(cookies), case is_list(C) of true -> C; _ -> [] end.
 add_cookie(Name,Value,Path,TTL) -> 
     C = cookies(),
@@ -14,13 +20,6 @@ add_cookie(Name,Value,Path,TTL) ->
         {Name,_,_,_} -> lists:keyreplace(Name,1,C,{Name,Value,Path,TTL});
         false -> [{Name,Value,Path,TTL}|C] end,
     put(cookies,Cookies).
-
-script() -> get(script).
-script(Script) -> put(script,Script).
-clear_actions() -> put(actions,[]).
-add_action(Action) ->
-    Actions = case get(actions) of undefined -> []; E -> E end,
-    put(actions,Actions++[Action]).
 
 init_context(Req) ->
     #cx{

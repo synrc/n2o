@@ -13,7 +13,7 @@
 -define(MESSAGE_API, [send/2, reg/1, reg/2, unreg/1]).
 
 -record(handler, {name, module, config, state}).
--record(cx,      {handlers, actions, req, module, path, session, params, form}).
+-record(cx,      {handlers, actions, req, module, path, session, params, form, state=[]}).
 -record(ev,      {module, msg, trigger, name :: api_event | control_event | event | atom() }).
 
 -define(DEFAULT_BASE, {?ELEMENT_BASE(undefined)}).

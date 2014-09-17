@@ -7,4 +7,4 @@ render_action(#wire{actions=Actions}) -> wf:render(Actions);
 render_action(S) when is_list(S) -> S;
 render_action(_) -> [].
 
-wire(Actions) -> wf_context:add_action(#wire{actions=Actions}).
+wire(Actions) -> wf:add_action(#wire{actions=Actions}).

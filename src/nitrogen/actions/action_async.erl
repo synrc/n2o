@@ -12,7 +12,7 @@ async(Name, F) ->
                 case R of
                     yes -> Fun();
                     _ -> skip end end,
-            Req = case wf_context:context() of
+            Req = case wf:context() of
                 undefined -> undefined;
                 _ -> ?REQ
             end,
@@ -22,12 +22,12 @@ async(Name, F) ->
 
 flush(Pool) ->
     Actions = wf_context:actions(),
-    wf_context:clear_actions(),
+    wf:actions([]),
     wf:send(Pool,{flush,Actions}).
 
 init_context(undefined) -> [];
 init_context(Req) ->
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_core:fold(init, Ctx#cx.handlers, Ctx),
-    wf_context:actions(NewCtx#cx.actions),
-    wf_context:context(NewCtx).
+    wf:actions(NewCtx#cx.actions),
+    wf:context(NewCtx).
