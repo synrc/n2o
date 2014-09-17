@@ -14,7 +14,9 @@ main() ->
 
 title() -> [ <<"N2O">> ].
 
-log_modules() -> [index,n2o_query,index2,n2o_bullet,login,n2o_dynroute]. %,n2o_bullet,n2o_dynalo,wf_core,routes].
+log_modules() -> 
+%    [index,n2o_query,index2,n2o_bullet,login,n2o_dynroute,n2o_nitrogen,n2o_websocket].
+    [index,n2o_query,index2,n2o_bullet,login,n2o_dynroute,n2o_nitrogen].
 
 body() ->
     wf:info(?MODULE,"RENDER!", []),
@@ -39,13 +41,14 @@ event(init) ->
             [#span{id=text, body = wf:f("User ~s logged in. X = ~p", [User,X]) },
              #button{id=logout, body="Logout", postback=logout}, 
              #br{}]}),
-    wf:insert_top(history,"-1-");
-
+    wf:insert_top(history,"-1-"),
+    {'MY_CONTEXT',1,2};
 
 event({chat,Pid}) ->
     wf:info(?MODULE,"Chat Pid: ~p",[Pid]),
     Username = wf:user(),
     wf:info(?MODULE,"User: ~p",[Username]),
+    wf:info(?MODULE,"Context: ~p",[?CTX#cx.state]),
     Message = wf:q(message),
     wf:update(banner,#panel{id=banner,body=[
         #panel{id=label,body=["Last Message: ",Message]},
