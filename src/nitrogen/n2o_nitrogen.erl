@@ -48,7 +48,7 @@ info({delivery,Route,Message}, Req, State) ->
     Module = State#cx.module,
     Term = try Module:event({delivery,Route,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
     wf:info(?MODULE,"Delivery: ~p Result: ~p",[Message,Term]),
-    {reply,wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]),Req,State};
+    {reply,wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]),Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
 
@@ -69,7 +69,7 @@ html_events({pickle,Source,Pickled,Linked}, State) ->
     case Ev of
          #ev{} -> render_ev(Ev,Source,Linked,State);
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
-    wf:json([{eval,iolist_to_binary(render_actions(get(actions)))}]).
+    wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]).
 
 render_ev(#ev{module=M,name=F,msg=P,trigger=T},Source,Linked,State) ->
     case F of

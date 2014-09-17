@@ -45,7 +45,7 @@ render_ev(#ev{module=Controller,name=Action,msg=P,trigger=T}=Ev,Source,Linked,St
     case Controller:Action(Ev,State#cx{params=Linked}) of
          {json,Dictionary,NewState} -> {wf:json(Dictionary),NewState};
          {binary,Raw,NewState} -> {{binary,Raw},NewState};
-         {actions,Elements,NewState} -> {wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(get(actions)))}]),NewState};
+         {actions,Elements,NewState} -> {wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(wf:actions()))}]), NewState};
          {file,FileName,NewState} -> {<<>>,NewState};
          {redirect,Address,NewState} -> {<<>>,NewState};
          _ -> {<<>>,State}
