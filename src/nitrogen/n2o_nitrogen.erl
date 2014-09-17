@@ -20,14 +20,6 @@ info({init,Rest},Req,State) ->
     wf:info(?MODULE,"n2o_nitrogen:event(init) ~w\r\n",[UserCx]),
     {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
 
-receive_actions(Req) ->
-    receive 
-        {actions,A} -> n2o_nitrogen:render_actions(A);
-        _ -> receive_actions(Req)
-    after 200 ->
-         QS = element(14, Req),
-         wf:redirect(case QS of <<>> -> ""; _ -> "?" ++ wf:to_list(QS) end),
-         [] end.
 
 info({text,Message},Req,State) ->   info(Message,Req,State);
 info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,State);
@@ -77,3 +69,11 @@ render_ev(#ev{module=M,name=F,msg=P,trigger=T},Source,Linked,State) ->
          event -> lists:map(fun({K,V})-> put(K,V) end,Linked), M:F(P);
          UserCustomEvent -> M:F(P,T,State) end.
 
+receive_actions(Req) ->
+    receive 
+        {actions,A} -> n2o_nitrogen:render_actions(A);
+        _ -> receive_actions(Req)
+    after 200 ->
+         QS = element(14, Req),
+         wf:redirect(case QS of <<>> -> ""; _ -> "?" ++ wf:to_list(QS) end),
+         [] end.
