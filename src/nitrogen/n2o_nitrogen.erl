@@ -27,7 +27,7 @@ info({init,Rest},Req,State) ->
     Actions = wf:render(wf:actions()),
     self() ! {init_rep,wf:json([{eval,iolist_to_binary([InitActions,Actions])}])},
     wf:info(?MODULE,"n2o_nitrogen:event(init) ~w\r\n",[UserCx]),
-    {cont,Rest,Req,wf:context(Cx,?MODULE,UserCx)};
+    {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
 
 info({text,Message},Req,State) ->   info(Message,Req,State);
 info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,State);
