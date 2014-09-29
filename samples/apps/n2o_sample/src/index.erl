@@ -48,7 +48,7 @@ event({chat,Pid}) ->
     wf:info(?MODULE,"Chat Pid: ~p",[Pid]),
     Username = wf:user(),
     wf:info(?MODULE,"User: ~p",[Username]),
-    wf:info(?MODULE,"Context: ~p",[?CTX#cx.state]),
+    wf:info(?MODULE,"Context: ~p",[wf:context(?CTX,n2o_nitrogen)]),
     Message = wf:q(message),
     wf:update(banner,#panel{id=banner,body=[
         #panel{id=label,body=["Last Message: ",Message]},
