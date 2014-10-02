@@ -161,26 +161,26 @@ reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
 % Logging API
 
-log_modules() -> [].
+-define(LOGGER, (wf:config(n2o,log_backend,n2o_log))).
+log_modules() -> [?LOGGER].
 -define(ALLOWED, (wf:config(n2o,log_modules,wf))).
 
 log(Module, String, Args, Fun) ->
-    case lists:member(Module,?ALLOWED:log_modules()) of
-         true -> %error_logger:Fun(String, Args);
-                   io:format(String ++ "\n\r", Args);
-         false -> skip end.
+    case lists:member(?LOGGER, ?ALLOWED:log_modules()) of
+        true -> ?LOGGER:Fun(Module, String, Args);
+        false -> skip end.
 
-info(Module,String, Args) ->  log(Module,String, Args, info_msg).
-info(String, Args) -> log(?MODULE, String, Args, info_msg).
-info(String) -> log(?MODULE, String, [], info_msg).
+info(Module, String, Args) -> log(Module, String, Args, info).
+info(String, Args) -> log(?MODULE, String, Args, info).
+info(String) -> log(?MODULE, String, [], info).
 
-warning(Module,String, Args) -> log(Module, String, Args, warning_msg).
-warning(String, Args) -> log(?MODULE, String, Args, warning_msg).
-warning(String) -> log(?MODULE,String, [], warning_msg).
+warning(Module, String, Args) -> log(Module, String, Args, warning).
+warning(String, Args) -> log(?MODULE, String, Args, warning).
+warning(String) -> log(?MODULE, String, [], warning).
 
-error(Module,String, Args) -> log(Module, String, Args, error_msg).
-error(String, Args) -> log(?MODULE, String, Args, error_msg).
-error(String) -> log(?MODULE, String, [], error_msg).
+error(Module, String, Args) -> log(Module, String, Args, error).
+error(String, Args) -> log(?MODULE, String, Args, error).
+error(String) -> log(?MODULE, String, [], error).
 
 % Convert and Utils API
 
@@ -230,4 +230,3 @@ setkey(Name,Pos,List,New) ->
     case lists:keyfind(Name,Pos,List) of
         false -> [New|List];
         Element -> lists:keyreplace(Name,Pos,List,New) end.
-
