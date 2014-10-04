@@ -161,12 +161,12 @@ reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
 % Logging API
 
--define(LOGGER, (wf:config(n2o,log_backend,n2o_log))).
+-define(LOGGER, (wf:config(n2o,log_backend,n2o_io))).
 log_modules() -> [?LOGGER].
 -define(ALLOWED, (wf:config(n2o,log_modules,wf))).
 
 log(Module, String, Args, Fun) ->
-    case lists:member(?LOGGER, ?ALLOWED:log_modules()) of
+    case lists:member(Module, ?ALLOWED:log_modules()) of
         true -> ?LOGGER:Fun(Module, String, Args);
         false -> skip end.
 
