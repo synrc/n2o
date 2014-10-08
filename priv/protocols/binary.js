@@ -1,7 +1,7 @@
 var $binary = {};
 $binary.on = function onbinary(evt, callback) //
 {
-    console.log("Binary On");
+//    console.log("Binary On");
 
     var HEAD_SIZE = 36;
     var reader = new FileReader();
