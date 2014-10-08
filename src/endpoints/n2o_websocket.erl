@@ -14,7 +14,7 @@ protocols() -> wf:config(n2o,protocols,[ n2o_binary,
 % web server callbacks
 
 stream({text,Data}=Message, Req, State)   -> push(Message,Req,State,protocols(),[]);
-stream({binary,Data}=Message, Req, State) -> push(Message,Req,State,protocols(),[]).
+stream({binary,Data}=Message, Req, State) -> push(binary_to_term(Data,[safe]),Req,State,protocols(),[]).
 
 info({init_reply,Message}, Req, State)    -> reply(Message,Req,State);
 info({init_n2o,P}, Req, State)            -> push({init,P},Req,State,protocols(),[]);
