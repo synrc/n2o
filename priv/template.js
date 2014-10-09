@@ -14,4 +14,6 @@ function template(html, data) { // template("{this.name}",{name:"Maxim"})
     code += 'return r.join("");';
     return new Function(code.replace(/[\r\t\n]/g, '')).apply(data); }
 
-function dom(html) { return new DOMParser().parseFromString(html, "text/xml").firstChild; }
+function dom(html) { 
+    var dom =  new DOMParser().parseFromString(html, "text/html")
+              .firstChild.getElementsByTagName("body")[0].firstChild; return dom; }
