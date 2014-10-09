@@ -17,4 +17,4 @@ function N2O_start() {
 }
 
 //WebSocket = undefined; // test XHR fallback
-if (autoinit) N2O_start();
+//if (autoinit) N2O_start();

@@ -169,7 +169,7 @@ var $bert = {};
 
 $bert.on = function onbert(evt, callback) // BERT formatter
 {
-    console.log("Bert On");
+//    console.log("Bert On");
     var reader = new FileReader();
     reader.addEventListener("loadend", function() {
         try {

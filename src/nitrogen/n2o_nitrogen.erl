@@ -35,11 +35,11 @@ info({flush,Actions}, Req, State) ->
     wf:info(?MODULE,"Flush Message: ~p",[Actions]),
     {reply, wf:json([{eval,iolist_to_binary(render_actions(Actions))}]), Req, State};
 
-info({delivery,Route,Message}, Req, State) ->
+info({direct,Message}, Req, State) ->
     wf:actions([]),
     Module = State#cx.module,
-    Term = try Module:event({delivery,Route,Message}) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
-    wf:info(?MODULE,"Delivery: ~p Result: ~p",[Message,Term]),
+    Term = try Module:event(Message) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
+    wf:info(?MODULE,"Direct: ~p Result: ~p",[Message,Term]),
     {reply,wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]),Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
