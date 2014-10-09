@@ -19,26 +19,13 @@ render_element(Record) ->
     Content = Record#radio.body,
 
     [
-       %% Checkbox...
-        wf_tags:emit_tag(<<"input">>, [
+        wf_tags:emit_tag(<<"input">>, Content, [
             {<<"id">>, ID},
             {<<"value">>, Record#radio.value},
-
-            %% the emitted name gives priority to html_name, but if it's
-            %% undefined, then we fall back to the name attribute.
-            %% Note, this might seem a bit hacky to have html_name and name
-            %% that do essentially the same thing, but they have their own
-            %% semantic meanings.  'html_name' is generally reserved for
-            %% RESTful forms, while 'name' will be the more commonly used
-            %% attribute.
             {<<"name">>, wf:coalesce([Record#radio.html_name,Record#radio.name])},
             {<<"type">>, <<"radio">>},
             {<<"class">>, Record#radio.class},
             {<<"style">>, Record#radio.style}
-        ]),
-
-        %% Label for Radio...
-        wf_tags:emit_tag(<<"label">>, Content, [
-            {<<"for">>, ID}
         ])
+
     ].
