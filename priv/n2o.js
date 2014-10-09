@@ -2,7 +2,6 @@
 // N2O CORE
 
 var active      = false,
-    autoinit    = true,
     protocol    = window.location.protocol == 'https:' ? "wss://" : "ws://",
     querystring = window.location.pathname + window.location.search,
     host        = null == transition.host ? window.location.hostname : transition.host,
@@ -17,4 +16,3 @@ function N2O_start() {
 }
 
 //WebSocket = undefined; // test XHR fallback
-//if (autoinit) N2O_start();
