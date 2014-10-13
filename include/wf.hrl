@@ -119,7 +119,7 @@
 -record(figure,       	?DEFAULT_BASE).
 -record(hr,       		?DEFAULT_BASE).
 -record(li,             {?ELEMENT_BASE(element_li),  value}).
--record(ol,             {?ELEMENT_BASE(element_ol),  reversed, start, type}).
+-record(ol,             {?ELEMENT_BASE(element_list),  reversed, start, type}).
 -record(p,       		?DEFAULT_BASE).
 -record(panel,          ?DEFAULT_BASE_TAG(<<"div">>)).
 -record(pre,       		?DEFAULT_BASE).
