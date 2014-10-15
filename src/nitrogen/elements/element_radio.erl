@@ -17,13 +17,15 @@ render_element(Record) ->
     end,
 
     Content = Record#radio.body,
+    TypeChecked = case Record#radio.checked of
+         true -> [{<<"checked">>, <<"">>},{<<"type">>, <<"radio">>}];
+         _ -> [{<<"type">>, <<"radio">>}] end,
 
     [
-        wf_tags:emit_tag(<<"input">>, Content, [
+        wf_tags:emit_tag(<<"input">>, Content, TypeChecked ++ [
             {<<"id">>, ID},
             {<<"value">>, Record#radio.value},
             {<<"name">>, wf:coalesce([Record#radio.html_name,Record#radio.name])},
-            {<<"type">>, <<"radio">>},
             {<<"class">>, Record#radio.class},
             {<<"style">>, Record#radio.style}
         ])
