@@ -17,5 +17,5 @@ render_action(#event{postback=Postback,actions=Actions,source=Source,target=Cont
         "tuple(" ++ Key ++ ", querySource('" ++ Id ++ "'))" end || Src <- Source]
     ++ ["tuple(tuple(utf8_toByteArray('"++ Control ++"'), bin('detail')), event.detail)"],",") ++ "]",
     PostbackBin = wf_event:new(Postback, Control, Delegate, event, Data),
-    [wf:f("document.getElementById('~s').addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});"].
+    [wf:f("{ var x = document.getElementById('~s'); x && x.addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});}"].
 
