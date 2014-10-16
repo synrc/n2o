@@ -184,6 +184,13 @@ error(String) -> log(?MODULE, String, [], error).
 
 % Convert and Utils API
 
+display(Element,Status) -> 
+   wf:wire("{ var x = document.getElementById('"++
+      wf:to_list(Element)++"'); if (x) x.style.display = '"++wf:to_list(Status)++"'; }").
+
+show(Element) -> display(Element,block).
+hide(Element) -> display(Element,none).
+
 f(S) -> _String = wf_utils:f(S).
 f(S, Args) -> _String = wf_utils:f(S, Args).
 coalesce(L) -> _Value = wf_utils:coalesce(L).
