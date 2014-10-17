@@ -14,10 +14,6 @@ main() ->
 
 title() -> [ <<"N2O">> ].
 
-log_modules() -> 
-%    [index,n2o_query,index2,n2o_bullet,login,n2o_dynroute,n2o_nitrogen,n2o_websocket].
-    [index,n2o_query,index2,n2o_bullet,login,n2o_dynroute,n2o_nitrogen].
-
 body() ->
     wf:info(?MODULE,"RENDER!", []),
     {ok,Pid} = wf:comet(fun() -> chat_loop() end), 
