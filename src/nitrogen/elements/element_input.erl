@@ -36,6 +36,7 @@ render_element(Record) ->
       {<<"disabled">>, if Record#input.disabled == true -> "disabled"; true -> undefined end},
       {<<"name">>,Record#input.name},
       {<<"type">>, Record#input.type},
+      {<<"multiple">>, Record#input.multiple },
       {<<"value">>,wf:js_escape(Record#input.value)} | Record#input.data_fields
     ],
     wf_tags:emit_tag(<<"input">>, wf:render(Record#input.body), List).
