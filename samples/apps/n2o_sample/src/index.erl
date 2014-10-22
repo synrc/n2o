@@ -21,7 +21,7 @@ body() ->
       #panel{ id=history },
       #textbox{ id=message },
       #button{ id=send, body= <<"Chat">>, postback={chat,Pid}, source=[message] },
-      #button{ id=bin, body= <<"Binary">>, postback={bin,{raw,Pid}} },
+      % #button{ id=bin, body= <<"Binary">>, postback={bin,{raw,Pid}} }, % Not supported now
       #button{ id=h_bin, body= <<"Binary with header">>, postback={bin,{headered,Pid}} },
       #button{ id=bin_text, body= <<"Send text from browser">>, postback={send_text, "from browser test"} } ].
 
