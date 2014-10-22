@@ -38,5 +38,6 @@ render_element(Record) ->
       {<<"rel">>, Record#link.rel},
       {<<"type">>, Record#link.type},
       {<<"download">>, Record#link.download},
-      {<<"name">>, Record#link.name} | Record#link.data_fields ],
+      {<<"name">>, Record#link.name},
+      {<<"onmouseover">>, Record#link.onmouseover} | Record#link.data_fields ],
     wf_tags:emit_tag(<<"a">>, wf:render(Record#link.body), List).
