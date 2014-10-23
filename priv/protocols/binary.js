@@ -1,7 +1,10 @@
 var $binary = {};
 $binary.on = function onbinary(evt, callback) //
 {
-//    console.log("Binary On");
+    //    console.log("Binary On");
+    
+    // Check for FileReader.readAsArrayBuffer()
+    if(!Blob.prototype.isPrototypeOf(evt.data)) { return { status: "error", desc: "not #binary{}" }; }
 
     var HEAD_SIZE = 36;
     var reader = new FileReader();
