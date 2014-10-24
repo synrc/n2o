@@ -10,7 +10,7 @@ function querySource(Id)
     switch (el.type)
     {
         case 'fieldset': val = document.querySelector('#' + Id + ' :checked');
-                         val = val ? utf8.toByteArray(val.value) : utf8.toByteArray("");
+                         val = val ? utf8_toByteArray(val.value) : utf8_toByteArray("");
                          break;
         case 'radio':
         case 'checkbox': val = el.checked ? el.value : atom('undefined');
