@@ -17,8 +17,8 @@ Features
 * Security: AES CBC 128
 * Samples: Skyline (DSL), Games (SPA)
 
-Sample Page in DSL
-------------------
+All Features in One snippet
+---------------------------
 
 ```erlang
 -module(index).
