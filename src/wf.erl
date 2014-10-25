@@ -31,10 +31,10 @@ insert_bottom(Target, Elements) ->
     spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
     {Render,Actions} = receive A -> A end,
     wf:wire(wf:f(
-        "document.querySelector('#~s').appendChild("
-        "(function(){var div = document.createElement('div');"
-        "div.innerHTML = '~s'; return div.firstChild; })());",
-        [Target,Render])),
+    "(function(){ var x = (function(){var div = document.createElement('div');"
+        "div.innerHTML = '~s'; return div.firstChild; })();"
+        "document.querySelector('#~s').appendChild(x); })();",
+        [Render,Target])),
     wf:wire(wf:render(Actions)).
 
 insert_adjacent(Command,Target, Elements) ->
