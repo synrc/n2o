@@ -109,8 +109,8 @@ function de_inner(S) {
         case SATOM: de_atom(S, 1);
         case ATOM: return de_atom(S, 2);
         case BINARY: return de_bin(S);
-        case SINT: return de_integer(S, 1);
-        case INT: return de_integer(S, 4);
+        case SINT: return de_small_integer(S);
+        case INT: return de_integer(S);
         case FLOAT: return de_float(S);
         case SBIG: return de_big(S,1);
         case LBIG: return de_big(S,4);
@@ -137,9 +137,13 @@ function de_big(S, Count) {
     S = S.substring(Count);
     Value = ltobi(S, Size);
     return { value : Value, rest: S.substring(Size + 1) }; };
-function de_integer(S, Count) {
-    var Value = ltoi(S, Count);
-    S = S.substring(Count);
+function de_integer(S) {
+    var Value = ltoi(S, 4);
+    S = S.substring(4);
+    return { value: Value, rest: S }; };
+function de_small_integer(S) {
+    var Value = S.charCodeAt(0);
+    S = S.substring(1);
     return { value: Value, rest: S }; };
 function de_float(S) {
     var Size = 31;
@@ -172,16 +176,16 @@ $bert.on = function onbert(evt, callback) // BERT formatter
     //    console.log("Bert On");
     
     // Check for FileReader.readAsArrayBuffer()
-    if(!Blob.prototype.isPrototypeOf(evt.data)) { return { status: "error", desc: "not Bert" }; }
-    var reader = new FileReader();
-    reader.addEventListener("loadend", function() {
-        try {
-            var erlang = dec(reader.result);
-            if (typeof callback  == 'function') callback(erlang);
-        } catch (e) { return { status: "error", desc: e }; }
-    });
-
-    if (evt.data.length >= HEAD_SIZE) reader.readAsArrayBuffer(evt.data);
-
-    return { status: "ok" };
+    if(Blob.prototype.isPrototypeOf(evt.data) && evt.data.length > 0) {
+        var reader = new FileReader();
+        reader.addEventListener("loadend", function() {
+            try {
+                var erlang = dec(reader.result);
+                if (typeof callback  == 'function') callback(erlang);
+            } catch (e) { return { status: "error", desc: e }; }
+        });
+        reader.readAsArrayBuffer(evt.data);
+        return { status: "ok" };
+    }
+    else  { return { status: "error", desc: "not Bert" }; }
 };
