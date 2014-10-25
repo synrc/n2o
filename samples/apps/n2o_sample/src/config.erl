@@ -3,12 +3,12 @@
 
 log_modules() ->
   [
-    % n2o_websocket,
-    n2o_query,
-    n2o_bullet,
+%   n2o_websocket,
+%   n2o_query,
+%   n2o_bullet,
+%   n2o_nitrogen,
+%   n2o_dynroute,
     login,
-    n2o_dynroute,
-    n2o_nitrogen,
     index,
-    index2
+    index_rails
   ].

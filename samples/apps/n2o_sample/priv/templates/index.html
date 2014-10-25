@@ -1,11 +1,39 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="static/synrc.css" type="text/css" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-<title>{{title}}</title>
+<title>N2O Chat</title>
 </head>
 <body>
+<table cellpadding=10 align=center><tr>
+<td valign=top align=center height=230 width=400>
+<img src="static/N2O.svg" border=0 width=200 style="margin-top:0px;"><br>
+</td>
+<td colspan=2 width=800 valign=top>
+
+	<h1><b id=heading>N2O Roster</b></h1>
+       <h2>Chat with Persons<br>
+       <button id=logoutButton></button></h2>
+
+</td>
+</tr><tr><td width=400 valign=top>
+<p>Just type something here and proceed:</p>
+
+<textarea id=message style="margin-left:5px; resize:none;font-size:16pt;" 
+          value="" rows="3" cols="30"></textarea>
+
 {{body}}
+
+<div id=history>
+</div>
+
+</td><td colspan=2 width=300 valign=top height=550 bgcolor=#eeeeee>
+
+	<h1>Rooms</h1>
+
+	<h2>Native WebSockets</h2>
+</td></tr></table>
 <!--script>var transition = {pid: '', host: 'localhost', port:'8000'};</script-->
 <script>{{script}}</script>
 <script src='/n2o/protocols/bert.js'></script>
@@ -14,6 +42,7 @@
 <script src='/n2o/protocols/nitrogen.js'></script>
 <script src='/n2o/bullet.js'></script>
 <script src='/n2o/utf8.js'></script>
+<script src='/n2o/template.js'></script>
 <script src='/n2o/n2o.js'></script>
 <script>N2O_start();</script>
 </body>

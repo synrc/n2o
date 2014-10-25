@@ -19,11 +19,11 @@ route_prefix(<<"/ws/",P/binary>>) -> route(P);
 route_prefix(<<"/",P/binary>>) -> route(P);
 route_prefix(P) -> route(P).
 
-route(<<>>)              -> index;
+route(<<>>)              -> login;
 route(<<"index">>)       -> index;
-route(<<"index2">>)       -> index2;
+route(<<"index_rails">>) -> index_rails;
 route(<<"login">>)       -> login;
 route(<<"favicon.ico">>) -> static_file;
-route(<<"static/spa/spa.htm">>) -> login;
+route(<<"static/spa/spa.htm">>)   -> login;
 route(<<"static/spa/index.htm">>) -> index;
-route(_) -> index.
+route(_) -> login.
