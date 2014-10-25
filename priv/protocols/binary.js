@@ -49,7 +49,8 @@ $binary.on = function onbinary(evt, callback) //
 
         if (typeof callback  == 'function') callback(erlang);
     });
-    reader.readAsArrayBuffer(evt.data.slice(0, HEAD_SIZE));
+
+    if(evt.data.length >= HEAD_SIZE) reader.readAsArrayBuffer(evt.data.slice(0, HEAD_SIZE)); 
 
     return { status: "ok" };
 };
