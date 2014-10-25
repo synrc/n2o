@@ -180,7 +180,8 @@ $bert.on = function onbert(evt, callback) // BERT formatter
             if (typeof callback  == 'function') callback(erlang);
         } catch (e) { return { status: "error", desc: e }; }
     });
-    reader.readAsArrayBuffer(evt.data);
+
+    if (evt.data.length >= HEAD_SIZE) reader.readAsArrayBuffer(evt.data);
 
     return { status: "ok" };
 };
