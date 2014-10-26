@@ -3,12 +3,13 @@
 -include_lib("kvs/include/feed.hrl").
 -include_lib("n2o/include/wf.hrl").
 
-main() -> #dtl{file = "login", app=n2o_sample,bindings=[{body,body()}]}.
+main() -> #dtl{file="login",app=review,bindings=[{body,body()},{folders,folders()}]}.
+folders() -> string:join([filename:basename(F)||F<-filelib:wildcard(code:priv_dir(review)++"/sippets/*/")],",").
 
 body() ->
  [ #span{id=display}, #br{},
             #span{body="Login: "}, #textbox{id=user,autofocus=true}, #br{},
-            #span{body="Room: "}, #textbox{id=pass},
+            #span{body="Join/Create Feed: "}, #textbox{style="width:160px;",id=pass},
             #button{body="Login",postback=login,source=[user,pass]} ].
 
 event(init) -> 

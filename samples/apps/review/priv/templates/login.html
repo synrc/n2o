@@ -7,27 +7,31 @@
 <body>
 
 <table cellpadding=20 align=center><tr>
-<td valign=top align=center height=230 width=400>
-<img src="static/N2O.svg" border=0 height=200 style="margin-top:0px;"><br>
+<td valign=top align=center height=230 width=200>
+<img src="https://synrc.com/images/s.png" border=0 height=200 style="margin-top:0px;"><br>
 </td>
-<td colspan=2 width=800 valign=top>
+<td colspan=2 width=600 valign=top>
 
-	<h1><b>Roster Application</b></h1> 
-       <h2>N2O is Unikernel Ready<br>
-       Modern Erlang WebSocket Application Server</h2>
+	<h1><b>N2O</b></h1> 
+       <h2>Simple Review Application</h2>
 
 </td>
 </tr><tr><td width=400 valign=top>
-<p>List of available rooms:</p>
+<p>List of spawned feeds:</p>
 
-{{list}}
+<div id=history class=feed>
+</div>
 
-<div id=history>
+<br><br>
+<p>List of inhabited realms:</p>
+
+<div class=feed>
+{{folders}}
 </div>
 
 </td><td colspan=2 width=300 valign=top height=550 bgcolor=#eeeeee>
 
-	<h1>Rooms</h1>
+	<h1>Anyname Login</h1>
 
 {{body}}
 

@@ -1,4 +1,4 @@
-{application, n2o_sample,
+{application, review,
  [
   {description, "N2O VXZ Sample App"},
   {vsn, "1"},

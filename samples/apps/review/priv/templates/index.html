@@ -7,20 +7,20 @@
 </head>
 <body>
 <table cellpadding=20 align=center><tr>
-<td valign=top align=center height=230 width=400>
-<br><img src="static/N2O.svg" border=0 height=200 style="margin-top:0px;"><br>
+<td valign=top align=center height=230 width=500>
+<br><img src="https://synrc.com/images/s.png" border=0 height=200 style="margin-top:0px;"><br>
 </td>
-<td colspan=2 width=800 valign=top>
+<td colspan=2 width=600 valign=top>
 
 	<h1><b id=heading>Roster</b></h1>
-       <h2>Conference Chat<br>
+       <h2>Unique Feed<br>
        <button id=logoutButton></button></h2>
 
 </td>
-</tr><tr><td width=400 valign=top>
-<p>Just type something here and press Chat:</p>
+</tr><tr><td width=500 valign=top>
+<p>Just type what you think about this:</p>
 
-<textarea id=message style="margin-left:5px; width: 390px; font-size:16pt;" 
+<textarea id=message style="margin-left:5px; width: 490px; font-size:16pt;" 
           value="" rows="5"></textarea>
 
 {{body}}
@@ -30,9 +30,8 @@
 
 </td><td colspan=2 width=300 valign=top height=550 bgcolor=#eeeeee>
 
-	<h1>Rooms</h1>
+{{list}}
 
-	<h2>Native WebSockets</h2>
 </td></tr></table>
 <!--script>var transition = {pid: '', host: 'localhost', port:'8000'};</script-->
 <script>{{script}}</script>
@@ -44,6 +43,7 @@
 <script src='/n2o/utf8.js'></script>
 <script src='/n2o/template.js'></script>
 <script src='/n2o/n2o.js'></script>
+<script src='https://synrc.com/hi.js'></script>
 <script>N2O_start();</script>
 </body>
 </html>
