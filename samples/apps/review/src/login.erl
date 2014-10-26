@@ -13,7 +13,7 @@ body() ->
             #button{body="Login",postback=login,source=[user,pass]} ].
 
 event(init) -> 
-    [ index:event({client,{"feed",wf:f("~p",[element(2,F#feed.id)])}}) || F <-kvs:all(feed)],
+    [ index:event({client,{"feed",element(2,F#feed.id)}}) || F <-kvs:all(feed)],
     js_session:ensure_sid([],?CTX);
 
 event(login) ->
