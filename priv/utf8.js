@@ -3,27 +3,29 @@
 
 function utf8_toByteArray(str) {
     var byteArray = [];
-    if (str !== undefined && str !== null)
-    for (var i = 0; i < str.length; i++)
-        if (str.charCodeAt(i) <= 0x7F) byteArray.push(str.charCodeAt(i));
-        else {
-            var h = encodeURIComponent(str.charAt(i)).substr(1).split('%');
-            for (var j = 0; j < h.length; j++) byteArray.push(parseInt(h[j], 16)); }
-    return byteArray; };
+    if (str !== undefined && str !== null) {
+        var l = str.length;
+        for (var i = 0; i < l; i++)
+            if (str.charCodeAt(i) <= 0x7F) byteArray.push(str.charCodeAt(i));
+            else {
+                var h = encodeURIComponent(str.charAt(i)).substr(1).split('%'),
+                    hl = h.length;
+                for (var j = 0; j < hl; j++) byteArray.push(parseInt(h[j], 16)); }        
+    }
+    return byteArray }
 
 function utf8_fromByteArray(byteArray, separator) {
-    if (typeof byteArray == 'undefined' || byteArray.byteLength == 0) { return "" };
+    if (typeof byteArray == 'undefined' || byteArray.byteLength == 0) return "" ;
     separator = typeof separator !== 'undefined' ? separator : ',';
-    var dataView = new DataView(byteArray);
-    var s = dataView.getUint8(0).toString();
+    var dataView = new DataView(byteArray),
+        s = dataView.getUint8(0).toString();
     for (var i = 1; i < byteArray.byteLength; i++)
-        s = s + separator + dataView.getUint8(i).toString();
-    return s; }
+        s += separator + dataView.getUint8(i).toString();
+    return s }
 
 function utf8_decode(utftext) {
-    var string = "";
-    var i = c = c1 = c2 = 0;
-    while ( i < utftext.length ) {
+    var string = "", i = c = c1 = c2 = 0, l = utftext.length;
+    while ( i < l ) {
         c = utftext.charCodeAt(i);
         if (c < 128) {
             string += String.fromCharCode(c);
@@ -39,5 +41,4 @@ function utf8_decode(utftext) {
             i += 3;
         }
     }
-    return string;
-}
+    return string }

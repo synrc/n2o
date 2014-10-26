@@ -11,10 +11,8 @@ function bullet(url) {
     var transports = {
 
         websocket: function() {
-            var transport = null;
-            if (window.WebSocket) { transport = window.WebSocket; }
-            if (transport) { return {'heart': true, 'transport': transport}; }
-            return null;
+            if (window.WebSocket) return {'heart': true, 'transport': window.WebSocket};
+            return null
         },
 
         xhrPolling: function() {
