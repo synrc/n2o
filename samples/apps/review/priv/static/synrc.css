@@ -3,7 +3,8 @@ A:link { color: blue; }
 A:visited { color: darkblue; }
 A:hover { color: blue; }
 SUP { font-size:10pt; }
-BODY { font-size:14pt; font-family: Calibri, Lucida Sans, "Lucida Grande"; }
+html { zoom: 0.8; }
+BODY {   font-size:14pt; font-family: Calibri, Lucida Sans, "Lucida Grande"; }
 TD { font-size:18pt; margin: 0 auto; padding-right: 20px; }
 textarea { padding: 10px; }
 input { font-size:28pt; width: 50%; margin:15px 15px 5px 5px; }
