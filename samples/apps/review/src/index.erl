@@ -19,7 +19,7 @@ list() ->
      || File<-filelib:wildcard(code:priv_dir(review)++"/sippets/"++Room++"/*") ]}.
 
 body() ->
-    wf:update(heading,#b{body="Realm: " ++ room()}),
+    wf:update(heading,#b{body="Review: " ++ room()}),
     wf:update(logoutButton,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
     [ #button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
