@@ -22,6 +22,7 @@ init([]) ->
 
     users:init(),
     users:populate(?USERS),
+    kvs:join(),
 
     {ok, {{one_for_one, 5, 10}, []}}.
 
