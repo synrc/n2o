@@ -1,21 +1,22 @@
 -module(login).
 -compile(export_all).
+-include_lib("kvs/include/feed.hrl").
 -include_lib("n2o/include/wf.hrl").
 
-title() -> [ <<"Login">> ].
-main() -> #dtl{file = "login", app=n2o_sample,bindings=[{title,title()},{body,body()}]}.
+main() -> #dtl{file = "login", app=n2o_sample,bindings=[{body,body()}]}.
 
 body() ->
  [ #span{id=display}, #br{},
             #span{body="Login: "}, #textbox{id=user,autofocus=true}, #br{},
-            #span{body="Room: "}, #input{id=pass},
+            #span{body="Room: "}, #textbox{id=pass},
             #button{body="Login",postback=login,source=[user,pass]} ].
 
-event(init) -> js_session:ensure_sid([],?CTX);
+event(init) -> 
+    [ index:event({client,{"feed",wf:f("~p",[F#feed.id])}}) || F <-kvs:all(feed) ],
+    js_session:ensure_sid([],?CTX);
 
 event(login) ->
-    User = wf:q(user),
-    wf:update(display,User),
+    User = case wf:q(user) of [] -> "anonymous"; E -> E end,
     wf:user(User),
     wf:redirect("/index?room="++wf:to_list(wf:q(pass))),
     ok;

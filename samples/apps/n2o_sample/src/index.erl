@@ -3,14 +3,16 @@
 -include_lib("kvs/include/entry.hrl").
 -include_lib("n2o/include/wf.hrl").
 
-main() -> 
+main() ->
     case wf:user() of
          undefined -> wf:redirect("/login");
          _ -> #dtl{file = "index", app=n2o_sample,bindings=[{body,body()}]} end.
 
+room() -> case wf:qs(<<"room">>) of <<>> -> "Lobby"; E -> wf:to_list(E) end.
+
 body() ->
-    wf:update(heading,#b{body="User: " ++ wf:user()}),
-    wf:update(logoutButton,#button{id=logout, body="Logout", postback=logout}),
+    wf:update(heading,#b{body="Room: " ++ room()}),
+    wf:update(logoutButton,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
     [ #button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
 event(chat) ->

@@ -4,8 +4,9 @@ A:hover { color: blue; }
 SUP { font-size:10pt; }
 BODY { font-size:14pt; font-family: Calibri, Lucida Sans, "Lucida Grande"; }
 TD { font-size:18pt; margin: 0 auto; padding-right: 20px; }
-input { font-size:14pt; width: 50%; margin: 5px 5px 5px 5px; }
-button { font-size:20pt; padding: 10px; }
+textarea { padding: 10px; }
+input { font-size:28pt; width: 50%; margin:15px 15px 5px 5px; }
+button { font-size:20pt; margin-top:15px; padding: 10px; }
 H1 { color: blue; font-weight: bold; font-size:26pt; margin-top:20px; margin-bottom:10px; margin-right:6px; }
 H2 { color: darkblue; font-size:18pt; margin-top:20px; margin-bottom:10px; margin-right:6px; }
 H3 { font-size:14pt; margin-top:20px; margin-bottom:10px; margin-right:6px; } 
@@ -22,3 +23,4 @@ pre { font-size:10pt; font-family: Calibri, Lucida Console; }
 .main { width:843px;float:left;margin-right:26px; }
 .contents { width:270px;float:left; }
 .numbox { padding:10px 10px 10px 10px;background-color:black;color:white; }
+#history { margin-top:20px; }
