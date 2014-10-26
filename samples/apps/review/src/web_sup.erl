@@ -14,8 +14,11 @@ start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
 
-    {ok, _} = cowboy:start_http(http, 3, [{port, wf:config(n2o,port,8000)}],
-                                           [{env, [{dispatch, dispatch_rules()}]}]),
+    case cowboy:start_http(http, 3, [{port, wf:config(n2o,port,8000)}],
+                                    [{env, [{dispatch, dispatch_rules()}]}]) of
+        {ok, _} -> ok;
+        {error,{{_,{_,_,{X,_}}},_}} -> io:format("Can't start Web Server: ~p\r\n",[X]), halt(abort,[]);
+        X -> io:format("Unknown Error: ~p\r\n",[X]), halt(abort,[]) end,
 
     users:init(),
     users:populate(?USERS),
