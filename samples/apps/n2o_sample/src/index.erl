@@ -1,51 +1,36 @@
 -module(index).
 -compile(export_all).
+-include_lib("kvs/include/entry.hrl").
 -include_lib("n2o/include/wf.hrl").
 
 main() -> 
-    wf:info(?MODULE,"user: ~p~n",[wf:user()]),
     case wf:user() of
          undefined -> wf:redirect("/login");
          _ -> #dtl{file = "index", app=n2o_sample,bindings=[{body,body()}]} end.
 
 body() ->
-    {ok,Pid} = wf:async(fun() -> chat_loop() end), 
+    wf:update(heading,#b{body="User: " ++ wf:user()}),
     wf:update(logoutButton,#button{id=logout, body="Logout", postback=logout}),
-    [ #button  { id=send, body= <<"Chat">>, postback={chat,Pid}, source=[message] } ].
+    [ #button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
-event(login) ->
-    login:event(login);
+event(chat) ->
+    User = wf:user(),
+    Message = wf:q(message),
+    Room = wf:qs(<<"room">>),
+    wf:wire(#jq{target=message,method=[focus,select]}),
+    kvs:add(#entry{id=kvs:next_id("entry",1),from=wf:user(),feed_id={room,Room},media=Message}),
+    wf:send({topic,Room},{client,{User,Message}});
 
-event(terminate) -> 
-    wf:info(?MODULE,"event(terminate) called~n",[]);
+event({client,{User,Message}}) ->
+    DTL = #dtl{file="message",app=n2o_sample,
+        bindings=[{user,User},{message,wf:js_escape(wf:html_encode(Message))}]},
+    wf:insert_top(history, DTL);
 
 event(init) -> 
-    wf:info(?MODULE,"event(init) called~n",[]),
-    User = wf:user(),
-    wf:reg(room),
-    wf:update(heading,#b{body="User: " ++ User}),
-    ok;
+    Room = wf:qs(<<"room">>),
+    wf:reg({topic,Room}),
+    [ event({client,{E#entry.from,E#entry.media}}) || E <- 
+       lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
 
-event({chat,Pid}) ->
-    wf:info(?MODULE,"Chat Pid: ~p",[Pid]),
-    Username = wf:user(),
-    Message = wf:q(message),
-    wf:wire(#jq{target=message,method=[focus,select]}),
-    Pid ! {message, Username, wf:js_escape(wf:html_encode(Message))};
-
-event(logout) -> 
-    wf:logout(),
-    wf:redirect("/login");
-
+event(logout) -> wf:logout(), wf:redirect("/login");
 event(Event) -> wf:info(?MODULE,"Event: ~p", [Event]).
-
-chat_loop() ->
-    receive 
-        {message, Username, Message} ->
-            wf:insert_top(history, 
-              #dtl{file="message",app=n2o_sample,
-                   bindings=[{user,Username},{message,Message}]}),
-            wf:flush(room);
-        Unknown -> wf:info(?MODULE,"Unknown Looper Message ~p",[Unknown])
-    end,
-    chat_loop().
