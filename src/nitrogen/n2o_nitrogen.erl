@@ -15,9 +15,8 @@ info({init,Rest},Req,State) ->
                     X = Pid ! {'N2O',self()},
                     receive_actions(Req) end,
     UserCx = try Module:event(init) catch C:E -> wf:error_page(C,E) end,
-    Actions = wf:render(wf:actions()),
+    Actions = render_actions(wf:actions()),
     self() ! {init_reply,wf:json([{eval,iolist_to_binary([InitActions,Actions])}])},
-    wf:info(?MODULE,"n2o_nitrogen:event(init) ~w\r\n",[UserCx]),
     {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
 
 
