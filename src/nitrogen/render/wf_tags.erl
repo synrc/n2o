@@ -10,7 +10,7 @@
               orelse Tag == <<"col">>    orelse Tag == <<"command">> orelse Tag == <<"option">>
               orelse Tag == <<"keygen">> orelse Tag == <<"source">>)).
 
-emit_tag(TagName, Props) -> [<<"<">>,TagName] ++ write_props(Props) ++ [<<">">>].
+emit_tag(TagName, Props) -> [<<"<">>,TagName] ++ write_props(Props) ++ [<<"/>">>].
 emit_tag(TagName, undefined, Props) -> emit_tag(TagName, [], Props);
 emit_tag(TagName, [undefined], Props) -> emit_tag(TagName, [], Props);
 emit_tag(TagName, [], Props) when ?VOID(TagName) -> emit_tag(TagName, Props);
