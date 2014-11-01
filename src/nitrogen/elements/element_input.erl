@@ -38,6 +38,9 @@ render_element(Record) ->
       {<<"type">>, Record#input.type},
       {<<"multiple">>, Record#input.multiple },
       {<<"value">>,wf:js_escape(Record#input.value)},
-      {<<"onkeypress">>, Record#input.onkeypress} | Record#input.data_fields
+      {<<"onkeypress">>, Record#input.onkeypress},
+      {<<"onkeyup">>, Record#input.onkeyup},
+      {<<"onkeydown">>, Record#input.onkeydown},
+      {<<"onchange">>, Record#input.onchange} | Record#input.data_fields
     ],
     wf_tags:emit_tag(<<"input">>, wf:render(Record#input.body), List).
