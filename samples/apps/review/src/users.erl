@@ -9,10 +9,10 @@ init() -> ets:new(users, [public, named_table, {keypos, #user.id}]).
 populate(Users) -> ets:insert(users, Users).
 exists(Id) -> ets:member(users, wf:to_list(Id)).
 get() -> ets:tab2list(users).
-get(Id) -> #user{id="maxim"}.
-%  [User] = ets:lookup(users, wf:to_list(Id)), User,
-%  io:format("GET id: ~w~n",[User]),
-%  User. % should return record #user{}
+get(Id) -> 
+%  [User] = ets:lookup(users, wf:to_list(Id)),
+  error_logger:info_msg("GET id: ~w~n",[Id]),
+  #user{id=Id}. % should return record #user{}
 delete(Id) -> ets:delete(users, wf:to_list(Id)).
 %put(#user{} = User) -> kvs:add(User#user{id=crypto:rand_uniform(1,10)}), true.
 post(#user{} = User) -> 

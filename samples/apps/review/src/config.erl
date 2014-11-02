@@ -9,6 +9,7 @@ log_modules() ->
 %   n2o_nitrogen,
 %   n2o_dynroute,
 %   n2o_client,
+    users,
     login,
     index,
     index_rails
