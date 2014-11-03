@@ -20,7 +20,7 @@
 -define(DEFAULT_BASE_TAG(Tag), {?ELEMENT_BASE(undefined,Tag,undefined)}).
 -define(ELEMENT_BASE(Module), ?ELEMENT_BASE(Module,undefined,undefined)).
 -define(ELEMENT_BASE(Module,Tag,Delegate),
-        ancestor=element, module=Module, delegate=Delegate, id, actions, class=[], style=[], source=[], onmouseover, onkeypress, onchange, onkeyup, onkeydown,
+        ancestor=element, module=Module, delegate=Delegate, id, actions, class=[], style=[], source=[], onmouseover, onkeypress, onchange, onkeyup, onkeydown, onclick,
         data_fields=[], aria_states=[], body, role, tabindex, show_if=true, html_tag=Tag, title, accesskey, contenteditable, contextmenu, dir, draggable, dropzone, hidden, lang, spellcheck, translate, onafterprint, onbeforeprint, onbeforeunload, onblur, onerror, onfocus, onhashchange, onload, onmessage, onoffline, ononline, onpagehide, onpageshow, onpopstate, onresize, onstorage, onunload).
 -define(ACTION_BASE(Module),
         ancestor=action, trigger, target, module=Module, actions, source=[]).
