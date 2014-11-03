@@ -1,24 +1,19 @@
-
 // Nitrogen Compatibility Layer
 
-function querySource(Id)
-{
-    if (Id.getValue) return bin(Id.getValue());
+function querySourceRaw(Id) {
     var val, el = document.getElementById(Id);
-    if (!el) return atom('undefined');
-
-    switch (el.type)
-    {
+    if (!el) return "";
+    switch (el.type) {
         case 'fieldset': val = document.querySelector('#' + Id + ' :checked');
-                         val = val ? utf8_toByteArray(val.value) : utf8_toByteArray("");
-                         break;
-        case 'radio':
-        case 'checkbox': val = el.checked ? el.value : atom('undefined');
-                         break;
+                         val = val ? val.value : ""; break;
+        case 'radio': case 'checkbox': val = el.checked ? el.value : ""; break;
         default:         var edit = el.getAttribute('contenteditable');
-                         if (edit && edit === 'true') val = bin(el.innerHTML);
-                                                 else val = utf8_toByteArray(el.value);
-    }
+                         if (edit && edit === 'true') val = el.innerHTML;
+                                                 else val = el.value; }
+    return val; }
 
-    return val;
-}
+function querySource(Id) {
+//  if (Id.getValue) return bin(Id.getValue());
+    var qs = querySourceRaw(Id);
+    if ("" == qs) return atom('undefined');
+             else return utf8_toByteArray(qs); }
