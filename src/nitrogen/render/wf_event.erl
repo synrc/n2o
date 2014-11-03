@@ -17,6 +17,6 @@ new(Postback, Element, Delegate, Name, Data, Source) ->
                "event.initCustomEvent('validation',true,true,~s);"
          "if (document.getElementById(name).dispatchEvent(event)) "
                "ws.send(enc(tuple(atom('~w'),bin(name),bin('~s'),~s)));"
-         "else console.log('Validation failed of source ~s');"
+         "else document.getElementById('~s').style.background = 'pink';"
          "}",
         [Element,Detail,wf:config(n2o,event,pickle),wf:pickle(Event),Data,SourceName]).
