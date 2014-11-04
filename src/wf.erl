@@ -191,6 +191,9 @@ display(Element,Status) ->
 show(Element) -> display(Element,block).
 hide(Element) -> display(Element,none).
 
+atom(List) when is_list(List) -> wf:to_atom(string:join([ wf:to_list(L) || L <- List],"_"));
+atom(Scalar) -> wf:to_atom(Scalar).
+
 f(S) -> _String = wf_utils:f(S).
 f(S, Args) -> _String = wf_utils:f(S, Args).
 coalesce(L) -> _Value = wf_utils:coalesce(L).
