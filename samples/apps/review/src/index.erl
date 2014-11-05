@@ -5,7 +5,7 @@
 
 main() ->
     case wf:user() of
-         undefined -> wf:redirect("/login");
+         undefined -> wf:redirect("/login"),#dtl{};
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
 
 room() -> case wf:qs(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
@@ -39,7 +39,7 @@ event({client,{User,Message}}) ->
         bindings=[{user,User},{message,wf:js_escape(wf:html_encode(Message))}]},
     wf:insert_top(history, DTL);
 
-event(init) -> 
+event(init) ->
     Room = room(),
     wf:reg({topic,Room}),
     [ event({client,{E#entry.from,E#entry.media}}) || E <- 

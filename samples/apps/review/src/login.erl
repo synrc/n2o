@@ -17,7 +17,9 @@ event(init) ->
     js_session:ensure_sid([],?CTX);
 
 event(login) ->
-    User = case wf:q(user) of [] -> "anonymous"; E -> E end,
+    User = case wf:q(user) of [] -> "anonymous";
+                              undefined -> "anonymous";
+                              E -> E end,
     wf:user(User),
     wf:redirect("/index?room="++wf:to_list(wf:q(pass))),
     ok;
