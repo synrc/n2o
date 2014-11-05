@@ -11,8 +11,8 @@
 
 -spec update(name(), render()) -> wire_answer().
 -spec insert_top(name(), render()) -> wire_answer().
--spec insert_bottom(name(), render()) -> wire_answer().
--spec insert_before(name(), render()) -> wire_answer().
+%-spec insert_bottom(name(), render()) -> wire_answer().
+%-spec insert_before(name(), render()) -> wire_answer().
 -spec insert_after(name(), render()) -> wire_answer().
 -spec remove(name()) -> wire_answer().
 

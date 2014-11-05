@@ -14,27 +14,27 @@
 update(Target, Elements) ->
     wf:wire(#jq{target=Target,property=outerHTML,right=Elements,format="'~s'"}).
 
-insert_top(Target, Elements) ->
+insert_top(Tag,Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
-    {Render,Actions} = receive A -> A end,
+    spawn(fun() -> R = wf:render(Elements), Pid ! {act,{R,wf_context:actions()}} end),
+    {Render,Actions} = receive {act,A} -> A end,
     wf:wire(wf:f(
         "document.querySelector('#~s').insertBefore("
-        "(function(){var div = document.createElement('div');"
+        "(function(){var div = document.createElement('~s');"
         "div.innerHTML = '~s'; return div.firstChild; })(),"
         "document.querySelector('#~s').firstChild);",
-        [Target,Render,Target])),
+        [Target,Tag,Render,Target])),
     wf:wire(wf:render(Actions)).
 
-insert_bottom(Target, Elements) ->
+insert_bottom(Tag, Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
-    {Render,Actions} = receive A -> A end,
+    spawn(fun() -> R = wf:render(Elements), Pid ! {act,{R,wf_context:actions()}} end),
+    {Render,Actions} = receive {act,A} -> A end,
     wf:wire(wf:f(
-    "(function(){ var x = (function(){var div = document.createElement('div');"
-        "div.innerHTML = '~s'; return div.firstChild; })();"
-        "document.querySelector('#~s').appendChild(x); })();",
-        [Render,Target])),
+        "(function(){ var div = document.createElement('~s');"
+        "div.innerHTML = '~s';"
+        "document.getElementById('~s').appendChild(div.firstChild); })();",
+        [Tag,Render,Target])),
     wf:wire(wf:render(Actions)).
 
 insert_adjacent(Command,Target, Elements) ->
@@ -45,8 +45,12 @@ insert_adjacent(Command,Target, Elements) ->
         [Target,Command,Render])),
     wf:wire(wf:render(Actions)).
 
-insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements).
-insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
+insert_top(Target, #tr{} = Elements)    -> insert_top(tbody,Target, Elements);
+insert_top(Target, Elements)            -> insert_top('div',Target, Elements).
+insert_bottom(Target, #tr{} = Elements) -> insert_bottom(tbody, Target, Elements);
+insert_bottom(Target, Elements)         -> insert_bottom('div', Target, Elements).
+insert_before(Target, Elements)         -> insert_adjacent(beforebegin,Target, Elements).
+insert_after(Target, Elements)          -> insert_adjacent(afterend,Target, Elements).
 
 remove(Target) ->
     wf:wire(wf:f(
