@@ -16,7 +16,7 @@ render_element(Record) ->
         Postback -> wf:wire(#event{type=change, postback=Postback, target=ID, delegate=Record#radio.delegate })
     end,
 
-    Content = Record#radio.body,
+    Content = wf:render(Record#radio.body),
     TypeChecked = case Record#radio.checked of
          true -> [{<<"checked">>, <<"">>},{<<"type">>, <<"radio">>}];
          _ -> [{<<"type">>, <<"radio">>}] end,
