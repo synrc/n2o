@@ -25,7 +25,7 @@ info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,Stat
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf:actions([]),
-    wf:info(?MODULE,"N2O Message: ~p\n\r",[Event]),
+    %wf:info(?MODULE,"N2O Message: ~p\n\r",[Event]),
     Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
     {reply,Result,Req,State};
 
@@ -56,7 +56,7 @@ render_actions(Actions) ->
 
 html_events({pickle,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
-    wf:info(?MODULE,"Depickled: ~p",[Ev]),
+    %wf:info(?MODULE,"Depickled: ~p",[Ev]),
     case Ev of
          #ev{} -> render_ev(Ev,Source,Linked,State);
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
