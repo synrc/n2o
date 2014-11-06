@@ -19,7 +19,9 @@ render_element(Record) ->
     Content = wf:render(Record#radio.body),
     TypeChecked = case Record#radio.checked of
          true -> [{<<"checked">>, <<"">>},{<<"type">>, <<"radio">>}];
-         _ -> [{<<"type">>, <<"radio">>}] end,
+            _ -> [{<<"type">>, <<"radio">>}] end ++ case Record#radio.disabled of
+         true -> [{<<"disabled">>, <<"disabled">>}];
+            _ -> [] end,
 
     [
         wf_tags:emit_tag(<<"input">>, Content, TypeChecked ++ [
