@@ -19,10 +19,9 @@ insert_top(Tag,Target, Elements) ->
     spawn(fun() -> R = wf:render(Elements), Pid ! {act,{R,wf_context:actions()}} end),
     {Render,Actions} = receive {act,A} -> A end,
     wf:wire(wf:f(
-        "document.querySelector('#~s').insertBefore("
-        "(function(){var div = document.createElement('~s');"
-        "div.innerHTML = '~s'; return div.firstChild; })(),"
-        "document.querySelector('#~s').firstChild);",
+        "qi('~s').insertBefore("
+        "(function(){var div = qn('~s'); div.innerHTML = '~s'; return div.firstChild; })(),"
+        "qi('~s').firstChild);",
         [Target,Tag,Render,Target])),
     wf:wire(wf:render(Actions)).
 
@@ -31,9 +30,8 @@ insert_bottom(Tag, Target, Elements) ->
     spawn(fun() -> R = wf:render(Elements), Pid ! {act,{R,wf_context:actions()}} end),
     {Render,Actions} = receive {act,A} -> A end,
     wf:wire(wf:f(
-        "(function(){ var div = document.createElement('~s');"
-        "div.innerHTML = '~s';"
-        "document.getElementById('~s').appendChild(div.firstChild); })();",
+        "(function(){ var div = qn('~s'); div.innerHTML = '~s';"
+                     "qi('~s').appendChild(div.firstChild); })();",
         [Tag,Render,Target])),
     wf:wire(wf:render(Actions)).
 
@@ -41,8 +39,7 @@ insert_adjacent(Command,Target, Elements) ->
     Pid = self(),
     spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
     {Render,Actions} = receive A -> A end,
-    wf:wire(wf:f("document.querySelector('#~s').insertAdjacentHTML('~s', '~s');",
-        [Target,Command,Render])),
+    wf:wire(wf:f("qi('~s').insertAdjacentHTML('~s', '~s');",[Target,Command,Render])),
     wf:wire(wf:render(Actions)).
 
 insert_top(Target, #tr{} = Elements)    -> insert_top(tbody,Target, Elements);
@@ -53,9 +50,7 @@ insert_before(Target, Elements)         -> insert_adjacent(beforebegin,Target, E
 insert_after(Target, Elements)          -> insert_adjacent(afterend,Target, Elements).
 
 remove(Target) ->
-    wf:wire(wf:f(
-        "document.querySelector('#~s').parentNode.removeChild("
-        "document.querySelector('#~s'));",[Target,Target])).
+    wf:wire(wf:f("qi('~s').parentNode.removeChild(qi('~s'));",[Target,Target])).
 
 % Wire JavaScript wf:wire
 

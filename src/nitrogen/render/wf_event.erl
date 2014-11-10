@@ -9,14 +9,8 @@ new(bin,Data) ->
 new(undefined, _, _, _, _, _) -> [];
 new(Postback, Element, Delegate, Name, Data, Source) ->
     Module = wf:coalesce([Delegate, ?CTX#cx.module]),
-    {Detail,SourceName} = case Source of
-                 [N] -> {wf:f("querySourceRaw('~s')",[N]),wf:to_list(N)};
-                   _ -> {"''",wf:to_list(Source)} end,
+    Sources = "[" ++ string:join([ wf:f("'~s'",[X]) || X<- Source ],",") ++ "]",
     Event = #ev{name=Name, module=Module, msg=Postback, trigger=Element},
-    wf:f("{var  event=new CustomEvent('validation'), name='~s';"
-               "event.initCustomEvent('validation',true,true,~s);"
-         "if (document.getElementById(name).dispatchEvent(event)) "
-               "ws.send(enc(tuple(atom('~w'),bin(name),bin('~s'),~s)));"
-         "else document.getElementById('~s').style.background = 'pink';"
-         "}",
-        [Element,Detail,wf:config(n2o,event,pickle),wf:pickle(Event),Data,SourceName]).
+    wf:f("{ if (validateSources(~s)) ws.send(enc(tuple(atom('~w'),bin('~s'),bin('~s'),~s)));"
+                               "else console.log('Validation Error'); }",
+        [Sources,wf:config(n2o,event,pickle),Element,wf:pickle(Event),Data]).

@@ -7,7 +7,7 @@ render_action(#event{source=undefined}) -> [];
 
 render_action(#event{postback={bin,Value},target=Control,type=Type}) ->
     PostbackBin = wf_event:new(bin,Value),
-    [wf:f("document.getElementById('~s').addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});"];
+    [wf:f("qi('~s').addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});"];
 
 render_action(#event{postback=Postback,actions=Actions,source=Source,target=Control,type=Type,delegate=Delegate}) ->
     Data = "[" ++ string:join([begin 
@@ -17,5 +17,5 @@ render_action(#event{postback=Postback,actions=Actions,source=Source,target=Cont
         "tuple(" ++ Key ++ ",querySource('" ++ Id ++ "'))" end || Src <- Source]
     ++ ["tuple(tuple(utf8_toByteArray('"++ Control ++"'), bin('detail')), event.detail)"],",") ++ "]",
     PostbackBin = wf_event:new(Postback, Control, Delegate, event, Data, Source),
-    [wf:f("{ var x = document.getElementById('~s'); x && x.addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});};"].
+    [wf:f("{ var x = qi('~s'); x && x.addEventListener('~s',function (event){", [Control,Type]),PostbackBin,"});};"].
 
