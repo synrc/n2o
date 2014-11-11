@@ -15,5 +15,5 @@ function querySourceRaw(Id) {
 function querySource(Id) {
 //  if (Id.getValue) return bin(Id.getValue());
     var qs = querySourceRaw(Id);
-    if ("" == qs) return atom('undefined');
+    if ("" == qs) return bin('');
              else return utf8_toByteArray(qs); }
