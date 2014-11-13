@@ -16,7 +16,9 @@ function validateLength(e, minlength, maxlength) {
 
 function validateMin(e, min) {
     var field = e.detail;
-    return parseFloat(field) > min; }
+    var re = /^\d{1,}$/;
+    console.log(re.test(field));
+    return (!re.test(field)) ? false : parseFloat(field) > min; }
 
 // IE polyfill
 
