@@ -9,5 +9,5 @@ render_element(Record) ->
     {<<"style">>, Record#td.style},
     {<<"rowspan">>, Record#td.rowspan},
     {<<"colspan">>, Record#td.colspan},
-    {<<"scope">>, Record#td.scope}
+    {<<"scope">>, Record#td.scope} | Record#td.data_fields
   ]).
