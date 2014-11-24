@@ -11,8 +11,15 @@ function validateSources(list) {
         return res && acc; },true); }
 
 function validateLength(e, minlength, maxlength) {
+    var radio6 = document.getElementById("reason6");
     var field = e.detail;
-    return field.length >= minlength && field.length <= maxlength; }
+    if (radio6 != null && radio6.checked) {
+            return field.length >= 1 && field.length <= maxlength
+    }
+    else{
+        return field.length >= minlength && field.length <= maxlength;
+    }
+}
 
 function validateMin(e, min) {
     var field = e.detail;
