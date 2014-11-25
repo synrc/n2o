@@ -14,11 +14,11 @@ render_action(Record=#jq{property=undefined,target=Target,method=Methods,args=A,
 
 render_action(#jq{target=T,method=undefined,property=P,args=simple,right=R,format=F}) ->
     wf:f("~s.~s = '~s';",
-        [wf:to_list(T),wf:to_list(P),binary_to_list(iolist_to_binary(wf:js_escape(wf:render(R))))]);
+        [wf:to_list(T),wf:to_list(P),binary_to_list(iolist_to_binary(wf:render(R)))]);
 
 render_action(#jq{target=T,method=undefined,property=P,right=undefined}) ->
     wf:f("document.querySelector('#~s').~s;", [wf:to_list(T),wf:to_list(P)]);
 
 render_action(#jq{target=T,method=undefined,property=P,right=R,format=F}) ->
     wf:f("document.querySelector('#~s').~s = '~s';",
-        [wf:to_list(T),wf:to_list(P),binary_to_list(iolist_to_binary(wf:js_escape(wf:render(R))))]).
+        [wf:to_list(T),wf:to_list(P),binary_to_list(iolist_to_binary(wf:render(R)))]).
