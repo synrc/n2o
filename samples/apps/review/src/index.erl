@@ -30,11 +30,11 @@ event(chat) ->
     User = wf:user(),
     Message = wf:q(message),
     Room = room(),
-    wf:wire(#jq{target=message,method=[focus,select]}),
     kvs:add(#entry{id=kvs:next_id("entry",1),from=wf:user(),feed_id={room,Room},media=Message}),
     wf:send({topic,Room},{client,{User,Message}});
 
 event({client,{User,Message}}) ->
+    wf:wire(#jq{target=message,method=[focus,select]}),
     DTL = #dtl{file="message",app=review,
         bindings=[{user,User},{message,wf:js_escape(wf:html_encode(Message))}]},
     wf:insert_top(history, DTL);
