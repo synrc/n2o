@@ -36,13 +36,13 @@ event(chat) ->
 event({client,{User,Message}}) ->
     wf:wire(#jq{target=message,method=[focus,select]}),
     DTL = #dtl{file="message",app=review,
-        bindings=[{user,User},{message,wf:js_escape(wf:html_encode(Message))}]},
+        bindings=[{user,User},{message,wf:html_encode(wf:js_escape(Message))}]},
     wf:insert_top(history, DTL);
 
 event(init) ->
     Room = room(),
     wf:reg({topic,Room}),
-    [ event({client,{E#entry.from,E#entry.media}}) || E <- 
+    [ event({client,{E#entry.from,E#entry.media}}) || E <-
        lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
 
 event(logout) -> wf:logout(), wf:redirect("/login");
