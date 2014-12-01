@@ -29,7 +29,8 @@ render_element(Record) ->
             {<<"value">>, Record#radio.value},
             {<<"name">>, wf:coalesce([Record#radio.html_name,Record#radio.name])},
             {<<"class">>, Record#radio.class},
-            {<<"style">>, Record#radio.style}
+            {<<"style">>, Record#radio.style},
+            {<<"onclick">>, wf:js_escape(Record#radio.onclick)}
         ])
 
     ].
