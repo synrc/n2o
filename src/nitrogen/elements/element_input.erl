@@ -36,7 +36,7 @@ render_element(Record) ->
       {<<"disabled">>, if Record#input.disabled == true -> "disabled"; true -> undefined end},
       {<<"name">>,Record#input.name},
       {<<"type">>, Record#input.type},
-      {<<"max">>, Record#input.max}
+      {<<"max">>, Record#input.max},
       {<<"min">>, Record#input.min},
       {<<"multiple">>, Record#input.multiple },
       {<<"value">>,      wf:js_escape(Record#input.value)},
