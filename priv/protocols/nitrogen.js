@@ -20,7 +20,7 @@ function querySource(Id) {
              else return utf8_toByteArray(qs); }
 
 function getErlDate(el) {
-    var val = /^(\d{4})-(\d{2})-(\d{2})$/.exec(el.value);
+    var val = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(el.value);
     if(val != null){
         var uDate = new Date(parseInt(val[1]),parseInt(val[2])-1,parseInt(val[3]));
         val[2] = (uDate.getMonth() < 9) ? "0" + (uDate.getMonth()+1) : (uDate.getMonth()+1);
