@@ -11,8 +11,8 @@ N2O is unusual in that it solves problems in different web development domains
 and stays small and concise at the same time. Started as a Nitrogen concept
 of server-side framework it can also build offline client-side applications
 using the same source code. This became possible with powerful Erlang JavaScript Parse
-Transform which lets Erlang run on JavaScript platform and enables Erlang and JavaScript
-interoperability. You can use Elixir, LFE and Joxa languages for backend development, as well.
+Transform which enables running Erlang on JavaScript platform and brings in Erlang and JavaScript
+interoperability. You can use Elixir, LFE and Joxa languages for backend development as well.
 
 \paragraph{}
 N2O supports DSL and HTML templates. It lets you build JavaScript
@@ -36,13 +36,13 @@ Erlang was built for low latency streaming of binary data in telecom systems.
 It's fundamental design goal included high manageability, scalability
 and extreme concurrency. Thinking of WebSocket channels as binary
 telecom streams and web pages as user binary sessions
-helps to get an understanding of the choice
-of Erlang over other alternatives for web development.
+helps to get an understanding reasons behind choosing Erlang
+over other alternatives for web development.
 
 \paragraph{}
 Using Erlang for web allows you to unleash the full power of telecom systems for
 building web-scale, event-driven, message-passing, NoSQL, asynchronous, non-blocking,
-reliable, highly-available, performance, secure, real-time, distributed applications.
+reliable, highly-available, performant, secure, real-time, distributed applications.
 See Erlang: The Movie II.
 
 \paragraph{}
@@ -68,20 +68,20 @@ client doesn't have much resources.
 \paragraph{}
 With N2O you can create both types of applications. You can use N2O REST framework
 for desktop applications based on Cowboy REST API along with DTL
-templates for initial HTML renderings for mobile applications.
+templates for initial HTML rendering for mobile applications.
 You can also use Nitrogen DSL-based approach for modeling parts of pages
-as widgets and control elements, thanks to rich
-Nitrogen elements collections provided by Nitrogen community.
+as widgets and control elements, thanks to Nitrogen
+rich collection of elements provided by Nitrogen community.
 
 \paragraph{}
-In cases where your system is built around Erlang infrastructure, N2O
-is the best choice for fast web prototyping, simplicity
-of use and clean codebase. Despite HTML transfers over the wire,
+In cases when your system is built around Erlang infrastructure, N2O
+is the best choice for fast web prototyping, bringing simplicity
+of use and clean codebase. Despite HTML being transfered over the wire,
 you still have access to all your Erlang services directly.
 
 \paragraph{}
 You can also create offline applications using Erlang JavaScript compiler
-just the way you would use ClojureScript, JScala, Elm, WebSharper
+just the way you would use ClojureScript, Scala.js, Elm, WebSharper
 or any other similar tool. N2O includes: REST micro frameworks,
 server-side and client-side rendering engines,
 WebSocket events streaming, JavaScript generation
@@ -128,7 +128,7 @@ inter-process communication work in N2O.
     body() ->
         {ok,Pid} = wf:async(fun() -> loop() end),
 
-      [ #span    { id=title,       body="Your chatroom name: " },
+      [ #span    { id=title,       body="Your nickname: " },
         #textbox { id=userName,    body="Anonymous" },
         #panel   { id=chatHistory, class=chat_history },
         #textbox { id=message },
@@ -157,7 +157,7 @@ Just try to build the similar functionality with your favorite language/framewor
 We took a liberty to break some compatibility with the original
 Nitrogen framework, mostly because we wanted to have a clean codebase
 and achieve better performance. However, it's still possible to port
-Nitrogen web sites to N2O quite esily. E.g., N2O returns id and class semantics
+Nitrogen web sites to N2O quite easily. E.g., N2O returns id and class semantics
 of HTML and not {\bf html\_id}.
 
 \paragraph{}
@@ -168,7 +168,7 @@ We simplified HTML rendering without using
 Nitrogen.js, originally created by Rusty Klophaus, was removed
 because of the pure WebSocket nature of N2O which doesn't
 require XHR helper methods on the client-side anymore. XHR fallback
-handling by using 'Bullet' library written by Loïc Hoguin was added as the replacemnt.
+handling by using 'Bullet' library written by Loïc Hoguin was added as the replacement.
 
 \paragraph{}
 We also removed {\bf simple\_bridge} and optimized N2O on each level to
@@ -177,7 +177,7 @@ using N2O. We are fully convinced it is the most efficient way to
 build Web applications in Erlang.
 
 \paragraph{}
-Original Nitrogen already was tested in production under high load and we
+Original Nitrogen was already tested in production under high load and we
 decided to remove {\bf nprocreg} process registry along
 with {\bf{action\_comet}} heavy process creation. N2O creates a single
 process for an async WebSocket handler, all asynchronous operations
