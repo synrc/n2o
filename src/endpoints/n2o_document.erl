@@ -8,7 +8,7 @@ transition(Actions) -> receive {'INIT',A} -> transition(A); {'N2O',Pid} -> Pid !
 run(Req) ->
     Pid = spawn(fun() -> transition([]) end),
     wf:script(["var transition = {pid: '", wf:pickle(Pid), "', ",
-                "port:'", wf:to_list(wf:config(n2o,port)),"'}"]),
+                "port:'", wf:to_list(wf:config(n2o,websocket_port,wf:config(n2o,port,8000))),"'}"]),
     Ctx = wf_context:init_context(Req),
     Ctx1 = wf_context:fold(init,Ctx#cx.handlers,Ctx),
     wf:actions(Ctx1#cx.actions),
