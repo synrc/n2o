@@ -15,4 +15,6 @@ log_modules() ->
     index_rails
   ].
 
+websocket_port() -> {ws, 8000, wss, 443}.
+
 info() ->  spawn(fun()-> wf:info(index,"~p",[mnesia:info()]) end).
