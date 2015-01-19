@@ -27,7 +27,8 @@ init(Req) ->
     NewCtx = wf_context:fold(init,Ctx#cx.handlers,Ctx),
     wf:context(NewCtx),
     wf:reg(broadcast,{wf:peer(Req)}),
-    Req1 = wf:header(<<"Access-Control-Allow-Origin">>, <<"*">>, NewCtx#cx.req),
+    {Origin, _} = cowboy_req:header(<<"origin">>, Req, <<"*">>),
+    Req1 = wf:header(<<"Access-Control-Allow-Origin">>, Origin, NewCtx#cx.req),
     {ok, Req1, NewCtx}.
 
 % N2O top level protocol NOP REPLY PUSH
