@@ -198,6 +198,7 @@
 -record(alert,   {?ACTION_BASE(action_alert), text}).
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
 -record(jq,      {?ACTION_BASE(action_jq), property, method, args=[], right, format="~s"}).
+-record(transfer,{?ACTION_BASE(action_transfer), state, events=[] }).
 
 %Binary messaging to browser
 -record(binary, {
