@@ -16,8 +16,9 @@ update(Target, Elements) ->
 
 insert_top(Tag,Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {act,{R,wf_context:actions()}} end),
-    {Render,Actions} = receive {act,A} -> A end,
+    Ref = make_ref(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f(
         "qi('~s').insertBefore("
         "(function(){var div = qn('~s'); div.innerHTML = '~s'; return div.firstChild; })(),"
@@ -27,8 +28,9 @@ insert_top(Tag,Target, Elements) ->
 
 insert_bottom(Tag, Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {act,{R,wf_context:actions()}} end),
-    {Render,Actions} = receive {act,A} -> A end,
+    Ref = make_ref(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f(
         "(function(){ var div = qn('~s'); div.innerHTML = '~s';"
                      "qi('~s').appendChild(div.firstChild); })();",
@@ -37,8 +39,9 @@ insert_bottom(Tag, Target, Elements) ->
 
 insert_adjacent(Command,Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
-    {Render,Actions} = receive A -> A end,
+    Ref = make_ref(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f("qi('~s').insertAdjacentHTML('~s', '~s');",[Target,Command,Render])),
     wf:wire(wf:render(Actions)).
 
