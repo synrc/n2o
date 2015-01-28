@@ -9,5 +9,5 @@ render_element(Record) ->
   wf_tags:emit_tag(<<"legend">>, wf:render(Record#legend.body), [
     {<<"id">>, Record#legend.id},
     {<<"class">>, Record#legend.class},
-    {<<"style">>, Record#legend.style}
+    {<<"style">>, Record#legend.style} | Record#legend.data_fields
   ]).

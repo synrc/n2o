@@ -11,5 +11,5 @@ render_element(Record) ->
     {<<"class">>, Record#label.class},
     {<<"style">>, Record#label.style},
     {<<"for">>, Record#label.for},
-    {<<"onclick">>, wf:js_escape(Record#label.onclick)}
+    {<<"onclick">>, wf:js_escape(Record#label.onclick)} | Record#label.data_fields
   ]).

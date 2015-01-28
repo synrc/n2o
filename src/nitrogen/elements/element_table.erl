@@ -29,5 +29,5 @@ render_element(Record = #table{}) ->
   wf_tags:emit_tag( <<"table">>, wf:render([Caption, Colgroup, Header, Footer, Bodies]), [
       {<<"id">>, Record#table.id},
       {<<"class">>, Record#table.class},
-      {<<"style">>, Record#table.style}
+      {<<"style">>, Record#table.style} | Record#table.data_fields
   ]).
