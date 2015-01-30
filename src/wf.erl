@@ -68,6 +68,7 @@ flush(Key) -> action_async:flush(Key).
 
 % Redirect and purge connection wf:redirect
 
+redirect() -> wf:wire("location.reload();").
 redirect(Url) ->
     wf:wire(#jq{target='window.top',property=location,args=simple,right=Url}).
 
