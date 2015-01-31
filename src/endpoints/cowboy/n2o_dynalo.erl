@@ -9,7 +9,7 @@ rest_init(Req, {dir, Path, Extra}) ->
 	{PathInfo, Req2} = cowboy_req:path_info(Req),
 	Info = {ok, #file_info{type=regular,size=0}},
 	FileName = filename:join([Path|PathInfo]),
-%    io:format("Rest Init: ~p~n\r",[FileName]),
+	wf:info(?MODULE,"Rest Init: ~p~n\r",[FileName]),
     {ok, Req2, {FileName, Info, Extra}}.
 
 malformed_request(Req, State) -> {State =:= error, Req, State}.
@@ -20,7 +20,7 @@ forbidden(Req, State={_, {ok, #file_info{access=Access}}, _}) when Access =:= wr
 forbidden(Req, State) -> {false, Req, State}.
 
 content_types_provided(Req, State={Path, _, Extra}) ->
-%    io:format("Content Type Provided: ~p~n\r",[Path]),
+    wf:info(?MODULE,"Content Type Provided: ~p~n\r",[Path]),
 	case lists:keyfind(mimetypes, 1, Extra) of
 		false -> {[{cow_mimetypes:web(Path), get_file}], Req, State};
 		{mimetypes, Module, Function} -> {[{Module:Function(Path), get_file}], Req, State};
@@ -46,10 +46,10 @@ last_modified(Req, State={_, {ok, #file_info{mtime=Modified}}, _}) -> {Modified,
 get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
     StringPath = binary_to_list(Path),
     [Type,Name|RestPath]=SplitPath = filename:split(StringPath),
-%    io:format("Split Path: ~p~n\r",[SplitPath]),
-%    io:format("Code Path: ~p~n\r",[filename:join([code:lib_dir(Name)|RestPath])]),
+    wf:info(?MODULE,"Split Path: ~p~n\r",[SplitPath]),
+    wf:info(?MODULE,"Code Path: ~p~n\r",[filename:join([code:lib_dir(Name)|RestPath])]),
 	FileName = filename:absname(StringPath),
-%    io:format("Abs Name: ~p~n\r",[FileName]),
+    wf:info(?MODULE,"Abs Name: ~p~n\r",[FileName]),
     Raw = case file:read_file(FileName) of
     {ok,Bin} -> Bin;
     {error,_} ->
@@ -59,7 +59,7 @@ get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
             case file:read_file(filename:join([code:lib_dir(Name)|RestPath])) of
             {ok,ReleaseFile} -> ReleaseFile;
             {error,_} -> <<>> end end end,
-%    io:format("Cowboy Requested Static File: ~p~n\r ~p~n\r",[Raw,absname(StringPath)]),
+    wf:info(?MODULE,"Cowboy Requested Static File: ~p~n\r ~p~n\r",[Raw,filename:absname(StringPath)]),
 	Sendfile = fun (Socket, Transport) ->
 		case Transport:send(Socket, Raw) of
 			{ok, _} -> ok;
