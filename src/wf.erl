@@ -14,44 +14,46 @@
 update(Target, Elements) ->
     wf:wire(#jq{target=Target,property=outerHTML,right=Elements,format="'~s'"}).
 
-insert_top(Target, Elements) ->
+insert_top(Tag,Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
-    {Render,Actions} = receive A -> A end,
+    Ref = make_ref(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f(
-        "document.querySelector('#~s').insertBefore("
-        "(function(){var div = document.createElement('div');"
-        "div.innerHTML = '~s'; return div.firstChild; })(),"
-        "document.querySelector('#~s').firstChild);",
-        [Target,Render,Target])),
+        "qi('~s').insertBefore("
+        "(function(){var div = qn('~s'); div.innerHTML = '~s'; return div.firstChild; })(),"
+        "qi('~s').firstChild);",
+        [Target,Tag,Render,Target])),
     wf:wire(wf:render(Actions)).
 
-insert_bottom(Target, Elements) ->
+insert_bottom(Tag, Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
-    {Render,Actions} = receive A -> A end,
+    Ref = make_ref(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f(
-        "document.querySelector('#~s').appendChild("
-        "(function(){var div = document.createElement('div');"
-        "div.innerHTML = '~s'; return div.firstChild; })());",
-        [Target,Render])),
+        "(function(){ var div = qn('~s'); div.innerHTML = '~s';"
+                     "qi('~s').appendChild(div.firstChild); })();",
+        [Tag,Render,Target])),
     wf:wire(wf:render(Actions)).
 
 insert_adjacent(Command,Target, Elements) ->
     Pid = self(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,wf_context:actions()} end),
-    {Render,Actions} = receive A -> A end,
-    wf:wire(wf:f("document.querySelector('#~s').insertAdjacentHTML('~s', '~s');",
-        [Target,Command,Render])),
+    Ref = make_ref(),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
+    wf:wire(wf:f("qi('~s').insertAdjacentHTML('~s', '~s');",[Target,Command,Render])),
     wf:wire(wf:render(Actions)).
 
-insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements).
-insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
+insert_top(Target, #tr{} = Elements)    -> insert_top(tbody,Target, Elements);
+insert_top(Target, Elements)            -> insert_top('div',Target, Elements).
+insert_bottom(Target, #tr{} = Elements) -> insert_bottom(tbody, Target, Elements);
+insert_bottom(Target, Elements)         -> insert_bottom('div', Target, Elements).
+insert_before(Target, Elements)         -> insert_adjacent(beforebegin,Target, Elements).
+insert_after(Target, Elements)          -> insert_adjacent(afterend,Target, Elements).
 
 remove(Target) ->
-    wf:wire(wf:f(
-        "document.querySelector('#~s').parentNode.removeChild("
-        "document.querySelector('#~s'));",[Target,Target])).
+    wf:wire(wf:f("qi('~s').parentNode.removeChild(qi('~s'));",[Target,Target])).
 
 % Wire JavaScript wf:wire
 
@@ -190,6 +192,9 @@ display(Element,Status) ->
 
 show(Element) -> display(Element,block).
 hide(Element) -> display(Element,none).
+
+atom(List) when is_list(List) -> wf:to_atom(string:join([ wf:to_list(L) || L <- List],"_"));
+atom(Scalar) -> wf:to_atom(Scalar).
 
 f(S) -> _String = wf_utils:f(S).
 f(S, Args) -> _String = wf_utils:f(S, Args).

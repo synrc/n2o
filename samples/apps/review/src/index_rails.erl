@@ -1,6 +1,8 @@
--module(index2).
+-module(index_rails).
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
+
+% please use this file with {event,rails} in sys.config for n2o
 
 peer()    -> io_lib:format("~p",[wf:peer(?REQ)]).
 main()    -> #dtl{file="index",app=n2o_sample,bindings=[{body,body()}]}.

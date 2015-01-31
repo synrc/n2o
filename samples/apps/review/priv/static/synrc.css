@@ -1,0 +1,40 @@
+A { font-size:18pt; }
+A:link { color: blue; }
+A:visited { color: darkblue; }
+A:hover { color: blue; }
+SUP { font-size:10pt; }
+html { zoom: 0.8; }
+BODY {   font-size:14pt; font-family: Calibri, Lucida Sans, "Lucida Grande"; }
+TD { font-size:18pt; margin: 0 auto; padding-right: 20px; }
+textarea { padding: 10px; }
+input { font-size:28pt; width: 50%; margin:15px 15px 5px 5px; }
+button { font-size:20pt; margin-top:15px; padding: 10px; }
+H1 { color: blue; font-weight: bold; font-size:26pt; margin-top:20px; margin-bottom:10px; margin-right:6px; }
+H2 { color: darkblue; font-size:18pt; margin-top:20px; margin-bottom:10px; margin-right:6px; }
+H3 { font-size:14pt; margin-top:20px; margin-bottom:10px; margin-right:6px; } 
+P { font-size:18pt; margin-top: 0px; margin-bottom: 8px; }
+P.poem { font-size:14pt; margin-top: 0px; margin-bottom: 8px; white-space: pre;}
+LI { font-size:12pt; }
+pre { font-size:10pt; font-family: Calibri, Lucida Console; }
+.menu { font-size:12pt; font-family: Calibri, Lucida Sans Unicode; color: red; }
+.small_infoblock { font-family: Calibri, Lucida Sans Unicode; font-size:8pt; }
+.block  { background-color: #EEEEEE; padding-top:6;padding-bottom:10;padding-right:10;padding-left:10;}
+.threecol { float:left; }
+.left { float:left; }
+.hints { width:59px;float:left;margin-right:6px; }
+.main { width:843px;float:left;margin-right:26px; }
+.contents { width:270px;float:left; }
+.numbox { padding:10px 10px 10px 10px;background-color:black;color:white; }
+.feed { margin-top:20px; }
+
+code, div.lstlisting { font-size:14pt; margin: 20px 20px 20px 0px;
+                        padding: 0px 20px 20px 20px; font-family: monospace;
+                        white-space: pre; background-color: white; display: inline-block;
+                         border-left:60px solid #afafaf; }
+code, div.lstlisting .keyword              { font-weight: bold }
+code, div.lstlisting .string, code .regexp { color: green }
+code, div.lstlisting .class { color: darkblue }
+code, div.lstlisting .record { color: purple }
+code, div.lstlisting .special { color: royalblue }
+code, div.lstlisting .number               { color: pink }
+code, div.lstlisting .comment              { color: grey }

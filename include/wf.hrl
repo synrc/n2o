@@ -20,7 +20,7 @@
 -define(DEFAULT_BASE_TAG(Tag), {?ELEMENT_BASE(undefined,Tag,undefined)}).
 -define(ELEMENT_BASE(Module), ?ELEMENT_BASE(Module,undefined,undefined)).
 -define(ELEMENT_BASE(Module,Tag,Delegate),
-        ancestor=element, module=Module, delegate=Delegate, id, actions, class=[], style=[], source=[], onmouseover, onkeypress,
+        ancestor=element, id, module=Module, delegate=Delegate, validation=[], actions, class=[], style=[], source=[], onmouseover, onkeypress, onchange, onkeyup, onkeydown, onclick,
         data_fields=[], aria_states=[], body, role, tabindex, show_if=true, html_tag=Tag, title, accesskey, contenteditable, contextmenu, dir, draggable, dropzone, hidden, lang, spellcheck, translate, onafterprint, onbeforeprint, onbeforeunload, onblur, onerror, onfocus, onhashchange, onload, onmessage, onoffline, ononline, onpagehide, onpageshow, onpopstate, onresize, onstorage, onunload).
 -define(ACTION_BASE(Module),
         ancestor=action, trigger, target, module=Module, actions, source=[]).
@@ -77,7 +77,7 @@
 -record(textarea,       {?ELEMENT_BASE(element_textarea), autofocus, cols, dirname, disabled, form, maxlength, name, placeholder, readonly, required, rows, wrap, postback, value}).
 
 % HTML Form inputs
--record(input,       {?ELEMENT_BASE(element_input),  autofocus, disabled, form, name, value, postback, type=[], multiple}).
+-record(input,       {?ELEMENT_BASE(element_input),  autofocus, disabled, form, name, value, postback, type=[], multiple, min, max}).
 -record(input_button,       {?ELEMENT_BASE(element_input_button),  autofocus, disabled, form, name, value, postback}).
 -record(checkbox,           {?ELEMENT_BASE(element_checkbox),  autofocus, checked=false, disabled, form, name, required, value, postback}).
 -record(color,           {?ELEMENT_BASE(element_color),  autocomplete, autofocus, disabled, form, list, name, value, postback}).
@@ -198,6 +198,7 @@
 -record(alert,   {?ACTION_BASE(action_alert), text}).
 -record(confirm, {?ACTION_BASE(action_confirm), text, postback, delegate}).
 -record(jq,      {?ACTION_BASE(action_jq), property, method, args=[], right, format="~s"}).
+-record(transfer,{?ACTION_BASE(action_transfer), state, events=[] }).
 
 %Binary messaging to browser
 -record(binary, {

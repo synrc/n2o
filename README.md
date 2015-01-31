@@ -1,6 +1,8 @@
 N2O: Erlang Web Framework
 =========================
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/5HT/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/5HT/n2o.svg?branch=master)](https://travis-ci.org/5HT/n2o)
 
 Features

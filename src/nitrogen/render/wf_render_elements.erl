@@ -11,6 +11,14 @@ render_element(Element) when is_tuple(Element) ->
         Other -> wf:to_list(Other) end,
     case element(#element.actions,Element) of undefined -> skip; Actions -> wf:wire(Actions) end,
     Tag = case element(#element.html_tag,Element) of undefined -> wf:to_binary(element(1, Element)); T -> T end,
+    case element(#element.validation,Element) of
+         [] -> skip;
+         Code ->
+         wf:wire(wf:f("{var name='~s'; qi(name)"
+           ".addEventListener('validation',"
+              "function(e) { if (!(~s)) e.preventDefault(); });"
+              "qi(name).validation = true;}",[Id,Code]))
+            end,
     case element(#element.module,Element) of
         undefined -> 
 	    default_render(Tag, Element);

@@ -4,7 +4,7 @@
 
 main(A) ->
 
-   mad_repl:main(A).
+   mad_repl:main(A,[]).
 
 start() -> start(normal, []).
 start(_StartType, _StartArgs) -> 

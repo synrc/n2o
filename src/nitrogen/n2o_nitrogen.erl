@@ -15,9 +15,8 @@ info({init,Rest},Req,State) ->
                     X = Pid ! {'N2O',self()},
                     receive_actions(Req) end,
     UserCx = try Module:event(init) catch C:E -> wf:error_page(C,E) end,
-    Actions = wf:render(wf:actions()),
+    Actions = render_actions(wf:actions()),
     self() ! {init_reply,wf:json([{eval,iolist_to_binary([InitActions,Actions])}])},
-    wf:info(?MODULE,"n2o_nitrogen:event(init) ~w\r\n",[UserCx]),
     {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
 
 
@@ -26,7 +25,7 @@ info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,Stat
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf:actions([]),
-    wf:info(?MODULE,"N2O Message: ~p\n\r",[Event]),
+    %wf:info(?MODULE,"N2O Message: ~p\n\r",[Event]),
     Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
     {reply,Result,Req,State};
 
@@ -39,7 +38,7 @@ info({direct,Message}, Req, State) ->
     wf:actions([]),
     Module = State#cx.module,
     Term = try Module:event(Message) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
-    wf:info(?MODULE,"Direct: ~p Result: ~p",[Message,Term]),
+    %wf:info(?MODULE,"Direct: ~p Result: ~p",[Message,Term]),
     {reply,wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]),Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
@@ -57,7 +56,7 @@ render_actions(Actions) ->
 
 html_events({pickle,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
-    wf:info(?MODULE,"Depickled: ~p",[Ev]),
+    %wf:info(?MODULE,"Depickled: ~p",[Ev]),
     case Ev of
          #ev{} -> render_ev(Ev,Source,Linked,State);
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,

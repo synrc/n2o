@@ -36,8 +36,14 @@ render_element(Record) ->
       {<<"disabled">>, if Record#input.disabled == true -> "disabled"; true -> undefined end},
       {<<"name">>,Record#input.name},
       {<<"type">>, Record#input.type},
+      {<<"max">>, Record#input.max},
+      {<<"min">>, Record#input.min},
       {<<"multiple">>, Record#input.multiple },
-      {<<"value">>,wf:js_escape(Record#input.value)},
-      {<<"onkeypress">>, Record#input.onkeypress} | Record#input.data_fields
+      {<<"value">>,      wf:js_escape(Record#input.value)},
+      {<<"onkeypress">>, wf:js_escape(Record#input.onkeypress)},
+      {<<"onkeyup">>,    wf:js_escape(Record#input.onkeyup)},
+      {<<"onkeydown">>,  wf:js_escape(Record#input.onkeydown)},
+      {<<"onclick">>,    wf:js_escape(Record#input.onclick)},
+      {<<"onchange">>, Record#input.onchange} | Record#input.data_fields
     ],
     wf_tags:emit_tag(<<"input">>, wf:render(Record#input.body), List).
