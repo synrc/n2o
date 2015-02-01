@@ -66,10 +66,11 @@ async(Function) -> action_async:async(Function).
 async(Name,Function) -> action_async:async(Name,Function).
 flush(Key) -> action_async:flush(Key).
 
-% Redirect and purge connection wf:redirect
+% redirect and purge connection wf:redirect
 
-redirect(Url) ->
-    wf:wire(#jq{target='window.top',property=location,args=simple,right=Url}).
+redirect({http,Url}) -> wf:header(<<"Location">>,wf:to_binary(Url)), wf:state(status,301), [];
+redirect(Url) -> wf:wire(#jq{target='window.top',property=location,args=simple,right=Url}).
+header(K,V) -> wf:context((?CTX)#cx{req=wf:header(K,V,?REQ)}).
 
 % Message Bus communications wf:reg wf:send
 
