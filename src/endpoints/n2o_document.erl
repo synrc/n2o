@@ -18,7 +18,7 @@ run(Req) ->
     Html = wf_render:render(Elements),
     Actions = wf:actions(),
     Pid ! {'INIT',Actions},
-    Ctx2 = wf_context:fold(finish,Ctx#cx.handlers,Ctx1),
+    Ctx2 = wf_context:fold(finish,Ctx#cx.handlers,?CTX),
     Req2 = wf:response(Html,set_cookies(wf:cookies(),Ctx2#cx.req)),
     wf:info(?MODULE,"Cookies Req: ~p",[Req2]),
     {ok, _ReqFinal} = wf:reply(wf:state(status), Req2).
