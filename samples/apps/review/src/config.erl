@@ -1,6 +1,7 @@
 -module(config).
 -compile(export_all).
 
+log_level() -> info.
 log_modules() ->
   [
 %   n2o_websocket,
