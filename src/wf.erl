@@ -166,7 +166,8 @@ reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 -define(LOGGER, (wf:config(n2o,log_backend,n2o_io))).
 log_modules() -> [wf].
 log_level() -> info.
--define(ALLOWED, (wf:config(n2o,log_modules,wf))).
+-define(LOG_MODULES, (wf:config(n2o,log_modules,wf))).
+-define(LOG_LEVEL, (wf:config(n2o,log_level,wf))).
 
 log_level(none) -> 3;
 log_level(error) -> 2;
@@ -174,11 +175,13 @@ log_level(warning) -> 1;
 log_level(_) -> 0.
 
 log(Module, String, Args, Fun) ->
-    case log_level(Fun) < log_level(?ALLOWED:log_level()) of
+    case log_level(Fun) < log_level(?LOG_LEVEL:log_level()) of
         true -> skip;
-        false -> case lists:member(Module, ?ALLOWED:log_modules()) of
-            true -> ?LOGGER:Fun(Module, String, Args);
-            false -> skip end end.
+        false -> case ?LOG_MODULES:log_modules() of
+            any -> ?LOGGER:Fun(Module, String, Args);
+            Allowed -> case lists:member(Module, Allowed) of
+                true -> ?LOGGER:Fun(Module, String, Args);
+                false -> skip end end end.
 
 info(Module, String, Args) -> log(Module, String, Args, info).
 info(String, Args) -> log(?MODULE, String, Args, info).
