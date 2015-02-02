@@ -9,6 +9,11 @@ render_element(Record=#dtl{}) ->
                 {error,bad_name} -> wf:to_list(Record#dtl.app);
                 A -> A end ++ "/" ++ wf:to_list(Record#dtl.folder)
          ++ "/" ++ wf:to_list(Record#dtl.file) ++ "." ++ wf:to_list(Record#dtl.ext),
-    {ok,R} = M:render([{K,wf:render(V)} || {K,V} <- Record#dtl.bindings] ++ 
+    {ok,R} = render(M, Record#dtl.js_escape, [{K,wf:render(V)} || {K,V} <- Record#dtl.bindings] ++
         if Record#dtl.bind_script==true -> [{script,wf:script()}]; true-> [] end),
     R.
+
+render(M, true, Args) ->
+    {ok, R} = M:render(Args),
+    {ok, wf:js_escape(R)};
+render(M, _, Args) -> M:render(Args).

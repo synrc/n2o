@@ -28,7 +28,7 @@
 
 -record(element, {?ELEMENT_BASE(undefined)}).
 -record(literal, {?ELEMENT_BASE(element_literal)}).
--record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates", ext="html", bind_script=true }).
+-record(dtl, {?ELEMENT_BASE(element_dtl), file="index", bindings=[], app=web, folder="priv/templates", ext="html", bind_script=true, js_escape=false }).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false }).
 -record(dropdown, {?ELEMENT_BASE(element_dropdown), options, postback, value, multiple=false, disabled=false, name}).
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup)}).
