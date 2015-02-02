@@ -10,5 +10,5 @@ render_element(Record = #tr{postback= Postback}) ->
   wf_tags:emit_tag(<<"tr">>, wf:render(Record#tr.cells), [
     {<<"id">>, Record#tr.id},
     {<<"class">>, Record#tr.class},
-    {<<"style">>, [Record#tr.style, Cursor]} | Record#th.data_fields
+    {<<"style">>, [Record#tr.style, Cursor]} | Record#tr.data_fields
   ]).
