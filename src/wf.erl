@@ -199,7 +199,7 @@ error(String) -> log(?MODULE, String, [], error).
 % Convert and Utils API
 
 display(Element,Status) -> 
-   wf:wire("{ var x = document.getElementById('"++
+   wf:wire("{ var x = qi('"++
       wf:to_list(Element)++"'); if (x) x.style.display = '"++wf:to_list(Status)++"'; }").
 
 show(Element) -> display(Element,block).
