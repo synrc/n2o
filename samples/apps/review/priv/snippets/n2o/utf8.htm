@@ -1,0 +1,29 @@
+<h1>UTF-8</h1>
+
+<h2>Erlang</h2>
+	
+The main thing you should know about Erlang unicode is that
+<code>
+1> unicode:characters_to_binary("UniText") == <<"UniText"/utf8>>.
+</code>
+I.e. in N2O DSL you should use:
+<code>
+2> io:format("~tp",[ #button{body= <<"Unicode Name"/utf8>>} ]).
+</code>
+
+<h2>JavaScript</h2>
+Whenever you want to send to server the value from DOM element you should use utf8_toByteArray.
+
+<code>    
+> utf_toByteArray(document.getElementById('phone').value);
+</code>
+<p>However we created shortcut for that purposes which knows about radio, fieldset and other types of DOM nodes. So you should use just:</p>
+<code>
+> querySource('phone');
+</code>
+<p>querySource JavaScript function ships in nitrogen.js which is part of N2O JavaScript library.
+Whenever you get unicode data from server you should prepare it before place in DOM with utf8_decode:</p>
+<code>    
+> console.log(utf8_decode(receivedMessage));
+</code>
+    

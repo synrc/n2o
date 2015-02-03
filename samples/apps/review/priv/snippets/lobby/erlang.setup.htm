@@ -1,0 +1,18 @@
+<code>
+Erlang 6.2 
+msys2.github.com
+font14
+pacman -S make
+pacman -S git
+git clone https://github.com/synrc/skyline
+git clone https://github.com/synrc/mad
+cp mad/mad web 
+cd web
+./mad deps compile plan repl
+> ^C
+./mad bundle web_app
+cp web_app /install
+. /install/web_app
+>
+
+</code>
