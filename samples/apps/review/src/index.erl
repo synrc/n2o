@@ -16,7 +16,7 @@ list() ->
     Room = room(),
     #ul{body=[ #li{body=#link{body=filename:basename(File),
                               postback={show,filename:basename(File),File}}}
-     || File<-filelib:wildcard(code:priv_dir(review)++"/sippets/"++Room++"/*") ]}.
+     || File<-filelib:wildcard(code:priv_dir(review)++"/snippets/"++Room++"/*") ]}.
 
 body() ->
     wf:update(heading,#b{body="Review: " ++ room()}),
