@@ -8,6 +8,7 @@ protocols() -> wf:config(n2o,protocols,[ n2o_binary,
                                          n2o_rails,
                                          n2o_client,
                                          n2o_nitrogen,
+                                         n2o_jsonp,
                                          n2o_heart
                                           ]).
 
