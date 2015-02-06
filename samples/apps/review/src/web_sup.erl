@@ -22,9 +22,9 @@ init([]) ->
 
     users:init(),
     users:populate(?USERS),
-    kvs:join(),
-
-    {ok, {{one_for_one, 5, 10}, []}}.
+    case kvs:join() of
+         {error,Error} -> io:format("KVS Error: ~p\r\n",[Error]), halt(abort,[]);
+         _ -> {ok, {{one_for_one, 5, 10}, []}} end.
 
 mime() -> [{mimetypes,cow_mimetypes,all}].
 
