@@ -84,7 +84,7 @@ LINUX NOTE: if you want to have online recompilation you should do at first:
 Erlang version
 --------------
 
-We don't accept any reports of problems with ESL or Ubuntu packaging. We do support only Erlang built from sources, built with kerl or installed on Mac with brew.
+We don't accept any reports of problems with ESL or Ubuntu packaging. We do support only Erlang built from sources, built with kerl or installed on Mac with brew. If you have problems with your favourite Erlang package for your OS, please report issues to package maintainer.
 
 Support
 -------
