@@ -81,6 +81,11 @@ LINUX NOTE: if you want to have online recompilation you should do at first:
 
     $ sudo apt-get install inotify-tools
 
+Erlang version
+--------------
+
+We don't accept any reports of problems with ESL or Ubuntu packaging. We do support only Erlang built from sources, built with kerl or installed on Mac with brew.
+
 Support
 -------
 
