@@ -134,6 +134,7 @@ q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
 qp(Key,Ctx) -> proplists:get_value(Key,Ctx#cx.params).
 qs(Key) -> proplists:get_value(Key,?CTX#cx.params).
 dqs(Key) -> proplists:get_value(Key,?CTX#cx.form).
+lang() -> ?CTX#cx.lang.
 
 % Cookies
 
