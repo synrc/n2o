@@ -8,9 +8,9 @@ main() ->
          undefined -> wf:redirect("/login"),#dtl{};
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
 
-room() -> case wf:qs(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
-content() -> case wf:qs(<<"code">>) of undefined -> list(); Code -> code() end.
-code() -> case wf:qs(<<"code">>) of undefined  -> "NO CODE"; 
+room() -> case wf:qp(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
+content() -> case wf:qp(<<"code">>) of undefined -> list(); Code -> code() end.
+code() -> case wf:qp(<<"code">>) of undefined  -> "NO CODE"; 
                        E -> {ok,Bin} = file:read_file(E), wf:to_list(Bin) end.
 list() ->
     Room = room(),

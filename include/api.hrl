@@ -46,5 +46,6 @@
 % query
 
 -spec q(name()) -> any().
--spec qs(name()) -> any().
+-spec qc(name()) -> any().
+-spec qp(name()) -> any().
 
