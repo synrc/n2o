@@ -1,8 +1,6 @@
 N2O: Erlang Web Framework
 =========================
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/5HT/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Build Status](https://travis-ci.org/5HT/n2o.svg?branch=master)](https://travis-ci.org/5HT/n2o)
 
 Features
@@ -86,10 +84,22 @@ Erlang version
 
 We don't accept any reports of problems with ESL or Ubuntu packaging. We do support only Erlang built from sources, built with kerl or installed on Mac with brew. If you have problems with your favourite Erlang package for your OS, please report issues to package maintainer.
 
-Support
+Posting Issues on Github
 -------
 
+Thank you for using N2O (you've made a wise choice) and your contributions to help make it better.
+Before posting an issue in Github, please contact us via the options listed below in the support section. Doing so will help us determine whether your issue is a suggested feature, refactor of existing code, bug, etc, that needs to be posted to GitHub for the contributing development community of N2O to incorporate. DO NOT post issues to GitHub related to misuses of N2O, all such issues will be closed. 
+
+Support
+-------
+* [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/5HT/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * IRC Channel #n2o on FreeNode 24/7
+
+Documentation
+-------
+
+If you are new or need to determine whether the N2O architecture and philosophy is a fit for your project
+
 * Official N2O Book [HTML](http://synrc.com/framework/web/) and [PDF](https://synrc.com/apps/n2o/doc/book.pdf)
 
 Credits
