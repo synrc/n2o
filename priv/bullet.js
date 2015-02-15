@@ -154,7 +154,12 @@ function bullet(url) {
 
         this.setURL = function(newURL) { url = newURL; };
         this.send = function(data){
-            if (transport) return transport.send(data); else return false;
+            if (transport) {
+                if (data.constructor === {}.constructor) {
+                    var str = JSON.stringify(data);
+                    return transport.send(enc(tuple(atom('json'), bin(str))));
+                } else return transport.send(data);
+            } else return false;
         };
         this.close = function(){
             readyState = CLOSING;
