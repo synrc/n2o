@@ -12,7 +12,7 @@ protocols() -> wf:config(n2o,protocols,[ n2o_binary,
 
 stream(<<>>, Req, State)                  -> nop(Req,State);
 stream({text,Data}=Message, Req, State)   -> push(Message,Req,State,protocols(),[]);
-stream({binary,Data}=Message, Req, State) -> push(binary_to_term(Data,[safe]),Req,State,protocols(),[]);
+stream({binary,Data}=Message, Req, State) -> push(binary_to_term(Data,[safe]),Req,State,protocols(),[]).
 info(Message, Req, State)                 -> push(Message,Req,State,protocols(),[]).
 
 terminate(_Req, _State=#cx{module=Module}) -> catch Module:event(terminate).
