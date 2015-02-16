@@ -23,7 +23,9 @@ init(Req) ->
     wf:context(NewCtx),
     wf:reg(broadcast,{wf:peer(Req)}),
     {Origin, _} = cowboy_req:header(<<"origin">>, Req, <<"*">>),
-    Req1 = wf:header(<<"Access-Control-Allow-Origin">>, Origin, NewCtx#cx.req),
+    ConfigOrigin = wf:to_binary(wf:config(n2o,origin,Origin)),
+    wf:info(?MODULE,"Origin: ~p",[ConfigOrigin]),
+    Req1 = wf:header(<<"Access-Control-Allow-Origin">>, ConfigOrigin, NewCtx#cx.req),
     {ok, Req1, NewCtx}.
 
 % N2O top level protocol NOP REPLY PUSH
