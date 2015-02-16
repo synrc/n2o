@@ -167,7 +167,7 @@ reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
 % Logging API
 
--define(LOGGER, (wf:config(n2o,log_backend,n2o_io))).
+-define(LOGGER, (wf:config(n2o,log_backend,n2o_log))).
 log_modules() -> [wf].
 log_level() -> info.
 -define(LOG_MODULES, (wf:config(n2o,log_modules,wf))).

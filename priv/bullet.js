@@ -17,11 +17,8 @@ function bullet(url) {
             return null;
         },
 
-        xhrPolling: function() {
+        xhr: function() {
             var timeout;
-            var xhr;
-
-            nextPoll();
 
             var fake = {
                 readyState: CONNECTING,
@@ -29,7 +26,6 @@ function bullet(url) {
                 receive: function(data) {
                     if (fake.readyState == CONNECTING) { fake.readyState = OPEN; fake.onopen(fake); }
                     if (data.length != 0) { fake.onmessage({'data': data }); }
-                    if (fake.readyState == OPEN) { nextPoll(); }
                 },
 
                 send: function(data) {
@@ -46,14 +42,9 @@ function bullet(url) {
                 },
                 close: function(){
                     this.readyState = CLOSED;
-                    xhr.abort();
                     clearTimeout(timeout);
                     fake.onclose();
                 },
-                onopen: function(){},
-                onmessage: function(){},
-                onerror: function(){},
-                onclose: function(){}
             };
 
             function poll(pooling){
@@ -70,8 +61,10 @@ function bullet(url) {
 
             function nextPoll() { timeout = setTimeout(function(){poll();}, 1000); }
 
+            fake.send('PING');
+            nextPoll();
 
-            return {'heart': false, 'transport': function(){ return fake; fake.nextPoll(); }};
+            return {'heart': false, 'transport': function() { return fake; } };
         }
     };
 
@@ -115,11 +108,7 @@ function bullet(url) {
 
             transport.onopen = function() {
                 delay = delayDefault;
-
-                if (transport.heart) { 
-                    heartbeat = setInterval(function(){stream.onheartbeat();}, 4000);
-                }
-
+                if (transport.heart) heartbeat = setInterval(function(){stream.onheartbeat();}, 4000);
                 if (readyState != OPEN) { readyState = OPEN; stream.onopen(); }
             };
 
@@ -141,9 +130,7 @@ function bullet(url) {
                 }
             };
             transport.onerror = transport.onclose;
-            transport.onmessage = function(e){
-            stream.onmessage(e);
-            };
+            transport.onmessage = function(e) { stream.onmessage(e); };
         }
 
         init();
@@ -153,13 +140,8 @@ function bullet(url) {
         this.onclose = function(){};    this.onheartbeat = function(){ return this.send('PING'); };
 
         this.setURL = function(newURL) { url = newURL; };
-        this.send = function(data){
-            if (transport) return transport.send(data); else return false;
-        };
-        this.close = function(){
-            readyState = CLOSING;
-            if (transport) transport.close();
-        };
+        this.send = function(data) { if (transport) return transport.send(data); else return false; };
+        this.close = function() { readyState = CLOSING; if (transport) transport.close(); };
     };
 
     return stream;
