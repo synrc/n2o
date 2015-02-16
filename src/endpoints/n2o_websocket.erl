@@ -31,10 +31,10 @@ init(Req) ->
 % N2O top level protocol NOP REPLY PUSH
 
 nop(R,S) ->       wf:info(?MODULE,"NOP",[]),        {reply,<<>>,R,S}.
-reply(M,R,S) ->   wf:info(?MODULE,"REPLY ~p",[M]),  {reply,M,R,S}.
+reply(M,R,S) ->   wf:info(?MODULE,"REPLY~n~p",[iolist_to_binary(M)]),  {reply,M,R,S}.
 
 push(M,R,S,[],Acc)               -> nop(R,S);
-push(M,R,S,[H|T]=Protocols,Acc)  -> wf:info(?MODULE,"PUSH ~p message ~p",[H,M]),
+push(M,R,S,[H|T]=Protocols,Acc)  -> wf:info(?MODULE,"PUSH ~p message~n~p",[H,M]),
     case H:info(M,R,S) of
          {unknown,_,_,_}         -> push(M,R,S,T,Acc);
          {reply,Msg,Req,State}   -> reply(Msg,Req,State);
