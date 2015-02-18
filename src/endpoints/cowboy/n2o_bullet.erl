@@ -7,7 +7,7 @@
 -export([terminate/2]).
 -compile(export_all).
 
-init(_Transport, Req, _Opts, _Active) -> n2o_websocket:init(Req).
+init(_Transport, Req, _Opts, _) -> n2o_websocket:init(Req).
 info(Data,Req,State) -> n2o_websocket:info(Data, Req, State).
 stream(Data, Req, State) -> n2o_websocket:stream(Data, Req, State).
 terminate(Req, State) -> n2o_websocket:terminate(Req, State).

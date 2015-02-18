@@ -8,10 +8,12 @@ var active      = false,
     port        = null == transition.port ? window.location.port : transition.port,
     protos      = [ $client, $binary, $bert ];
 
+
+
 function N2O_start() {
   ws = new bullet(protocol + host + ":" + port + "/ws" + querystring);
   ws.onmessage = function (evt) { for (var i=0;i<protos.length;i++) { p = protos[i]; if (p.on(evt, p.do).status == "ok") return; } };
-  ws.onopen = function() { if (!active) { console.log('Connect'); ws.send(['N2O', transition.pid]); active=true; } };
+  ws.onopen = function() { if (!active) { console.log('Connect'); ws.send('N2O,'+transition.pid); active=true; } };
   ws.ondisconnect = function() { active = false; console.log('Disconnect'); };
 }
 

@@ -5,8 +5,8 @@
 
 init(State, Ctx) -> 
     {Params,NewReq} = wf:params(Ctx#cx.req),
-    {Form,NewReq2} = wf:form(NewReq),
-    NewCtx = Ctx#cx{params=Params,req=NewReq2,form=Form},
+    %{Form,NewReq2} = wf:form(NewReq),
+    NewCtx = Ctx#cx{params=Params,req=NewReq},%,form=Form},
     {ok, [], NewCtx}.
 
 finish(State, Ctx) ->  {ok, [], Ctx}.

@@ -50,9 +50,7 @@ is_char(C) -> is_integer(C) andalso C >= 0 andalso C =< 255.
 is_string([N | _] = PossibleString) when is_number(N) -> lists:all(fun is_char/1, PossibleString);
 is_string(_)                                          -> false.
 
-config(App, Key, Default) -> case application:get_env(App,Key) of
-                                undefined -> Default;
-                                {ok,V} -> V end.
+config(App, Key, Default) -> application:get_env(App,Key,Default).
 
 os_env(Key) -> os_env(Key, "").
 os_env(Key, Default) when is_atom(Key) ->

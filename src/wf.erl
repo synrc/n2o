@@ -128,12 +128,15 @@ cache(Key) ->
 state(Key) -> erlang:get(Key).
 state(Key,Value) -> erlang:put(Key,Value).
 
-% Context Variables and URL Query Strings wf:q and wf:qs
+% Context Variables and URL Query Strings from ?REQ and ?CTX wf:q wf:qc wf:qp
 
-q(Key) -> Val = get(Key), case Val of undefined -> qs(Key); A -> A end.
-qp(Key,Ctx) -> proplists:get_value(Key,Ctx#cx.params).
-qs(Key) -> proplists:get_value(Key,?CTX#cx.params).
+q(Key) -> Val = get(Key), case Val of undefined -> qp(Key); A -> A end.
+qc(Key) -> qc(Key,?CTX).
+qc(Key,Ctx) -> proplists:get_value(wf:to_binary(Key),Ctx#cx.params).
+qp(Key) -> qp(Key,?REQ).
+qp(Key,Req) -> {Params,_} = wf:params(Req), proplists:get_value(wf:to_binary(Key),Params).
 dqs(Key) -> proplists:get_value(Key,?CTX#cx.form).
+lang() -> ?CTX#cx.lang.
 
 % Cookies
 
@@ -164,7 +167,7 @@ reply(Status,Req) -> ?BRIDGE:reply(Status,Req).
 
 % Logging API
 
--define(LOGGER, (wf:config(n2o,log_backend,n2o_io))).
+-define(LOGGER, (wf:config(n2o,log_backend,n2o_log))).
 log_modules() -> [wf].
 log_level() -> info.
 -define(LOG_MODULES, (wf:config(n2o,log_modules,wf))).

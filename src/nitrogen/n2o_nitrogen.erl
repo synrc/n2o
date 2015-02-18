@@ -16,8 +16,9 @@ info({init,Rest},Req,State) ->
                     receive_actions(Req) end,
     UserCx = try Module:event(init) catch C:E -> wf:error_page(C,E) end,
     Actions = render_actions(wf:actions()),
-    self() ! {init_reply,wf:json([{eval,iolist_to_binary([InitActions,Actions])}])},
-    {cont,Rest,Req,wf:context(State,?MODULE,UserCx)};
+    JSON = wf:json([{eval,iolist_to_binary([InitActions,Actions])}]),
+%    self() ! {init_reply,JSON},
+    {reply,JSON,Req,wf:context(State,?MODULE,UserCx)};
 
 
 info({text,Message},Req,State) ->   info(Message,Req,State);
