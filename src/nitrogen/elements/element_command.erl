@@ -24,7 +24,7 @@ render_element(Record) ->
       {<<"title">>, Record#command.title},
       {<<"translate">>, case Record#command.contenteditable of "yes" -> "yes"; "no" -> "no"; _ -> undefined end},
       % spec
-      {<<"disabled">>, if Record#file.disabled == true -> "disabled"; true -> undefined end},
+      {<<"disabled">>, if Record#command.disabled == true -> "disabled"; true -> undefined end},
       {<<"icon">>, Record#command.icon},
       {<<"label">>, Record#command.label},
       {<<"radiogroup">>, Record#command.radiogroup},

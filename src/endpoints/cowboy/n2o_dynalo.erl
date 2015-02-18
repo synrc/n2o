@@ -43,9 +43,9 @@ generate_default_etag(Size, Mtime) ->
 
 last_modified(Req, State={_, {ok, #file_info{mtime=Modified}}, _}) -> {Modified, Req, State}.
 
-get_file(Req, State={Path, {ok, #file_info{size=Size}}, _}) ->
+get_file(Req, State={Path, {ok, #file_info{size=_Size}}, _}) ->
     StringPath = binary_to_list(Path),
-    [Type,Name|RestPath]=SplitPath = filename:split(StringPath),
+    [_Type,Name|RestPath]=SplitPath = filename:split(StringPath),
     wf:info(?MODULE,"Split Path: ~p~n\r",[SplitPath]),
     wf:info(?MODULE,"Code Path: ~p~n\r",[filename:join([code:lib_dir(Name)|RestPath])]),
 	FileName = filename:absname(StringPath),
