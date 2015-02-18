@@ -26,8 +26,8 @@ realm() -> "visitor".
 is_protected(index) -> true;
 is_protected(static_file) -> false;
 is_protected(_) -> false.
-is_authenticated(Module, User) -> false.
+is_authenticated(_Module, _User) -> false.
 
 authenticate(index, "admin", "admin")       -> true;
 authenticate(static_file, _, _)       -> true;
-authenticate(Module, User, Password) -> false.
+authenticate(_Module, _User, _Password) -> false.

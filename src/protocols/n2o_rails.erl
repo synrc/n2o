@@ -41,12 +41,12 @@ handle_ev(Source,Ev,Linked,State) ->
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]),
                           {<<>>,State} end.
 
-render_ev(#ev{module=Controller,name=Action,msg=P,trigger=T}=Ev,Source,Linked,State) ->
+render_ev(#ev{module=Controller,name=Action,msg=_P,trigger=_T}=Ev,_Source,Linked,State) ->
     case Controller:Action(Ev,State#cx{params=Linked}) of
          {json,Dictionary,NewState} -> {wf:json(Dictionary),NewState};
          {binary,Raw,NewState} -> {{binary,Raw},NewState};
-         {actions,Elements,NewState} -> {wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(wf:actions()))}]), NewState};
-         {file,FileName,NewState} -> {<<>>,NewState};
-         {redirect,Address,NewState} -> {<<>>,NewState};
+         {actions,_Elements,NewState} -> {wf:json([{eval,iolist_to_binary(n2o_nitrogen:render_actions(wf:actions()))}]), NewState};
+         {file,_FileName,NewState} -> {<<>>,NewState};
+         {redirect,_Address,NewState} -> {<<>>,NewState};
          _ -> {<<>>,State}
     end.

@@ -34,12 +34,12 @@ init(State, Ctx) ->
     wf:info(?MODULE,"State: ~p",[SessionCookie]),
     {ok, State, Ctx#cx{session=SessionCookie}}.
 
-expired(_Issued,{_TTL,Till}) -> false. %Till < calendar:now_to_datetime(now()).
+expired(_Issued,{_TTL,_Till}) -> false. %Till < calendar:now_to_datetime(now()).
 
 finish(State, Ctx) -> 
     wf:info(?MODULE,"Finish Cookie Set ~p",[State]),
     NewReq = case Ctx#cx.session of
-         {{Session,Key},Path,Issued,{TTL,Till},Status} -> 
+         {{Session,_Key},Path,_Issued,{TTL,_Till},_Status} -> 
               wf:cookie_req(session_cookie_name(),Session,Path,TTL,Ctx#cx.req);
          _ -> Ctx#cx.req end,
     {ok, [], Ctx#cx{req=NewReq}}.
