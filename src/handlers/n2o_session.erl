@@ -18,8 +18,8 @@ ensure_sid(State, Ctx, From) ->
 session_sid(SID, Source) -> js_session:session_sid([], ?CTX, SID, Source).
 session_sid(State, Ctx, SessionId, From) ->
     wf:info(?MODULE,"Session Init ~p: ~p",[From,SessionId]),
-    Till = till(calendar:local_time(), ttl()),
     Lookup = lookup_ets({SessionId,<<"auth">>}),
+    NewTill = till(calendar:local_time(), ttl()),
     SessionCookie = case Lookup of
         undefined ->
             CookieValue = case SessionId of
@@ -27,7 +27,7 @@ session_sid(State, Ctx, SessionId, From) ->
                     undefined -> new_cookie_value(From);
                     Csid -> new_cookie_value(Csid, From) end;
                 _ -> new_cookie_value(SessionId,From) end,
-            Cookie = {{CookieValue,<<"auth">>},<<"/">>,now(),Till,new},
+            Cookie = {{CookieValue,<<"auth">>},<<"/">>,now(),NewTill,new},
             ets:insert(cookies,Cookie),
             wf:info(?MODULE,"Cookie New: ~p~n",[Cookie]),
             Cookie;
@@ -37,11 +37,12 @@ session_sid(State, Ctx, SessionId, From) ->
                     Cookie = {{Session,Key},Path,Issued,Till,Status},
                     wf:info(?MODULE,"Cookie Same: ~p",[Cookie]),
                     Cookie;
-                true -> Cookie = {{new_cookie_value(From),<<"auth">>},<<"/">>,now(),Till,new},
+                true ->
+                    Cookie = {{new_cookie_value(From),<<"auth">>},<<"/">>,now(),NewTill,new},
                     ets:insert(cookies,Cookie),
                     wf:info(?MODULE,"Cookie Expired: ~p",[Cookie]),
                     Cookie end;
-        _ -> wf:info(?MODULE,"Cookie Error",[]), skip
+        What -> wf:info(?MODULE,"Cookie Error: ~p",[What]), What
     end,
     {{ID,_},_,_,_,_} = SessionCookie,
     put(session_id,ID),
