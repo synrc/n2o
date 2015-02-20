@@ -12,9 +12,9 @@ body() ->
    #span   { body="Join/Create Feed: " }, #textbox{id=pass},
    #button { body="Login",postback=login,source=[user,pass]}].
 
-event(init) -> 
+event(init) ->
     [ index:event({client,{"feed",element(2,F#feed.id)}}) || F <-kvs:all(feed)],
-    js_session:ensure_sid([],?CTX);
+    n2o_session:ensure_sid([],?CTX,[]);
 
 event(login) ->
     User = case wf:q(user) of [] -> "anonymous";

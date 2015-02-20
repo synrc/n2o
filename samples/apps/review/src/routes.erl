@@ -21,9 +21,6 @@ route_prefix(P) -> route(P).
 
 route(<<>>)              -> login;
 route(<<"index">>)       -> index;
-route(<<"index_rails">>) -> index_rails;
 route(<<"login">>)       -> login;
 route(<<"favicon.ico">>) -> static_file;
-route(<<"static/spa/spa.htm">>)   -> login;
-route(<<"static/spa/index.htm">>) -> index;
 route(_) -> login.
