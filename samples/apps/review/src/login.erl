@@ -21,6 +21,7 @@ event(login) ->
                               undefined -> "anonymous";
                               E -> E end,
     wf:user(User),
+    wf:info(?MODULE,"User: ~p",[wf:user()]),
     wf:redirect("/index?room="++wf:to_list(wf:q(pass))),
     ok;
 
