@@ -211,24 +211,25 @@ hide(Element) -> display(Element,none).
 atom(List) when is_list(List) -> wf:to_atom(string:join([ wf:to_list(L) || L <- List],"_"));
 atom(Scalar) -> wf:to_atom(Scalar).
 
-f(S) -> _String = wf_utils:f(S).
-f(S, Args) -> _String = wf_utils:f(S, Args).
-coalesce(L) -> _Value = wf_utils:coalesce(L).
-to_list(T) -> _String = wf_convert:to_list(T).
-to_atom(T) -> _Atom = wf_convert:to_atom(T).
-to_binary(T) -> _Binary = wf_convert:to_binary(T).
-to_integer(T) -> _Integer = wf_convert:to_integer(T).
-to_string_list(Term) -> _StringList = wf_convert:to_string_list(Term).
-clean_lower(S) -> _String = wf_convert:clean_lower(S).
-html_encode(S) -> _String = wf_convert:html_encode(S).
-html_encode(S, Encode) -> _String = wf_convert:html_encode(S, Encode).
-url_encode(S) -> _String = wf_convert:url_encode(S).
-url_decode(S) -> _String = wf_convert:url_decode(S).
-hex_encode(S) -> _String = wf_convert:hex_encode(S).
-hex_decode(S) -> _String = wf_convert:hex_decode(S).
-js_escape(String) -> _String = wf_convert:js_escape(String).
-join(List,Delimiter) -> _Result = wf_convert:join(List,Delimiter).
-json(Json) -> n2o_json:encode(Json).
+f(S)        -> wf_utils:f(S).
+f(S, Args)  -> wf_utils:f(S, Args).
+coalesce(L) -> wf_utils:coalesce(L).
+json(Json)  -> n2o_json:encode(Json).
+
+to_list(T)    -> wf_convert:to_list(T).
+to_atom(T)    -> wf_convert:to_atom(T).
+to_binary(T)  -> wf_convert:to_binary(T).
+to_integer(T) -> wf_convert:to_integer(T).
+
+js_escape(String)      -> wf_convert:js_escape(String).
+html_encode(S)         -> wf_convert:html_encode(S).
+html_encode(S, Encode) -> wf_convert:html_encode(S, Encode).
+url_encode(S)          -> wf_convert:url_encode(S).
+url_decode(S)          -> wf_convert:url_decode(S).
+hex_encode(S)          -> wf_convert:hex(S).
+hex_decode(S)          -> wf_convert:hex(S).
+join(List,Delimiter)   -> wf_convert:join(List,Delimiter).
+
 
 % These api are not really API
 
@@ -236,15 +237,15 @@ temp_id() -> {_, _, C} = now(), "auto" ++ integer_to_list(C).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 
-actions() -> wf_context:actions().
-actions(Ac) -> wf_context:actions(Ac).
-context() -> wf_context:context().
-context(Cx) -> wf_context:context(Cx).
-context(Cx,Proto) -> wf_context:context(Cx,Proto).
-context(Cx,Proto,UserCx) -> wf_context:context(Cx,Proto,UserCx).
-script() -> wf_context:script().
+actions()      -> wf_context:actions().
+actions(Ac)    -> wf_context:actions(Ac).
+script()       -> wf_context:script().
 script(Script) -> wf_context:script(Script).
-add_action(Action) -> wf_context:add_action(Action).
+context()      -> wf_context:context().
+context(Cx)    -> wf_context:context(Cx).
+context(Cx,Proto)        -> wf_context:context(Cx,Proto).
+context(Cx,Proto,UserCx) -> wf_context:context(Cx,Proto,UserCx).
+add_action(Action)       -> wf_context:add_action(Action).
 
 config_multiple(Keys) -> [config(Key, "") || Key <- Keys].
 config(Key) -> config(n2o, Key, "").

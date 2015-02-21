@@ -75,11 +75,9 @@ till(NowDateTime,TTLInSeconds) ->
 
 session_id() -> get(session_id).
 
-new_sid() -> {X1,X2,X3} = now(),
-             A = integer_to_binary(X1),
-             B = integer_to_binary(X2),
-             C = integer_to_binary(X3),
-             <<A/binary,"-",B/binary,"-",C/binary>>.
+new_sid() ->
+    wf_convert:hex(binary:part(crypto:hmac(wf:config(n2o,hmac,sha256),
+         n2o_secret:secret(),term_to_binary(now())),0,16)).
 
 new_cookie_value(From) -> new_cookie_value(new_sid(), From).
 new_cookie_value(undefined, From) -> new_cookie_value(new_sid(), From);
