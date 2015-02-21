@@ -76,7 +76,9 @@ till(NowDateTime,TTLInSeconds) ->
 
 session_id() -> get(session_id).
 
-new_sid() -> wf_convert:hex(crypto:hmac(wf:config(n2o,hmac,sha256),n2o_secret:secret(),term_to_binary(now()))).
+new_sid() ->
+    wf_convert:hex(binary:part(crypto:hmac(wf:config(n2o,hmac,sha256),
+         n2o_secret:secret(),term_to_binary(now())),0,16)).
 
 new_cookie_value(From) -> new_cookie_value(new_sid(), From).
 new_cookie_value(undefined, From) -> new_cookie_value(new_sid(), From);
