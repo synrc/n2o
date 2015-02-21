@@ -1,6 +1,7 @@
 -module(n2o_secret).
 -author('Oleksandr Nikitin').
 -include_lib("n2o/include/wf.hrl").
+-compile(export_all).
 -export(?PICKLES_API).
 
 pickle(Data) ->
