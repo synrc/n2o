@@ -4,6 +4,7 @@
 -include_lib("n2o/include/wf.hrl").
 
 main() ->
+    n2o_session:ensure_sid([],?CTX,[]),
     case wf:user() of
          undefined -> wf:redirect("/login"),#dtl{};
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.

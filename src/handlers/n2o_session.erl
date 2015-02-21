@@ -15,7 +15,7 @@ ensure_sid(State, Ctx, From) ->
     wf:info(?MODULE,"Ensure SID ~p-sid=~p~n",[From,SessionId]),
     session_sid(State, Ctx, SessionId, From).
 
-session_sid(SID, Source) -> js_session:session_sid([], ?CTX, SID, Source).
+session_sid(SID, Source) -> session_sid([], ?CTX, SID, Source).
 session_sid(State, Ctx, SessionId, From) ->
     wf:info(?MODULE,"Session Init ~p: ~p",[From,SessionId]),
     Lookup = lookup_ets({SessionId,<<"auth">>}),
