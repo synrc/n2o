@@ -1,7 +1,6 @@
 -module(n2o_session).
 -author('Dmitry Krapivnoy').
 -include_lib("n2o/include/wf.hrl").
--include_lib("kvs/include/user.hrl").
 -include_lib("stdlib/include/ms_transform.hrl").
 -compile(export_all).
 -record(state, {unique, node}).
