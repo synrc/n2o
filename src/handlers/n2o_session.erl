@@ -76,13 +76,7 @@ till(NowDateTime,TTLInSeconds) ->
 
 session_id() -> get(session_id).
 
-digit(N) when N < 10 -> $0 + N;
-digit(N) -> $a + N - 10.
-
-hex(<<>>) -> <<>>;
-hex(<<H,T/binary>>) -> Tail=hex(T), L=digit(H bsr 4), R=digit(H band 15), <<R,L,Tail/binary>>.
-
-new_sid() -> hex(crypto:hmac(wf:config(n2o,hmac,sha256),n2o_secret:secret(),term_to_binary(now()))).
+new_sid() -> wf_convert:hex(crypto:hmac(wf:config(n2o,hmac,sha256),n2o_secret:secret(),term_to_binary(now()))).
 
 new_cookie_value(From) -> new_cookie_value(new_sid(), From).
 new_cookie_value(undefined, From) -> new_cookie_value(new_sid(), From);

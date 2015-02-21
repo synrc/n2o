@@ -1,33 +1,14 @@
-%% @copyright 2007 Mochi Media, Inc.
-%% @author Bob Ippolito <bob@mochimedia.com>
-
-%% @doc Useful numeric algorithms for floats that cover some deficiencies
-%% in the math module. More interesting is digits/1, which implements
-%% the algorithm from:
-%% http://www.cs.indiana.edu/~burger/fp/index.html
-%% See also "Printing Floating-Point Numbers Quickly and Accurately"
-%% in Proceedings of the SIGPLAN '96 Conference on Programming Language
-%% Design and Implementation.
-
 -module(n2o_mochinum).
--author("Bob Ippolito <bob@mochimedia.com>").
--export([digits/1, frexp/1, int_pow/2, int_ceil/1]).
+-author('Bob Ippolito').
+-compile(export_all).
 
 %% IEEE 754 Float exponent bias
 -define(FLOAT_BIAS, 1022).
 -define(MIN_EXP, -1074).
 -define(BIG_POW, 4503599627370496).
 
-%% External API
-
-%% @spec digits(number()) -> string()
-%% @doc  Returns a string that accurately represents the given integer or float
-%%       using a conservative amount of digits. Great for generating
-%%       human-readable output, or compact ASCII serializations for floats.
-digits(N) when is_integer(N) ->
-    integer_to_list(N);
-digits(0.0) ->
-    "0.0";
+digits(N) when is_integer(N) -> integer_to_list(N);
+digits(0.0) -> "0.0";
 digits(Float) ->
     {Frac1, Exp1} = frexp_int(Float),
     [Place0 | Digits0] = digits1(Float, Exp1, Frac1),
@@ -40,43 +21,15 @@ digits(Float) ->
             R
     end.
 
-%% @spec frexp(F::float()) -> {Frac::float(), Exp::float()}
-%% @doc  Return the fractional and exponent part of an IEEE 754 double,
-%%       equivalent to the libc function of the same name.
-%%       F = Frac * pow(2, Exp).
-frexp(F) ->
-    frexp1(unpack(F)).
+frexp(F) -> frexp1(unpack(F)).
 
-%% @spec int_pow(X::integer(), N::integer()) -> Y::integer()
-%% @doc  Moderately efficient way to exponentiate integers.
-%%       int_pow(10, 2) = 100.
-int_pow(_X, 0) ->
-    1;
-int_pow(X, N) when N > 0 ->
-    int_pow(X, N, 1).
+int_pow(_X, 0) -> 1;
+int_pow(X, N) when N > 0 -> int_pow(X, N, 1).
+int_ceil(X) -> T = trunc(X), case (X - T) of Pos when Pos > 0 -> T + 1; _ -> T end.
+int_pow(X, N, R) when N < 2 -> R * X;
+int_pow(X, N, R) -> int_pow(X * X, N bsr 1, case N band 1 of 1 -> R * X; 0 -> R end).
 
-%% @spec int_ceil(F::float()) -> integer()
-%% @doc  Return the ceiling of F as an integer. The ceiling is defined as
-%%       F when F == trunc(F);
-%%       trunc(F) when F &lt; 0;
-%%       trunc(F) + 1 when F &gt; 0.
-int_ceil(X) ->
-    T = trunc(X),
-    case (X - T) of
-        Pos when Pos > 0 -> T + 1;
-        _ -> T
-    end.
-
-
-%% Internal API
-
-int_pow(X, N, R) when N < 2 ->
-    R * X;
-int_pow(X, N, R) ->
-    int_pow(X * X, N bsr 1, case N band 1 of 1 -> R * X; 0 -> R end).
-
-insert_decimal(0, S) ->
-    "0." ++ S;
+insert_decimal(0, S) -> "0." ++ S;
 insert_decimal(Place, S) when Place > 0 ->
     L = length(S),
     case Place - L of
@@ -91,10 +44,8 @@ insert_decimal(Place, S) when Place > 0 ->
         _ ->
             insert_decimal_exp(Place, S)
     end;
-insert_decimal(Place, S) when Place > -6 ->
-    "0." ++ lists:duplicate(abs(Place), $0) ++ S;
-insert_decimal(Place, S) ->
-    insert_decimal_exp(Place, S).
+insert_decimal(Place, S) when Place > -6 -> "0." ++ lists:duplicate(abs(Place), $0) ++ S;
+insert_decimal(Place, S) -> insert_decimal_exp(Place, S).
 
 insert_decimal_exp(Place, S) ->
     [C | S0] = S,
@@ -207,8 +158,7 @@ unpack(Float) ->
     <<Sign:1, Exp:11, Frac:52>> = <<Float:64/float>>,
     {Sign, Exp, Frac}.
 
-frexp1({_Sign, 0, 0}) ->
-    {0.0, 0};
+frexp1({_Sign, 0, 0}) -> {0.0, 0};
 frexp1({Sign, 0, Frac}) ->
     Exp = log2floor(Frac),
     <<Frac1:64/float>> = <<Sign:1, ?FLOAT_BIAS:11, (Frac-1):52>>,
@@ -217,20 +167,13 @@ frexp1({Sign, Exp, Frac}) ->
     <<Frac1:64/float>> = <<Sign:1, ?FLOAT_BIAS:11, Frac:52>>,
     {Frac1, Exp - ?FLOAT_BIAS}.
 
-log2floor(Int) ->
-    log2floor(Int, 0).
-
-log2floor(0, N) ->
-    N;
-log2floor(Int, N) ->
-    log2floor(Int bsr 1, 1 + N).
+log2floor(Int) -> log2floor(Int, 0).
+log2floor(0, N) -> N;
+log2floor(Int, N) -> log2floor(Int bsr 1, 1 + N).
 
 
-transform_digits(Place, [0 | Rest]) ->
-    transform_digits(Place, Rest);
-transform_digits(Place, Digits) ->
-    {Place, [$0 + D || D <- Digits]}.
-
+transform_digits(Place, [0 | Rest]) -> transform_digits(Place, Rest);
+transform_digits(Place, Digits) -> {Place, [$0 + D || D <- Digits]}.
 
 frexp_int(F) ->
     case unpack(F) of
@@ -240,115 +183,4 @@ frexp_int(F) ->
             {Frac + (1 bsl 52), Exp - 53 - ?FLOAT_BIAS}
     end.
 
-%%
-%% Tests
-%%
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
 
-int_ceil_test() ->
-    ?assertEqual(1, int_ceil(0.0001)),
-    ?assertEqual(0, int_ceil(0.0)),
-    ?assertEqual(1, int_ceil(0.99)),
-    ?assertEqual(1, int_ceil(1.0)),
-    ?assertEqual(-1, int_ceil(-1.5)),
-    ?assertEqual(-2, int_ceil(-2.0)),
-    ok.
-
-int_pow_test() ->
-    ?assertEqual(1, int_pow(1, 1)),
-    ?assertEqual(1, int_pow(1, 0)),
-    ?assertEqual(1, int_pow(10, 0)),
-    ?assertEqual(10, int_pow(10, 1)),
-    ?assertEqual(100, int_pow(10, 2)),
-    ?assertEqual(1000, int_pow(10, 3)),
-    ok.
-
-digits_test() ->
-    ?assertEqual("0",
-                 digits(0)),
-    ?assertEqual("0.0",
-                 digits(0.0)),
-    ?assertEqual("1.0",
-                 digits(1.0)),
-    ?assertEqual("-1.0",
-                 digits(-1.0)),
-    ?assertEqual("0.1",
-                 digits(0.1)),
-    ?assertEqual("0.01",
-                 digits(0.01)),
-    ?assertEqual("0.001",
-                 digits(0.001)),
-    ?assertEqual("1.0e+6",
-                 digits(1000000.0)),
-    ?assertEqual("0.5",
-                 digits(0.5)),
-    ?assertEqual("4503599627370496.0",
-                 digits(4503599627370496.0)),
-    %% small denormalized number
-    %% 4.94065645841246544177e-324 =:= 5.0e-324
-    <<SmallDenorm/float>> = <<0,0,0,0,0,0,0,1>>,
-    ?assertEqual("5.0e-324",
-                 digits(SmallDenorm)),
-    ?assertEqual(SmallDenorm,
-                 list_to_float(digits(SmallDenorm))),
-    %% large denormalized number
-    %% 2.22507385850720088902e-308
-    <<BigDenorm/float>> = <<0,15,255,255,255,255,255,255>>,
-    ?assertEqual("2.225073858507201e-308",
-                 digits(BigDenorm)),
-    ?assertEqual(BigDenorm,
-                 list_to_float(digits(BigDenorm))),
-    %% small normalized number
-    %% 2.22507385850720138309e-308
-    <<SmallNorm/float>> = <<0,16,0,0,0,0,0,0>>,
-    ?assertEqual("2.2250738585072014e-308",
-                 digits(SmallNorm)),
-    ?assertEqual(SmallNorm,
-                 list_to_float(digits(SmallNorm))),
-    %% large normalized number
-    %% 1.79769313486231570815e+308
-    <<LargeNorm/float>> = <<127,239,255,255,255,255,255,255>>,
-    ?assertEqual("1.7976931348623157e+308",
-                 digits(LargeNorm)),
-    ?assertEqual(LargeNorm,
-                 list_to_float(digits(LargeNorm))),
-    %% issue #10 - mochinum:frexp(math:pow(2, -1074)).
-    ?assertEqual("5.0e-324",
-                 digits(math:pow(2, -1074))),
-    ok.
-
-frexp_test() ->
-    %% zero
-    ?assertEqual({0.0, 0}, frexp(0.0)),
-    %% one
-    ?assertEqual({0.5, 1}, frexp(1.0)),
-    %% negative one
-    ?assertEqual({-0.5, 1}, frexp(-1.0)),
-    %% small denormalized number
-    %% 4.94065645841246544177e-324
-    <<SmallDenorm/float>> = <<0,0,0,0,0,0,0,1>>,
-    ?assertEqual({0.5, -1073}, frexp(SmallDenorm)),
-    %% large denormalized number
-    %% 2.22507385850720088902e-308
-    <<BigDenorm/float>> = <<0,15,255,255,255,255,255,255>>,
-    ?assertEqual(
-       {0.99999999999999978, -1022},
-       frexp(BigDenorm)),
-    %% small normalized number
-    %% 2.22507385850720138309e-308
-    <<SmallNorm/float>> = <<0,16,0,0,0,0,0,0>>,
-    ?assertEqual({0.5, -1021}, frexp(SmallNorm)),
-    %% large normalized number
-    %% 1.79769313486231570815e+308
-    <<LargeNorm/float>> = <<127,239,255,255,255,255,255,255>>,
-    ?assertEqual(
-        {0.99999999999999989, 1024},
-        frexp(LargeNorm)),
-    %% issue #10 - mochinum:frexp(math:pow(2, -1074)).
-    ?assertEqual(
-       {0.5, -1073},
-       frexp(math:pow(2, -1074))),
-    ok.
-
--endif.

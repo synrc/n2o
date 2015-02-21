@@ -1,29 +1,24 @@
 -module (wf_convert).
--author('Rusty Klophaus').
+-author('Maxim Sokhatsky').
 -compile(export_all).
 -include_lib("n2o/include/wf.hrl").
 
+% WF to_atom to_list to_binary
+
 -define(IS_STRING(Term), (is_list(Term) andalso Term /= [] andalso is_integer(hd(Term)))).
 
-%%% CONVERSION %%%
-
-clean_lower(L) -> string:strip(string:to_lower(to_list(L))).
-
 to_list(L) when ?IS_STRING(L) -> L;
-to_list(L) when is_list(L) ->
-    SubLists = [inner_to_list(X) || X <- L],
-    lists:flatten(SubLists);
+to_list(L) when is_list(L) -> SubLists = [inner_to_list(X) || X <- L], lists:flatten(SubLists);
 to_list(A) -> inner_to_list(A).
 inner_to_list(A) when is_atom(A) -> atom_to_list(A);
 inner_to_list(B) when is_binary(B) -> binary_to_list(B);
 inner_to_list(I) when is_integer(I) -> integer_to_list(I);
-inner_to_list(F) when is_float(F) -> 
-	case F == round(F) of
-		true -> inner_to_list(round(F));
-		false -> n2o_mochinum:digits(F)
-	end;
 inner_to_list(L) when is_tuple(L) -> lists:flatten(io_lib:format("~p", [L]));
-inner_to_list(L) when is_list(L) -> L.
+inner_to_list(L) when is_list(L) -> L;
+inner_to_list(F) when is_float(F) ->
+    case F == round(F) of
+        true -> inner_to_list(round(F));
+        false -> n2o_mochinum:digits(F) end.
 
 to_atom(A) when is_atom(A) -> A;
 to_atom(B) when is_binary(B) -> to_atom(binary_to_list(B));
@@ -44,41 +39,15 @@ to_integer([]) -> 0;
 to_integer(L) when is_list(L) -> list_to_integer(L);
 to_integer(F) when is_float(F) -> round(F).
 
-%%% TO STRING LIST %%%
-
-%% @doc
-%% Convert the following forms into a list of strings...
-%% 	- atom
-%%  - [atom, atom, ...]
-%%  - "String"
-%%  - "String, String, ..."
-%%  - "String String ..."
-%%  - [atom, "String", ...]
-to_string_list(L) -> to_string_list(L, []).
-to_string_list([], Acc) -> Acc;
-to_string_list(undefined, Acc) -> Acc;
-to_string_list(L, Acc) when is_atom(L) ->
-    [atom_to_list(L)|Acc];
-to_string_list(L, Acc) when ?IS_STRING(L) ->
-    string:tokens(L, " ,") ++ Acc;
-to_string_list(L, Acc) when is_binary(L) ->
-    [binary_to_list(L)|Acc];
-to_string_list([H|T], Acc) ->
-    to_string_list(T, to_string_list(H) ++ Acc).
-
-
-%%% HTML ENCODE %%%
+% HTML encode/decode
 
 html_encode(L,Fun) when is_function(Fun) -> Fun(L);
-
 html_encode(L,EncType) when is_atom(L) -> html_encode(wf:to_list(L),EncType);
 html_encode(L,EncType) when is_integer(L) -> html_encode(integer_to_list(L),EncType);
 html_encode(L,EncType) when is_float(L) -> html_encode(n2o_mochinum:digits(L),EncType);
-
 html_encode(L, false) -> L; %wf:to_list(lists:flatten([L]));
 html_encode(L, true) -> L; %html_encode(wf:to_list(lists:flatten([L])));
 html_encode(L, whites) -> html_encode_whites(wf:to_list(lists:flatten([L]))).
-
 html_encode(<<>>) -> [];
 html_encode([]) -> [];
 html_encode([H|T]) ->
@@ -111,47 +80,46 @@ html_encode_whites([H|T]) ->
 		_ -> [H|html_encode_whites(T)]
 	end.
 
-
-
-%%% HEX ENCODE and HEX DECODE
-
-hex_encode(Data) -> encode(Data, 16).
-hex_decode(Data) -> decode(Data, 16).
-
-encode(Data, Base) when is_binary(Data) -> encode(binary_to_list(Data), Base);
-encode(Data, Base) when is_list(Data) ->
-    F = fun(C) when is_integer(C) ->
-        case erlang:integer_to_list(C, Base) of
-            [C1, C2] -> <<C1, C2>>;
-            [C1]     -> <<$0, C1>>;
-            _        -> throw("Could not hex_encode the string.")
-        end
-    end,
-    {ok, list_to_binary([F(I) || I <- Data])}.
-
-decode(Data, Base) when is_binary(Data) -> decode(binary_to_list(Data), Base);
-decode(Data, Base) when is_list(Data) ->
-    {ok, list_to_binary(inner_decode(Data, Base))}.
-
-inner_decode(Data, Base) when is_list(Data) ->
-    case Data of
-        [C1, C2|Rest] ->
-            I = erlang:list_to_integer([C1, C2], Base),
-            [I|inner_decode(Rest, Base)];
-
-        [] ->
-            [];
-
-        _  ->
-            throw("Could not hex_decode the string.")
-    end.
-
-%%% URL ENCODE/DECODE %%%
+%% URL encode/decode
 
 url_encode(S) -> quote_plus(S).
 url_decode(S) -> unquote(S).
 
-%%% ESCAPE JAVASCRIPT %%%
+-define(PERCENT, 37).  % $\%
+-define(FULLSTOP, 46). % $\.
+-define(IS_HEX(C), ((C >= $0 andalso C =< $9) orelse
+    (C >= $a andalso C =< $f) orelse
+    (C >= $A andalso C =< $F))).
+-define(QS_SAFE(C), ((C >= $a andalso C =< $z) orelse
+    (C >= $A andalso C =< $Z) orelse
+    (C >= $0 andalso C =< $9) orelse
+    (C =:= ?FULLSTOP orelse C =:= $- orelse C =:= $~ orelse
+        C =:= $_))).
+
+quote_plus(Atom) when is_atom(Atom) -> quote_plus(atom_to_list(Atom));
+quote_plus(Int) when is_integer(Int) -> quote_plus(integer_to_list(Int));
+quote_plus(Bin) when is_binary(Bin) -> quote_plus(binary_to_list(Bin));
+quote_plus(String) -> quote_plus(String, []).
+
+quote_plus([], Acc) -> lists:reverse(Acc);
+quote_plus([C | Rest], Acc) when ?QS_SAFE(C) -> quote_plus(Rest, [C | Acc]);
+quote_plus([$\s | Rest], Acc) -> quote_plus(Rest, [$+ | Acc]);
+quote_plus([C | Rest], Acc) -> <<Hi:4, Lo:4>> = <<C>>, quote_plus(Rest, [digit(Lo), digit(Hi), ?PERCENT | Acc]).
+
+unquote(Binary) when is_binary(Binary) -> unquote(binary_to_list(Binary));
+unquote(String) -> qs_revdecode(lists:reverse(String)).
+
+unhexdigit(C) when C >= $0, C =< $9 -> C - $0;
+unhexdigit(C) when C >= $a, C =< $f -> C - $a + 10;
+unhexdigit(C) when C >= $A, C =< $F -> C - $A + 10.
+
+qs_revdecode(S) -> qs_revdecode(S, []).
+qs_revdecode([], Acc) -> Acc;
+qs_revdecode([$+ | Rest], Acc) -> qs_revdecode(Rest, [$\s | Acc]);
+qs_revdecode([Lo, Hi, ?PERCENT | Rest], Acc) when ?IS_HEX(Lo), ?IS_HEX(Hi) -> qs_revdecode(Rest, [(unhexdigit(Lo) bor (unhexdigit(Hi) bsl 4)) | Acc]);
+qs_revdecode([C | Rest], Acc) -> qs_revdecode(Rest, [C | Acc]).
+
+%% JavaScript encode/decode
 
 js_escape(undefined) -> [];
 js_escape(Value) when is_list(Value) -> binary_to_list(js_escape(iolist_to_binary(Value)));
@@ -166,98 +134,45 @@ js_escape(<<"script>", Rest/binary>>, Acc) -> js_escape(Rest, <<Acc/binary, "scr
 js_escape(<<C, Rest/binary>>, Acc) -> js_escape(Rest, <<Acc/binary, C>>);
 js_escape(<<>>, Acc) -> Acc.
 
+% JOIN
 
-%%% JOIN %%%
-%% Erlang doesn't provide a short way to join lists of "things" with other things.
-%% string:join is not applicable here and only works on strings
+join([],_) -> [];
+join([Item],_Delim) -> [Item];
+join([Item|Items],Delim) -> [Item,Delim | join(Items,Delim)].
 
-join([],_) ->
-	[];
-join([Item],_Delim) ->
-	[Item];
-join([Item|Items],Delim) ->
-	[Item,Delim | join(Items,Delim)].
+% Fast HEX
 
-%%% CODE BELOW IS FROM MOCHIWEB %%%
+digit(0) -> $0;
+digit(1) -> $1;
+digit(2) -> $2;
+digit(3) -> $3;
+digit(4) -> $4;
+digit(5) -> $5;
+digit(6) -> $6;
+digit(7) -> $7;
+digit(8) -> $8;
+digit(9) -> $9;
+digit(10) -> $a;
+digit(11) -> $b;
+digit(12) -> $c;
+digit(13) -> $d;
+digit(14) -> $e;
+digit(15) -> $f.
 
-%% This is the MIT license.
-%%
-%% Copyright (c) 2007 Mochi Media, Inc.
-%%
-%% Permission is hereby granted, free of charge, to any person
-%% obtaining a copy of this software and associated documentation
-%% files (the "Software"), to deal in the Software without
-%% restriction, including without limitation the rights to use, copy,
-%% modify, merge, publish, distribute, sublicense, and/or sell copies
-%% of the Software, and to permit persons to whom the Software is
-%% furnished to do so, subject to the following conditions:
-%%
-%% The above copyright notice and this permission notice shall be
-%% included in all copies or substantial portions of the Software.
-%%
-%% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-%% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-%% MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-%% NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-%% BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-%% ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-%% CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-%% SOFTWARE.
-
--define(PERCENT, 37).  % $\%
--define(FULLSTOP, 46). % $\.
--define(IS_HEX(C), ((C >= $0 andalso C =< $9) orelse
-    (C >= $a andalso C =< $f) orelse
-    (C >= $A andalso C =< $F))).
--define(QS_SAFE(C), ((C >= $a andalso C =< $z) orelse
-    (C >= $A andalso C =< $Z) orelse
-    (C >= $0 andalso C =< $9) orelse
-    (C =:= ?FULLSTOP orelse C =:= $- orelse C =:= $~ orelse
-        C =:= $_))).
-
-
-hexdigit(C) when C < 10 -> $0 + C;
-hexdigit(C) when C < 16 -> $A + (C - 10).
-
-unhexdigit(C) when C >= $0, C =< $9 -> C - $0;
-unhexdigit(C) when C >= $a, C =< $f -> C - $a + 10;
-unhexdigit(C) when C >= $A, C =< $F -> C - $A + 10.
-
-
-quote_plus(Atom) when is_atom(Atom) ->
-    quote_plus(atom_to_list(Atom));
-quote_plus(Int) when is_integer(Int) ->
-    quote_plus(integer_to_list(Int));
-quote_plus(Bin) when is_binary(Bin) ->
-    quote_plus(binary_to_list(Bin));
-quote_plus(String) ->
-    quote_plus(String, []).
-
-quote_plus([], Acc) ->
-    lists:reverse(Acc);
-quote_plus([C | Rest], Acc) when ?QS_SAFE(C) ->
-    quote_plus(Rest, [C | Acc]);
-quote_plus([$\s | Rest], Acc) ->
-    quote_plus(Rest, [$+ | Acc]);
-quote_plus([C | Rest], Acc) ->
-    <<Hi:4, Lo:4>> = <<C>>,
-    quote_plus(Rest, [hexdigit(Lo), hexdigit(Hi), ?PERCENT | Acc]).
-
-%% @spec unquote(string() | binary()) -> string()
-%% @doc Unquote a URL encoded string.
-unquote(Binary) when is_binary(Binary) ->
-    unquote(binary_to_list(Binary));
-unquote(String) ->
-    qs_revdecode(lists:reverse(String)).
-
-qs_revdecode(S) ->
-    qs_revdecode(S, []).
-
-qs_revdecode([], Acc) ->
-    Acc;
-qs_revdecode([$+ | Rest], Acc) ->
-    qs_revdecode(Rest, [$\s | Acc]);
-qs_revdecode([Lo, Hi, ?PERCENT | Rest], Acc) when ?IS_HEX(Lo), ?IS_HEX(Hi) ->
-    qs_revdecode(Rest, [(unhexdigit(Lo) bor (unhexdigit(Hi) bsl 4)) | Acc]);
-qs_revdecode([C | Rest], Acc) ->
-    qs_revdecode(Rest, [C | Acc]).
+hex(<<>>) -> <<>>;
+hex(<<A1:4,A2:4,A3:4,A4:4,A5:4,A6:4,A7:4,A8:4,
+      A9:4,A10:4,A11:4,A12:4,A13:4,A14:4,A15:4,A16:4,
+%      A17:4,A18:4,A19:4,A20:4,A21:4,A22:4,A23:4,A24:4,
+%      A25:4,A26:4,A27:4,A28:4,A29:4,A30:4,A31:4,A32:4,
+      T/binary>>) ->
+   <<(digit(A1)), (digit(A2)), (digit(A3)), (digit(A4)),
+     (digit(A5)), (digit(A6)), (digit(A7)), (digit(A8)),
+     (digit(A9)), (digit(A10)),(digit(A11)),(digit(A12)),
+     (digit(A13)),(digit(A14)),(digit(A15)),(digit(A16)),
+%     (digit(A17)),(digit(A18)),(digit(A19)),(digit(A20)),
+%     (digit(A21)), (digit(A22)), (digit(A23)), (digit(A24)),
+%     (digit(A25)), (digit(A26)),(digit(A27)),(digit(A28)),
+%     (digit(A29)),(digit(A30)),(digit(A31)),(digit(A32)),
+     (hex(T))/binary>>;
+hex(<<A1:4,A2:4,T/binary>>) ->
+   <<(digit(A1)),(digit(A2)),(hex(T))/binary>>.
