@@ -116,3 +116,5 @@ get_value(Key, DefaultValue) ->
                        true -> ets:delete(cookies,{SID,Key}), DefaultValue end end,
     %wf:info(?MODULE,"Session Lookup Key ~p Value ~p",[Key,Res]),
     Res.
+
+remove_value(Key) -> ets:delete(cookies,Key).
