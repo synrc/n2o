@@ -88,10 +88,10 @@ new_cookie_value(SessionKey, From) ->
                 [wf:to_list(session_cookie_name(From)),
                  wf:to_list(SessionKey),
                  cookie_expire(2147483647)])),
-    % NOTE: infinity-expire cookie will clean up all session cookies
-    %       by request from browser so we don't need to sweep them on server
-    %       actually we should anyway to cleanup outdated cookies
-    %       that will never be requested
+    % NOTE: Infinity-expire cookie will allow to clean up all session cookies
+    %       by request from browser so we don't need to sweep them on server.
+    %       Actually we should anyway to cleanup outdated cookies
+    %       that will never be requested.
     SessionKey.
 
 session_cookie_name([]) -> session_cookie_name(site);
