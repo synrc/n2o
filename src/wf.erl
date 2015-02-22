@@ -117,11 +117,15 @@ user() -> wf:session(<<"user">>).
 user(User) -> wf:session(<<"user">>,User).
 clear_user() -> wf:session(<<"user">>,undefined).
 logout() -> clear_user(), clear_session().
-cache(Key, Value) -> ets:insert(caching,{Key,Value}), Value.
+cache(Key, Value) -> ets:insert(caching,{Key,n2o_session:till(calendar:local_time(), n2o_session:ttl()),Value}), Value.
+cache(Key, Value, Till) -> ets:insert(caching,{Key,Till,Value}), Value.
 cache(Key) ->
     Res = ets:lookup(caching,Key),
     Val = case Res of [] -> undefined; [Value] -> Value; Values -> Values end,
-    case Val of undefined -> undefined; {_,X} -> X end.
+    case Val of undefined -> undefined;
+                {_,Expire,X} -> case Expire < calendar:local_time() of
+                                  true ->  ets:delete(caching,Key), undefined;
+                                  false -> X end end.
 
 % Process State
 
