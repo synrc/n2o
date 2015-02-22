@@ -28,27 +28,28 @@ session_sid(State, Ctx, SessionId, From) ->
                 _ -> new_cookie_value(SessionId,From) end,
             Cookie = {{CookieValue,<<"auth">>},<<"/">>,now(),NewTill,new},
             ets:insert(cookies,Cookie),
-            wf:info(?MODULE,"Cookie New: ~p~n",[Cookie]),
+            wf:info(?MODULE,"Auth Cookie New: ~p~n",[Cookie]),
             Cookie;
         {{Session,Key},Path,Issued,Till,Status} ->
             case expired(Issued,Till) of
                 false ->
                     Cookie = {{Session,Key},Path,Issued,Till,Status},
-                    wf:info(?MODULE,"Cookie Same: ~p",[Cookie]),
+                    wf:info(?MODULE,"Auth Cookie Same: ~p",[Cookie]),
                     Cookie;
                 true ->
                     Cookie = {{new_cookie_value(From),<<"auth">>},<<"/">>,now(),NewTill,new},
+                    clear(Session),
                     ets:insert(cookies,Cookie),
-                    wf:info(?MODULE,"Cookie Expired: ~p",[Cookie]),
+                    wf:info(?MODULE,"Auth Cookie Expired in Session ~p~n",[Session]),
                     Cookie end;
-        What -> wf:info(?MODULE,"Cookie Error: ~p",[What]), What
+        What -> wf:info(?MODULE,"Auth Cookie Error: ~p",[What]), What
     end,
     {{ID,_},_,_,_,_} = SessionCookie,
     put(session_id,ID),
     wf:info(?MODULE,"State: ~p",[SessionCookie]),
     {ok, State, Ctx#cx{session=SessionCookie}}.
 
-expired(_Issued,Till) -> Till < calendar:now_to_datetime(now()).
+expired(_Issued,Till) -> Till < calendar:local_time().
 
 lookup_ets(Key) ->
     Res = ets:lookup(cookies,Key),
@@ -70,8 +71,9 @@ cookie_expire(SecondsToLive) ->
 
 ttl() -> wf:config(n2o,ttl,60*15).
 
-till(NowDateTime,TTLInSeconds) ->
-    calendar:gregorian_seconds_to_datetime(calendar:datetime_to_gregorian_seconds(NowDateTime) + TTLInSeconds).
+till(Now,TTL) ->
+    calendar:gregorian_seconds_to_datetime(
+        calendar:datetime_to_gregorian_seconds(Now) + TTL).
 
 session_id() -> get(session_id).
 
@@ -85,21 +87,32 @@ new_cookie_value(SessionKey, From) ->
     wf:wire(wf:f("document.cookie='~s=~s; path=/; expires=~s';",
                 [wf:to_list(session_cookie_name(From)),
                  wf:to_list(SessionKey),
-                 cookie_expire(ttl())])),
+                 cookie_expire(2147483647)])),
+    % NOTE: infinity-expire cookie will clean up all session cookies
+    %       by request from browser so we don't need to sweep them on server
+    %       actually we should anyway to cleanup outdated cookies
+    %       that will never be requested
     SessionKey.
-
-destroy_cookie(From) ->
-    wf:wire(wf:f("document.cookie='~s=~s; path=/; expires=~s';",
-        [wf:to_list(session_cookie_name(From)),
-            [], cookie_expire(-3600)])).
 
 session_cookie_name([]) -> session_cookie_name(site);
 session_cookie_name(From) -> wf:to_binary([wf:to_binary(From), <<"-sid">>]).
-set_session_value(Session,Key, Value) -> ets:insert(cookies,{{Session,Key},Value}), Value.
-set_value(Key, Value) -> ets:insert(cookies,{{session_id(),Key},Value}), Value.
+
+set_session_value(Session, Key, Value) ->
+    Till = till(calendar:local_time(), ttl()),
+    ets:insert(cookies,{{Session,Key},<<"/">>,now(),Till,Value}),
+    Value.
+
+set_value(Key, Value) ->
+    NewTill = till(calendar:local_time(), ttl()),
+    ets:insert(cookies,{{session_id(),Key},<<"/">>,now(),NewTill,Value}),
+    Value.
+
 get_value(Key, DefaultValue) ->
-    Res = case lookup_ets({session_id(),Key}) of
+    SID = session_id(),
+    Res = case lookup_ets({SID,Key}) of
                undefined -> DefaultValue;
-               {_,Value} -> Value end,
+               {{SID,Key},_,Issued,Till,Value} -> case expired(Issued,Till) of
+                       false -> Value;
+                       true -> ets:delete(cookies,{SID,Key}), DefaultValue end end,
     %wf:info(?MODULE,"Session Lookup Key ~p Value ~p",[Key,Res]),
     Res.
