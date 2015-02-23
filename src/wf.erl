@@ -227,7 +227,7 @@ to_binary(T)  -> wf_convert:to_binary(T).
 to_integer(T) -> wf_convert:to_integer(T).
 
 js_escape(String)      -> wf_convert:js_escape(String).
-html_encode(S)         -> wf_convert:html_encode(S).
+html_encode(S)         -> wf_convert:html_encode(wf:to_list(iolist_to_binary(S))).
 html_encode(S, Encode) -> wf_convert:html_encode(S, Encode).
 url_encode(S)          -> wf_convert:url_encode(S).
 url_decode(S)          -> wf_convert:url_decode(S).
