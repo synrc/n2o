@@ -3,7 +3,7 @@
 
 var active      = false,
     protocol    = window.location.protocol == 'https:' ? "wss://" : "ws://",
-    querystring = window.location.pathname + window.location.search,
+    querystring = window.location.pathname,
     host        = null == transition.host ? window.location.hostname : transition.host,
     port        = null == transition.port ? window.location.port : transition.port,
     protos      = [ $client, $binary, $bert ];
