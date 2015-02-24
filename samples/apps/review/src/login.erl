@@ -17,9 +17,9 @@ event(init) ->
     n2o_session:ensure_sid([],?CTX,[]);
 
 event(login) ->
-    User = case wf:q(user) of [] -> "anonymous";
+    User = case wf:q(user) of <<>> -> "anonymous";
                               undefined -> "anonymous";
-                              E -> E end,
+                              E -> wf:to_list(E) end,
     wf:user(User),
     wf:info(?MODULE,"User: ~p",[wf:user()]),
     wf:redirect("/index?room="++wf:to_list(wf:q(pass))),
