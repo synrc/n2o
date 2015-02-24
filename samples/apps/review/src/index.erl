@@ -29,7 +29,7 @@ event({show,Short,File}) ->
 
 event(chat) ->
     User = wf:user(),
-    Message = wf:q(message),
+    Message = wf:to_list(wf:q(message)),
     Room = room(),
     kvs:add(#entry{id=kvs:next_id("entry",1),from=wf:user(),feed_id={room,Room},media=Message}),
     wf:send({topic,Room},{client,{User,Message}});
