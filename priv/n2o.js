@@ -9,8 +9,6 @@ var active      = false,
     port        = null == transition.port ? window.location.port : transition.port,
     protos      = [ $client, $binary, $bert ];
 
-
-
 function N2O_start() {
   ws = new bullet(protocol + host + (port==""?"":":"+port) + "/ws" + querystring);
   ws.onmessage = function (evt) { for (var i=0;i<protos.length;i++) { p = protos[i]; if (p.on(evt, p.do).status == "ok") return; } };
