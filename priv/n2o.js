@@ -7,7 +7,7 @@ var active      = false,
     querystring = window.location.pathname + window.location.search,
     host        = null == transition.host ? window.location.hostname : transition.host,
     port        = null == transition.port ? window.location.port : transition.port,
-    protos      = [ $client, $binary, $bert ];
+    protos      = [ $client, $bert ];
 
 function N2O_start() {
   ws = new bullet(protocol + host + (port==""?"":":"+port) + "/ws" + querystring);
