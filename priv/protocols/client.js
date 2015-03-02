@@ -7,7 +7,7 @@ $client.on = function onclient(evt, callback) // JSON formatter
 
            if (typeof callback == 'function' && msg.data) callback(msg.data);
 
-           console.log(msg.eval);
+           if (debug) console.log(msg.eval);
            if (msg.eval) try { eval(msg.eval); } 
                       catch (e) { return { status: "error", desc: e }; }
 

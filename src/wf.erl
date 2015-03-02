@@ -136,6 +136,7 @@ state(Key,Value) -> erlang:put(Key,Value).
 % Context Variables and URL Query Strings from ?REQ and ?CTX wf:q wf:qc wf:qp
 
 q(Key) -> Val = get(Key), case Val of undefined -> qp(Key); A -> A end.
+ql(Key) -> wf:to_list(q(Key)).
 qc(Key) -> qc(Key,?CTX).
 qc(Key,Ctx) -> proplists:get_value(wf:to_binary(Key),Ctx#cx.params).
 qp(Key) -> qp(Key,?REQ).
@@ -257,7 +258,7 @@ config(Key) -> config(n2o, Key, "").
 config(App, Key) -> config(App,Key, "").
 config(App, Key, Default) -> wf_utils:config(App, Key, Default).
 
-version() -> "2.2".
+version() -> "2.3".
 
 setkey(Name,Pos,List,New) ->
     case lists:keyfind(Name,Pos,List) of
