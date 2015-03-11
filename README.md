@@ -56,9 +56,9 @@ for each request. So this data shows internal data throughput by wrk:
 
 | Framework | Enabled Components | Speed | Timeouts |
 |-----------|--------------------|-------|----------|
-| PHP5 FCGI | Simple script with two <?php print "OK"; ?> terms inside | 5K | timeouts |
-| ChicagoBoss  | No sessions, No DSL, Simple template with two variable | 500 | no |
-| Nitrogen  | No sessions, No DSL, Simple template with two variable | 1K | no |
+| PHP5 FCGI | Simple script with two <?php print "OK"; ?> | 5K | timeouts |
+| ChicagoBoss| No sessions, No DSL, Simple DTL | 500 | no |
+| Nitrogen  | No sessions, No DSL, Simple DTL | 1K | no |
 | N2O       | All enabled, sessions, Template, heavy DSL | 7K | no |
 | N2O       | Sessions enabled, template with two variables, no DSL | 10K | no |
 | N2O       | No sessions, No DSL, only template with two vars | 15K | no |
