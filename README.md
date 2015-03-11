@@ -102,6 +102,15 @@ If you are new or need to determine whether the N2O architecture and philosophy 
 
 * Official N2O Book [HTML](http://synrc.com/framework/web/) and [PDF](https://synrc.com/apps/n2o/doc/book.pdf)
 
+Windows Users
+-------------
+
+For windows you should install http://msys2.github.io and appropriative packages to use Synrc Stack:
+
+* git
+* mc
+* sh
+
 Credits
 -------
 
