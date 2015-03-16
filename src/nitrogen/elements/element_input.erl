@@ -2,8 +2,6 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-reflect() -> record_info(fields, input).
-
 render_element(Record) ->
     Id = case Record#input.postback of
         undefined -> Record#input.id;
@@ -37,6 +35,7 @@ render_element(Record) ->
       {<<"name">>,Record#input.name},
       {<<"type">>, Record#input.type},
       {<<"max">>, Record#input.max},
+      {<<"placeholder">>,Record#input.placeholder},
       {<<"min">>, Record#input.min},
       {<<"multiple">>, Record#input.multiple },
       {<<"value">>,      wf:js_escape(Record#input.value)},
