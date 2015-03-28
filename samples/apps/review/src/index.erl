@@ -11,7 +11,7 @@ main() ->
 
 room() -> case wf:qp(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
 content() -> case wf:qp(<<"code">>) of undefined -> list(); Code -> code() end.
-code() -> case wf:qp(<<"code">>) of undefined  -> "NO CODE"; 
+code() -> case wf:qp(<<"code">>) of <<>>  -> "NO CODE"; 
                        E -> {ok,Bin} = file:read_file(E), wf:to_list(Bin) end.
 list() ->
     Room = room(),
