@@ -259,7 +259,7 @@ config(Key) -> config(n2o, Key, "").
 config(App, Key) -> config(App,Key, "").
 config(App, Key, Default) -> wf_utils:config(App, Key, Default).
 
-version() -> "2.3".
+version() -> "2.5".
 
 setkey(Name,Pos,List,New) ->
     case lists:keyfind(Name,Pos,List) of
