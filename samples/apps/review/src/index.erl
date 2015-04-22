@@ -38,7 +38,7 @@ event({client,{User,Message}}) ->
     wf:wire(#jq{target=message,method=[focus,select]}),
     DTL = #dtl{file="message",app=review,
         bindings=[{user,User},{message,wf:html_encode(wf:js_escape(Message))}]},
-    wf:insert_top(history, DTL);
+    wf:insert_top(history, wf:jse(wf:render(DTL)));
 
 event(init) ->
     Room = room(),
