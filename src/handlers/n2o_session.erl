@@ -5,7 +5,7 @@
 -compile(export_all).
 -record(state, {unique, node}).
 
-init(State,Ctx) -> {ok,State,Ctx}.
+init(State,Ctx) -> n2o_session:ensure_sid(State,Ctx,[]).
 finish(State,Ctx) -> {ok,State,Ctx}.
 
 ensure_sid(State, Ctx, []) -> ensure_sid(State, Ctx, site);
