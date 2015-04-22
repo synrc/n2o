@@ -227,6 +227,7 @@ to_atom(T)    -> wf_convert:to_atom(T).
 to_binary(T)  -> wf_convert:to_binary(T).
 to_integer(T) -> wf_convert:to_integer(T).
 
+jse(String)      -> wf_convert:js_escape(String).
 js_escape(String)      -> wf_convert:js_escape(String).
 html_encode(S)         -> wf_convert:html_encode(wf:to_list(iolist_to_binary(S))).
 html_encode(S, Encode) -> wf_convert:html_encode(S, Encode).
