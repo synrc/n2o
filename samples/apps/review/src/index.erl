@@ -41,6 +41,7 @@ event({client,{User,Message}}) ->
     wf:insert_top(history, wf:jse(wf:render(DTL)));
 
 event(init) ->
+    n2o_session:ensure_sid([],?CTX,[]),
     Room = room(),
     wf:reg({topic,Room}),
     [ event({client,{E#entry.from,E#entry.media}}) || E <-
