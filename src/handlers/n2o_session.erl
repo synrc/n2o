@@ -6,9 +6,9 @@
 -record(state, {unique, node}).
 
 finish(State,Ctx) -> {ok,State,Ctx}.
-init(State,Ctx) -> case application:get_env(n2o,auto_session) of
-                        undefined -> n2o_session:ensure_sid(State,Ctx,[]);
-                        disabled -> {ok,State,Ctx} end.
+init(State,Ctx) -> case wf:config(n2o,auto_session) of
+                        disabled -> {ok,State,Ctx};
+                        _ -> n2o_session:ensure_sid(State,Ctx,[]) end.
 
 ensure_sid(State, Ctx, []) -> ensure_sid(State, Ctx, site);
 ensure_sid(State, Ctx, From) ->
