@@ -4,7 +4,6 @@
 -include_lib("n2o/include/wf.hrl").
 
 main() ->
-    n2o_session:ensure_sid([],?CTX,[]),
     case wf:user() of
          undefined -> wf:redirect("/login"),#dtl{};
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
@@ -41,7 +40,6 @@ event({client,{User,Message}}) ->
     wf:insert_top(history, wf:jse(wf:render(DTL)));
 
 event(init) ->
-    n2o_session:ensure_sid([],?CTX,[]),
     Room = room(),
     wf:reg({topic,Room}),
     [ event({client,{E#entry.from,E#entry.media}}) || E <-
