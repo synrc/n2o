@@ -47,7 +47,7 @@ get_file(Req, State={Path, {ok, #file_info{size=_Size}}, _}) ->
     StringPath = binary_to_list(Path),
     [_Type,Name|RestPath]=SplitPath = filename:split(StringPath),
     wf:info(?MODULE,"Split Path: ~p~n\r",[SplitPath]),
-    wf:info(?MODULE,"Code Path: ~p~n\r",[filename:join([code:lib_dir(Name)|RestPath])]),
+    %wf:info(?MODULE,"Code Path: ~p~n\r",[filename:join([code:lib_dir(Name)|RestPath])]),
 	FileName = filename:absname(StringPath),
     wf:info(?MODULE,"Abs Name: ~p~n\r",[FileName]),
     Raw = case file:read_file(FileName) of
