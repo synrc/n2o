@@ -159,22 +159,5 @@ digit(13) -> $d;
 digit(14) -> $e;
 digit(15) -> $f.
 
-bin_to_hex(<<>>) -> <<>>;
-bin_to_hex(<<A1:4,A2:4,A3:4,A4:4,A5:4,A6:4,A7:4,A8:4,
-      A9:4,A10:4,A11:4,A12:4,A13:4,A14:4,A15:4,A16:4,
-      A17:4,A18:4,A19:4,A20:4,A21:4,A22:4,A23:4,A24:4,
-      A25:4,A26:4,A27:4,A28:4,A29:4,A30:4,A31:4,A32:4,
-      T/binary>>) ->
-   <<(digit(A1)), (digit(A2)), (digit(A3)), (digit(A4)),
-     (digit(A5)), (digit(A6)), (digit(A7)), (digit(A8)),
-     (digit(A9)), (digit(A10)),(digit(A11)),(digit(A12)),
-     (digit(A13)),(digit(A14)),(digit(A15)),(digit(A16)),
-     (digit(A17)),(digit(A18)),(digit(A19)),(digit(A20)),
-     (digit(A21)), (digit(A22)), (digit(A23)), (digit(A24)),
-     (digit(A25)), (digit(A26)),(digit(A27)),(digit(A28)),
-     (digit(A29)),(digit(A30)),(digit(A31)),(digit(A32)),
-     (bin_to_hex(T))/binary>>;
-bin_to_hex(<<A1:4,A2:4,T/binary>>) ->
-   <<(digit(A1)),(digit(A2)),(bin_to_hex(T))/binary>>.
-
+bin_to_hex(Bin) -> << << (digit(A1)),(digit(A2)) >> || <<A1:4,A2:4>> <= Bin >>.
 hex_to_bin(Hex) -> << << (erlang:list_to_integer([H1,H2], 16)) >> || <<H1,H2>> <= Hex >>.
