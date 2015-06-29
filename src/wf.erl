@@ -233,8 +233,8 @@ html_encode(S)         -> wf_convert:html_encode(wf:to_list(iolist_to_binary(S))
 html_encode(S, Encode) -> wf_convert:html_encode(S, Encode).
 url_encode(S)          -> wf_convert:url_encode(S).
 url_decode(S)          -> wf_convert:url_decode(S).
-hex_encode(S)          -> wf_convert:hex(S).
-hex_decode(S)          -> wf_convert:hex(S).
+hex_encode(S)          -> wf_convert:bin_to_hex(S).
+hex_decode(S)          -> wf_convert:hex_to_bin(S).
 join(List,Delimiter)   -> wf_convert:join(List,Delimiter).
 
 
