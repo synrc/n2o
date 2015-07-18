@@ -27,7 +27,7 @@ info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,Stat
 info({pickle,_,_,_}=Event, Req, State) ->
     wf:actions([]),
     %wf:info(?MODULE,"N2O Message: ~p\n\r",[Event]),
-    Result = try html_events(Event,State) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), 
+    Result = try html_events(Event,State) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), 
                  wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]) end,
     {reply,Result,Req,State};
 
@@ -39,7 +39,7 @@ info({flush,Actions}, Req, State) ->
 info({direct,Message}, Req, State) ->
     wf:actions([]),
     Module = State#cx.module,
-    _Term = try Module:event(Message) catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
+    _Term = try Module:event(Message) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
     %wf:info(?MODULE,"Direct: ~p Result: ~p",[Message,Term]),
     {reply,wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]),Req,State};
 
