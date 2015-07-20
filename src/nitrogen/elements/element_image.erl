@@ -9,6 +9,7 @@ render_element(Record) ->
   Attributes = [
     {<<"id">>, Record#image.id},
     {<<"class">>, Record#image.class},
+    {<<"title">>, Record#image.title},
     {<<"style">>, Record#image.style},
     {<<"alt">>, Record#image.alt},
     {<<"width">>, Record#image.width},
