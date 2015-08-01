@@ -26,7 +26,7 @@ to_atom(I) when is_integer(I) -> to_atom(integer_to_list(I));
 to_atom(F) when is_float(F) -> to_atom(n2o_mochinum:digits(F));
 to_atom(L) when is_list(L) -> list_to_atom(binary_to_list(list_to_binary(L))).
 
-to_binary(A) when is_atom(A) -> atom_to_binary(A,latin1);
+to_binary(A) when is_atom(A) -> to_binary(atom_to_list(A));
 to_binary(B) when is_binary(B) -> B;
 to_binary(I) when is_integer(I) -> to_binary(integer_to_list(I));
 to_binary(F) when is_float(F) -> to_binary(n2o_mochinum:digits(F));

@@ -7,7 +7,7 @@ info({text,Text}=Message, Req, State) when is_binary(Text) ->
     wf:info(?MODULE,"TEXT Message: ~p",[Message]),
     Module = State#cx.module,
     Resp = try Module:event(Message) catch 
-    	E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> 
+    	E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> 
     end,
     {reply, Resp, Req, State};
 
