@@ -21,7 +21,7 @@ info({rails,_,_,_}=Event, Req, State) ->
     wf:actions([]),
     {Result,NewState} = 
          try events(Event,State) 
-         catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), {<<>>,State} end,
+         catch E:R -> wf:info(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), {<<>>,State} end,
     {reply,Result,Req,NewState};
 
 info({flush,Actions}, Req, State) ->
