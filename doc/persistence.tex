@@ -36,18 +36,18 @@ The second element usually corresponds to the index key field.
 
 Iterator is a sequence of fields used as interface for all tables
 represented as doubly-linked lists. It defines id, next, prev,
-feed_id fields. This fields should be at the beginning of user's record,
+feed\_id fields. This fields should be at the beginning of user's record,
 because KVS core is accessing relative position of the
-field (like #iterator.next) with setelement/element BIF, e.g.
+field (like \#iterator.next) with setelement/element BIF, e.g.
 
 \begin{lstlisting}
     setelement(#iterator.next, Record, NewValue).
 \end{lstlisting}
 
 Iterator is a sequence of fields used as interface for all tables
-represented as doubly-linked lists. It defines id, next, prev, feed_id fields and
+represented as doubly-linked lists. It defines id, next, prev, feed\_id fields and
 should be in the begin of the record's memory footprint because KVS core is accessing
-relative position of the field (like #iterator.next) with setelement/element BIF.
+relative position of the field (like \#iterator.next) with setelement/element BIF.
 
 All records could be chained into the double-linked lists in the database.
 So you can inherit from the ITERATOR record just like that:
