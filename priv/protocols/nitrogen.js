@@ -8,8 +8,8 @@ function querySourceRaw(Id) {
                          val = val ? val.value : ""; break;
         case 'INPUT':
             switch (el.getAttribute("type")) {
-                case 'radio': case 'checkbox': val = el.checked ? el.value : "";
-                case  'date': val = getErlDate(el);
+                case 'radio': case 'checkbox': val = el.checked ? el.value : ""; break;
+                case  'date': val = getErlDate(el); break;
                 default:     var edit = el.contentEditable;
                     if (edit && edit === 'true') val = el.innerHTML;
                     else val = el.value; }
