@@ -3,14 +3,20 @@
 function querySourceRaw(Id) {
     var val, el = document.getElementById(Id);
     if (!el) return "";
-    switch (el.type) {
-        case 'fieldset': val = document.querySelector('#' + Id + ' :checked');
+    switch (el.tagName) {
+        case 'FIELDSET': val = document.querySelector('#' + Id + ' :checked');
                          val = val ? val.value : ""; break;
-        case 'radio': case 'checkbox': val = el.checked ? el.value : ""; break;
-        case  'date': val = getErlDate(el); break;
-        default:         var edit = el.contentEditable;
-                         if (edit && edit === 'true') val = el.innerHTML;
-                                                 else val = el.value; }
+        case 'INPUT':
+            switch (el.getAttribute("type")) {
+                case 'radio': case 'checkbox': val = el.checked ? el.value : "";
+                case  'date': val = getErlDate(el);
+                default:     var edit = el.contentEditable;
+                    if (edit && edit === 'true') val = el.innerHTML;
+                    else val = el.value; }
+            break;
+        default: var edit = el.contentEditable;
+            if (edit && edit === 'true') val = el.innerHTML;
+            else val = el.value; }
     return val; }
 
 function querySource(Id) {
