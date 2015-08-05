@@ -100,7 +100,7 @@ Documentation
 
 If you are new or need to determine whether the N2O architecture and philosophy is a fit for your project
 
-* Official N2O Book [HTML](http://synrc.com/framework/web/) and [PDF](https://synrc.com/apps/n2o/doc/book.pdf)
+* Official N2O Book [PDF](https://synrc.com/apps/n2o/doc/book.pdf)
 
 Windows Users
 -------------
