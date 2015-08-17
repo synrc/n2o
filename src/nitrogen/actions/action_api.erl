@@ -7,5 +7,5 @@ render_action(Record) ->
     Name = Record#api.name,
     Data = "utf8_toByteArray(JSON.stringify(data))",
     PostbackScript = wf_event:new(Name, "document", Record#api.delegate, api_event, Data, []),
-    wf:f("~s = function(data) {",  [Name]) ++ PostbackScript ++ "};".
+    wf:f("~s = function(data) {",  [Name]) ++ binary_to_list(PostbackScript) ++ "};".
 
