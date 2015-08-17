@@ -1,7 +1,7 @@
 N2O: Erlang Web Framework
 =========================
 
-[![Build Status](https://travis-ci.org/5HT/n2o.svg?branch=master)](https://travis-ci.org/5HT/n2o)
+[![Build Status](https://travis-ci.org/synrc/n2o.svg?branch=master)](https://travis-ci.org/synrc/n2o)
 
 Features
 --------
