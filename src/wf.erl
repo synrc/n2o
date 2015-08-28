@@ -259,7 +259,7 @@ config(Key) -> config(n2o, Key, "").
 config(App, Key) -> config(App,Key, "").
 config(App, Key, Default) -> wf_utils:config(App, Key, Default).
 
-version() -> "2.4".
+version() -> proplists:get_value(vsn,element(2,application:get_all_key(n2o))).
 
 setkey(Name,Pos,List,New) ->
     case lists:keyfind(Name,Pos,List) of
