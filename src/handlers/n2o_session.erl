@@ -3,7 +3,6 @@
 -include_lib("n2o/include/wf.hrl").
 -include_lib("stdlib/include/ms_transform.hrl").
 -compile(export_all).
--record(state, {unique, node}).
 
 finish(State,Ctx) -> {ok,State,Ctx}.
 init(State,Ctx) -> case wf:config(n2o,auto_session) of
@@ -28,7 +27,7 @@ session_sid(State, Ctx, SessionId, From) ->
                     undefined -> new_cookie_value(From);
                     Csid -> new_cookie_value(Csid, From) end;
                 _ -> new_cookie_value(SessionId,From) end,
-            Cookie = {{CookieValue,<<"auth">>},<<"/">>,now(),NewTill,new},
+            Cookie = {{CookieValue,<<"auth">>},<<"/">>,os:timestamp(),NewTill,new},
             ets:insert(cookies,Cookie),
             wf:info(?MODULE,"Auth Cookie New: ~p~n",[Cookie]),
             Cookie;
@@ -39,7 +38,7 @@ session_sid(State, Ctx, SessionId, From) ->
                     wf:info(?MODULE,"Auth Cookie Same: ~p",[Cookie]),
                     Cookie;
                 true ->
-                    Cookie = {{new_cookie_value(From),<<"auth">>},<<"/">>,now(),NewTill,new},
+                    Cookie = {{new_cookie_value(From),<<"auth">>},<<"/">>,os:timestamp(),NewTill,new},
                     clear(Session),
                     ets:insert(cookies,Cookie),
                     wf:info(?MODULE,"Auth Cookie Expired in Session ~p~n",[Session]),
@@ -67,9 +66,9 @@ clear(Session) ->
         ets:fun2ms(fun(A) when (element(1,element(1,A)) == Session) -> element(1,A) end)) ].
 
 cookie_expire(SecondsToLive) ->
-  Seconds = calendar:datetime_to_gregorian_seconds(calendar:local_time()),
-  DateTime = calendar:gregorian_seconds_to_datetime(Seconds + SecondsToLive),
-  httpd_util:rfc1123_date(DateTime).
+    Seconds = calendar:datetime_to_gregorian_seconds(calendar:local_time()),
+    DateTime = calendar:gregorian_seconds_to_datetime(Seconds + SecondsToLive),
+    cow_date:rfc2109(DateTime).
 
 ttl() -> wf:config(n2o,ttl,60*15).
 
@@ -81,7 +80,7 @@ session_id() -> get(session_id).
 
 new_sid() ->
     wf_convert:hex(binary:part(crypto:hmac(wf:config(n2o,hmac,sha256),
-         n2o_secret:secret(),term_to_binary(now())),0,16)).
+         n2o_secret:secret(),term_to_binary(os:timestamp())),0,16)).
 
 new_cookie_value(From) -> new_cookie_value(new_sid(), From).
 new_cookie_value(undefined, From) -> new_cookie_value(new_sid(), From);
@@ -101,12 +100,12 @@ session_cookie_name(From) -> wf:to_binary([wf:to_binary(From), <<"-sid">>]).
 
 set_session_value(Session, Key, Value) ->
     Till = till(calendar:local_time(), ttl()),
-    ets:insert(cookies,{{Session,Key},<<"/">>,now(),Till,Value}),
+    ets:insert(cookies,{{Session,Key},<<"/">>,os:timestamp(),Till,Value}),
     Value.
 
 set_value(Key, Value) ->
     NewTill = till(calendar:local_time(), ttl()),
-    ets:insert(cookies,{{session_id(),Key},<<"/">>,now(),NewTill,Value}),
+    ets:insert(cookies,{{session_id(),Key},<<"/">>,os:timestamp(),NewTill,Value}),
     Value.
 
 get_value(Key, DefaultValue) ->

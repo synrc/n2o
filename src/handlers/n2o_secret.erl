@@ -5,7 +5,7 @@
 -export(?PICKLES_API).
 
 pickle(Data) ->
-    Message = term_to_binary({Data,now()}),
+    Message = term_to_binary({Data,os:timestamp()}),
     Padding = size(Message) rem 16,
     Bits = (16-Padding)*8, Key = secret(), IV = crypto:rand_bytes(16),
     Cipher = crypto:block_encrypt(aes_cbc128,Key,IV,<<Message/binary,0:Bits>>),

@@ -1,7 +1,7 @@
 {application, n2o, [
     {description,  "N2O WebSocket Application Server"},
-    {vsn,          "2.3"},
-    {applications, [kernel, stdlib, cowboy, ranch, gproc, erlydtl]},
+    {vsn,          "2.9"},
+    {applications, [kernel, stdlib, cowboy, ranch, gproc]},
     {modules, []},
     {registered,   []},
     {mod, { n2o_app, []}},

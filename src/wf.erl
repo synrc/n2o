@@ -45,12 +45,12 @@ insert_adjacent(Command,Target, Elements) ->
     wf:wire(wf:f("qi('~s').insertAdjacentHTML('~s', '~s');",[Target,Command,Render])),
     wf:wire(wf:render(Actions)).
 
-insert_top(Target, #tr{} = Elements)    -> insert_top(tbody,Target, Elements);
-insert_top(Target, Elements)            -> insert_top('div',Target, Elements).
-insert_bottom(Target, #tr{} = Elements) -> insert_bottom(tbody, Target, Elements);
-insert_bottom(Target, Elements)         -> insert_bottom('div', Target, Elements).
-insert_before(Target, Elements)         -> insert_adjacent(beforebegin,Target, Elements).
-insert_after(Target, Elements)          -> insert_adjacent(afterend,Target, Elements).
+insert_top(Target, Elements) when element(1,Elements) == tr -> insert_top(tbody,Target, Elements);
+insert_top(Target, Elements) -> insert_top('div',Target, Elements).
+insert_bottom(Target, Elements) when element(1,Elements) == tr -> insert_bottom(tbody, Target, Elements);
+insert_bottom(Target, Elements) -> insert_bottom('div', Target, Elements).
+insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements).
+insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
 
 remove(Target) ->
     wf:wire(wf:f("qi('~s').parentNode.removeChild(qi('~s'));",[Target,Target])).
@@ -220,7 +220,7 @@ atom(Scalar) -> wf:to_atom(Scalar).
 f(S)        -> wf_utils:f(S).
 f(S, Args)  -> wf_utils:f(S, Args).
 coalesce(L) -> wf_utils:coalesce(L).
-json(Json)  -> n2o_json:encode(Json).
+json(Json)  -> jsone:encode(Json).
 
 to_list(T)    -> wf_convert:to_list(T).
 to_atom(T)    -> wf_convert:to_atom(T).
@@ -240,7 +240,7 @@ join(List,Delimiter)   -> wf_convert:join(List,Delimiter).
 
 % These api are not really API
 
-temp_id() -> {_, _, C} = now(), "auto" ++ integer_to_list(C).
+temp_id() -> {_, _, C} = os:timestamp(), "auto" ++ integer_to_list(C).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 

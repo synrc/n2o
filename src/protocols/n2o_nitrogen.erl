@@ -17,7 +17,6 @@ info({init,Rest},Req,State) ->
     UserCx = try Module:event(init) catch C:E -> wf:error_page(C,E) end,
     Actions = render_actions(wf:actions()),
     JSON = wf:json([{eval,iolist_to_binary([InitActions,Actions])}]),
-%    self() ! {init_reply,JSON},
     {reply,JSON,Req,wf:context(State,?MODULE,UserCx)};
 
 
@@ -71,7 +70,7 @@ render_ev(#ev{module=M,name=F,msg=P,trigger=T},_Source,Linked,State) ->
          _UserCustomEvent -> M:F(P,T,State) end.
 
 receive_actions(Req) ->
-    receive 
+    receive
         {actions,A} -> n2o_nitrogen:render_actions(A);
         _ -> receive_actions(Req)
     after 200 ->
