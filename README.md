@@ -6,7 +6,7 @@ N2O: Erlang Application Server
 Features
 --------
 
-* Formatters: **BERT**, JSON (changeable on the fly)
+* Formatters: **BERT**, JSON — changeable on the fly
 * Protocols: [N2O](http://5ht.co/n2o.htm)
 * Endpoints: **WebSocket**, HTTP, [REST](http://synrc.github.io/rest)
 * High Performance Protocol Relay
