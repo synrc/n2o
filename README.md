@@ -77,10 +77,10 @@ but if you want to use DTL templates, JSON message formatter, SHEN JavaScript Co
 or NITRO Nitrogen DSL you can plug all of them separately.
 
 ```erlang
-    {n2o,    ".*", {git, "git://github.com/synrc/n2o",          {tag, "master"} }},
-    {jsone, ".*",  {git, "git://github.com/sile/jsone.git",     {tag,"v0.3.3"}}},
-    {nitro,  ".*", {git, "git://github.com/synrc/nitro",        {tag, "master"} }},
-    {erlydtl,".*", {git, "git://github.com/evanmiller/erlydtl", {tag, "0.8.0"}  }},
+{n2o,    ".*", {git, "git://github.com/synrc/n2o",          {tag, "master"} }},
+{jsone, ".*",  {git, "git://github.com/sile/jsone.git",     {tag,"v0.3.3"}}},
+{nitro,  ".*", {git, "git://github.com/synrc/nitro",        {tag, "master"} }},
+{erlydtl,".*", {git, "git://github.com/evanmiller/erlydtl", {tag, "0.8.0"}  }},
 ```
 
 Message Formatters
