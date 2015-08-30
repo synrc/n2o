@@ -158,3 +158,22 @@ digit(15) -> $f.
 
 hex(Bin) -> << << (digit(A1)),(digit(A2)) >> || <<A1:4,A2:4>> <= Bin >>.
 unhex(Hex) -> << << (erlang:list_to_integer([H1,H2], 16)) >> || <<H1,H2>> <= Hex >>.
+
+format(Term) -> format(Term,application:get_env(n2o,formatter,json)).
+
+format({io,Eval,Data},json) ->
+    jsone:encode([{name,"io"},
+                  {eval,iolist_to_binary(Eval)},
+                  {data,binary_to_list(term_to_binary(Data))}]);
+
+format({server,Data}, json) ->
+    jsone:encode([{name,"server"},
+                  {data,binary_to_list(term_to_binary(Data))}]);
+
+format({binary,Data}, json) ->
+    jsone:encode([{name,"binary"},
+                  {data,binary_to_list(term_to_binary(Data))}]);
+
+format(Term, bert) -> {binary,term_to_binary(Term)};
+
+format(Term, _) -> {binary,<<"Only JSON/BERT formatters available.">>}.

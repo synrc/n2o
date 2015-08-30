@@ -2,7 +2,7 @@
 // Copyright (c) Maxim Sokhatsky (@5HT)
 
 function atom(o) { return { type: "Atom", value: o, toString: function() { return this.value; } }; };
-function bin(o) { return { type: "Binary", value: o, toString: function() { return "<<\'"+this.value+"'>>"; } }; };
+function bin(o) { return { type: "Binary", value: o, toString: function() { return this.value.length > 200 ? "<<["+this.value.length+"]>>" : "<<'"+utf8_decode(this.value)+"'>>"; } }; };
 function tuple() {
     return { type: "Tuple", value: arguments, toString: function() { var s = ""; 
         for (var i=0;i<this.value.length;i++) { if (s!=="") s+=","; s+=this.value[i]; }
@@ -12,7 +12,7 @@ function enc(s) {
     var ori = encode(s), buf = new Uint8Array(new ArrayBuffer(ori.length));
     for (var i=0; i < buf.length; i++) { buf[i] = ori.charCodeAt(i); }
     return new Blob([buf.buffer]); };
-
+    
 BERT = itoa(131);
 SATOM = itoa(115);
 ATOM = itoa(100);
@@ -187,3 +187,15 @@ $bert.on = function onbert(evt, callback) // BERT formatter
     }
     else  { return { status: "error", desc: "not Bert" }; }
 };
+
+function isIO(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
+                   x.value[0].length == 3 && x.value[0][0] == 'io'); }
+
+$bert.do = function (x) {
+   // console.log(x.toString());
+    if (isIO(x)) {
+        try { eval(utf8_decode(x.value[0][1].value)); }
+        catch (e) { return { status: "error", desc: e }; }
+        return { status: "ok", desc: e };
+    } else console.log("unknown Bert: " + x);
+}

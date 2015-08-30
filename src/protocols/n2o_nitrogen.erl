@@ -16,31 +16,27 @@ info({init,Rest},Req,State) ->
                     receive_actions(Req) end,
     UserCx = try Module:event(init) catch C:E -> wf:error_page(C,E) end,
     Actions = render_actions(wf:actions()),
-    JSON = wf:json([{eval,iolist_to_binary([InitActions,Actions])}]),
-    {reply,JSON,Req,wf:context(State,?MODULE,UserCx)};
-
+    {reply,wf:format({io,iolist_to_binary([InitActions,Actions]),<<>>}),Req,wf:context(State,?MODULE,UserCx)};
 
 info({text,Message},Req,State) ->   info(Message,Req,State);
 info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,State);
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf:actions([]),
-    %wf:info(?MODULE,"N2O Message: ~p\n\r",[Event]),
-    Result = try html_events(Event,State) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), 
-                 wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]) end,
-    {reply,Result,Req,State};
+    Result = try html_events(Event,State) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)),
+                 {io,render_actions(wf:actions()),<<>>} end,
+    {reply,wf:format(Result),Req,State};
 
 info({flush,Actions}, Req, State) ->
     wf:actions([]),
     wf:info(?MODULE,"Flush Message: ~p",[Actions]),
-    {reply, wf:json([{eval,iolist_to_binary(render_actions(Actions))}]), Req, State};
+    {reply,wf:format({io,render_actions(wf:actions()),<<>>}),Req, State};
 
 info({direct,Message}, Req, State) ->
     wf:actions([]),
     Module = State#cx.module,
     _Term = try Module:event(Message) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
-    %wf:info(?MODULE,"Direct: ~p Result: ~p",[Message,Term]),
-    {reply,wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]),Req,State};
+    {reply,wf:format({io,render_actions(wf:actions()),<<>>}),Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
 
@@ -51,17 +47,16 @@ render_actions(Actions) ->
     First  = wf:render(Actions),
     Second = wf:render(wf:actions()),
     wf:actions([]),
-    [First,Second].
+    iolist_to_binary([First,Second]).
 
 % N2O events
 
 html_events({pickle,Source,Pickled,Linked}, State) ->
     Ev = wf:depickle(Pickled),
-    %wf:info(?MODULE,"Depickled: ~p",[Ev]),
     case Ev of
          #ev{} -> render_ev(Ev,Source,Linked,State);
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
-    wf:json([{eval,iolist_to_binary(render_actions(wf:actions()))}]).
+    {io,render_actions(wf:actions()),<<>>}.
 
 render_ev(#ev{module=M,name=F,msg=P,trigger=T},_Source,Linked,State) ->
     case F of

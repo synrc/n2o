@@ -236,7 +236,7 @@ url_decode(S)          -> wf_convert:url_decode(S).
 hex_encode(S)          -> wf_convert:hex(S).
 hex_decode(S)          -> wf_convert:unhex(S).
 join(List,Delimiter)   -> wf_convert:join(List,Delimiter).
-
+format(Term)           -> wf_convert:format(Term).
 
 % These api are not really API
 
