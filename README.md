@@ -6,23 +6,25 @@ N2O: Erlang Application Relay
 Features
 --------
 
-* Formatters: **BERT**, JSON (change on the fly)
-* Protocols: [N2O PROTOCOL](http://5ht.co/n2o.htm)
+* Formatters: **BERT**, JSON (changeable on the fly)
+* Protocols: [N2O](http://5ht.co/n2o.htm)
 * Endpoints: **WebSocket**, HTTP, [REST](http://synrc.github.io/rest)
 * High Performance Protocol Relay
 * Smallest possible codebase (1K LOC)
-* PubSub: MQS, GPROC
-* Templates: DTL, [NITRO](http://synrc.github.io/nitro)
-* Sessions: server driven
-* DOM Language: SHEN JavaScript Compiler
-* Speed: **15K** **req/s**
-* Security: AES CBC 128
+* Handlers
+  * PubSub: MQS, GPROC
+  * Templates: DTL, [NITRO](http://synrc.github.io/nitro)
+  * Sessions: server driven
+  * DOM Language: SHEN JavaScript Compiler
+  * Error Logging: IO, LOGGER, [crashdump.io](http://crashdump.io)
+  * Security: PLAIN, AES CBC 128
+* Speed: **15K** **conn/s** easily
 * Samples: Skyline (DSL), Games (SPA), Review (KVS)
 
 Project Structure
 -----------------
 
-We polished directory tree to show you the several year of purity evolution.
+We polished directory tree to show you the several years of purity evolution.
 
 ```
 ├── endpoints
@@ -63,14 +65,16 @@ We polished directory tree to show you the several year of purity evolution.
 ```
 
 That is all files related to what we called N2O application server,
-the implementation of N2O core protocol.
+the implementation of N2O core protocol. That is how it looks like:
 
-Dependencies
-------------
+
+
+Optional Dependencies
+---------------------
 
 For raw N2O use with BERT message formatter you need only one N2O dependecy,
-but if you want to use DTL templates, JSON message formatter or Nitrogen DSL
-you can plug all of them separately.
+but if you want to use DTL templates, JSON message formatter, SHEN JavaScript Compiler
+or NITRO Nitrogen DSL you can plug all of them separately.
 
 ```erlang
     {n2o,    ".*", {git, "git://github.com/synrc/n2o",          {tag, "master"} }},
@@ -86,11 +90,11 @@ You can use any message formmatter at the bottom of N2O protocol.
 The IO message of N2O protocol could be seen as follows:
 
 ```
-1. XML  : <io><eval>console.log('hello')</eval></io>
-2. BERT : {io,"console.log('hello')",[]}
-3. JSON : {name:io,eval:"console.log('hello')"}
-4. TEXT : IO console.log('hello') \n
-5. WAMP : [io,"console.log('hello')",""]
+1. BERT : {io,"console.log('hello')",1}
+2. WAMP : [io,"console.log('hello')",1]
+3. JSON : {name:io,eval:"console.log('hello')",data:1}
+4. TEXT : IO console.log('hello') 1\n
+5. XML  : <io><eval>console.log('hello')</eval><data>1</data></io>
 ```
 
 Moreover you can switch channel termination formatter on the fly
@@ -121,9 +125,6 @@ chat_loop() ->
        wf:insert_bottom(history,#panel{body=[Peer,": ",Message,#br{}]}),
        wf:flush(room) end, chat_loop().
 ```
-
-And try to compare how this functionality would be implemented
-with your favourite language/framework.
 
 Performance
 -----------
