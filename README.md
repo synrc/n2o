@@ -11,6 +11,8 @@ Features
 * Endpoints: **WebSocket**, HTTP, [REST](http://synrc.github.io/rest)
 * High Performance Protocol Relay
 * Smallest possible codebase (1K LOC)
+* BEAM/LING support on posix, arm, mips and xen platforms
+* Single-file atomic packaging with [MAD](http://synrc.github.io/mad)
 * Handlers
   * PubSub: MQS, GPROC
   * Templates: DTL, [NITRO](http://synrc.github.io/nitro)
