@@ -10,7 +10,7 @@ Features
 * Protocols: [N2O](http://5ht.co/n2o.htm)
 * Endpoints: **WebSocket**, HTTP, [REST](http://synrc.github.io/rest)
 * High Performance Protocol Relay
-* Smallest possible codebase (1K LOC)
+* Smallest possible codebase — **1K** **LOC**
 * BEAM/LING support on posix, arm, mips and xen platforms
 * Single-file atomic packaging with [MAD](http://synrc.github.io/mad)
 * Handlers
@@ -206,15 +206,15 @@ appropriative packages to use Synrc Stack:
 Credits
 -------
 
-* Maxim Sokhatsky -- core, shen, windows
-* Dmitry Bushmelev -- endpoints, yaws, cowboy
-* Andrii Zadorozhnii -- elements, actions, handlers
-* Vladimir Kirillov -- mac, bsd, xen, linux support
-* Andrey Martemyanov -- binary protocols
-* Oleksandr Nikitin -- security
-* Anton Logvinenko -- doc
-* Roman Shestakov -- advanced elements, ct
-* Jesse Gumm -- nitrogen, help
-* Rusty Klophaus -- original author
+* Maxim Sokhatsky — core, shen, windows
+* Dmitry Bushmelev — endpoints, yaws, cowboy
+* Andrii Zadorozhnii — elements, actions, handlers
+* Vladimir Kirillov — mac, bsd, xen, linux support
+* Andrey Martemyanov — binary protocols
+* Oleksandr Nikitin — security
+* Anton Logvinenko — doc
+* Roman Shestakov — advanced elements, ct
+* Jesse Gumm — nitrogen, help
+* Rusty Klophaus — original author
 
 OM A HUM
