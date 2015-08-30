@@ -176,4 +176,4 @@ format({binary,Data}, json) ->
 
 format(Term, bert) -> {binary,term_to_binary(Term)};
 
-format(Term, _) -> {binary,<<"Only JSON/BERT formatters available.">>}.
+format(_,_) -> {binary,<<"Only JSON/BERT formatters are available.">>}.
