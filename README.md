@@ -23,54 +23,6 @@ Features
 * Speed: **15K** **conn/s** easily
 * Samples: Skyline (DSL), Games (SPA), Review (KVS), Sample (MAD)
 
-Project Structure
------------------
-
-We polished directory tree to show you the several years of purity evolution.
-
-```
-├── endpoints
-│   ├── cowboy
-│   │   ├── bullet_handler.erl
-│   │   ├── n2o_bullet.erl
-│   │   ├── n2o_cowboy.erl
-│   │   └── n2o_dynalo.erl
-│   ├── n2o_document.erl
-│   └── n2o_websocket.erl
-├── formatters
-│   ├── wf_convert.erl
-│   └── wf_utils.erl
-├── handlers
-│   ├── n2o_auth.erl
-│   ├── n2o_dynroute.erl
-│   ├── n2o_error.erl
-│   ├── n2o_io.erl
-│   ├── n2o_log.erl
-│   ├── n2o_mq.erl
-│   ├── n2o_pickle.erl
-│   ├── n2o_query.erl
-│   ├── n2o_secret.erl
-│   └── n2o_session.erl
-├── n2o.app.src
-├── n2o_app.erl
-├── n2o_sup.erl
-├── protocols
-│   ├── n2o_binary.erl
-│   ├── n2o_client.erl
-│   ├── n2o_heart.erl
-│   ├── n2o_nitrogen.erl
-│   ├── n2o_rails.erl
-│   └── n2o_text.erl
-├── static_file.erl
-├── wf.erl
-└── wf_context.erl
-```
-
-That is all files related to what we called N2O application server,
-the implementation of N2O core protocol. That is how it looks like:
-
-
-
 Optional Dependencies
 ---------------------
 
