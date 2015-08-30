@@ -19,7 +19,7 @@ Features
   * Error Logging: IO, LOGGER, [crashdump.io](http://crashdump.io)
   * Security: PLAIN, AES CBC 128
 * Speed: **15K** **conn/s** easily
-* Samples: Skyline (DSL), Games (SPA), Review (KVS)
+* Samples: Skyline (DSL), Games (SPA), Review (KVS), Sample (MAD)
 
 Project Structure
 -----------------
