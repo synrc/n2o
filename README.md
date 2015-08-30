@@ -198,9 +198,7 @@ Windows Users
 For windows you should install http://msys2.github.io and
 appropriative packages to use Synrc Stack:
 
-* git
-* mc
-* sh
+* pacman -S git
 
 Credits
 -------
