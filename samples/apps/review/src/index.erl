@@ -1,6 +1,7 @@
 -module(index).
 -compile(export_all).
 -include_lib("kvs/include/entry.hrl").
+-include_lib("nitro/include/nitro.hrl").
 -include_lib("n2o/include/wf.hrl").
 
 main() ->
@@ -9,7 +10,7 @@ main() ->
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
 
 room() -> case wf:qp(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
-content() -> case wf:qp(<<"code">>) of undefined -> list(); Code -> code() end.
+content() -> case wf:qp(<<"code">>) of undefined -> list(); _ -> code() end.
 code() -> case wf:qp(<<"code">>) of <<>>  -> "NO CODE"; 
                        E -> {ok,Bin} = file:read_file(E), wf:to_list(Bin) end.
 list() ->

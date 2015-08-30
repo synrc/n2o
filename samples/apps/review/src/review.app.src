@@ -1,6 +1,6 @@
 {application, review,
  [
-  {description, "N2O VXZ Sample App"},
+  {description, "N2O Review Application"},
   {vsn, "1"},
   {registered, []},
   {applications, [kernel, stdlib, n2o, kvs]},
