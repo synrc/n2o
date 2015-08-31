@@ -5,6 +5,9 @@
 -include_lib("n2o/include/api.hrl").
 -compile (export_all).
 
+-define(ACTION_BASE(Module), ancestor=action, trigger, target, module=Module, actions, source=[]).
+-record(jq,      {?ACTION_BASE(action_jq), property, method, args=[], right, format="~s"}).
+
 % Here is Nitrogen Web Framework compatible API
 % Please read major changes made to N2O and
 % how to port existing Nitrogen sites at https://synrc.com/apps/n2o

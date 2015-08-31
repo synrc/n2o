@@ -4,8 +4,8 @@
 
 -type name() :: atom() | binary() | string().
 -type render() :: list() | binary() | tuple() | list(tuple()).
--type wire_answer() :: undefined | list(#wire{}).
--type wiring() :: string() | #wire{} | #event{} | #jq{}.
+-type wire_answer() :: undefined | list(tuple()).
+-type wiring() :: string() | tuple().
 
 % update
 

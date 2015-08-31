@@ -4,7 +4,7 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-protocols() -> wf:config(n2o,protocols,[ n2o_binary,
+protocols() -> wf:config(n2o,protocols,[ n2o_file,
                                          n2o_client,
                                          n2o_nitrogen,
                                          n2o_heart
