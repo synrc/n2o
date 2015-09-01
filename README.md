@@ -104,7 +104,7 @@ Kickstart Bootstrap
 To try N2O you just need to clone a N2O repo from Github and build.
 We use very small and powerful mad tool designed for our Web Stack.
 
-    $ git clone git://github.com/5HT/n2o
+    $ git clone git://github.com/synrc/n2o
     $ cd n2o/samples
     $ ./mad deps compile plan repl
 
@@ -136,7 +136,7 @@ issues to GitHub related to misuses of N2O, all such issues will be closed.
 
 Support
 -------
-* [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/5HT/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+* [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/synrc/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * IRC Channel #n2o on FreeNode 24/7
 
 Documentation
