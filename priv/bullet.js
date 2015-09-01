@@ -1,148 +1,30 @@
 
-// N2O Bullet
+// N2O Transports
 
-function bullet(url) {
+$websocket = { heart: true, creator: function(url) { return new window.WebSocket(url); },
+               onopen: nop, onmessage: nop, onclose: nop,
+               onheartbeat: function() {     this.send('PING'); },
+               send:  function(data)   { if (this.channel) this.channel.send(data); },
+               close: function()       { if (this.channel) this.channel.close();    } };
 
-    var CONNECTING = 0;
-    var OPEN = 1;
-    var CLOSING = 2;
-    var CLOSED = 3;
+// N2O Firestarter
 
-    var transports = {
+ct = 0;
+xport = null;
+transports = [ $websocket ];
+heartbeat = null;
+reconnectDelay = 1000;
 
-        websocket: function() {
-            var transport = null;
-            if (window.WebSocket) { transport = window.WebSocket; }
-            if (transport) { return {'heart': true, 'transport': transport}; }
-            return null;
-        },
+function nop() { }
+function next() { if (transports.length <= ct) ct = 0; return transports[ct++]; }
+function bullet(url) { xport = next(); xport.url = url; return up(); }
+function reconnect() { ct++; setTimeout(function() { up(); }, reconnectDelay); }
 
-        xhr: function() {
-            var timeout;
-
-            var fake = {
-                readyState: CONNECTING,
-
-                receive: function(data) {
-                    if (fake.readyState == CONNECTING) { fake.readyState = OPEN; fake.onopen(fake); }
-                    if (data.length != 0) { fake.onmessage({'data': data }); }
-                },
-
-                send: function(data) {
-                    if (this.readyState != CONNECTING && this.readyState != OPEN) return false;
-                    var fakeurl = url.replace('ws:', 'http:').replace('wss:', 'https:');
-                    var request = new XMLHttpRequest();
-                    request.open('POST',fakeurl,true);
-                    request.setRequestHeader('Content-Type',
-                        'application/x-www-form-urlencoded; charset=utf-8');
-                    request.setRequestHeader('X-Socket-Transport','xhrPolling');
-                    request.onload = function() { fake.receive(request.response); };
-                    request.send(data);
-                    return true;
-                },
-                close: function(){
-                    this.readyState = CLOSED;
-                    clearTimeout(timeout);
-                    fake.onclose();
-                },
-            };
-
-            function poll(pooling){
-                var fakeurl = url.replace('ws:', 'http:').replace('wss:', 'https:');
-                var request = new XMLHttpRequest();
-                request.open('GET',fakeurl,true);
-                request.setRequestHeader('Content-Type',
-                    'application/x-www-form-urlencoded; charset=utf-8');
-                request.setRequestHeader('X-Socket-Transport','xhrPolling');
-                request.onload = function() { fake.receive(request.response); };
-                request.onerror = function() { fake.onerror(); };
-                request.send({});
-            }
-
-            function nextPoll() { timeout = setTimeout(function(){poll();}, 1000); }
-
-            fake.send('PING');
-            nextPoll();
-
-            return {'heart': false, 'transport': function() { return fake; } };
-        }
-    };
-
-    var tn = 0;
-    function next() {
-        var c = 0;
-
-        for (var f in transports) {
-            if (tn == c) {
-                var t = transports[f]();
-                if (t) { var ret = new t.transport(url); ret.heart = t.heart; return ret; }
-                tn++;
-            }
-            c++;
-        }
-        return false;
-    }
-
-    var stream = new function() {
-        var isClosed = true;
-        var readyState = CLOSED;
-        var heartbeat;
-        var delay = 80;
-        var delayDefault = 80;
-        var delayMax = 10000;
-
-        var transport;
-        function init() {
-
-            isClosed = false;
-            readyState = CONNECTING;
-            transport = next();
-
-            if (!transport) {
-                delay = delayDefault;
-                tn = 0;
-                stream.ondisconnect();
-                setTimeout(function(){init();}, delayMax);
-                return false;
-            }
-
-            transport.onopen = function() {
-                delay = delayDefault;
-                if (transport.heart) heartbeat = setInterval(function(){stream.onheartbeat();}, 4000);
-                if (readyState != OPEN) { readyState = OPEN; stream.onopen(); }
-            };
-
-            transport.onclose = function() {
-                if (isClosed) { return; }
-
-                transport = null;
-                clearInterval(heartbeat);
-
-                if (readyState == CLOSING){
-                    readyState = CLOSED;
-                    stream.onclose();
-                } else {
-                    if (readyState == CONNECTING) tn++;
-                    delay *= 2;
-                    if (delay > delayMax) { delay = delayMax; }
-                    isClosed = true;
-                    setTimeout(function() { init(); }, delay);
-                }
-            };
-            transport.onerror = transport.onclose;
-            transport.onmessage = function(e) { stream.onmessage(e); };
-        }
-
-        init();
-
-        this.onopen = function(){};     this.oninit = function(){};
-        this.onmessage = function(){};  this.ondisconnect = function(){ initialized = false; };
-        this.onclose = function(){};    this.onheartbeat = function(){ return this.send('PING'); };
-
-        this.setURL = function(newURL) { url = newURL; };
-        this.send = function(data) { if (transport) return transport.send(data); else return false; };
-        this.close = function() { readyState = CLOSING; if (transport) transport.close(); };
-    };
-
-    return stream;
-}
+function up() {
+    xport.channel = xport.creator(xport.url);
+    xport.channel.onmessage = function(e) { xport.onmessage(e); };
+    xport.channel.onopen = function() {
+        if (xport.heart) heartbeat = setInterval(function(){xport.onheartbeat();}, 4000);
+        xport.onopen(); };
+    xport.channel.onclose = function() { xport.onclose(); clearInterval(heartbeat); reconnect(); };
+    return xport; }
