@@ -18,7 +18,7 @@ Features
   * Templates: DTL, [NITRO](http://synrc.github.io/nitro)
   * Sessions: server driven
   * DOM Language: SHEN JavaScript Compiler
-  * Error Logging: IO, LOGGER, [crashdump.io](http://crashdump.io)
+  * Error Logging: IO, LOGGER
   * Security: PLAIN, AES CBC 128
 * Speed: **30K** **conn/s** at notebook easily
 * Samples: Skyline (DSL), Games (SPA), Review (KVS), Sample (MAD)
@@ -61,6 +61,7 @@ All Features in One snippet
 ```erlang
 -module(index).
 -compile(export_all).
+-include_lib("nitro/include/nitro.hrl").
 -include_lib("n2o/include/wf.hrl").
 
 peer()    -> io_lib:format("~p",[wf:peer(?REQ)]).
