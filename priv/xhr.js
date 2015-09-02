@@ -1,10 +1,11 @@
 
 // N2O XHR Fallback
 
-//xhr_active = false;
 $xhr = { heart: false, interval: 100, creator: function(url) { $conn.url = xhr_url(url);
          $xhr.channel = { send: xhr_send, close: xhr_close }; $conn.onopen();
          return $xhr.channel; }, onheartbeat: function() { xhr('GET',{});} };
+
+transports = [$ws,$xhr];
 
 function xhr_header(request) {
     request.setRequestHeader('X-Socket-Transport','xhrPolling');
