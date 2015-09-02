@@ -169,9 +169,11 @@ function de_tuple(S, Count) {
     return { value: tuple(Arr), rest: S }; };
 function de_nil(S) { return { value: [], rest: S }; };
 
-var $bert = {};
 
-$bert.on = function onbert(evt, callback) // BERT formatter
+// BERT formatter
+
+var $bert = {};
+$bert.on = function onbert(evt, callback) 
 {
     if (debug) console.log("Bert On");
     if (Blob.prototype.isPrototypeOf(evt.data) && (evt.data.length > 0 || evt.data.size > 0)) {
