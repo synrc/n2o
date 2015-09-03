@@ -4,6 +4,6 @@
   {vsn, "1"},
   {registered, []},
   {applications, [kernel, stdlib, n2o, kvs]},
-  {mod, { web_app, []}},
+  {mod, { review, []}},
   {env, []}
  ]}.
