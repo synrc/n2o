@@ -169,6 +169,8 @@ format({Atom,Data},   json) -> wf:info(?MODULE,"JSON {~p,_}: ~tp~n",[Atom,data(D
                                jsone:encode([{name,Atom},{data,data(Data)}]);
 format({Io,Eval,Data},bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Io,io(Eval)]),
                                {binary,term_to_binary({Io,io(Eval),data(Data)})};
+format(#ftp{source=Source}=FTP,bert) -> wf:info(?MODULE,"BERT {ftp,_,_,_,_,_,_,_,_,_,_,_}: ~tp~n",[FTP]),
+                               {binary,term_to_binary(FTP)};
 format({Atom,Data},   bert) -> wf:info(?MODULE,"BERT {~p,_}: ~tp~n",[Atom,data(Data)]),
                                {binary,term_to_binary({Atom,data(Data)})};
 format(Term,          bert) -> {binary,term_to_binary(Term)};

@@ -173,9 +173,8 @@ function de_nil(S) { return { value: [], rest: S }; };
 // BERT formatter
 
 var $bert = {};
-$bert.on = function onbert(evt, callback) 
+$bert.on = function onbert(evt, callback)
 {
-    if (debug) console.log("Bert On");
     if (Blob.prototype.isPrototypeOf(evt.data) && (evt.data.length > 0 || evt.data.size > 0)) {
         var reader = new FileReader();
         reader.addEventListener("loadend", function() {
@@ -194,10 +193,10 @@ function isIO(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
                    x.value[0].length == 3 && x.value[0][0] == 'io'); }
 
 $bert.do = function (x) {
-   // console.log(x.toString());
     if (isIO(x)) {
+        if (debug) console.log(x.toString());
         try { eval(utf8_decode(x.value[0][1].value)); }
         catch (e) { return { status: "error", desc: e }; }
         return { status: "ok", desc: e };
-    } else console.log("unknown Bert: " + x);
+    } else return { status: "error", desc: "not #io" };
 }
