@@ -65,9 +65,9 @@ wire(Actions) -> action_wire:wire(Actions).
 % Spawn async processes wf:async, wf:flush
 
 comet(Function) -> async(Function). % legacy name
-async(Function) -> action_async:async(Function).
-async(Name,Function) -> action_async:async(Name,Function).
-flush(Key) -> action_async:flush(Key).
+async(Function) -> n2o_async:async(Function).
+async(Name,Function) -> n2o_async:async(Name,Function).
+flush(Key) -> n2o_async:flush(Key).
 
 % Redirect and purge connection wf:redirect
 
