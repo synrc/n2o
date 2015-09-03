@@ -47,7 +47,7 @@ render_actions(Actions) ->
     First  = wf:render(Actions),
     Second = wf:render(wf:actions()),
     wf:actions([]),
-    iolist_to_binary([First,Second]).
+    [First,Second].
 
 % N2O events
 
