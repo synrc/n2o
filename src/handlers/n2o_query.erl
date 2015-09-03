@@ -3,10 +3,9 @@
 -include_lib("n2o/include/wf.hrl").
 -export(?QUERING_API).
 
-init(_State, Ctx) -> 
+init(_State, Ctx) ->
     {Params,NewReq} = wf:params(Ctx#cx.req),
-    %{Form,NewReq2} = wf:form(NewReq),
-    NewCtx = Ctx#cx{params=Params,req=NewReq},%,form=Form},
+    NewCtx = Ctx#cx{params=Params,req=NewReq},
     {ok, [], NewCtx}.
 
 finish(_State, Ctx) ->  {ok, [], Ctx}.
