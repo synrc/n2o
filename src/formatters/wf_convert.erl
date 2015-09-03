@@ -158,19 +158,25 @@ digit(15) -> $f.
 
 hex(Bin) -> << << (digit(A1)),(digit(A2)) >> || <<A1:4,A2:4>> <= Bin >>.
 unhex(Hex) -> << << (erlang:list_to_integer([H1,H2], 16)) >> || <<H1,H2>> <= Hex >>.
+
 io(Data) -> iolist_to_binary(Data).
 data(Data) -> binary_to_list(term_to_binary(Data)).
-
 format(Term) -> format(Term,application:get_env(n2o,formatter,json)).
 
-format({io,Eval,Data},json) -> wf:info(?MODULE,"{io,_,_}: ~tp~n",[io(Eval)]),
+format({io,Eval,Data},json) -> wf:info(?MODULE,"JSON {io,_,_}: ~tp~n",[io(Eval)]),
                                jsone:encode([{name,"io"},{eval,io(Eval)},{data,data(Data)}]);
-format({server,Data}, json) -> wf:info(?MODULE,"{server,_,_}: ~tp~n",[io(Data)]),
+format({server,Data}, json) -> wf:info(?MODULE,"JSON {server,_,_}: ~tp~n",[io(Data)]),
                                jsone:encode([{name,"server"},{data,data(Data)}]);
-format({client,Data}, json) -> wf:info(?MODULE,"{client,_}: ~tp~n",[io(Data)]),
+format({client,Data}, json) -> wf:info(?MODULE,"JSON {client,_}: ~tp~n",[io(Data)]),
                                jsone:encode([{name,"client"},{data,data(Data)}]);
-format({binary,Data}, json) -> wf:info(?MODULE,"{bniary,_}: ~tp~n",[io(Data)]),
+format({binary,Data}, json) -> wf:info(?MODULE,"JSON {bniary,_}: ~tp~n",[io(Data)]),
                                jsone:encode([{name,"binary"},{data,data(Data)}]);
+
+format({Io,Eval,Data},bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Io,io(Eval)]),
+                               {binary,term_to_binary({Io,io(Eval),data(Data)})};
+format({Atom,Data},   bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Atom,data(Data)]),
+                               {binary,term_to_binary({Atom,data(Data)})};
 format(Term,          bert) -> {binary,term_to_binary(Term)};
+
 format(_,_)                 -> {binary,term_to_binary({error,<<>>,
                                   <<"Only JSON/BERT formatters are available.">>})}.
