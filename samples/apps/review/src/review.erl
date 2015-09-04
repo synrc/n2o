@@ -4,7 +4,9 @@
 -export([init/1, start/0, start/2, stop/1, main/1]).
 -include_lib("kvs/include/user.hrl").
 
+main(["start"]) -> mad_run:start([]);
 main(A) -> mad_repl:main(A,[]).
+
 start() -> start(normal, []).
 start(_StartType, _StartArgs) -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 stop(_State) -> ok.
