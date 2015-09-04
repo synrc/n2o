@@ -20,7 +20,7 @@ async(Name, F) ->
 pid({Class,Name}) -> wf:cache({Class,Name}).
 key() -> n2o_session:session_id().
 restart(Name) -> exit(n2o_async:pid({async,{Name,key()}}),kill).
-send(Name,Message) -> gen_server:call(n2o_async:pid({async,{Name,key()}}),Message).
+send(Name,Message) -> n2o_async:pid({async,{Name,key()}}) ! Message, [].
 flush() -> A=wf_context:actions(), wf:actions([]), get(parent) ! {flush,A}.
 flush(Pool) -> A=wf_context:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
 stop(Name) -> [ supervisor:F(n2o_sup,{async,{Name,key()}})||F<-[terminate_child,delete_child]].
@@ -30,7 +30,8 @@ init_context(Req) ->
     Ctx = wf_context:init_context(Req),
     NewCtx = wf_context:fold(init, Ctx#cx.handlers, Ctx),
     wf:actions(NewCtx#cx.actions),
-    wf:context(NewCtx).
+    wf:context(NewCtx),
+    NewCtx.
 
 start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
     ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
