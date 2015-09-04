@@ -10,6 +10,7 @@ function querySourceRaw(Id) {
             switch (el.getAttribute("type")) {
                 case 'radio': case 'checkbox': val = el.checked ? el.value : ""; break;
                 case  'date': val = getErlDate(el); break;
+                case  'calendar': val = getDateFromCalendar(el); break;  //only 4 nitro #calendar{}
                 default:     var edit = el.contentEditable;
                     if (edit && edit === 'true') val = el.innerHTML;
                     else val = el.value; }
@@ -36,4 +37,15 @@ function getErlDate(el) {
         }else val = "";
     } else val = "";
     return val;
+}
+
+function getDateFromCalendar(el) {
+    var picker = pickers[el.id] || null;
+    var val = {};
+    if(picker) {
+        val.month = (picker._d.getMonth() < 9) ? "0" + (picker._d.getMonth()+1) : (picker._d.getMonth()+1);
+        val.day = (picker._d.getDate()  < 10) ? "0" + picker._d.getDate() : picker._d.getDate();
+        val.erlangDate = "{"+ picker._d.getFullYear() +","+ val.month +","+ val.day +"}";
+    }else { val.erlangDate = ""; }
+    return val.erlangDate;
 }
