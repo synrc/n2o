@@ -18,7 +18,7 @@ Features
   * Templates: DTL, [NITRO](http://synrc.github.io/nitro)
   * Sessions: server driven
   * DOM Language: SHEN JavaScript Compiler
-  * Error Logging: IO, LOGGER, [crashdump.io](http://crashdump.io)
+  * Error Logging: IO, LOGGER
   * Security: PLAIN, AES CBC 128
 * Speed: **30K** **conn/s** at notebook easily
 * Samples: Skyline (DSL), Games (SPA), Review (KVS), Sample (MAD)
@@ -26,9 +26,9 @@ Features
 Optional Dependencies
 ---------------------
 
-For raw N2O use with BERT message formatter you need only one N2O dependecy,
-but if you want to use DTL templates, JSON message formatter, SHEN JavaScript Compiler
-or NITRO Nitrogen DSL you can plug all of them separately.
+N2O comes with BERT message formatter support out of the box, and you only need
+one N2O dependency in this case. Should you need DTL templates, JSON message formatter, 
+SHEN JavaScript Compiler or NITRO Nitrogen DSL you can plug all of them in separately:
 
 ```erlang
 {n2o,    ".*",{git,"git://github.com/synrc/n2o",         {tag, "2.8"}}},
@@ -42,7 +42,7 @@ Message Formatters
 ------------------
 
 You can use any message formmatter at the bottom of N2O protocol.
-The IO message of N2O protocol could be seen as follows:
+IO messages supported by the N2O protocol are as follows:
 
 ```
 1. BERT : {io,"console.log('hello')",1}
@@ -52,8 +52,8 @@ The IO message of N2O protocol could be seen as follows:
 5. XML  : <io><eval>console.log('hello')</eval><data>1</data></io>
 ```
 
-Moreover you can switch channel termination formatter on the fly
-in the same WebSocket session.
+Besides, you can even switch a channel termination formatter on the fly
+within one WebSocket session.
 
 All Features in One snippet
 ---------------------------
@@ -61,6 +61,7 @@ All Features in One snippet
 ```erlang
 -module(index).
 -compile(export_all).
+-include_lib("nitro/include/nitro.hrl").
 -include_lib("n2o/include/wf.hrl").
 
 peer()    -> io_lib:format("~p",[wf:peer(?REQ)]).
@@ -84,10 +85,13 @@ chat_loop() ->
 Performance
 -----------
 
-We are using for measurement ab, httperf, wrk and siege, all of them. The most valuable storm
-created by wrk and it is not achieved in real apps but could show us the internal throughput
-of individual components. The most near to real life apps is siege who also make DNS lookup
-for each request. So this data shows internal data throughput by wrk:
+ab, httperf, wrk and siege are all used for measuring performance. 
+The most valuable request hell is created by wrk and even though it 
+is not achievable in real apps, it can demonstrate internal throughput 
+of certain individual components. 
+
+The nearest to real life apps is siege which also performs a DNS lookup
+for each request. The data below shows internal data throughput by wrk:
 
 | Framework | Enabled Components | Speed | Timeouts |
 |-----------|--------------------|-------|----------|
@@ -101,25 +105,25 @@ for each request. So this data shows internal data throughput by wrk:
 Kickstart Bootstrap
 -------------------
 
-To try N2O you just need to clone a N2O repo from Github and build.
-We use very small and powerful mad tool designed for our Web Stack.
+To try N2O you  need to clone a N2O repo from Github and build it.
+We use a very small and powerful tool called mad designed specially for our Web Stack.
 
-    $ git clone git://github.com/5HT/n2o
+    $ git clone git://github.com/synrc/n2o
     $ cd n2o/samples
     $ ./mad deps compile plan repl
 
-Now you can try: [http://localhost:8000](http://localhost:8000)
+Now you can try it out: [http://localhost:8000](http://localhost:8000)
 
-LINUX NOTE: if you want to have online recompilation you should do at first:
+LINUX NOTE: if you want to have online recompilation you should install `inotify-tools` first:
 
     $ sudo apt-get install inotify-tools
 
 Erlang version
 --------------
 
-We don't accept any reports of problems with ESL or Ubuntu packaging.
-We do support only Erlang built from sources, official Windows package,
-built with kerl or installed on Mac with brew. If you have problems
+We don't accept any reports of problems related to ESL or Ubuntu packaging.
+We only support Erlang built from sources, official Windows package,
+built with kerl or installed on Mac with homebrew. If you have any problems
 with your favourite Erlang package for your OS, please report issues
 to package maintainer.
 
@@ -127,7 +131,7 @@ Posting Issues on Github
 -------
 
 Thank you for using N2O (you've made a wise choice) and your contributions
-to help make it better. Before posting an issue in Github, please contact
+to help make it better. Before posting an issue on Github, please contact
 us via the options listed below in the support section. Doing so will
 help us determine whether your issue is a suggested feature, refactor
 of existing code, bug, etc, that needs to be posted to GitHub for the
@@ -136,16 +140,16 @@ issues to GitHub related to misuses of N2O, all such issues will be closed.
 
 Support
 -------
-* [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/5HT/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+* [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/synrc/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * IRC Channel #n2o on FreeNode 24/7
 
 Documentation
 -------
 
-If you are new or need to determine whether the N2O architecture
+If you are new or you need to decide whether the N2O architecture
 and philosophy is a fit for your project
 
-* Official N2O Book [PDF](https://synrc.com/apps/n2o/doc/book.pdf)
+* Official N2O Book [PDF](http://synrc.com/apps/n2o/doc/book.pdf)
 
 Windows Users
 -------------

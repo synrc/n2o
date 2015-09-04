@@ -11,6 +11,6 @@ defmodule N2O.Mixfile do
   defp package do
     [files: ~w(c_src doc include priv src LICENSE mix.exs README.md rebar.config),
      licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/5HT/n2o"}]
+     links: %{"GitHub" => "https://github.com/synrc/n2o"}]
    end
 end

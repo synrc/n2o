@@ -2,7 +2,7 @@
 // N2O CORE
 
 var active      = false,
-    debug       = false,
+    debug       = true,
     protocol    = window.location.protocol == 'https:' ? "wss://" : "ws://",
     querystring = window.location.pathname + window.location.search,
     host        = null == transition.host ? window.location.hostname : transition.host,
@@ -14,6 +14,7 @@ function N2O_start() {
   ws.onmessage = function (evt) { for (var i=0;i<protos.length;i++) { p = protos[i]; if (p.on(evt, p.do).status == "ok") return; } };
   ws.onopen = function() { if (!active) { console.log('Connect'); ws.send('N2O,'+transition.pid); active=true; } };
   ws.onclose = function() { active = false; console.log('Disconnect'); };
+  next();
 }
 
 //WebSocket = undefined; // test XHR fallback

@@ -169,33 +169,46 @@ function de_tuple(S, Count) {
     return { value: tuple(Arr), rest: S }; };
 function de_nil(S) { return { value: [], rest: S }; };
 
-var $bert = {};
 
-$bert.on = function onbert(evt, callback) // BERT formatter
+// BERT formatter
+
+var $bert = {};
+$bert.on = function onbert(evt, callback)
 {
-    if (debug) console.log("Bert On");
     if (Blob.prototype.isPrototypeOf(evt.data) && (evt.data.length > 0 || evt.data.size > 0)) {
         var reader = new FileReader();
         reader.addEventListener("loadend", function() {
             try {
                 var erlang = dec(reader.result);
                 if (typeof callback  == 'function') callback(erlang);
-            } catch (e) { return { status: "error", desc: e }; }
+            } catch (e) { console.log(e); }
         });
         reader.readAsArrayBuffer(evt.data);
         return { status: "ok" };
     }
-    else  { return { status: "error", desc: "not Bert" }; }
+    else  { return { status: "error", desc: "data" }; }
 };
 
 function isIO(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
                    x.value[0].length == 3 && x.value[0][0] == 'io'); }
 
-$bert.do = function (x) {
-   // console.log(x.toString());
+function isFTP(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
+                    x.value[0].length == 12 && x.value[0][0] == 'ftp'); }
+
+function isBIN(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
+                    x.value[0].length == 2 && x.value[0][0] == 'bin'); }
+
+$bert.do = function onio(x) {
+    if (debug) console.log(x.toString());
     if (isIO(x)) {
         try { eval(utf8_decode(x.value[0][1].value)); }
         catch (e) { return { status: "error", desc: e }; }
-        return { status: "ok", desc: e };
-    } else console.log("unknown Bert: " + x);
+        return { status: "ok" };
+    } else if (isFTP(x)) {
+        console.log("#ftp.source: " + x.value[0][4]);
+        return { status: "ok" }
+    } else if (isBIN(x)) {
+        console.log("#bin.data: " + x.value[0][1].value);
+        return { status: "ok" }
+    } else return { status: "error", desc: "bert" };
 }

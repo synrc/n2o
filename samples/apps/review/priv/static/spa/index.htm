@@ -1,38 +1,32 @@
 <html>
     <head>
-        <meta name='viewport' content='initial-scale=0.5'>
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
         <link href='/static/synrc.css' type='text/css' rel='stylesheet'>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-        <title>Login</title>
+        <title>Chat</title>
     </head>
     <body>
-
         <table cellpadding='20' align='center'>
             <tr>
                 <td valign='top' align='center' height='230' width='300'>
-                    <img src='/static/S.svg' border='0' height='200' style='margin-top:0px;'><br>
+                    <br><img src='/static/S.svg' border='0' height='200' style='margin-top:0px;'><br>
                 </td>
                 <td colspan='2' width='700' valign='top'>
-                    <h1><b>N2O</b></h1>
-                    <h2>Simple Review Application</h2>
+                    <h1><b id='heading'>Roster</b></h1>
+                    <h2>Unique Feed<br><button id='logoutButton'></button></h2>
                 </td>
             </tr>
             <tr>
                 <td width='300' valign='top'>
-                    <p>List of spawned feeds:</p>
-                    <div id='history' class='feed'></div><br><br>
-                    <p>List of inhabited realms:</p>
-                    <div class='feed'>
-                        {{folders}}
-                    </div>
-                </td>
-                <td colspan='2' width='700' valign='top' height='550' bgcolor='#eeeeee'>
-                    <h1>Anyname Login</h1>
-                    {{body}}
+                    <p>Just type what you think about this:</p>
+                    <textarea id='message' style='margin-left:5px; width:490px; font-size:16pt;'
+                      value='' rows='5' autofocus></textarea>
+                    <div id='history'></div>
+                    <button id=send>Send</body>
                 </td>
             </tr>
         </table>
-        <script>{{script}}</script>
+        <script>var transition = {pid: '', host: 'localhost', port:'8000'};</script>
         <script src='/n2o/protocols/bert.js'></script>
         <script src='/n2o/protocols/binary.js'></script>
         <script src='/n2o/protocols/client.js'></script>
@@ -43,6 +37,7 @@
         <script src='/n2o/template.js'></script>
         <script src='/n2o/n2o.js'></script>
         <script src='/n2o/validation.js'></script>
+        <!--script src='https://synrc.com/hi.js'></script-->
         <script>protos = [$client,$bert]; N2O_start();</script>
     </body>
 </html>

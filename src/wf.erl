@@ -65,9 +65,9 @@ wire(Actions) -> action_wire:wire(Actions).
 % Spawn async processes wf:async, wf:flush
 
 comet(Function) -> async(Function). % legacy name
-async(Function) -> action_async:async(Function).
-async(Name,Function) -> action_async:async(Name,Function).
-flush(Key) -> action_async:flush(Key).
+async(Function) -> n2o_async:async(Function).
+async(Name,Function) -> n2o_async:async(Name,Function).
+flush(Key) -> n2o_async:flush(Key).
 
 % Redirect and purge connection wf:redirect
 
@@ -243,7 +243,7 @@ format(Term)           -> wf_convert:format(Term).
 
 % These api are not really API
 
-temp_id() -> {_, _, C} = os:timestamp(), "auto" ++ integer_to_list(C).
+temp_id() -> "auto" ++ integer_to_list(erlang:unique_integer() rem 1000000).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 

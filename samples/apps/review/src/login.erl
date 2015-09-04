@@ -11,7 +11,7 @@ body() ->
  [ #span   { id=display },                #br{},
    #span   { body="Login: " },            #textbox{id=user,autofocus=true}, #br{},
    #span   { body="Join/Create Feed: " }, #textbox{id=pass},
-   #button { body="Login",postback=login,source=[user,pass]}].
+   #button { id=login, body="Login",postback=login,source=[user,pass]} ].
 
 event(init) ->
     [ index:event({client,{"feed",element(2,F#feed.id)}}) || F <-kvs:all(feed)],
@@ -23,7 +23,7 @@ event(login) ->
                               E -> wf:to_list(E) end,
     wf:user(User),
     wf:info(?MODULE,"User: ~p",[wf:user()]),
-    wf:redirect("/index?room="++wf:to_list(wf:q(pass))),
+    wf:redirect("index.htm?room="++wf:to_list(wf:q(pass))),
     ok;
 
 event(_) -> [].

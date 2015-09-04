@@ -6,7 +6,7 @@
 
 main() ->
     case wf:user() of
-         undefined -> wf:redirect("/login"),#dtl{};
+         undefined -> wf:redirect("login.htm"), #dtl{};
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
 
 room() -> case wf:qp(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
@@ -25,9 +25,10 @@ body() ->
     [ #button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
 event({show,Short,File}) ->
-    wf:redirect("/index?room="++Short++"&code="++File);
+    wf:redirect("index.htm?room="++Short++"&code="++File);
 
 event(chat) ->
+    wf:info(?MODULE,"Chat pressed~n",[]),
     User = wf:user(),
     Message = wf:to_list(wf:q(message)),
     Room = room(),
@@ -46,5 +47,5 @@ event(init) ->
     [ event({client,{E#entry.from,E#entry.media}}) || E <-
        lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
 
-event(logout) -> wf:logout(), wf:redirect("/login");
+event(logout) -> wf:logout(), wf:redirect("login.htm");
 event(Event) -> wf:info(?MODULE,"Event: ~p", [Event]).

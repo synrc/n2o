@@ -1,12 +1,14 @@
--module(web_sup).
+-module(review).
 -behaviour(supervisor).
--export([start_link/0, init/1]).
--compile(export_all).
--include_lib("n2o/include/wf.hrl").
+-behaviour(application).
+-export([init/1, start/0, start/2, stop/1, main/1]).
 -include_lib("kvs/include/user.hrl").
--define(APP, n2o_sample).
 
-start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+main(A) -> mad:main(A).
+
+start() -> start(normal, []).
+start(_StartType, _StartArgs) -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+stop(_State) -> ok.
 
 -define(USERS, [#user{id="maxim",email="maxim@synrc.com"},
                 #user{id="doxtop",email="doxtop@synrc.com"},

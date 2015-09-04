@@ -1,30 +1,33 @@
 
-// N2O Transports
+// WebSocket Transport
 
-$websocket = { heart: true, creator: function(url) { return new window.WebSocket(url); },
-               onopen: nop, onmessage: nop, onclose: nop,
-               onheartbeat: function() {     this.send('PING'); },
-               send:  function(data)   { if (this.channel) this.channel.send(data); },
-               close: function()       { if (this.channel) this.channel.close();    } };
+$ws = { heart: true, interval: 4000,
+        creator: function(url) { return window.WebSocket ? new window.WebSocket(url) : false; },
+        onheartbeat: function() { this.channel.send('PING'); } };
 
-// N2O Firestarter
+// N2O Reliable Connection
+
+$conn = { onopen: nop, onmessage: nop, onclose: nop,
+          send:  function(data)   { if (this.port.channel) this.port.channel.send(data); },
+          close: function()       { if (this.port.channel) this.port.channel.close(); } };
 
 ct = 0;
-xport = null;
-transports = [ $websocket ];
+transports = [ $ws ];
 heartbeat = null;
 reconnectDelay = 1000;
+maxReconnects = 100;
 
 function nop() { }
-function next() { if (transports.length <= ct) ct = 0; return transports[ct++]; }
-function bullet(url) { xport = next(); xport.url = url; return up(); }
-function reconnect() { ct++; setTimeout(function() { up(); }, reconnectDelay); }
-
-function up() {
-    xport.channel = xport.creator(xport.url);
-    xport.channel.onmessage = function(e) { xport.onmessage(e); };
-    xport.channel.onopen = function() {
-        if (xport.heart) heartbeat = setInterval(function(){xport.onheartbeat();}, 4000);
-        xport.onopen(); };
-    xport.channel.onclose = function() { xport.onclose(); clearInterval(heartbeat); reconnect(); };
-    return xport; }
+function bullet(url) { $conn.url = url; return $conn; }
+function xport() { return maxReconnects <= ct ? false : transports[ct++ % transports.length]; }
+function reconnect() { setTimeout(function() { connect(); }, reconnectDelay); }
+function next() { $conn.port = xport(); return $conn.port ? connect() : false; }
+function connect() {
+    $conn.port.channel = $conn.port.creator($conn.url);
+    if (!$conn.port.channel) return next();
+    $conn.port.channel.onmessage = function(e) { $conn.onmessage(e); };
+    $conn.port.channel.onopen = function() {
+        if ($conn.port.heart) heartbeat = setInterval(function(){$conn.port.onheartbeat();}, $conn.port.interval);
+        $conn.onopen(); };
+    $conn.port.channel.onclose = function() { $conn.onclose(); clearInterval(heartbeat); reconnect(); };
+    return $conn; }

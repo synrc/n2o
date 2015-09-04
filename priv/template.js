@@ -15,15 +15,9 @@ function template(html, data) { // template("{this.name}",{name:"Maxim"})
     return new Function(code.replace(/[\r\t\n]/g, '')).apply(data); }
 
 function xml(html) { return new DOMParser().parseFromString(html, "application/xhtml+xml").firstChild; }
-
 function dom(html) {
-try {
-  var dom =  new DOMParser().parseFromString(html, "text/html")
-                .firstChild.getElementsByTagName("body")[0].firstChild;
-  return dom; } catch (ex) {
-      var tempContainer = document.createElement("DIV");
-      tempContainer.innerHTML = html;
-      var dom = tempContainer.firstChild;
-      return dom; }
+    try { return new DOMParser().parseFromString(html, "text/html").firstChild.getElementsByTagName("body")[0].firstChild; } 
+    catch (ex) { var temp = document.createElement("DIV");
+                     temp.innerHTML = html;
+                     return temp.firstChild; }
 }
-

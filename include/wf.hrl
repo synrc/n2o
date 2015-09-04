@@ -1,7 +1,7 @@
 -ifndef(N2O_HRL).
 -define(N2O_HRL, true).
 
--record(handler, { name, module, config, state}).
+-record(handler, { name, module, class, group, config, state}).
 -record(cx,      { handlers, actions, req, module, lang, path, session, params, form, state=[] }).
 
 -define(CTX, (get(context))).
@@ -36,6 +36,6 @@
 
 % File Transfer Protocol
 
--record(ftp,     { id, type, app, version, from, to, meta, data }).
+-record(ftp,     { sid, filename, hash, source, target, offset, meta, data, status, block, priority }).
 
 -endif.
