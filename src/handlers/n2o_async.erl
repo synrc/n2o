@@ -31,3 +31,13 @@ init_context(Req) ->
     NewCtx = wf_context:fold(init, Ctx#cx.handlers, Ctx),
     wf:actions(NewCtx#cx.actions),
     wf:context(NewCtx).
+
+start(Async) ->
+    Restart = transient,
+    Shutdown = 5000,
+    ChildSpec = { Async#handler.name, { Async#handler.module, start_link, [Async]},
+                  Restart, Shutdown, worker, [Async#handler.module] },
+    case supervisor:start_child(Async#handler.group,ChildSpec) of
+         {ok,_}   -> {ok,Async#handler.name};
+         {ok,_,_} -> {ok,Async#handler.name};
+         Else     -> Else end.
