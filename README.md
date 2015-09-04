@@ -68,7 +68,7 @@ peer()    -> io_lib:format("~p",[wf:peer(?REQ)]).
 message() -> wf:js_escape(wf:html_encode(wf:q(message))).
 main()    -> #dtl{file="index",app=n2o_sample,bindings=[{body,body()}]}.
 body() ->
-    {Pid,_} = wf:async(fun() -> chat_loop() end),
+    {Pid,_} = wf:async(fun(X) -> chat_loop(X) end),
     [ #panel{id=history}, #textbox{id=message},
       #button{id=send,body="Chat",postback={chat,Pid},source=[message]} ].
 
