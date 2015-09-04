@@ -28,7 +28,7 @@ event({show,Short,File}) ->
     wf:redirect("index.htm?room="++Short++"&code="++File);
 
 event(chat) ->
-    io:format("Chat pressed~n"),
+    wf:info(?MODULE,"Chat pressed~n",[]),
     User = wf:user(),
     Message = wf:to_list(wf:q(message)),
     Room = room(),
