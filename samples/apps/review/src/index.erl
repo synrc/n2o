@@ -6,7 +6,7 @@
 
 main() ->
     case wf:user() of
-         undefined -> wf:redirect("login.htm");
+         undefined -> wf:redirect("login.htm"), #dtl{};
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
 
 room() -> case wf:qp(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.

@@ -10,7 +10,7 @@
 %% [code:ensure_loaded(M) || M <- [index, login, ... ]]
 
 finish(State, Ctx) -> {ok, State, Ctx}.
-init(State, Ctx) -> 
+init(State, Ctx) ->
     Path = wf:path(Ctx#cx.req),
     wf:info(?MODULE,"Route: ~p~n",[Path]),
     {ok, State, Ctx#cx{path=Path,module=route_prefix(Path)}}.
