@@ -13,7 +13,7 @@ info(#ftp{status="init"}=FTP, Req, #cx{}=State) ->
     {reply,wf:format(FTP#ftp{source=wf:version()}),Req,State};
 
 info(#ftp{sid=Sid,filename=File,hash=Hash,status="send"}=FTP, Req, State) ->
-    {reply,Reply,Async} = gen_server:call(n2o_async:pid({file,{Sid,File,Hash}}),FTP),
+    Reply = gen_server:call(n2o_async:pid({file,{Sid,File,Hash}}),FTP),
     {reply,wf:format(Reply),Req,State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.
