@@ -1,7 +1,7 @@
 
 \section{Handlers}
 HTML and JavaScript Web Server HTTP handlers share the same system
-of context initialization. 
+of context initialization.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -19,7 +19,7 @@ on each HTTP request. You can redefine any of them or plug your own
 additional handler in the chain to transform web server requests.
 
 \vspace{1\baselineskip}
-\begin{lstlisting}[caption={wf}\_{core}:fold/3]
+\begin{lstlisting}[caption={wf}\_{context}:fold/3]
     fold(Fun,Handlers,Ctx) ->
         lists:foldl(fun({_,Module},Ctx1) ->
             {ok,_,NewCtx} = Module:Fun([],Ctx1),

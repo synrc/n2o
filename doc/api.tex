@@ -223,13 +223,18 @@ And set it in runtime:
 \end{lstlisting}
 
 \subsection{Async Processes {\bf wf:async} and {\bf wf:flush}}
-Function {\bf wf:async} creates Erlang process, which communicate with the primary page
-process by sending messages. {\bf wf:flush} should be called to redirect all updates and
-wire actions back to the page process from its async counterpart.
+Function {\bf wf:async/2} creates Erlang process, which communicate with the primary page
+process by sending messages. {\bf wf:flush/0} should be called to redirect all updates and
+wire actions back to the page process from its async counterpart. But function {\bf wf:flush/1}
+has completly another meaning, it uses pubsub to deliver a rendered actions in async worker to
+any process, previously registered with {\bf wf:reg/1}, by its topic.
 Usually you send messages to async processes over N2O
-message bus {\bf wf:send}, but you can use also {\bf n2o\_async:send}. In following
+message bus {\bf wf:send/2} which is similar to how {\bf wf:flush/1} works.
+But you can use also {\bf n2o\_async:send/2} selectively to async worker what reminds
+{\bf wf:flush/0}. In following
 example different variants are gives, both incrementing counter by 2. Also notice
-the async process initialization throung {\bf init} message.
+the async process initialization throung {\bf init} message. It is not nessesary
+to include init clause to async looper.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -248,21 +253,64 @@ the async process initialization throung {\bf init} message.
                       #span{id=display,body=wf:to_binary(C)}),
                    wf:flush().
 \end{lstlisting}
+\vspace{1\baselineskip}
 
 \paragraph{\bf Process Naming}
 The name of async process is globally unique. There are two
 versions, {\bf wf:async/1} and {\bf wf:async/2}. In the given example
 the name of async process is specified as ``counter'', otherwise,
 if the first parameter was not specified, the default name ``looper''
-will be used. Internally each async process includes custom key which is settled by
-default to session id.
+will be used. Internally each async process includes custom key which
+is settled by default to session id.
 
+\newpage
+So let's mimic {\bf session\_id} and {\bf \#cx} in the shell:
+
+\vspace{1\baselineskip}
 \begin{lstlisting}
-  > supervisor:which_children(n2o_sup).
-    [{{async,{"counter",<<"d43adcc79dd64393a1eb559227a2d3fd">>}},
-      <0.11564.0>,worker,
-      [n2o_async]}]
+    > put(session_id,<<"d43adcc79dd64393a1eb559227a2d3fd">>).
+      undefined
+
+    > wf:context(wf_context:init_context(undefined)).
+      {cx,[{query,n2o_query},
+           {session,n2o_session},
+           {route,routes}],
+           [],[],index,undefined,[],
+           undefined,[],undefined,[]}
+
+    > wf:async("ho!",
+         fun(X) -> io:format("Received: ~p~n",[X]) end).
+      index:Received: init
+      {<0.507.0>,{async,
+        {"ho!",<<"d43adcc79dd64393a1eb559227a2d3fd">>}}}
+
+    > supervisor:which_children(n2o_sup).
+      [{{async,
+          {"counter",<<"d43adcc79dd64393a1eb559227a2d3fd">>}},
+        <0.11564.0>,worker,
+        [n2o_async]}]
 \end{lstlisting}
+\vspace{1\baselineskip}
+
+Async workers suppors both sync and async messages, you may use {\bf gen\_server}
+for calling by pid, {\bf n2o\_async} for named or even built-in erlang way of
+sending messages. All types of handlilng like info, cast and call are supported.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > pid(0,507,0) ! "hey".
+      Received: "hey"
+      ok
+
+    > n2o_async:send("ho!","hola").
+      Received: "hola"
+      ok
+
+    > gen_server:call(pid(0,507,0),"sync").
+      Received: "sync"
+      ok
+\end{lstlisting}
+\vspace{1\baselineskip}
 
 \subsection{Parse URL and Context parameters {\bf wf:q} and {\bf wf:qp}}
 These are used to extract URL parameters or read from the process context.
