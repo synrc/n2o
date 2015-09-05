@@ -62,7 +62,7 @@ Remember to envelop all elements in common root element before inserts.
 \paragraph{}
 For relative updates use {\bf wf:insert\_before/2} and {\bf wf:insert\_after/2}.
 To remove an element use {\bf wf:remove/2}.
-Updates are covered in detail in {\bf Section 7}.
+Updates are covered in detail in {\bf Chapter 8}.
 If you want to see how custom element are being implemented you may refer
 to {\bf synrc/extra} packages where some useful controls may be found like
 file uploader, calendar, autocompletion textboxlist and HTML editor.
@@ -238,7 +238,7 @@ the async process initialization throung {\bf init} message.
                      #button { id=send, body="Inc",
                                postback=inc} ].
 
-    event(init) -> wf:async("counter",fun counter:loop/1);
+    event(init) -> wf:async("counter",fun loop/1);
     event(inc)  -> wf:send(counter,up),
                    n2o_async:send("counter",up).
 
