@@ -29,8 +29,9 @@ info({pickle,_,_,_}=Event, Req, State) ->
 
 info({flush,Actions}, Req, State) ->
     wf:actions([]),
-    wf:info(?MODULE,"Flush Message: ~p",[Actions]),
-    {reply,wf:format({io,render_actions(Actions),<<>>}),Req, State};
+    Render = iolist_to_binary(render_actions(Actions)),
+%    wf:info(?MODULE,"Flush Message: ~tp",[Render]),
+    {reply,wf:format({io,Render,<<>>}),Req, State};
 
 info({direct,Message}, Req, State) ->
     wf:actions([]),

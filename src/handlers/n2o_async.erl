@@ -6,24 +6,38 @@
 -export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
 -compile(export_all).
 
+% n2o_async API
+
 async(Fun) -> async("looper",Fun).
 async(Name, F) ->
     Key = key(),
-    Res = case n2o_async:start(#handler{module=?MODULE,class=async,group=n2o_sup,
-                                        name={Name,Key},config={F,?REQ}}) of
-        {ok,X} -> {n2o_async:pid({async,{Name,Key}}),{async,{Name,Key}}};
-        {error,{already_started,Pid}} -> {Pid,{async,{Name,Key}}};
-        Else -> Else end,
-    n2o_async:send(Name,{parent,self()}),
-    Res.
+    Handler = #handler{module=?MODULE,class=async,group=n2o_sup,
+                       name={Name,Key},config={F,?REQ},state=self()},
+    case n2o_async:start(Handler) of
+        {error,{already_started,P}} -> init(P,{Name,Key}), {P,{async,{Name,Key}}};
+        {P,X} when is_pid(P)        -> init(P,X),          {P,{async,X}};
+        Else -> Else end.
 
+init(Pid,Name) when is_pid(Pid) -> wf:cache({async,Name},Pid), send(Pid,{parent,self()}).
+send(Pid,Message) when is_pid(Pid) -> gen_server:call(Pid,Message);
+send(Name,Message) -> gen_server:call(n2o_async:pid({async,{Name,key()}}),Message).
 pid({Class,Name}) -> wf:cache({Class,Name}).
 key() -> n2o_session:session_id().
-restart(Name) -> exit(n2o_async:pid({async,{Name,key()}}),kill).
-send(Name,Message) -> n2o_async:pid({async,{Name,key()}}) ! Message, [].
+restart(Name) ->
+    case n2o_async:pid({async,{Name,key()}}) of
+        Pid when is_pid(Pid) -> Async = send(Pid,{get}), stop(Name), start(Async);
+        Data -> {error,{not_pid,Data}} end.
 flush() -> A=wf_context:actions(), wf:actions([]), get(parent) ! {flush,A}.
 flush(Pool) -> A=wf_context:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
-stop(Name) -> [ supervisor:F(n2o_sup,{async,{Name,key()}})||F<-[terminate_child,delete_child]].
+stop(Name) -> [ supervisor:F(n2o_sup,{async,{Name,key()}})||F<-[terminate_child,delete_child]],
+                wf:cache({async,{Name,key()}},undefined).
+start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
+    ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
+    wf:info(?MODULE,"Async Start Attempt ~p~n",[Async#handler{config=[]}]),
+    case supervisor:start_child(Group,ChildSpec) of
+         {ok,Pid}   -> {Pid,Async#handler.name};
+         {ok,Pid,_} -> {Pid,Async#handler.name};
+         Else     -> Else end.
 
 init_context(undefined) -> [];
 init_context(Req) ->
@@ -33,31 +47,21 @@ init_context(Req) ->
     wf:context(NewCtx),
     NewCtx.
 
-start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
-    ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
-    case supervisor:start_child(Group,ChildSpec) of
-         {ok,_}   -> {ok,Async#handler.name};
-         {ok,_,_} -> {ok,Async#handler.name};
-         Else     -> Else end.
+% Generic Async Server
 
+init(#handler{module=Mod,class=Class,name=Name}=Handler) -> wf:cache({Class,Name},self()), Mod:proc(init,Handler).
+handle_call(Message,_,#handler{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_cast(Message,  #handler{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_info(Message,  #handler{module=Mod}=Async) -> {noreply,element(3,Mod:proc(Message,Async))}.
 start_link(Parameters) -> gen_server:start_link(?MODULE, Parameters, []).
 code_change(_,State,_) -> {ok, State}.
 terminate(_Reason, #handler{name=Name,group=Group,class=Class}) ->
     spawn(fun() -> supervisor:delete_child(Group,Name) end),
-    wf:cache({Class,Name},undefined),
-    ok.
+    wf:cache({Class,Name},undefined), ok.
 
-handle_call(stop,_,   #handler{module=Mod}=Async) -> {stop,normal,Async};
-handle_call(Message,_,#handler{module=Mod}=Async) -> Mod:proc(Message,Async).
-handle_cast(Message,  #handler{module=Mod}=Async) -> Mod:proc(Message,Async).
-handle_info(Message,  #handler{module=Mod}=Async) -> {_,_,State} = Mod:proc(Message,Async),
-                                                     {noreply,State}.
+% wf:async page workers
 
-init(#handler{class=Class,name=Name}=Handler) ->
-    wf:info(?MODULE,"Async Handler ~p started ~p",[Handler,self()]),
-    wf:cache({Class,Name},self()),
-    (Handler#handler.module):proc(init,Handler).
-
-proc(init,#handler{class=Class,name=Name,config={F,Req}}=Async) -> init_context(Req), {ok,Async};
-proc({parent,Parent},Async) -> {reply,put(parent,Parent),Async};
+proc(init,#handler{class=Class,name=Name,config={F,Req},state=Parent}=Async) -> put(parent,Parent), init_context(Req), {ok,Async};
+proc({parent,Parent},Async) -> {reply,put(parent,Parent),Async#handler{state=Parent}};
+proc({get},#handler{class=Class,name=Name}=Async) -> {reply,Async,Async};
 proc(Message,#handler{config={F,Req}}=Async) -> {reply,F(Message),Async}.

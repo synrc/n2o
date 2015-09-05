@@ -10,7 +10,7 @@
 
 % Here is Nitrogen Web Framework compatible API
 % Please read major changes made to N2O and
-% how to port existing Nitrogen sites at https://synrc.com/apps/n2o
+% how to port existing Nitrogen sites at http://synrc.com/apps/n2o
 
 % Update DOM wf:update
 
@@ -64,8 +64,10 @@ wire(Actions) -> action_wire:wire(Actions).
 
 % Spawn async processes wf:async, wf:flush
 
-comet(Function) -> async(Function). % legacy name
 async(Function) -> n2o_async:async(Function).
+start(#handler{}=Handler) -> n2o_async:start(Handler).
+stop(Name) -> n2o_async:stop(Name).
+restart(Name) -> n2o_async:restart(Name).
 async(Name,Function) -> n2o_async:async(Name,Function).
 flush() -> n2o_async:flush().
 flush(Key) -> n2o_async:flush(Key).
@@ -139,13 +141,11 @@ state(Key,Value) -> erlang:put(Key,Value).
 
 % Context Variables and URL Query Strings from ?REQ and ?CTX wf:q wf:qc wf:qp
 
-q(Key) -> Val = get(Key), case Val of undefined -> qp(Key); A -> A end.
-ql(Key) -> wf:to_list(q(Key)).
+q(Key) -> Val = get(Key), case Val of undefined -> qc(Key); A -> A end.
 qc(Key) -> qc(Key,?CTX).
-qc(Key,Ctx) -> proplists:get_value(wf:to_binary(Key),Ctx#cx.params).
+qc(Key,Ctx) -> proplists:get_value(to_binary(Key),Ctx#cx.params).
 qp(Key) -> qp(Key,?REQ).
-qp(Key,Req) -> {Params,_} = wf:params(Req), proplists:get_value(wf:to_binary(Key),Params).
-dqs(Key) -> proplists:get_value(Key,?CTX#cx.form).
+qp(Key,Req) -> {Params,_} = params(Req), proplists:get_value(to_binary(Key),Params).
 lang() -> ?CTX#cx.lang.
 
 % Cookies
@@ -244,7 +244,8 @@ format(Term)           -> wf_convert:format(Term).
 
 % These api are not really API
 
-temp_id() -> "auto" ++ integer_to_list(erlang:unique_integer() rem 1000000).
+unique_integer() -> try erlang:unique_integer() catch _:_ -> {MS,S,US} = erlang:now(), (MS*1000000+S)*1000000+US end.
+temp_id() -> "auto" ++ integer_to_list(unique_integer() rem 1000000).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 
