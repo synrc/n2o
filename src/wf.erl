@@ -81,7 +81,7 @@ header(K,V) -> wf:context((?CTX)#cx{req=wf:header(K,V,?REQ)}).
 % Message Bus communications wf:reg wf:send
 
 -ifndef(REGISTRATOR).
--define(REGISTRATOR, n2o_mq).
+-define(REGISTRATOR, (wf:config(n2o,mq,n2o_mq))).
 -endif.
 
 send(Pool, Message) -> ?REGISTRATOR:send(Pool,Message).
