@@ -9,9 +9,9 @@ main() ->
          undefined -> wf:redirect("login.htm"), #dtl{};
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
 
-room() -> case wf:qp(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
-content() -> case wf:qp(<<"code">>) of undefined -> list(); _ -> code() end.
-code() -> case wf:qp(<<"code">>) of <<>>  -> "NO CODE"; 
+room() -> case wf:q(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
+content() -> case wf:q(<<"code">>) of undefined -> list(); _ -> code() end.
+code() -> case wf:q(<<"code">>) of <<>>  -> "NO CODE";
                        E -> {ok,Bin} = file:read_file(E), wf:to_list(Bin) end.
 list() ->
     Room = room(),
@@ -30,12 +30,12 @@ event({show,Short,File}) ->
 event(chat) ->
     wf:info(?MODULE,"Chat pressed~n",[]),
     User = wf:user(),
-    Message = wf:to_list(wf:q(message)),
+    Message = wf:q(message),
     Room = room(),
     kvs:add(#entry{id=kvs:next_id("entry",1),from=wf:user(),feed_id={room,Room},media=Message}),
     wf:send({topic,Room},{client,{User,Message}});
 
-event({client,{User,Message}}) ->
+event({client,{User,Message}}=M) ->
     wf:wire(#jq{target=message,method=[focus,select]}),
     DTL = #dtl{file="message",app=review,
         bindings=[{user,User},{color,"gray"},{message,wf:html_encode(wf:jse(Message))}]},
@@ -43,10 +43,10 @@ event({client,{User,Message}}) ->
 
 event(init) ->
     Room = room(),
-    Res = wf:async("looper",fun index:loop/1),
-    wf:info(?MODULE,"Async Process Created: ~p in ~p~n",[Res,self()]),
-    n2o_async:send("looper","waterline"),
     wf:reg({topic,Room}),
+    Res = wf:async("looper",fun index:loop/1),
+    wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),
+    n2o_async:send("looper","waterline"),
     [ event({client,{E#entry.from,E#entry.media}}) || E <-
        lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
 

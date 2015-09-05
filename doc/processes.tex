@@ -16,11 +16,14 @@ N2O creates persistent WebSocket process and the Transition process dies.
 \paragraph{}
 Your page could also spawn processes with {\bf wf:async}.
 These are persistent processes that act like regular Erlang processes.
-This is a usual approach to organize non-blocking UI for file uploads and other time consuming operations.
+This is a usual approach to organize non-blocking UI for file uploads
+and other time consuming operations.
 
 \newpage
-\subsection{Page Process}
-The very first HTTP handler only renders HTML. All created
+\subsection{Page Serving Process}
+This processes are applicable only to the case when you serving not static HTML,
+but dynamically rendered pages with NITRO, DTL or ET template engines.
+The very first HTTP handler only renders HTML. All created on the way
 JavaScript actions are stored in the transition process.
 
 \begin{lstlisting}
@@ -30,7 +33,7 @@ JavaScript actions are stored in the transition process.
 
 \paragraph{}
 HTTP handler will die immediately after returning HTML. Transition process
-waits for a request from a WebSocket handler.
+stores actions and waits for a request from a WebSocket handler.
 
 \subsection{Transition Process}
 Right after receiving HTML the browser initiates WebSocket connection
@@ -47,14 +50,32 @@ per connection.
 
 \subsection{Async Processes}
 These are user processes that were created with {\bf wf:async} invocation.
-This is a legacy name from the times when async technology
-was called COMET for XHR channel. Async Processes are optional
-and only needed when you have a UI event taking too much
+This processes was very useful to organize persiste stateful connection
+for legacy async technology like COMET for XHR channel. If you have problem with
+proxying WebSocket stream you can easily use XHR fallback that is
+provided by {\bf xhr.js} N2O companion library.
+Async processes are optional and only needed when you have a UI event taking too much
 time to be processed, like gigabyte file uploads. You can create
-multiple Async Processes per user.
+multiple async processes per user. Starting from N2O 2.9 all async
+processes are being created as {\bf gen\_server} under
+{\bf n2o\_sup} supervision tree and new .
 
 \subsection{SPA Mode}
 In SPA mode your N2O can serve no HTML at all. N2O elements are
 bound during INIT handshake and thus can be used regularly as in DSL mode.
+In the example provided in n2o/samples you can find two different
+front end to the same {\bf review} application which consist of
+two page modules {\bf index} and {\bf login}. You can access this application
+involving no HTML rendering by using static file serving that could be
+switched to direct nginx serving.
 
+\begin{lstlisting}
+    open http://localhost:8000/static/app/login.htm
+\end{lstlisting}
+
+Or you can see DTL rendered HTML pages which resides at following address:
+
+\begin{lstlisting}
+    open http://localhost:8000/login.htm
+\end{lstlisting}
 
