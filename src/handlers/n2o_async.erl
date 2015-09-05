@@ -61,7 +61,7 @@ terminate(_Reason, #handler{name=Name,group=Group,class=Class}) ->
 
 % wf:async page workers
 
-proc(init,#handler{class=Class,name=Name,config={F,Req},state=Parent}=Async) -> put(parent,Parent), F(init), init_context(Req), {ok,Async};
+proc(init,#handler{class=Class,name=Name,config={F,Req},state=Parent}=Async) -> put(parent,Parent), try F(init) catch _:_ -> skip end, init_context(Req), {ok,Async};
 proc({parent,Parent},Async) -> {reply,put(parent,Parent),Async#handler{state=Parent}};
 proc({get},#handler{class=Class,name=Name}=Async) -> {reply,Async,Async};
 proc(Message,#handler{config={F,Req}}=Async) -> {reply,F(Message),Async}.
