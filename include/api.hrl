@@ -22,8 +22,12 @@
 
 % async
 
--spec async(name(), fun()) -> {ok,pid()}.
--spec flush(name()) -> {ok,pid()}.
+-spec async(name(),fun()) -> {pid(),{async,{name(),any()}}}.
+-spec start(#handler{}) -> {pid(),{name(),any()}}.
+-spec stop(name()) -> any().
+-spec restart(name()) -> any().
+-spec flush() -> any().
+-spec flush(any()) -> any().
 
 % pickle
 

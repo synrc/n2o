@@ -6,10 +6,13 @@
 -export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
 -compile(export_all).
 
+% n2o_async API
+
 async(Fun) -> async("looper",Fun).
 async(Name, F) ->
     Key = key(),
-    Handler = #handler{module=?MODULE,class=async,group=n2o_sup,name={Name,Key},config={F,?REQ},state=self()},
+    Handler = #handler{module=?MODULE,class=async,group=n2o_sup,
+                       name={Name,Key},config={F,?REQ},state=self()},
     case n2o_async:start(Handler) of
         {error,{already_started,P}} -> init(P,{Name,Key}), {P,{async,{Name,Key}}};
         {P,X} when is_pid(P)        -> init(P,X),          {P,{async,X}};
@@ -23,11 +26,18 @@ key() -> n2o_session:session_id().
 restart(Name) ->
     case n2o_async:pid({async,{Name,key()}}) of
         Pid when is_pid(Pid) -> Async = send(Pid,{get}), stop(Name), start(Async);
-        Not -> {error,{pid_needed,Not}} end.
+        Data -> {error,{not_pid,Data}} end.
 flush() -> A=wf_context:actions(), wf:actions([]), get(parent) ! {flush,A}.
 flush(Pool) -> A=wf_context:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
 stop(Name) -> [ supervisor:F(n2o_sup,{async,{Name,key()}})||F<-[terminate_child,delete_child]],
                 wf:cache({async,{Name,key()}},undefined).
+start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
+    ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
+    wf:info(?MODULE,"Async Start Attempt ~p~n",[Async#handler{config=[]}]),
+    case supervisor:start_child(Group,ChildSpec) of
+         {ok,Pid}   -> {Pid,Async#handler.name};
+         {ok,Pid,_} -> {Pid,Async#handler.name};
+         Else     -> Else end.
 
 init_context(undefined) -> [];
 init_context(Req) ->
@@ -37,31 +47,19 @@ init_context(Req) ->
     wf:context(NewCtx),
     NewCtx.
 
-start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
-    ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
-    wf:info(?MODULE,"Async Start Attempt ~p~n",[Async#handler{config=[]}]),
-    case supervisor:start_child(Group,ChildSpec) of
-         {ok,Pid}   -> {Pid,Async#handler.name};
-         {ok,Pid,_} -> {Pid,Async#handler.name};
-         Else     -> Else end.
+% Generic Async Server
 
+init(#handler{module=Mod,class=Class,name=Name}=Handler) -> wf:cache({Class,Name},self()), Mod:proc(init,Handler).
+handle_call(Message,_,#handler{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_cast(Message,  #handler{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_info(Message,  #handler{module=Mod}=Async) -> {noreply,element(3,Mod:proc(Message,Async))}.
 start_link(Parameters) -> gen_server:start_link(?MODULE, Parameters, []).
 code_change(_,State,_) -> {ok, State}.
 terminate(_Reason, #handler{name=Name,group=Group,class=Class}) ->
     spawn(fun() -> supervisor:delete_child(Group,Name) end),
-    wf:cache({Class,Name},undefined),
-    ok.
+    wf:cache({Class,Name},undefined), ok.
 
-init(#handler{module=Mod,class=Class,name=Name}=Handler) ->
-    wf:cache({Class,Name},self()),
-    Mod:proc(init,Handler).
-
-handle_call(stop,_,   #handler{module=Mod}=Async) -> {stop,normal,Async};
-handle_call(Message,_,#handler{module=Mod}=Async) -> Mod:proc(Message,Async).
-handle_cast(Message,  #handler{module=Mod}=Async) -> Mod:proc(Message,Async).
-handle_info(Message,  #handler{module=Mod}=Async) -> {_,_,State} = Mod:proc(Message,Async),
-                                                     {noreply,State}.
-
+% wf:async page workers
 
 proc(init,#handler{class=Class,name=Name,config={F,Req},state=Parent}=Async) -> put(parent,Parent), init_context(Req), {ok,Async};
 proc({parent,Parent},Async) -> {reply,put(parent,Parent),Async#handler{state=Parent}};

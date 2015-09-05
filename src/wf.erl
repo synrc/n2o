@@ -10,7 +10,7 @@
 
 % Here is Nitrogen Web Framework compatible API
 % Please read major changes made to N2O and
-% how to port existing Nitrogen sites at https://synrc.com/apps/n2o
+% how to port existing Nitrogen sites at http://synrc.com/apps/n2o
 
 % Update DOM wf:update
 
@@ -64,8 +64,10 @@ wire(Actions) -> action_wire:wire(Actions).
 
 % Spawn async processes wf:async, wf:flush
 
-comet(Function) -> async(Function). % legacy name
 async(Function) -> n2o_async:async(Function).
+start(#handler{}=Handler) -> n2o_async:start(Handler).
+stop(Name) -> n2o_async:stop(Name).
+restart(Name) -> n2o_async:restart(Name).
 async(Name,Function) -> n2o_async:async(Name,Function).
 flush() -> n2o_async:flush().
 flush(Key) -> n2o_async:flush(Key).
