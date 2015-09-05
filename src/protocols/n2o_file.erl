@@ -1,5 +1,5 @@
 -module(n2o_file).
--author('Andrii Zadoorozhnii').
+-author('Andrii Zadorozhnii').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 

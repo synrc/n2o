@@ -139,13 +139,11 @@ state(Key,Value) -> erlang:put(Key,Value).
 
 % Context Variables and URL Query Strings from ?REQ and ?CTX wf:q wf:qc wf:qp
 
-q(Key) -> Val = get(Key), case Val of undefined -> qp(Key); A -> A end.
-ql(Key) -> wf:to_list(q(Key)).
+q(Key) -> Val = get(Key), case Val of undefined -> qc(Key); A -> A end.
 qc(Key) -> qc(Key,?CTX).
-qc(Key,Ctx) -> proplists:get_value(wf:to_binary(Key),Ctx#cx.params).
+qc(Key,Ctx) -> proplists:get_value(to_binary(Key),Ctx#cx.params).
 qp(Key) -> qp(Key,?REQ).
-qp(Key,Req) -> {Params,_} = wf:params(Req), proplists:get_value(wf:to_binary(Key),Params).
-dqs(Key) -> proplists:get_value(Key,?CTX#cx.form).
+qp(Key,Req) -> {Params,_} = params(Req), proplists:get_value(to_binary(Key),Params).
 lang() -> ?CTX#cx.lang.
 
 % Cookies
@@ -244,7 +242,8 @@ format(Term)           -> wf_convert:format(Term).
 
 % These api are not really API
 
-temp_id() -> "auto" ++ integer_to_list(erlang:unique_integer() rem 1000000).
+unique_integer() -> try erlang:unique_integer() catch _:_ -> {MS,S,US} = erlang:now(), (MS*1000000+S)*1000000+US end.
+temp_id() -> "auto" ++ integer_to_list(unique_integer() rem 1000000).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 

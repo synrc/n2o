@@ -19,7 +19,7 @@ add_action(Action) ->
 script() -> get(script).
 script(Script) -> put(script,Script).
 cookies() -> C = get(cookies), case is_list(C) of true -> C; _ -> [] end.
-add_cookie(Name,Value,Path,TTL) -> 
+add_cookie(Name,Value,Path,TTL) ->
     C = cookies(),
     Cookies = case lists:keyfind(Name,1,C) of
         {Name,_,_,_} -> lists:keyreplace(Name,1,C,{Name,Value,Path,TTL});

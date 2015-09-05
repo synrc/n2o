@@ -14,6 +14,8 @@ replace(String, S1, S2) when is_list(String), is_list(S1), is_list(S2) ->
         _ -> [hd(String)|replace(tl(String), S1, S2)]
     end.
 
+coalesce({X,Y}) -> Y;
+coalesce(false) -> undefined;
 coalesce([]) -> undefined;
 coalesce([H]) -> H;
 coalesce([undefined|T]) -> coalesce(T);
