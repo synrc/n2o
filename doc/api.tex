@@ -131,23 +131,43 @@ Following nested action embedding is also valid:
 You mau try to see how internally wiring is working:
 
 \begin{lstlisting}
-  > wf:actions().
-  []
+    > wf:actions().
+      []
 
-  > wf:wire(#alert{text="N2O"}).
-  [#wire{ancestor = action,trigger = undefined,
-         target = undefined,module = action_wire,
-         actions = #alert{ancestor = action,
-                          trigger = undefined,
-                          target = undefined,
-                          module = action_alert,
-                          actions = undefined,
-                          source = [], text = "N2O"},
-         source = []}]
+    > wf:wire(#alert{text="N2O"}).
+      [#wire{ancestor = action,trigger = undefined,
+             target = undefined,module = action_wire,
+             actions = #alert{ancestor = action,
+                              trigger = undefined,
+                              target = undefined,
+                              module = action_alert,
+                              actions = undefined,
+                              source = [], text = "N2O"},
+              source = []}]
 
-  > iolist_to_binary(wf:render(wf:actions())).
-  <<"alert(\"N2O\");">>
+    > iolist_to_binary(wf:render(wf:actions())).
+      <<"alert(\"N2O\");">>
 \end{lstlisting}
+
+Consider wiring {\bf \#event} if you want to add listener to
+existed element on page:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+
+    > wf:wire(#event{target=btn,postback=evt}).
+      []
+
+    > rp(iolist_to_binary(wf:render(wf:actions()))).
+      <<"{var x=qi('btn'); x && x.addEventListener('default',
+      function (event){{ if (validateSources([])) ws.send(enc
+      (tuple(atom('pickle'),bin('btn'),bin('g2gCaAVkAAJldmQAB
+      WluZGV4ZAADZXZ0awADYnRuZAAFZXZlbnRoA2IAAAWhYgAG8wViAAHk
+      tw=='),[tuple(tuple(utf8_toByteArray('btn'),bin('detail
+      ')),event.detail)])));else console.log('Validation Erro
+      r'); }});};">>
+\end{lstlisting}
+
 
 \newpage
 \subsection{Message Bus {\bf wf:reg} and {\bf wf:send}}
