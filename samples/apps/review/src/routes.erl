@@ -20,6 +20,7 @@ route_prefix(<<"/",P/binary>>) -> route(P);
 route_prefix(P) -> route(P).
 
 route(<<>>)              -> login;
+route(<<"counter",_/binary>>) -> counter;
 route(<<"index",_/binary>>) -> index;
 route(<<"static/spa/index",_/binary>>) -> index;
 route(<<"static/spa/login",_/binary>>) -> login;
