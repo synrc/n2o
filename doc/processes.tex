@@ -69,7 +69,7 @@ per connection.
 \begin{lstlisting}
     event(init) -> wf:reg(room);
     event(chat) -> #insert_top(history,#span{body="message"}),
-                   wf:send(room,#flush{data=wf:actions()}).
+                   wf:flush(room).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
