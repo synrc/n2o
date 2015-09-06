@@ -271,7 +271,7 @@ So let's mimic {\bf session\_id} and {\bf \#cx} in the shell:
     > put(session_id,<<"d43adcc79dd64393a1eb559227a2d3fd">>).
       undefined
 
-    > wf:context(wf_context:init_context(undefined)).
+    > wf:context(wf:init_context(undefined)).
       {cx,[{query,n2o_query},
            {session,n2o_session},
            {route,routes}],
@@ -322,8 +322,8 @@ inside N2O with something like.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    Ctx = wf_context:init_context(Req),
-    NewCtx = wf_context:fold(init,Ctx#cx.handlers,Ctx),
+    Ctx = wf:init_context(Req),
+    NewCtx = wf:fold(init,Ctx#cx.handlers,Ctx),
     wf:context(NewCtx),
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -351,7 +351,7 @@ produced during previous {\bf \#button} rendering:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    > wf:context(wf_context:init_context([])).
+    > wf:context(wf:init_context([])).
       undefined
 
     > rp(iolist_to_binary(nitro:render(wf:actions()))).
