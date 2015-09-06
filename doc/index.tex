@@ -106,13 +106,15 @@ elements and components in the host language.
 Template-based approach (Yesod, ASP, PHP, JSP, Rails, Yaws and ChicagoBoss)
 requires developers to deal with raw HTML. It allows
 defining pages in terms of top-level controls, placeholders
-and panels. Thus N2O combines both approaches.
+and panels. N2O also support this approach by proving bindings
+to DTL and ET template engines.
 
 \paragraph{}
-The main N2O advantage is its sutability for large-scale projects without sacrificing simplicity and comfort of prototyping solutions in fast and dynamic manner.
-Below is an example of complete Web Chat implementation using
-WebSockets that shows how  Templates, DSL and asynchronous
-inter-process communication work in N2O.
+The main N2O advantage is its sutability for large-scale projects
+without sacrificing simplicity and comfort of prototyping solutions
+in fast and dynamic manner. Below is an example of complete Web Chat
+implementation using WebSockets that shows how  Templates, DSL and
+asynchronous inter-process communication work in N2O.
 
 \newpage
 \vspace{1\baselineskip}
@@ -155,7 +157,8 @@ one async {\bf gen\_server} worker under supervision, NITRO DSL, DTL template,
 WebSockets, HTML and JavaScript generation in a simple file that you can
 put in your N2O application directory tree without restart and
 manual compilation. Also you can create single-file bundle
-which is able to run in Windows, Linux and Mac.
+which is able to run in Windows, Linux and Mac. Moreover this
+application is ready to run under multiplatform LING Erlang virtual machine.
 
 \newpage
 \subsection*{Changes from Nitrogen}

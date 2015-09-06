@@ -99,6 +99,7 @@ Nitrogen DSL you can plug all of them separately.
     https://github.com/synrc/kvs        2.9
     https://github.com/synrc/active     2.9
     https://github.com/synrc/shen       1.5
+    https://github.com/synrc/rest       1.5
     https://github.com/spawnproc/bpe    1.5
     https://github.com/spawnproc/forms  1.5
 \end{lstlisting}
@@ -108,24 +109,28 @@ Nitrogen DSL you can plug all of them separately.
 \subsection{Configuration}
 
 \vspace{1\baselineskip}
-\begin{lstlisting}
-  [{n2o, [{port,8000},
-          {websocket_port,8000},
-          {app,review},
-          {route,routes},
-          {mq,n2o_mq},
-          {formatter,bert},
-          {log_modules,config},
-          {log_level,config},
-          {log_backend,n2o_log},
-          {event,pickle}]},
-   {kvs, [{dba,store_mnesia},
-          {schema, [kvs_user,
-                    kvs_acl,
-                    kvs_feed,
-                    kvs_subscription ]} ]}].
+\begin{lstlisting}[caption=sys.config]
+    [{n2o, [{port,8000},
+            {app,review},
+            {route,routes},
+            {mq,n2o_mq},
+            {formatter,bert},
+            {log_modules,config},
+            {log_level,config},
+            {log_backend,n2o_log},
+            {session,n2o_session},
+            {origin,<<"*">>},
+            {bridge,n2o_cowboy},
+            {pickler,n2o_pickler},
+            {erroring,n2o_error}]},
+     {kvs, [{dba,store_mnesia},
+            {schema, [kvs_user,
+                      kvs_acl,
+                      kvs_feed,
+                      kvs_subscription ]} ]} ].
 \end{lstlisting}
 \vspace{1\baselineskip}
+
 
 \subsection*{Ports}
 N2O uses two ports for WebSocket and HTTP connections.
@@ -147,7 +152,56 @@ You can also redefine these ports in bullet connection inside template:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-\paragraph{}
+\newpage
+
+\subsection*{Application}
+In {\bf app} setting you should place the name of your OTP application
+that will be treated by N2O and NITRO as a source for templates and
+other static data with {\bf code:priv\_dir}.
+
+\subsection*{Routes}
+Setting {\bf route} is a place for the name of Erlang module where
+resides mappings from URL to page modules.
+
+\subsection*{Logging}
+N2O supports logging API and you can plug different logging module.
+It ships with {\bf n2o\_io} and {\bf n2o\_log} modules which you can set in the
+{\bf log\_backend} option. This is how logging looks like in N2O:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:info(index,"Message: ~p",[Message]),
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+First argument is a module from which function is being called. By using this
+N2O can filter all log messages with special filter settled with {\bf log\_modules} option.
+It says in which Erlang module function {\bf log\_modules/0} exists that
+returns allowed Erlang modules to log. Option {\bf log\_level} which specified
+in a similar way, it specifies the module with function {\bf log\_level/0} that could
+return one of {\bf none}, {\bf error}, {\bf warning} or {\bf info} atom values which
+means different error log levels.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -module(config).
+    -compile(export_all).
+
+    log_level() -> info.
+    log_modules() -> [ login, index ].
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+\subsection*{Message Queue}
+In {\bf mq} settings you should place the name of Erlang module which supports
+message queue API. By default N2O provides {\bf n2o\_mq} module.
+
+\subsection*{Formatter}
+With {\bf formatter} option you may set the formatter parameter.
+As for N2O version 2.9 only {\bf bert} or {\bf json} are supported.
+
+\subsection*{Minimal Page}
 And then add a minimal {\bf index.erl} page:
 
 \vspace{1\baselineskip}

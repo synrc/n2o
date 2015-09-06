@@ -23,7 +23,9 @@ and other time consuming operations.
 \subsection{Page Serving Process}
 This processes are applicable only to the case when you serving not static HTML,
 but dynamically rendered pages with NITRO, DTL or ET template engines.
-The very first HTTP handler only renders HTML. All created on the way
+The very first HTTP handler only renders HTML. During page initialization
+function Module:{\bf main/0} is called. This function should return raw HTML or
+NITRO elements that could be rendered into raw HTML. All created on the way
 JavaScript actions are stored in the transition process.
 
 \vspace{1\baselineskip}
@@ -76,6 +78,11 @@ topic in pubsub and broadcast history changing to all registered
 process in the system under the same topic using {\bf \#flush}
 NITRO protocol message.
 
+\paragraph{}
+During page initialization before Module:{\bf event(init)},
+Module:{\bf main/0} is called to render initial postbacks for
+elements. So you can share the same code to use SPA or DSL/DTL approach.
+
 \subsection{Async Processes}
 These are user processes that were created with {\bf wf:async} invocation.
 This processes was very useful to organize persiste stateful connection
@@ -100,21 +107,28 @@ processes are being created as {\bf gen\_server} under
 
 \newpage
 \subsection{SPA Mode}
-In SPA mode your N2O can serve no HTML at all. N2O elements are
-bound during INIT handshake and thus can be used regularly as in DSL mode.
+In SPA mode N2O can serve no HTML at all. N2O elements are
+bound during initialization handshake and thus can be used
+regularly as in DSL mode.
+
+\paragraph{}
 In the example provided in n2o/samples you can find two different
 front end to the same {\bf review} application which consist of
 two page modules {\bf index} and {\bf login}. You can access this application
 involving no HTML rendering by using static file serving that could be
-switched to direct nginx serving.
+switched to direct nginx serving in production.
 
+\vspace{1\baselineskip}
 \begin{lstlisting}
     open http://localhost:8000/static/app/login.htm
 \end{lstlisting}
+\vspace{1\baselineskip}
 
 Or you can see DTL rendered HTML pages which resides at following address:
 
+\vspace{1\baselineskip}
 \begin{lstlisting}
     open http://localhost:8000/login.htm
 \end{lstlisting}
+\vspace{1\baselineskip}
 

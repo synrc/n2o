@@ -154,17 +154,17 @@ existed element on page:
 \vspace{1\baselineskip}
 \begin{lstlisting}
 
-    > wf:wire(#event{target=btn,postback=evt}).
+    > wf:wire(#event{target=btn,postback=evt,type=click}),
       []
 
     > rp(iolist_to_binary(wf:render(wf:actions()))).
-      <<"{var x=qi('btn'); x && x.addEventListener('default',
-      function (event){{ if (validateSources([])) ws.send(enc
-      (tuple(atom('pickle'),bin('btn'),bin('g2gCaAVkAAJldmQAB
-      WluZGV4ZAADZXZ0awADYnRuZAAFZXZlbnRoA2IAAAWhYgAG8wViAAHk
-      tw=='),[tuple(tuple(utf8_toByteArray('btn'),bin('detail
-      ')),event.detail)])));else console.log('Validation Erro
-      r'); }});};">>
+      <<"{var x=qi('element_id'); x && x.addEventListener('cl
+      ick',function (event){{ if (validateSources([])) ws.sen
+      d(enc(tuple(atom('pickle'),bin('element_id'),bin('g2gCa
+      AVkAAJldmQABWluZGV4ZAADZXZ0awAKZWxlbWVudF9pZGQABWV2ZW50
+      aANiAAAFoWIAB8kuYgAOvJA='),[tuple(tuple(utf8_toByteArra
+      y('element_id'),bin('detail')),event.detail)])));else c
+      onsole.log('Validation Error'); }});};">>
 \end{lstlisting}
 
 
