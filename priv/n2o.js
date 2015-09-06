@@ -22,3 +22,4 @@ function N2O_start() {
 function qi(name) { return document.getElementById(name); }
 function qs(name) { return document.querySelector(name);  }
 function qn(name) { return document.createElement(name);  }
+

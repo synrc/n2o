@@ -12,7 +12,7 @@ function enc(s) {
     var ori = encode(s), buf = new Uint8Array(new ArrayBuffer(ori.length));
     for (var i=0; i < buf.length; i++) { buf[i] = ori.charCodeAt(i); }
     return new Blob([buf.buffer]); };
-    
+
 BERT = itoa(131);
 SATOM = itoa(115);
 ATOM = itoa(100);
@@ -169,46 +169,39 @@ function de_tuple(S, Count) {
     return { value: tuple(Arr), rest: S }; };
 function de_nil(S) { return { value: [], rest: S }; };
 
+// BERT protocols
+
+var $io = {};
+$io.on = function onio(x, cb) { if (isTUPLE(x,3,'io')) {
+    try { eval(utf8_decode(x.value[0][1].value));
+          if (typeof cb == 'function') cb(x); } catch (e) { return { status: '' }; }
+    return { status: "ok" }; } else return { status: '' }; }
+
+var $file = {};
+$file.on = function onfile(x, cb) { if (isTUPLE(x,12,'ftp')) {
+    if (typeof cb == 'function') cb(x); return { status: "ok" }; } else return { status: ''}; }
+
+var $bin = {};
+$bin.on = function onbin(x, cb) { if (isTUPLE(x,2,'bin')) {
+    if (typeof cb == 'function') cb(x); return { status: "ok" }; } else return { status: '' }; }
 
 // BERT formatter
 
+function isTUPLE(x,num,name) { return (typeof x == 'object' &&
+    x.type == 'Tuple' && x.value[0].length == num && x.value[0][0] == name); }
+
 var $bert = {};
-$bert.on = function onbert(evt, callback)
-{
+$bert.protos = [$io,$bin,$file];
+$bert.on = function onbert(evt, cb) {
     if (Blob.prototype.isPrototypeOf(evt.data) && (evt.data.length > 0 || evt.data.size > 0)) {
         var reader = new FileReader();
         reader.addEventListener("loadend", function() {
             try {
                 var erlang = dec(reader.result);
-                if (typeof callback  == 'function') callback(erlang);
-            } catch (e) { console.log(e); }
-        });
+                if (debug) console.log(erlang.toString());
+                if (typeof cb  == 'function') cb(erlang);
+                for (var i=0;i<$bert.protos.length;i++) {
+                    p = $bert.protos[i]; if (p.on(erlang, p.do).status == "ok") return; }
+            } catch (e) { console.log(e); } });
         reader.readAsArrayBuffer(evt.data);
-        return { status: "ok" };
-    }
-    else  { return { status: "error", desc: "data" }; }
-};
-
-function isIO(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
-                   x.value[0].length == 3 && x.value[0][0] == 'io'); }
-
-function isFTP(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
-                    x.value[0].length == 12 && x.value[0][0] == 'ftp'); }
-
-function isBIN(x) { return (typeof x == 'object' && x.type == 'Tuple' &&
-                    x.value[0].length == 2 && x.value[0][0] == 'bin'); }
-
-$bert.do = function onio(x) {
-    if (debug) console.log(x.toString());
-    if (isIO(x)) {
-        try { eval(utf8_decode(x.value[0][1].value)); }
-        catch (e) { return { status: "error", desc: e }; }
-        return { status: "ok" };
-    } else if (isFTP(x)) {
-        console.log("#ftp.source: " + x.value[0][4]);
-        return { status: "ok" }
-    } else if (isBIN(x)) {
-        console.log("#bin.data: " + x.value[0][1].value);
-        return { status: "ok" }
-    } else return { status: "error", desc: "bert" };
-}
+        return { status: "ok" }; } else return { status: "error", desc: "data" }; }

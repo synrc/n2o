@@ -29,7 +29,7 @@ restart(Name) ->
         Data -> {error,{not_pid,Data}} end.
 flush() -> A=wf:actions(), wf:actions([]), get(parent) ! {flush,A}.
 flush(Pool) -> A=wf:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
-stop(Name) -> [ supervisor:F(n2o_sup,{async,{Name,key()}})||F<-[terminate_child,delete_child]],
+stop(Name) -> [ supervisor:F(n2o,{async,{Name,key()}})||F<-[terminate_child,delete_child]],
                 wf:cache({async,{Name,key()}},undefined).
 start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
     ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
