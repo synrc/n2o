@@ -13,7 +13,9 @@ info(#ftp{status="init"}=FTP, Req, #cx{}=State) ->
     {reply,wf:format(FTP#ftp{source=wf:version()}),Req,State};
 
 info(#ftp{sid=Sid,filename=File,hash=Hash,status="send"}=FTP, Req, State) ->
-    Reply = gen_server:call(n2o_async:pid({file,{Sid,File,Hash}}),FTP),
+    wf:info(?MODULE,"File: ~p~n",[FTP]),
+    Reply = try gen_server:call(n2o_async:pid({file,{Sid,File,Hash}}),FTP)
+          catch E:R -> #ftp{data={E,R}} end,
     {reply,wf:format(Reply),Req,State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.
@@ -25,4 +27,4 @@ proc(init,Async) ->
 
 proc(#ftp{}=FTP,#handler{}=Async) ->
     wf:info(?MODULE,"File Transfer Call: ~p~n",[FTP]),
-    {reply,FTP,Async}.
+    {reply,FTP,Async#handler{state=FTP}}.
