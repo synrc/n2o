@@ -11,7 +11,7 @@
 async(Fun) -> async("looper",Fun).
 async(Name, F) ->
     Key = key(),
-    Handler = #handler{module=?MODULE,class=async,group=n2o_sup,
+    Handler = #handler{module=?MODULE,class=async,group=n2o,
                        name={Name,Key},config={F,?REQ},state=self()},
     case n2o_async:start(Handler) of
         {error,{already_started,P}} -> init(P,{Name,Key}), {P,{async,{Name,Key}}};
@@ -27,8 +27,8 @@ restart(Name) ->
     case n2o_async:pid({async,{Name,key()}}) of
         Pid when is_pid(Pid) -> Async = send(Pid,{get}), stop(Name), start(Async);
         Data -> {error,{not_pid,Data}} end.
-flush() -> A=wf_context:actions(), wf:actions([]), get(parent) ! {flush,A}.
-flush(Pool) -> A=wf_context:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
+flush() -> A=wf:actions(), wf:actions([]), get(parent) ! {flush,A}.
+flush(Pool) -> A=wf:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
 stop(Name) -> [ supervisor:F(n2o_sup,{async,{Name,key()}})||F<-[terminate_child,delete_child]],
                 wf:cache({async,{Name,key()}},undefined).
 start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
@@ -41,8 +41,8 @@ start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
 
 init_context(undefined) -> [];
 init_context(Req) ->
-    Ctx = wf_context:init_context(Req),
-    NewCtx = wf_context:fold(init, Ctx#cx.handlers, Ctx),
+    Ctx = wf:init_context(Req),
+    NewCtx = wf:fold(init, Ctx#cx.handlers, Ctx),
     wf:actions(NewCtx#cx.actions),
     wf:context(NewCtx),
     NewCtx.

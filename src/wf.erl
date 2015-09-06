@@ -20,7 +20,7 @@ update(Target, Elements) ->
 insert_top(Tag,Target, Elements) ->
     Pid = self(),
     Ref = make_ref(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf:actions()} end),
     {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f(
         "qi('~s').insertBefore("
@@ -32,7 +32,7 @@ insert_top(Tag,Target, Elements) ->
 insert_bottom(Tag, Target, Elements) ->
     Pid = self(),
     Ref = make_ref(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf:actions()} end),
     {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f(
         "(function(){ var div = qn('~s'); div.innerHTML = '~s';"
@@ -43,7 +43,7 @@ insert_bottom(Tag, Target, Elements) ->
 insert_adjacent(Command,Target, Elements) ->
     Pid = self(),
     Ref = make_ref(),
-    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf_context:actions()} end),
+    spawn(fun() -> R = wf:render(Elements), Pid ! {R,Ref,wf:actions()} end),
     {Render,Ref,Actions} = receive {_, Ref, _} = A -> A end,
     wf:wire(wf:f("qi('~s').insertAdjacentHTML('~s', '~s');",[Target,Command,Render])),
     wf:wire(wf:render(Actions)).
@@ -150,10 +150,10 @@ lang() -> ?CTX#cx.lang.
 
 % Cookies
 
-cookies() -> wf_context:cookies().
+cookies() -> n2o_cx:cookies().
 cookie(Name) -> lists:keyfind(Name,1,cookies()).
 cookie(Name,Value) -> cookie(Name,Value,"/", 24 * 60 * 60).
-cookie(Name,Value,Path,TTL) -> wf_context:add_cookie(Name,Value,Path,TTL).
+cookie(Name,Value,Path,TTL) -> n2o_cx:add_cookie(Name,Value,Path,TTL).
 
 % Bridge Information
 
@@ -249,15 +249,17 @@ temp_id() -> "auto" ++ integer_to_list(unique_integer() rem 1000000).
 append(List, Key, Value) -> case Value of undefined -> List; _A -> [{Key, Value}|List] end.
 render(X) -> wf_render:render(X).
 
-actions()      -> wf_context:actions().
-actions(Ac)    -> wf_context:actions(Ac).
-script()       -> wf_context:script().
-script(Script) -> wf_context:script(Script).
-context()      -> wf_context:context().
-context(Cx)    -> wf_context:context(Cx).
-context(Cx,Proto)        -> wf_context:context(Cx,Proto).
-context(Cx,Proto,UserCx) -> wf_context:context(Cx,Proto,UserCx).
-add_action(Action)       -> wf_context:add_action(Action).
+init_context(R)-> n2o_cx:init_context(R).
+actions()      -> n2o_cx:actions().
+actions(Ac)    -> n2o_cx:actions(Ac).
+script()       -> n2o_cx:script().
+script(Script) -> n2o_cx:script(Script).
+context()      -> n2o_cx:context().
+context(Cx)    -> n2o_cx:context(Cx).
+context(Cx,Proto)        -> n2o_cx:context(Cx,Proto).
+context(Cx,Proto,UserCx) -> n2o_cx:context(Cx,Proto,UserCx).
+add_action(Action)       -> n2o_cx:add_action(Action).
+fold(Fun,Handlers,Ctx) -> n2o_cx:fold(Fun,Handlers,Ctx).
 
 config_multiple(Keys) -> [config(Key, "") || Key <- Keys].
 config(Key) -> config(n2o, Key, "").

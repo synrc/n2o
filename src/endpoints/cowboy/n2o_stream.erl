@@ -1,4 +1,6 @@
--module(bullet_handler).
+-module(n2o_stream).
+-description('N2O Stream Bridge to WebSocket or XHR channels').
+-author('Loïc Hoguin').
 -behaviour(cowboy_http_handler).
 -behaviour(cowboy_websocket_handler).
 
@@ -36,10 +38,10 @@ init(Transport, Req, Opts) ->
 	end.
 
 init(Transport, Req, Opts, <<"GET">>) ->
-	{handler, Handler} = lists:keyfind(handler, 1, Opts),
+	Handler = n2o_proto,
     wf:info(?MODULE,"GET XHR POLL ~p~n",[self()]),
 	State = #state{handler=Handler},
-	case Handler:init(Transport, Req, Opts, xhr) of
+	case n2o_proto:init(Transport, Req, Opts, xhr) of
 		{ok, Req2, HandlerState} ->
 			Req3 = cowboy_req:compact(Req2),
 			{loop, Req3, State#state{handler_state=HandlerState}, ?TIMEOUT, hibernate};
@@ -48,7 +50,7 @@ init(Transport, Req, Opts, <<"GET">>) ->
 	    Else -> wf:info(?MODULE,"Unexpected return from GET XHR INIT ~p~n",[Else])
 	end;
 init(Transport, Req, Opts, <<"POST">>) ->
-	{handler, Handler} = lists:keyfind(handler, 1, Opts),
+	Handler = n2o_proto,
     wf:info(?MODULE,"POST XHR INIT ~p~n",[self()]),
 	State = #state{handler=Handler},
 	case Handler:init(Transport, Req, Opts, xhr) of
@@ -63,7 +65,7 @@ init(Transport, Req, Opts, <<"POST">>) ->
 	        wf:info(?MODULE,"Unexpected return from POST XHR INIT ~p~n",[Else])
 	end;
 init(Transport, Req, Opts, <<"OPTIONS">>) ->
-	{handler, Handler} = lists:keyfind(handler, 1, Opts),
+	Handler = n2o_proto,
 	State = #state{handler=Handler},
     wf:info(?MODULE,"OPTIONS XHR ~p~n",[cowboy_req:body(Req)]),
 	case Handler:init(Transport, Req, Opts, once) of
@@ -110,8 +112,7 @@ handle(Req, State=#state{handler=Handler, handler_state=HandlerState}, <<"POST">
 	    Else -> wf:info(?MODULE,"Unexpected return from POST XHR INIT ~p~n",[Else])
 	end.
 
-info(Message, Req,
-		State=#state{handler=Handler, handler_state=HandlerState}) ->
+info(Message, Req, State=#state{handler=Handler, handler_state=HandlerState}) ->
 	case Handler:info(Message, Req, HandlerState) of
 		{ok, Req2, HandlerState2} ->
 			{loop, Req2, State#state{handler_state=HandlerState2}, hibernate};
@@ -121,16 +122,16 @@ info(Message, Req,
 	end.
 
 terminate(_Reason, _Req, undefined) ->
-        wf:info(?MODULE,"bullet_handler terminate",[]),
+    wf:info(?MODULE,"bullet_handler terminate",[]),
 	ok;
 terminate(_Reason, Req, #state{handler=Handler, handler_state=HandlerState}) ->
-        wf:info(?MODULE,"bullet_handler state terminate",[]),
+    wf:info(?MODULE,"bullet_handler state terminate",[]),
 	Handler:terminate(Req, HandlerState).
 
 %% Websocket.
 
 websocket_init(Transport, Req, Opts) ->
-	{handler, Handler} = lists:keyfind(handler, 1, Opts),
+	Handler = n2o_proto,
 	State = #state{handler=Handler},
 	case Handler:init(Transport, Req, Opts, true) of
 		{ok, Req2, HandlerState} ->
@@ -141,8 +142,7 @@ websocket_init(Transport, Req, Opts) ->
 			{shutdown, Req2}
 	end.
 
-websocket_handle(Data, Req,
-		State=#state{handler=Handler, handler_state=HandlerState}) ->
+websocket_handle(Data, Req, State=#state{handler=Handler, handler_state=HandlerState}) ->
 	case Handler:stream(Data, Req, HandlerState) of
 		{ok, Req2, HandlerState2} ->
 			{ok, Req2, State#state{handler_state=HandlerState2}, hibernate};
@@ -158,8 +158,7 @@ websocket_handle(Data, Req,
 websocket_handle(_Frame, Req, State) ->
 	{ok, Req, State, hibernate}.
 
-websocket_info(Info, Req, State=#state{
-		handler=Handler, handler_state=HandlerState}) ->
+websocket_info(Info, Req, State=#state{handler=Handler, handler_state=HandlerState}) ->
 	case Handler:info(Info, Req, HandlerState) of
 		{ok, Req2, HandlerState2} ->
 			{ok, Req2, State#state{handler_state=HandlerState2}, hibernate};
@@ -171,6 +170,5 @@ websocket_info(Info, Req, State=#state{
 				State#state{handler_state=HandlerState2}, hibernate}
 	end.
 
-websocket_terminate(_Reason, Req,
-		#state{handler=Handler, handler_state=HandlerState}) ->
+websocket_terminate(_Reason, Req,#state{handler=Handler, handler_state=HandlerState}) ->
 	Handler:terminate(Req, HandlerState).

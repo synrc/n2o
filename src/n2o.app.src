@@ -4,6 +4,6 @@
     {applications, [kernel, stdlib, cowboy, gproc]},
     {modules, []},
     {registered,   []},
-    {mod, { n2o_app, []}},
+    {mod, { n2o,   []}},
     {env, []}
 ]}.

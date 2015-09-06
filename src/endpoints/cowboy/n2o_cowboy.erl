@@ -1,4 +1,5 @@
 -module(n2o_cowboy).
+-description('N2O Cowboy Server Bridge to HTTP Server Pages').
 -author('Roman Shestakov').
 -behaviour(cowboy_http_handler).
 -include_lib("n2o/include/wf.hrl").

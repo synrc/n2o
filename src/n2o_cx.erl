@@ -1,4 +1,5 @@
--module(wf_context).
+-module(n2o_cx).
+-description('N2O Process Context').
 -author('Rusty Klophaus').
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).

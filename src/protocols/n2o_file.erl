@@ -8,7 +8,7 @@
 info(#ftp{status="init"}=FTP, Req, #cx{}=State) ->
     wf:info(?MODULE,"File Transfer Init: ~p~n",[FTP]),
     application:set_env(n2o,formatter,bert),
-    n2o_async:start(#handler{module=?MODULE,class=file,group=n2o_sup,
+    n2o_async:start(#handler{module=?MODULE,class=file,group=n2o,
                              name={FTP#ftp.sid,FTP#ftp.filename,FTP#ftp.hash}}),
     {reply,wf:format(FTP#ftp{source=wf:version()}),Req,State};
 
