@@ -4,19 +4,13 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
-protocols() -> wf:config(n2o,protocols,[ n2o_file,
-                                         n2o_client,
+upack(D)    -> binary_to_term(D,[safe]).
+protocols() -> wf:config(n2o,protocols,[ n2o_heart,
                                          n2o_nitrogen,
-                                         n2o_heart
-                                       ]).
+                                         n2o_file,
+                                         n2o_client ]).
 
-stream(<<>>, Req, State)                   -> nop(Req,State);
-stream({text,_Data}=Message, Req, State)   -> push(Message,Req,State,protocols(),[]);
-stream({binary,Data}=_Message, Req, State) -> push(binary_to_term(Data,[safe]),Req,State,protocols(),[]);
-stream(_Message, Req, State)               -> nop(Req,State).
-info(Message, Req, State)                  -> push(Message,Req,State,protocols(),[]).
-
-terminate(_Req, _State=#cx{module=Module}) -> catch Module:event(terminate).
+terminate(_,#cx{module=Module}) -> catch Module:event(terminate).
 init(_Transport, Req, _Opts, _) ->
     wf:actions([]),
     Ctx = wf:init_context(Req),
@@ -31,12 +25,17 @@ init(_Transport, Req, _Opts, _) ->
 
 % N2O top level protocol NOP REPLY PUSH
 
-nop(R,S) ->       wf:info(?MODULE,"NOP",[]),        {reply,<<>>,R,S}.
-reply(M,R,S) ->   wf:info(?MODULE,"REPLY~n~p",[M]),  {reply,M,R,S}.
+info(M,R,S)               -> push(M,R,S,protocols(),[]).
+stream(<<>>,R,S)          -> nop(R,S);
+stream({text,_}=M,R,S)    -> push(M,R,S,protocols(),[]);
+stream({binary,D},R,S)    -> push(upack(D),R,S,protocols(),[]);
+stream(_,R,S)             -> nop(R,S).
 
-push(_M,R,S,[],_Acc)               -> nop(R,S);
-push(M,R,S,[Protocol|T]=_Protocols,Acc)  -> wf:info(?MODULE,"PUSH ~p message~n~p",[Protocol,M]),
-    case Protocol:info(M,R,S) of
-         {unknown,_,_,_}         -> push(M,R,S,T,Acc);
-         {reply,Msg,Req,State}   -> reply(Msg,Req,State);
-                    Ans          -> push(M,R,S,T,[Ans|Acc]) end.
+nop(R,S)                  -> {reply,<<>>,R,S}.
+reply(M,R,S)              -> {reply,M,R,S}.
+push(_,R,S,[],_)          -> nop(R,S);
+push(M,R,S,[H|T],Acc)     ->
+    case H:info(M,R,S) of
+         {unknown,_,_,_}  -> push(M,R,S,T,Acc);
+         {reply,M1,R1,S1} -> reply(M1,R1,S1);
+                        A -> push(M,R,S,T,[A|Acc]) end.
