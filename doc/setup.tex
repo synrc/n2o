@@ -38,37 +38,30 @@ for passing HTTP, REST, WebSocket and Static N2O endpoints:
   -module(review).
   -behaviour(supervisor).
   -behaviour(application).
-  -export([init/1, start/0, start/2, stop/1, main/1]).
+  -export([init/1, start/2, stop/1, main/1]).
+  -include_lib("kvs/include/user.hrl").
 
-  main(A) -> mad:main(A).
+  main(A)    -> mad:main(A).
+  start(_,_) -> supervisor:start_link({local,review},review,[]).
+  stop(_)    -> ok.
+  init([])   -> case cowboy:start_http(http,3,port(),env()) of
+                     {ok, _}   -> ok;
+                     {error,_} -> halt(abort,[]) end, sup().
 
-  start() -> start(normal, []).
-  stop(_State) -> ok.
-  start(_StartType, _StartArgs) ->
-    supervisor:start_link({local, ?MODULE}, ?MODULE, []).
-
-  init([]) -> case cowboy:start_http(http, 3,
-    [ { port, wf:config(n2o,port,8000)      } ],
-    [ { env, [{dispatch, dispatch_rules()}] } ]) of
-      { ok, _ } -> ok;
-              X -> io:format("Unknown Error: ~p~n",[X]),
-                   halt(abort,[]) end,
-
-      { ok, {{one_for_one, 5, 10}, []} }.
-
-  mime()   -> [ { mimetypes, cow_mimetypes, all } ].
+  sup()    -> { ok, { { one_for_one, 5, 100 }, [] } }.
+  port()   -> [ { port, wf:config(n2o,port,8000)  } ].
+  env()    -> [ { env, [ { dispatch, points() } ] } ].
   static() ->   { dir, "apps/review/priv/static", mime() }.
-  n2o()    ->   { dir, "deps/n2o/priv", mime() }.
-  ws()     -> [ { handler, n2o_bullet } ].
-  nop()    -> [ ].
+  n2o()    ->   { dir, "deps/n2o/priv",           mime() }.
+  mime()   -> [ { mimetypes, cow_mimetypes, all   } ].
+  points() -> cowboy_router:compile([{'_', [
 
-  dispatch_rules() -> cowboy_router:compile([  { '_', [
-    { "/static/[...]",       n2o_dynalo,     static() },
-    { "/n2o/[...]",          n2o_dynalo,     n2o()    },
-    { "/rest/:resource",     rest_cowboy,    nop()    },
-    { "/rest/:resource/:id", rest_cowboy,    nop()    },
-    { "/ws/[...]",           bullet_handler, ws()     },
-    { '_',                   n2o_cowboy,     nop()    } ] } ] ).
+              { "/static/[...]",       n2o_static,  static()},
+              { "/n2o/[...]",          n2o_static,  n2o()},
+              { "/rest/:resource",     rest_cowboy, []},
+              { "/rest/:resource/:id", rest_cowboy, []},
+              { "/ws/[...]",           n2o_stream,  []},
+              { '_',                   n2o_cowboy,  []} ]}]).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -142,7 +135,8 @@ N2O uses two ports for WebSocket and HTTP connections.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-You can also redefine these ports in bullet connection inside template:
+If you use server pages mode N2O will render HTML with nessesary ports values.
+For single page application mode you should redefine these ports inside the template:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}

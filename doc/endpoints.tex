@@ -13,10 +13,10 @@ REST endpoint handlers with Cowboy Web Server.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:resource", rest_cowboy, []},
+    {"/rest/:resource",     rest_cowboy, []},
     {"/rest/:resource/:id", rest_cowboy, []},
-    {"/ws/[...]", bullet_handler, [{handler, n2o_bullet}]},
-    {'_', n2o_cowboy, []}
+    {"/ws/[...]",           n2o_stream,  []},
+    {'_',                   n2o_cowboy,  []}
 \end{lstlisting}
 
 \subsection{HTML Pages over HTTP}
@@ -38,8 +38,8 @@ of N2O handlers is called.
 
 \paragraph{}
 This handler knows how to deal with XHR and WebSocket requests.
-{\bf {n2o}\_{bullet}} is a default JavaScript event handler
-based on Bullet library created by Loïc Hoguin.
+{\bf {n2o}\_{stream}} is a default JavaScript event handler
+based on Bullet library created by Loïc Hoguin, optimized and refined.
 
 \paragraph{}
 You can send several types of events directly from JavaScript

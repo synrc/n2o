@@ -5,7 +5,7 @@ of context initialization.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    init_context(Req) -> #context{
+    init_context(Req) -> #cx{
         actions=[], module=index, path=[],
         req=Req, params=[], session=undefined,
         handlers= [ {'query', wf:config('query', n2o_query)},
@@ -19,7 +19,7 @@ on each HTTP request. You can redefine any of them or plug your own
 additional handler in the chain to transform web server requests.
 
 \vspace{1\baselineskip}
-\begin{lstlisting}[caption={wf}\_{context}:fold/3]
+\begin{lstlisting}[caption=wf:fold/3]
     fold(Fun,Handlers,Ctx) ->
         lists:foldl(fun({_,Module},Ctx1) ->
             {ok,_,NewCtx} = Module:Fun([],Ctx1),
@@ -39,7 +39,7 @@ You can specify routing table with application config:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {n2o, [{route,custom_router}]}
+    {n2o, [{route,n2o_route}]}
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -47,25 +47,23 @@ Remember that routing handler should be kept very simple because it
 influences overall initial page load latency and HTTP capacity.
 
 \vspace{1\baselineskip}
-\begin{lstlisting}[caption=n2o\_route.erl]
-    -module (n2o_route).
-    -author('Maxim Sokhatsky').
+\begin{lstlisting}
+    -module(n2o_route).
     -include_lib("n2o/include/wf.hrl").
     -export(?ROUTING_API).
 
-    finish(State, Ctx) -> {ok, State, Ctx}.
-    init(State, Ctx) ->
-        Path = wf:path(Ctx#context.req),
-        Module = route_prefix(Path),
-        {ok, State, Ctx#context{path=Path,module=Module}}.
+    finish(S, Cx) -> {ok, S, Cx}.
+    init(S, Cx)   -> P = wf:path(Cx#context.req),
+                     M = prefix(Path),
+                     {ok, S, Cx#cx{path=P,module=M}}.
 
-    route_prefix(<<"/ws/",P/binary>>) -> route(P);
-    route_prefix(<<"/",P/binary>>) -> route(P);
-    route_prefix(P) -> route(P).
+    prefix(<<"/ws/",P/binary>>) -> route(P);
+    prefix(<<"/",P/binary>>)    -> route(P);
+    prefix(P)                   -> route(P).
 
-    route(<<>>)              -> index;
-    route(<<"index">>)       -> index;
-    route(<<"login">>)       -> login;
-    route(<<"favicon.ico">>) -> static_file;
-    route(_) -> index.
+    route(<<>>)                 -> index;
+    route(<<"index">>)          -> index;
+    route(<<"login">>)          -> login;
+    route(<<"favicon.ico">>)    -> index;
+    route(_)                    -> index.
 \end{lstlisting}
