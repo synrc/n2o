@@ -121,7 +121,7 @@ Nitrogen DSL you can plug all of them separately.
             {session,n2o_session},
             {origin,<<"*">>},
             {bridge,n2o_cowboy},
-            {pickler,n2o_pickler},
+            {pickler,n2o_pickle},
             {erroring,n2o_error}]},
      {kvs, [{dba,store_mnesia},
             {schema, [kvs_user,
