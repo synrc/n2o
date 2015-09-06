@@ -47,7 +47,7 @@ using various protocols. E.g. you man need to use client protocol:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-JavaScript> ws.send(enc(tuple(atom('client'),
+  JavaScript> ws.send(enc(tuple(atom('client'),
                    tuple(atom('phone_auth'),"+380.."))));
 \end{lstlisting}
 \vspace{1\baselineskip}
@@ -56,8 +56,8 @@ And catch this event at Erlang side:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-event({client,{phone_auth,Phone}}) ->
-    io:format("Phone: ~p~n",[Phone]).
+  event({client,{phone_auth,Phone}}) ->
+      io:format("Phone: ~p~n",[Phone]).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -66,7 +66,7 @@ because it may violate security rules.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-> ws.send(enc(tuple(atom('direct'),atom('init'))));
+    > ws.send(enc(tuple(atom('direct'),atom('init'))));
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -74,11 +74,9 @@ With catching at Erlang side:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-event(init) ->
-    io:format("Init called~n").
+    event(init) -> io:format("Init called~n").
 \end{lstlisting}
 \vspace{1\baselineskip}
-
 
 \newpage
 \subsection{HTTP API over REST}

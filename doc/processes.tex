@@ -23,13 +23,20 @@ and other time consuming operations.
 \subsection{Page Serving Process}
 This processes are applicable only to the case when you serving not static HTML,
 but dynamically rendered pages with NITRO, DTL or ET template engines.
-The very first HTTP handler only renders HTML. All created on the way
+The very first HTTP handler only renders HTML. During page initialization
+function Module:{\bf main/0} is called. This function should return raw HTML or
+NITRO elements that could be rendered into raw HTML. All created on the way
 JavaScript actions are stored in the transition process.
 
+\vspace{1\baselineskip}
 \begin{lstlisting}
-    transition(Actions) ->
-        receive {'N2O',Pid} -> Pid ! Actions end.
+    main() -> #dtl { file     = "login",
+                     app      = review,
+                     bindings = [ { body,
+                          #button { id       = send,
+                                    postback = chat } } ] }.
 \end{lstlisting}
+\vspace{1\baselineskip}
 
 \paragraph{}
 HTTP handler will die immediately after returning HTML. Transition process
@@ -41,12 +48,40 @@ thus starting WebSocket handler on the server. After responding with
 JavaScript actions the Transition process dies and the only process left
 running is WebSocket handler. At this point initialization phase is complete.
 
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    transition(Actions) ->
+        receive {'N2O',Pid} -> Pid ! Actions end.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Transition process is only applicable to dynamically rendered pages
+served by {\bf n2o\_document} endpoint. You never deal with it manually.
+
 \subsection{Events Process}
 After that all client/server communication is performed over
 WebSocket channel. All events coming from the browser are
 handled by N2O, which renders elements to HTML and actions to
 JavaScript. Each user at any time has only one WebSocket process
 per connection.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    event(init) -> wf:reg(room);
+    event(chat) -> #insert_top(history,#span{body="message"}),
+                   wf:send(room,#flush{data=wf:actions()}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+This code will register all WebSocket processes under the same
+topic in pubsub and broadcast history changing to all registered
+process in the system under the same topic using {\bf \#flush}
+NITRO protocol message.
+
+\paragraph{}
+During page initialization before Module:{\bf event(init)},
+Module:{\bf main/0} is called to render initial postbacks for
+elements. So you can share the same code to use SPA or DSL/DTL approach.
 
 \subsection{Async Processes}
 These are user processes that were created with {\bf wf:async} invocation.
@@ -58,24 +93,42 @@ Async processes are optional and only needed when you have a UI event taking too
 time to be processed, like gigabyte file uploads. You can create
 multiple async processes per user. Starting from N2O 2.9 all async
 processes are being created as {\bf gen\_server} under
-{\bf n2o\_sup} supervision tree and new .
+{\bf n2o\_sup} supervision tree.
 
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    event(init) -> wf:reg(room),
+                   wf:async("looper", fun async/1);
+
+    async(init) -> ok;
+    aynsc(Chat) -> io:format("Chat: ~p~n",[Chat]).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
 \subsection{SPA Mode}
-In SPA mode your N2O can serve no HTML at all. N2O elements are
-bound during INIT handshake and thus can be used regularly as in DSL mode.
+In SPA mode N2O can serve no HTML at all. N2O elements are
+bound during initialization handshake and thus can be used
+regularly as in DSL mode.
+
+\paragraph{}
 In the example provided in n2o/samples you can find two different
 front end to the same {\bf review} application which consist of
 two page modules {\bf index} and {\bf login}. You can access this application
 involving no HTML rendering by using static file serving that could be
-switched to direct nginx serving.
+switched to direct nginx serving in production.
 
+\vspace{1\baselineskip}
 \begin{lstlisting}
     open http://localhost:8000/static/app/login.htm
 \end{lstlisting}
+\vspace{1\baselineskip}
 
 Or you can see DTL rendered HTML pages which resides at following address:
 
+\vspace{1\baselineskip}
 \begin{lstlisting}
     open http://localhost:8000/login.htm
 \end{lstlisting}
+\vspace{1\baselineskip}
 
