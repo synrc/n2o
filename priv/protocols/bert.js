@@ -8,10 +8,11 @@ function tuple() {
         for (var i=0;i<this.value.length;i++) { if (s!=="") s+=","; s+=this.value[i]; }
         return "{" + s + "}"; } }; };
 function dec(S) { return decode(ltoa(new Uint8Array(S))); };
-function enc(s) {
+function enc(s) { return new Blob([encodebuf(s).buffer]); };
+function encodebuf(s) {
     var ori = encode(s), buf = new Uint8Array(new ArrayBuffer(ori.length));
     for (var i=0; i < buf.length; i++) { buf[i] = ori.charCodeAt(i); }
-    return new Blob([buf.buffer]); };
+    return buf; }
 
 BERT = itoa(131);
 SATOM = itoa(115);
