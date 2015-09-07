@@ -2,7 +2,7 @@
 // N2O CORE
 
 var active      = false,
-    debug       = true,
+    debug       = false,
     protocol    = window.location.protocol == 'https:' ? "wss://" : "ws://",
     querystring = window.location.pathname + window.location.search,
     host        = null == transition.host ? window.location.hostname : transition.host,

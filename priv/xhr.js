@@ -3,13 +3,11 @@
 
 $xhr = { heart: false, interval: 100, creator: function(url) { $conn.url = xhr_url(url);
          $xhr.channel = { send: xhr_send, close: xhr_close }; $conn.onopen();
-         return $xhr.channel; }, onheartbeat: function() { xhr('GET',{});} };
+         return $xhr.channel; }, onheartbeat: function() { xhr('POST',{});} };
 
 transports = [$ws,$xhr];
 
-function xhr_header(request) {
-    request.setRequestHeader('X-Socket-Transport','xhrPolling');
-    request.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=utf-8'); }
+function xhr_header(request) { request.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=utf-8'); }
 function xhr_url(url) { return url.replace('ws:', 'http:').replace('wss:', 'https:'); }
 function xhr_close() { $conn.onclose(); clearInterval(heartbeat); }
 function xhr_send(data) { return xhr('POST',data); }

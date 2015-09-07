@@ -159,20 +159,23 @@ digit(15) -> $f.
 hex(Bin) -> << << (digit(A1)),(digit(A2)) >> || <<A1:4,A2:4>> <= Bin >>.
 unhex(Hex) -> << << (erlang:list_to_integer([H1,H2], 16)) >> || <<H1,H2>> <= Hex >>.
 
-io(Data) -> iolist_to_binary(Data).
-data(Data) -> binary_to_list(term_to_binary(Data)).
+io(Data)     -> iolist_to_binary(Data).
+bin(Data)    -> term_to_binary(Data).
+list(Data)   -> binary_to_list(term_to_binary(Data)).
 format(Term) -> format(Term,application:get_env(n2o,formatter,json)).
 
 format({Io,Eval,Data},json) -> wf:info(?MODULE,"JSON {~p,_,_}: ~tp~n",[Io,io(Eval)]),
-                               jsone:encode([{name,Io},{eval,io(Eval)},{data,data(Data)}]);
-format({Atom,Data},   json) -> wf:info(?MODULE,"JSON {~p,_}: ~tp~n",[Atom,data(Data)]),
-                               jsone:encode([{name,Atom},{data,data(Data)}]);
+                               jsone:encode([{name,Io},{eval,io(Eval)},{data,list(Data)}]);
+format({Atom,Data},   json) -> wf:info(?MODULE,"JSON {~p,_}: ~tp~n",[Atom,list(Data)]),
+                               jsone:encode([{name,Atom},{data,list(Data)}]);
+
 format({Io,Eval,Data},bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Io,io(Eval)]),
-                               {binary,term_to_binary({Io,io(Eval),data(Data)})};
-format(#ftp{source=Source}=FTP,bert) -> wf:info(?MODULE,"BERT {ftp,_,_,_,_,_,_,_,_,_,_,_}: ~tp~n",[FTP]),
+                               {binary,term_to_binary({Io,io(Eval),bin(Data)})};
+format({Atom,Data},   bert) -> wf:info(?MODULE,"BERT {~p,_}: ~tp~n",[Atom,bin(Data)]),
+                               {binary,term_to_binary({Atom,bin(Data)})};
+format(#ftp{}=FTP,    bert) -> wf:info(?MODULE,"BERT {ftp,_,_,_,_,_,_,_,_,_,_,_}: ~tp~n",[FTP]),
                                {binary,term_to_binary(FTP)};
-format({Atom,Data},   bert) -> wf:info(?MODULE,"BERT {~p,_}: ~tp~n",[Atom,data(Data)]),
-                               {binary,term_to_binary({Atom,data(Data)})};
 format(Term,          bert) -> {binary,term_to_binary(Term)};
+
 format(_,_)                 -> {binary,term_to_binary({error,<<>>,
                                   <<"Only JSON/BERT formatters are available.">>})}.
