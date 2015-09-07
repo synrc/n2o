@@ -25,6 +25,7 @@ to_atom(L) when is_list(L) -> list_to_atom(binary_to_list(list_to_binary(L))).
 
 to_binary(A) when is_atom(A) -> atom_to_binary(A,latin1);
 to_binary(B) when is_binary(B) -> B;
+to_binary(T) when is_tuple(T) -> term_to_binary(T);
 to_binary(I) when is_integer(I) -> to_binary(integer_to_list(I));
 to_binary(F) when is_float(F) -> float_to_binary(F,[{decimals,9},compact]);
 to_binary(L) when is_list(L) ->  iolist_to_binary(L).
