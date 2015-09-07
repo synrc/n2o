@@ -1,12 +1,126 @@
-
 \section{Protocols}
+If you put regular JSON on the wire sooner or later you will
+discover your own wire protocol. Here is description of
+N2O binary precise protocols stack for a broad range of applications.
+N2O protocol also has ASN.1 formal description, however here we will speak on it freely.
 
-We made it to make you happy.
-You can plug any binary formatting protocol like BERT, BED, MessagePack
-or even textual ones like TXT, JSON or custom binary protocols like MQTT, AMQP or legacy XMPP.
-Nitrogen-support here is just three protocol messages: {\bf pickle}, {\bf flush} and {\bf direct}.
-N2O also provides basic heartbeat protocol that can be formatted at your whim.
-Currently N2O supports 4 protocols: Heartbeat, Nitrogen, Client/Server and File Transfer Protocol.
+\includeimage{n2o-proto.png}{Protocols Stack}
+
+\paragraph{}
+You may find extensible N2O protocol specification similar to
+XML-based XMPP, binary COM/CORBA, JSON-based WAMP,
+.NET WCF or Apache Camel network relay stacks.
+We combine all these ideas into one single protocols
+stack for any application/formatter you will ever need
+and provide you stable and mature implementation
+for Erlang in a form of N2O application server that covers
+core protocols.
+
+\newpage
+\subsection*{Cross Language Compatibility}
+N2O application server implemented to support N2O protocol reference implementation
+in Erlang which is widely used in enterprise applications.
+Experimental implementation in Haskell {\bf n2o.hs} exists
+which supports core {\bf heart} protocol along with {\bf bert} formatter.
+We will show you how N2O clients are compatible across
+different server implementations in different languages.
+
+\subsection*{Web Protocols: {\bf nitro}, {\bf spa}, {\bf bin}}
+N2O protocols stack provides definition for several unoverlapped protocol layers.
+N2O application server implementaion of N2O protocol supports
+four protocol layers from this stack: {\bf heart}, {\bf nitro}, {\bf spa} and {\bf bin} protocols.
+Heartbeat protocol is for reliable connections and WebSocket initialization.
+Nitrogen protocol for {\bf \#element} and {\bf \#action} client/server interoperability.
+SPA protocol dedicated for games and static page applications that involves no HTML,
+such as SVG based games or non-gui IoT applications.
+And finally binary file transfer protocol for images and gigabyte file uploads and downloads.
+
+\subsection*{Social Protocols: {\bf roster}, {\bf muc}, {\bf search}}
+For social connectivity one may need to use {\bf synrc/roster} instant messaging server
+that supports {\bf roster} protocol  with variation
+for enabling public rooms {\bf muc} or full-text {\bf search} facilities.
+
+\subsection*{Enterprise Protocols: {\bf bpe}, {\bf mq}, {\bf rest}}
+There is no single system shipped to support all of N2O protocols but it
+could exist theoretically. For other protocols implementation you may refer
+to other products like {\bf spawnproc/bpe}, {\bf synrc/rest} or {\bf synrc/mq}.
+
+\newpage
+\subsection*{Channel Termination Formatters}
+N2O protocol is formatter agnostic and it doesn't strict you
+to use a particular encoder/decoder.
+Application developers could choose their own formatter per protocol.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    1. BERT : {io,"fire();",1}
+    2. WAMP : [io,"fire();",1]
+    3. JSON : {name:io,eval:"fire();",data:1}
+    4. TEXT : IO \xFF fire(); \xFF 1\n
+    5. XML  : <io><eval>fire();</eval><data>1</data></io>
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+E.g. N2O uses TEXT formatting for ``PING'' and ``N2O,'' protocol messages,
+across versions N2O used to have IO message formatted with JSON and BERT both.
+All other protocol messages were BERT from origin.
+Make sure formatters set for client and server is compatible.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > application:set_env(n2o,formatter,bert).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Note that you may include to support more that one protocol on the client.
+At server side you can change formatter on the fly without breaking
+the channel stream. Each message during data stream could be formatted
+using only one protocol at a time. If you want to pass each message
+through more that one formatter you should write echo protocol.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    <script src='/n2o/protocols/bert.js'></script>
+    <script src='/n2o/protocols/client.js'></script>
+    <script>protos = [ $bert, $client ]; N2O_start();</script>
+\end{lstlisting}
+
+
+\newpage
+\subsection*{Protocol Loop}
+After message arrives to endpoint and handlers chain is being initializes,
+message then comes to protocol stack. N2O selects appropropriative protocol
+module and handle the message. After than message is being formatted and
+replied back to stream channel. Note that protocol loop is applicable
+only to WebSocket stream channel endpoint.
+
+\includeimage{n2o_protocols.png}{Messaging Pipeline}
+\
+
+Here is pseudocode how message travels for each protocol until some
+of them handle the message. Note tnat this logic is subject to change.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}[caption=Top-level protocol loop in {n2o}\_{proto}]
+    info(M,R,S)               -> push(M,R,S,protocols(),[]).
+    stream({text,_}=M,R,S)    -> push(M,R,S,protocols(),[]);
+    stream({binary,D},R,S)    -> push(M,R,S,protocols(),[]);
+    stream(<<>>,R,S)          -> nop(R,S);
+    stream(_,R,S)             -> nop(R,S).
+
+    reply(M,R,S)              -> {reply,M,R,S}.
+    nop(R,S)                  -> {reply,<<>>,R,S}.
+    push(_,R,S,[],_Acc)       -> nop(R,S);
+    push(M,R,S,[H|T],Acc)     ->
+        case H:info(M,R,S) of
+              {unknown,_,_,_} -> push(M,R,S,T,Acc);
+             {reply,M1,R1,S1} -> reply(M1,R1,S1);
+                            A -> push(M,R,S,T,[A|Acc]) end.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You may set up protocol from sys.config file,
+enabling or disabling some of them on the fly.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -19,25 +133,28 @@ Currently N2O supports 4 protocols: Heartbeat, Nitrogen, Client/Server and File 
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-\includeimage{images/n2o_protocols.png}{Messaging Pipeline}
-\
+For example in Skyline (DSL) application you use only {\bf nitro} protocol:
 
-For example in Skyline (DSL) application you use only nitrogen:
-
+\vspace{1\baselineskip}
 \begin{lstlisting}
     > wf:config(n2o,protocols).
     [n2o_heart,n2o_nitrogen]
 \end{lstlisting}
+\vspace{1\baselineskip}
 
-And in Games (SPA) application you need only client/server protocol:
+And in Games (SPA) application you need only {\bf spa} protocol:
 
+\vspace{1\baselineskip}
 \begin{lstlisting}
     > wf:config(n2o,protocols).
     [n2o_heart,n2o_client]
 \end{lstlisting}
+\vspace{1\baselineskip}
 
+\newpage
 \subsection{Heartbeat}
 
+N2O also provides basic Heartbeat protocol that can be formatted at your whim.
 Heartbeat protocol is essential WebSocket application level protocol for
 PING and N2O initialization. It pings every 4-5 seconds from client-side to server
 thus allowing to determine client online presence. On reconnection or initial connect
@@ -62,8 +179,10 @@ also you can enable logging the heartbeat protocol by including its module in lo
 Heartbeat protocol PING request returns empty message NOP binary response;
 N2O messages returns JSON with EVAL fields of rendered actions.
 
+\newpage
 \subsection{Nitrogen Compatibility Layer}
 
+NITRO protocol consist of three protocol messages: {\bf pickle}, {\bf flush} and {\bf direct}.
 Pickled messages are used if you send messages over unencrypted
 channel and want to hide the content of the message,
 that was generated on server. You can use BASE64 pickling mechanisms
@@ -91,6 +210,7 @@ This is Nitrogen-based messaging model. Nitrogen WebSocket processes receive als
 flush and delivery protocol messages, but originated from server. These are internal Nitrogen
 protocol messages. This request will return JSON with EVAL field only.
 
+\newpage
 \subsection{Client/Server}
 
 Client messages usually originated at client and represent the Client API Requests:
@@ -133,6 +253,7 @@ But it is up to your application and client/server handlers how to handle these 
 
 NOTE: client/server request may return JSON with EVAL and DATA fields.
 
+\newpage
 \subsection*{JSON enveloped EVAL and DATA}
 
 Each message from Web Socket channel to Client is encoded as JSON object.
