@@ -55,23 +55,18 @@ dvp = DataView.prototype;
 dvp.gu=dvp.getUint8;dvp.gu2=dvp.getUint16;
 dvp.gi4=dvp.getInt32;dvp.gu4=dvp.getUint32;
 
-var  $tab=
-   [[ 97,int,1],[ 98,int,4],[ 99,nop,0],[100,str,2],
-    [101,nop,0],[102,nop,0],[103,nop,0],[104,run,1],
-    [105,run,4],[106,nop,4],[107,str,2],[108,run,4],
-    [109,str,4],[110,nop,1],[111,nop,4],[112,nop,0],
-    [113,nop,0],[114,nop,0],[115,nop,0],[116,nop,0],
-    [117,nop,0],[118,nop,0],[119,nop,0],[  0,nop,0]],sx,ix;
-
-function dec(d) { sx=new DataView(d);ix=0; if(sx.gu(ix++)!==131)throw("BERT?"); return din();};
-function din()  { var c=sx.gu(ix++),x=(c>96&&c<120)?$tab[c-97]:$tab[23];
-                  return {t:x[0],v:x[1](x[2])};};
 function nop(b) { return []; };
 function int(b) { return b==1?sx.gu(ix++):sx.gi4((a=ix,ix+=4,a)); };
+function dec(d) { sx=new DataView(d);ix=0; if(sx.gu(ix++)!==131)throw("BERT?"); return din();};
 function str(b) { var sz=b==2?sx.gu2(ix):sx.gi4(ix);ix+=b;
                   return utf8_dec(new DataView(sx.buffer.slice(ix,ix+=sz))); };
-function run(b) { var sz=b==1?sx.gu(ix):sx.gu4(ix),r=[]; ix+=b;
-                  for (var i=0;i<sz;i++)r.push(din());if(b==4)ix++; return r; };
+function run(b) { var i=sz=b==1?sx.gu(ix):sx.gu4(ix),r=[]; ix+=b;
+                  while(i--) r[sz-i-1]=din(); if(b==4)ix++; return r; };
+function din()  { var c=sx.gu(ix++),x; switch(c) { case 97: x=[int,1];break;
+                  case 98:  x=[int,4]; break; case 100: x=[str,2]; break;
+                  case 104: x=[run,1]; break; case 107: x=[str,2]; break;
+                  case 108: x=[run,4]; break; case 109: x=[str,4]; break;
+                  default:  x=[nop,0]; } return {t:c,v:x[0](x[1])};};
 
 function isTUPLE(x,num,name) { return (x.v.length === num && x.v[0].v === name); }
 var $io = {}; $io.on = function onio(x, cb) { if (isTUPLE(x,3,'io')) {
@@ -85,14 +80,13 @@ var $bin = {}; $bin.on = function onbin(x, cb) { if (isTUPLE(x,2,'bin')) {
 var $bert = {}; $bert.protos = [$io,$bin,$file];
 $bert.on = function onbert(evt, cb) {
     if (Blob.prototype.isPrototypeOf(evt.data) && (evt.data.length > 0 || evt.data.size > 0)) {
-        var reader = new FileReader();
-        reader.addEventListener("loadend", function() {
-            try { lastBuf = reader.result;
-                  erlang = dec(reader.result);
+        var r = new FileReader();
+        r.addEventListener("loadend", function() {
+            try { erlang = dec(r.result);
                   if (debug) console.log(JSON.stringify(erlang.v));
                   if (typeof cb  == 'function') cb(erlang);
                   for (var i=0;i<$bert.protos.length;i++) {
                     p = $bert.protos[i]; if (p.on(erlang, p.do).status == "ok") return; }
             } catch (e) { console.log(e); } });
-        reader.readAsArrayBuffer(evt.data);
+        r.readAsArrayBuffer(evt.data);
         return { status: "ok" }; } else return { status: "error", desc: "data" }; }
