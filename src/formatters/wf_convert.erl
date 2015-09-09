@@ -166,9 +166,12 @@ list(Data)   -> binary_to_list(term_to_binary(Data)).
 format(Term) -> format(Term,application:get_env(n2o,formatter,json)).
 
 format({Io,Eval,Data},json) -> wf:info(?MODULE,"JSON {~p,_,_}: ~tp~n",[Io,io(Eval)]),
-                               jsone:encode([{name,Io},{eval,io(Eval)},{data,list(Data)}]);
+                               jsone:encode([{t,104},{v,[[{t,100},{v,io}],
+                                                         [{t,109},{v,io(Eval)}],
+                                                         [{t,109},{v,list(Data)}]]}]);
 format({Atom,Data},   json) -> wf:info(?MODULE,"JSON {~p,_}: ~tp~n",[Atom,list(Data)]),
-                               jsone:encode([{name,Atom},{data,list(Data)}]);
+                               jsone:encode([{t,104},{v,[[{t,100},{v,Atom}],
+                                                         [{t,109},{v,list(Data)}]]}]);
 
 format({Io,Eval,Data},bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Io,io(Eval)]),
                                {binary,term_to_binary({Io,io(Eval),bin(Data)})};
