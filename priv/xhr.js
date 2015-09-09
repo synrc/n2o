@@ -1,6 +1,8 @@
 
 // N2O XHR Fallback
 
+// WebSocket = undefined; // to test
+
 $xhr = { heart: false, interval: 100, creator: function(url) { $conn.url = xhr_url(url);
          $xhr.channel = { send: xhr_send, close: xhr_close }; $conn.onopen();
          return $xhr.channel; }, onheartbeat: function() { xhr('POST',{});} };
