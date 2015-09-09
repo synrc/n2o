@@ -36,7 +36,8 @@ function en_object(Obj) {
     if (Obj.type === "Atom") return en_atom(Obj);
     if (Obj.type === "Binary") return en_bin(Obj);
     if (Obj.type === "Tuple") return en_tuple(Obj);
-    if (Obj.constructor.toString().indexOf("Array") !== -1) return en_array(Obj); };
+    if (Obj.constructor.toString().indexOf("Array") !== -1) return en_array(Obj);
+    return en_associative_array(Obj); };
 function en_atom(Obj) { return itoa(100) + itol(Obj.value.length, 2) + Obj.value; };
 function en_bin(Obj) { return itoa(109) + itol(Obj.value.length, 4) + Obj.value; };
 function en_tuple(Obj) {
@@ -50,6 +51,10 @@ function en_array(Obj) {
     for (i = 0; i < Obj.length; i++) { s += en_inner(Obj[i]); }
     s += itoa(106);
     return s; };
+function en_associative_array(Obj) {
+    var key, Arr = [];
+    for (key in Obj) { if (Obj.hasOwnProperty(key)) { Arr.push(tuple(atom(key), Obj[key])); } }
+    return en_array(Arr); };
 
 dvp = DataView.prototype;
 dvp.gu=dvp.getUint8;dvp.gu2=dvp.getUint16;
