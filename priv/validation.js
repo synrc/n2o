@@ -10,18 +10,6 @@ function validateSources(list) {
         if (el) el.style.background = res ? '' : 'pink';
         return res && acc; },true); }
 
-function validateLength(e, minlength, maxlength) {
-    var field = e.detail;
-    return field.length >= minlength && field.length <= maxlength; }
-
-function validateMin(e, min) {
-    var field = e.detail;
-    var re = /^\d{1,}$/;
-    console.log(re.test(field));
-    return (!re.test(field)) ? false : parseFloat(field) > min; }
-
-// IE polyfill
-
 (function () {
    function CustomEvent ( event, params ) {
        params = params || { bubbles: false, cancelable: false, detail: undefined };
