@@ -3,19 +3,11 @@ function bin(o) { return { type: "Binary", value: o, toString: function() { retu
 function tuple() { return { type: "Tuple", value: arguments, toString: function() { var s = "";
     for (var i=0;i<this.value.length;i++) { if (s!=="") s+=","; s+=this.value[i]; }
     return "{" + s + "}"; } }; };
-function dec(S) { return decode(0,0,new Uint8Array(S).buffer); };
 function enc(s) { return new Blob([encodebuf(s).buffer]); };
 function encodebuf(s) {
     var ori = encode(s), buf = new Uint8Array(new ArrayBuffer(ori.length));
     for (var i=0; i < buf.length; i++) { buf[i] = ori.charCodeAt(i); }
     return buf; }
-
-var $tab=[['INTE', 97,dint,1],['LINT', 98,dint,4],['FLOA', 99,dflo,0],['ATOM',100,dstr,2],
-          ['REFE',101,dnop,0],['PORT',102,dnop,0],['PID0',103,dnop,0],['TUPL',104,drun,1],
-          ['TUPL',105,drun,4],['NIL0',106,dnil,4],['STRI',107,dstr,2],['LIST',108,drun,4],
-          ['BINA',109,dstr,4],['BIGI',110,dnop,1],['LBIG',111,dnop,4],['NFUN',112,dnop,0],
-          ['EXPO',113,dnop,0],['NREF',114,dnop,0],['SATO',115,dnop,0],['MAPS',116,dnop,0],
-          ['FUNC',117,dnop,0],['AUT8',118,dnop,0],['SAU8',119,dnop,0]];
 
 function itoa(x) { return String.fromCharCode(x); }
 function ltoa(a) { for (var i = 0,s=""; i < a.length; i++) s += itoa(a[i]); return s; };
@@ -59,27 +51,31 @@ function en_array(Obj) {
     s += itoa(106);
     return s; };
 
-function decode(b,ix,d) { var s = new DataView(d);
-    if (s.getUint8(ix++)!==131) throw("BERT"); return din(0,ix,s); };
-function din(b,ix,s) { var c=s.getUint8(ix++),r,x=(c>96&&c<120)?$tab[c-97]:['U',0,dnop,0];
-    r=x[2](x[3],ix,s); r.type=x[0]; return r; }
-function dflo(b,ix,s) { return { value: [], size: ix+31}; }
-function dint(b,ix,s) { return { value:b==1?s.getUint8(ix):s.getInt32(ix), size:ix+b }; }
-function dnil(b,ix,s) { return { value:[],size:ix+1}; } function dnop(b,ix,s) { return { }; }
-function dstr(b,ix,s) {
-    var sz = b==2?s.getUint16(ix):s.getUint32(ix),r=[]; ix+=b;
-    return { value: utf8_dec(new DataView(s.buffer.slice(ix,ix+sz))), size: ix+sz }; };
-function drun(b,ix,s) {
-    var sz = b==1?s.getUint8(ix):s.getUint32(ix),r=[]; ix+=b;
-    for (var i=0;i<sz;i++) { e=din(0,ix,s); r.push(e); ix=e.size; }
-    if (b==4 && s.getUint8(ix++) != 106) throw ("NIL");
-    return { value: r, size: ix }; };
+dvp = DataView.prototype;
+dvp.gu=dvp.getUint8;dvp.gu2=dvp.getUint16;
+dvp.gi4=dvp.getInt32;dvp.gu4=dvp.getUint32;
 
-function isTUPLE(x,num,name) { return (x.value.length == num && x.value[0].value == name); }
+var  $tab=
+   [[ 97,int,1],[ 98,int,4],[ 99,nop,0],[100,str,2],
+    [101,nop,0],[102,nop,0],[103,nop,0],[104,run,1],
+    [105,run,4],[106,nop,4],[107,str,2],[108,run,4],
+    [109,str,4],[110,nop,1],[111,nop,4],[112,nop,0],
+    [113,nop,0],[114,nop,0],[115,nop,0],[116,nop,0],
+    [117,nop,0],[118,nop,0],[119,nop,0],[  0,nop,0]],sx,ix;
+
+function dec(d) { sx=new DataView(d);ix=0; if(sx.gu(ix++)!==131)throw("BERT?"); return din();};
+function din()  { var c=sx.gu(ix++),x=(c>96&&c<120)?$tab[c-97]:$tab[23];
+                  return {t:x[0],v:x[1](x[2])};};
+function nop(b) { return []; };
+function int(b) { return b==1?sx.gu(ix++):sx.gi4((a=ix,ix+=4,a)); };
+function str(b) { var sz=b==2?sx.gu2(ix):sx.gi4(ix);ix+=b;
+                  return utf8_dec(new DataView(sx.buffer.slice(ix,ix+=sz))); };
+function run(b) { var sz=b==1?sx.gu(ix):sx.gu4(ix),r=[]; ix+=b;
+                  for (var i=0;i<sz;i++)r.push(din());if(b==4)ix++; return r; };
+
+function isTUPLE(x,num,name) { return (x.v.length === num && x.v[0].v === name); }
 var $io = {}; $io.on = function onio(x, cb) { if (isTUPLE(x,3,'io')) {
-    try { console.log(x.value[1].value);
-          eval(x.value[1].value);
-          if (typeof cb == 'function') cb(x); } catch (e) { console.log(e); return { status: '' }; }
+    try { eval(x.v[1].v); if (typeof cb == 'function') cb(x); } catch (e) { console.log(e); return { status: '' }; }
     return { status: "ok" }; } else return { status: '' }; }
 var $file = {}; $file.on = function onfile(x, cb) { if (isTUPLE(x,12,'ftp')) {
     if (typeof cb == 'function') cb(x); return { status: "ok" }; } else return { status: ''}; }
@@ -92,8 +88,8 @@ $bert.on = function onbert(evt, cb) {
         var reader = new FileReader();
         reader.addEventListener("loadend", function() {
             try { lastBuf = reader.result;
-                  erlang = decode(0,0,reader.result);
-                  if (debug) console.log(erlang);
+                  erlang = dec(reader.result);
+                  if (debug) console.log(JSON.stringify(erlang.v));
                   if (typeof cb  == 'function') cb(erlang);
                   for (var i=0;i<$bert.protos.length;i++) {
                     p = $bert.protos[i]; if (p.on(erlang, p.do).status == "ok") return; }
