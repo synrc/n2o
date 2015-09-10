@@ -22,7 +22,6 @@ function querySourceRaw(Id) {
 
 function querySource(Id) {
     var qs = querySourceRaw(Id);
-    if (qs == "") { return bin(''); }
-    else if(qs instanceof Date) { return tuple(qs.getFullYear(),(qs.getMonth()+1),qs.getDate()); }
+    if(qs instanceof Date) { return tuple(qs.getFullYear(),(qs.getMonth()+1),qs.getDate()); }
     else { return utf8_toByteArray(qs); } }
 
