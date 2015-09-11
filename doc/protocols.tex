@@ -1,39 +1,38 @@
 \section{Protocols}
-If you put regular JSON on the wire sooner or later you will
-discover your own wire protocol. Here is description of
-N2O binary precise protocols stack for a broad range of applications.
-N2O protocol also has ASN.1 formal description, however here we will speak on it freely.
+N2O is more that just web framework or even application server.
+It also has protocol specification that covers broad range of application domains.
+In this chapter we go deep inside network capabilities of N2O communications.
+N2O protocol also has an ASN.1 formal description, however here we will speak on it freely.
+Here is the landscape of N2O protocols stack.
 
 \includeimage{n2o-proto.png}{Protocols Stack}
 
 \paragraph{}
-You may find extensible N2O protocol specification similar to
-XML-based XMPP, binary COM/CORBA, JSON-based WAMP,
-.NET WCF or Apache Camel network relay stacks.
-We combine all these ideas into one single protocols
-stack for any application/formatter you will ever need
-and provide you stable and mature implementation
-for Erlang in a form of N2O application server that covers
-core protocols.
+You may find it similar to XML-based XMPP, binary COM/CORBA,
+JSON-based WAMP, Apache Camel or Microsoft WCF communication foundations.
+We took best from all and put into one protocols stack for web,
+social and enterprise domains providing stable and mature implementation for Erlang
+in a form of N2O application server.
 
 \newpage
 \subsection*{Cross Language Compatibility}
-N2O application server implemented to support N2O protocol reference implementation
+N2O application server implemented to support N2O protocol protocol defenition
 in Erlang which is widely used in enterprise applications.
 Experimental implementation in Haskell {\bf n2o.hs} exists
-which supports core {\bf heart} protocol along with {\bf bert} formatter.
+which supports only core {\bf heart} protocol along with {\bf bert} formatter.
 We will show you how N2O clients are compatible across
 different server implementations in different languages.
 
 \subsection*{Web Protocols: {\bf nitro}, {\bf spa}, {\bf bin}}
 N2O protocols stack provides definition for several unoverlapped protocol layers.
-N2O application server implementaion of N2O protocol supports
-four protocol layers from this stack: {\bf heart}, {\bf nitro}, {\bf spa} and {\bf bin} protocols.
-Heartbeat protocol is for reliable connections and WebSocket initialization.
-Nitrogen protocol for {\bf \#element} and {\bf \#action} client/server interoperability.
+N2O application server implementaion of N2O protocol specification supports
+four protocol layers from this stack for WebSocket and IoT applications: {\bf heart}, {\bf nitro}, {\bf spa} and {\bf bin} protocols.
+HEART protocol is designed for reliable managed connections and stream channel initialization.
+The domain of NITRO protocol is HTML5 client/server interoperability, HTML events and JavaScript delivery.
 SPA protocol dedicated for games and static page applications that involves no HTML,
 such as SVG based games or non-gui IoT applications.
 And finally binary file transfer protocol for images and gigabyte file uploads and downloads.
+All these protocols transfers coexist in the same multi-channel stream.
 
 \subsection*{Social Protocols: {\bf roster}, {\bf muc}, {\bf search}}
 For social connectivity one may need to use {\bf synrc/roster} instant messaging server
@@ -76,7 +75,7 @@ Note that you may include to support more that one protocol on the client.
 At server side you can change formatter on the fly without breaking
 the channel stream. Each message during data stream could be formatted
 using only one protocol at a time. If you want to pass each message
-through more that one formatter you should write echo protocol.
+through more that one formatter you should write an echo protocol.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -95,19 +94,13 @@ replied back to stream channel. Note that protocol loop is applicable
 only to WebSocket stream channel endpoint.
 
 \includeimage{n2o_protocols.png}{Messaging Pipeline}
-\
 
+\paragraph{}
 Here is pseudocode how message travels for each protocol until some
 of them handle the message. Note tnat this logic is subject to change.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}[caption=Top-level protocol loop in {n2o}\_{proto}]
-    info(M,R,S)               -> push(M,R,S,protocols(),[]).
-    stream({text,_}=M,R,S)    -> push(M,R,S,protocols(),[]);
-    stream({binary,D},R,S)    -> push(M,R,S,protocols(),[]);
-    stream(<<>>,R,S)          -> nop(R,S);
-    stream(_,R,S)             -> nop(R,S).
-
     reply(M,R,S)              -> {reply,M,R,S}.
     nop(R,S)                  -> {reply,<<>>,R,S}.
     push(_,R,S,[],_Acc)       -> nop(R,S);
@@ -119,6 +112,8 @@ of them handle the message. Note tnat this logic is subject to change.
 \end{lstlisting}
 \vspace{1\baselineskip}
 
+\newpage
+\subsection*{Enabling Protocols}
 You may set up protocol from sys.config file,
 enabling or disabling some of them on the fly.
 

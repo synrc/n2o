@@ -8,6 +8,7 @@ log_modules() -> % any
     wf_convert,
     n2o_file,
     n2o_async,
+    n2o_stream,
     n2o_nitrogen,
     index
   ].

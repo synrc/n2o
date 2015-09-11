@@ -25,6 +25,6 @@ route(<<"chat",_/binary>>) -> chat;
 route(<<"index",_/binary>>) -> index;
 route(<<"static/spa/index",_/binary>>) -> index;
 route(<<"static/spa/login",_/binary>>) -> login;
-route(<<"login">>)       -> login;
+route(<<"login",_/binary>>) -> login;
 route(<<"favicon.ico">>) -> static_file;
 route(_) -> login.

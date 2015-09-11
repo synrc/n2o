@@ -33,13 +33,12 @@ If you want to start using N2O inside your application, you can use Cowboy dispa
 for passing HTTP, REST, WebSocket and Static N2O endpoints:
 
 \vspace{1\baselineskip}
-\begin{lstlisting}[caption=review.erl]
+\begin{lstlisting}[caption=sample.erl]
 
-  -module(review).
+  -module(sample).
   -behaviour(supervisor).
   -behaviour(application).
   -export([init/1, start/2, stop/1, main/1]).
-  -include_lib("kvs/include/user.hrl").
 
   main(A)    -> mad:main(A).
   start(_,_) -> supervisor:start_link({local,review},review,[]).
@@ -51,15 +50,13 @@ for passing HTTP, REST, WebSocket and Static N2O endpoints:
   sup()    -> { ok, { { one_for_one, 5, 100 }, [] } }.
   port()   -> [ { port, wf:config(n2o,port,8000)  } ].
   env()    -> [ { env, [ { dispatch, points() } ] } ].
-  static() ->   { dir, "apps/review/priv/static", mime() }.
+  static() ->   { dir, "apps/sample/priv/static", mime() }.
   n2o()    ->   { dir, "deps/n2o/priv",           mime() }.
   mime()   -> [ { mimetypes, cow_mimetypes, all   } ].
   points() -> cowboy_router:compile([{'_', [
 
               { "/static/[...]",       n2o_static,  static()},
               { "/n2o/[...]",          n2o_static,  n2o()},
-              { "/rest/:resource",     rest_cowboy, []},
-              { "/rest/:resource/:id", rest_cowboy, []},
               { "/ws/[...]",           n2o_stream,  []},
               { '_',                   n2o_cowboy,  []} ]}]).
 \end{lstlisting}
@@ -202,7 +199,7 @@ And then add a minimal {\bf index.erl} page:
 \begin{lstlisting}[caption=index.erl]
     -module(index).
     -compile(export_all).
-    -include_lib("nitroo/include/nitro.hrl").
+    -include_lib("nitro/include/nitro.hrl").
 
     main() -> #span{body="Hello"}.
 \end{lstlisting}
