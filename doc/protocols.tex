@@ -147,23 +147,14 @@ And in Games (SPA) application you need only {\bf spa} protocol:
 \vspace{1\baselineskip}
 
 \newpage
-\subsection{Heartbeat}
+\subsection{HEART}
 
-N2O also provides basic Heartbeat protocol that can be formatted at your whim.
-Heartbeat protocol is essential WebSocket application level protocol for
-PING and N2O initialization. It pings every 4-5 seconds from client-side to server
-thus allowing to determine client online presence. On reconnection or initial connect
+HEART protocol is essential WebSocket application level protocol for PING and N2O initialization.
+It pings every 4-5 seconds from client-side to server thus allowing to
+determine client online presence. On reconnection or initial connect
 client sends N2O init marker telling to server to reinitialize the context.
 
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    ws.send('PING');
-    ws.send('N2O,');
-\end{lstlisting}
-\vspace{1\baselineskip}
 
-You can try manually send these messages in web console to see whats happening,
-also you can enable logging the heartbeat protocol by including its module in log\_modules:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -171,11 +162,85 @@ also you can enable logging the heartbeat protocol by including its module in lo
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Heartbeat protocol PING request returns empty message NOP binary response;
-N2O messages returns JSON with EVAL fields of rendered actions.
+The {\bf heart} protocol defined client originated messages N2O, PING
+and server originated messages PONG, IO and NOP. IO message contains EVAL
+that contains UTF-8 JavaScript string and DATA reply contains any
+binary string, including BERT encoded data. "PING" and "N2O," are
+defined as text 4-bytes messages and second could be followed by
+any text string. NOP is 0-byte acknowledging packet.
+This is heart essence protocol which is enough for any rpc and code
+transfering interface. Normally heart protocol is not for active
+client usage but for supporting active connection with notifications
+and possibly DOM updates.
+
+\subsection*{Session Initialization}
+
+After page load you should start N2O session in JavaScript with configured
+formatters and starting function that will start message loop on the client:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    var transition = {pid: '', host: 'localhost', port:'8000'};
+    protos = [ $bert, $client ];
+    N2O_start();
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Id {\bf pid} field is not set in {\bf transition} variable then you
+will request new session otherwise you may put here information from
+previously settled cookies for attaching to existing session. This {\bf pid}
+disregarding set or empty will be bypassed as a parameter to N2O init marker.
 
 \newpage
-\subsection{Nitrogen Compatibility Layer}
+You can manually invoke session initialization inside existing session:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    ws.send('N2O,');
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+In response on successfull WebSocket connection and enabled {\bf heart}
+protocol on the server you will recieve the IO message event.
+IO events are containers for function and data which can be used as parameters.
+There is no predefined semantic to IO message. Second element of a tuple
+will be directly evaluated in WebBrowser. IO events are normally not
+constructed on client. Heartbeat protocol PING request returns PONG
+or empty message NOP binary response; N2O messages returns IO messages
+with .
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    issue TEXT N2O expect IO
+   N2O is TEXT "N2O," ++ PID
+   PID is TEXT "" or any
+    IO is BERT {io,_,_} or
+          JSON {name:'io',eval,data}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection*{Online Presence}
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    ws.send('PING');
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can try manually send this messag in web console to see whats happening,
+also you can enable logging the heartbeat protocol by including its
+module in {\bf log\_modules}:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    issue TEXT PING expect PONG
+  PONG is TEXT "PONG" or ""
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+
+\newpage
+\subsection{NITRO}
 
 NITRO protocol consist of three protocol messages: {\bf pickle}, {\bf flush} and {\bf direct}.
 Pickled messages are used if you send messages over unencrypted
@@ -183,30 +248,119 @@ channel and want to hide the content of the message,
 that was generated on server. You can use BASE64 pickling mechanisms
 with optional AES/RIPEMD160 encrypting.
 
+Here is definition to NITRO protocol in expect language:
+
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    ws.send(enc(tuple(atom('pickle'),
-        binary('ddtake'),
-        binary('g2gCaAVkAAJldmQABWluZGV4ZAAEdGFrZWsABH'+
-                Rha2VkAAVldmVudGgDYgAABXViAAQKXmIAC3cK'),
-        [tuple(atom('ddtake'),'0')])));
+        issue BERT PICKLE expect IO
+        issue BERT DIRECT expect IO
+        issue BERT FLUSH  expect IO
+    PICKLE is BERT {pickle,_,_,_,_}
+    DIRECT is BERT {direct,_}
+     FLUSH is BERT {flush,_}
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Where Base64 represents the N2O EVENT:
+Usually {\bf pickle} events are being sent generated from server during
+rendering of {\bf nitro} elements. To see how it looks like you can see
+inside IO messages returned from N2O initialization. There you can find
+something like this:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    #ev{module=index,msg=take,trigger="take",name=event}
+    ws.send(enc(tuple(atom('pickle'),
+        bin('loginButton'),
+        bin('g2gCaAVkAAJldmQABGF1dGhkAAVsb2dpbmsAC2xvZ2lu'
+             'QnV0dG9uZAAFZXZlbnRoA2IAAAWiYgAA72ViAA8kIQ=='),
+        [ tuple(tuple(utf8_toByteArray('loginButton'),
+                      bin('detail')),[]),
+          tuple(atom('user'),querySource('user')),
+          tuple(atom('pass'),querySource('pass'))])));
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Invocation of {\bf pickle} messages is binded to DOM elements
+using {\bf source} and {\bf postback} information from nitro elements.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+   #button { id=loginButton,
+             body="Login",
+             postback=login,
+             source=[user,pass] } ].
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Only fields listed in {\bf source} will be included in {\bf pickle}
+message on invocation. Information about module and event arguments (postback)
+is sent encrypted or pickled. So it would be hard to know the internal
+structure of server codebase for potential hacker. On the server you will
+recieve following structure:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    {pickle,<<"loginButton">>,
+            <<"g2gCaAVkAAJldmQABGF1dGhkAAVsb2dpbmsAC2xvZ2lu"
+              "QnV0dG9uZAAFZXZlbnRoA2IAAAWiYgAA72ViAA8kIQ==">>,
+           [{{"loginButton",<<"detail">>},[]},
+            {user,[]},
+            {pass,"z"}]}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can depickle {\bf \#ev} event with {\bf wf:depickle} API:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > wf:depickle(<<"g1AAAAA6eJzLYMpgTWFgSi1LYWDNyU/PzIPR2Qh+"
+                    "allqXkkGcxIDA+siIHEvKomB5cBKAN+JEQ4=">>).
+
+    #ev { module  = Module  = auth,
+          msg     = Message = login,
+          name    = event,
+          trigger = "loginButton" }
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Information for {\bf \#ev} event is directly passed to page module
+as {\bf Module:event(Message) }. Information from sources {\bf user}
+and {\bf pass} could be retrieved with {\bf wf:q} API:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -module(auth).
+    -compile(export_all).
+
+    event(login) ->
+        io:format(lists:concat([":user:",wf:q(user),
+                                ":pass:",wf:q(pass)])).
 \end{lstlisting}
 \vspace{1\baselineskip}
 
 This is Nitrogen-based messaging model. Nitrogen WebSocket processes receive also
-flush and delivery protocol messages, but originated from server. These are internal Nitrogen
-protocol messages. This request will return JSON with EVAL field only.
+flush and delivery protocol messages, but originated from server, which is internal
+NITRO protocol messages. All client requests originate IO message as a response.
 
 \newpage
-\subsection{Client/Server}
+\subsection{SPA}
+
+If you are creating SVG based game you don't need HTML5 nitro elements at all.
+Instead you need simple and clean JavaScript based protocol for updating DOM SVG elements
+but based on {\bf shen} generated or manual JavaScript code sent from server.
+Thus you need still IO messages as a reply but originating massesage shouldn't
+rely in {\bf nitro} at all. For that purposes ingeneral and for {\bf synrc/games} sample
+in particular we created SPA protocol layer. SPA protocol consist of CLIENT originated message
+and SERVER message that could be originated both from client and server. All messages expects
+IO as a response.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+        issue BERT CLIENT expect IO
+        issue BERT SERVER expect IO
+    SERVER is BERT {server,_}
+    CLIENT is BERT {client,_}
+\end{lstlisting}
+\vspace{1\baselineskip}
 
 Client messages usually originated at client and represent the Client API Requests:
 
@@ -221,110 +375,76 @@ Client messages usually originated at client and represent the Client API Reques
 Server messages are usually being sent to client originated on the
 server by sending {\bf info} notifications directly to Web Socket process:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
     > WebSocketPid ! {server, Message}
 \end{lstlisting}
-\vspace{1\baselineskip}
 
-You can obtain this Pid like here:
+You can obtain this Pid during page init:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
-    event(init) -> wf:info(?MODULE, "Web Socket Pid: ~p",[self()]);
+    event(init) -> io:format("Pid: ~p",[self()]);
 \end{lstlisting}
-\vspace{1\baselineskip}
 
 You can also send server messages from client relays and vice versa.
-But it is up to your application and client/server handlers how to handle these messages.
-
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    ws.send(enc(tuple(
-        atom('server'),
-        tuple(atom('attach'),1000001))));
-\end{lstlisting}
-\vspace{1\baselineskip}
-
-NOTE: client/server request may return JSON with EVAL and DATA fields.
+It is up to your application and client/server handlers how to handle such messages.
 
 \newpage
-\subsection*{JSON enveloped EVAL and DATA}
-
-Each message from Web Socket channel to Client is encoded as JSON object.
-\footahref{https://github.com/5HT/n2o/blob/master/priv/n2o.js}{N2O.js}
-is used to decode WebSocket binary messages from JSON container.
-
-\begin{lstlisting}
-    { "eval": "ws.send("Send Back This String");",
-      "data": [ 131,104,2,100,0,7,109,101,115,115,
-                97,103,101,107,0,5,72,101,108,108,111 ] }
-\end{lstlisting}
-
-EVAL values are evaluated immediately and DATA values are passed
-to handle\_web\_socket(data) function if it exists.
-
-\begin{lstlisting}
-    function handle_web_socket(body) { console.log(body); }
-\end{lstlisting}
-
-\subsection*{JSON enveloped BERT}
-
-Usually in DATA come BERT messages (Binary Erlang Term Format).
-\footahref{https://github.com/5HT/n2o/blob/master/priv/bert.js}{BERT.js}
-is used to decode application protocol message.
-
-\begin{lstlisting}
-    function handle_web_socket(body) {
-        console.log(String(dec(body))); }
-\end{lstlisting}
-
-\begin{lstlisting}
-    E> Received: {message,"Hello"}
-\end{lstlisting}
-
-\subsection{Binary}
+\subsection{BIN}
 
 When you need raw binary Blob on client-side,
 for images or other raw data, you can ask server like this:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    ws.send(enc(tuple(
-        atom('bin'),
-        binary('API Request'));
+    > ws.send(enc(tuple(atom('bin'),bin('request'))));
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-And handle also in binary clause:
+Ensure you have defined {\bf \#bin} handler and page you are
+asking is visible by router:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    event({binary,Message}) ->
-        wf:info(?MODULE, "This API will return Raw Binary", []),
-        <<84,0,0,0,108>>;
+    event(#bin{data=Data}) ->
+        wf:info(?MODULE,"Binary Delivered ~p~n",[Data]),
+        #bin{data = "SERVER v1"};
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-NOTE: if event returns not the binary, client will receive BERT encoded message.
+Having enabled all loggin in module {\bf n2o\_file}, {\bf idnex} and {\bf wf\_convert}
+you will see:
 
-\subsection*{BERT}
-
-Erlang RPC protocol interconnection with JavaScript nodes should be transferred as BERT answers.
-
+\vspace{1\baselineskip}
 \begin{lstlisting}
-    function handle_web_socket(body) {
-        console.log(String(dec(body))); }
+    n2o_file:BIN Message: {bin,<<"request">>}
+    index:Binary Delivered <<"request">>
+    wf_convert:BERT {bin,_}: "SERVER v1"
 \end{lstlisting}
+\vspace{1\baselineskip}
 
-\subsection*{RAW Binary}
+In JavaScript when you enable `debug=true` you can see:
 
-Raw images for fastest possible speed should be transferred as binary answers.
-
+\vspace{1\baselineskip}
 \begin{lstlisting}
-    function handle_web_socket_blob(body) { }
+    > {"t":104,"v":[{"t":100,"v":"bin"},
+                    {"t":107,"v":"SERVER v1"}]}
 \end{lstlisting}
+\vspace{1\baselineskip}
 
+Or by adding handling for BIN protocol:
+
+\vspace{1\baselineskip}
 \begin{lstlisting}
-    E> Unknown Raw Binary Received: [72,101,108,108,111]
+    > function (x) { console.log('BIN received: ' + x.v[1].v); }
+    > ws.send(enc(tuple(atom('bin'),bin('request'))));
+    > BIN received: SERVER v1
 \end{lstlisting}
+\vspace{1\baselineskip}
+
+The formal description of BIN is simple relay:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    issue BERT {bin,_} expect {bin,_}
+\end{lstlisting}
+\vspace{1\baselineskip}
