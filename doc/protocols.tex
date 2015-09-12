@@ -396,7 +396,7 @@ for images or other raw data, you can ask server like this:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    ws.send(enc(tuple(atom('bin'),bin('request'))));
+    > ws.send(enc(tuple(atom('bin'),bin('request'))));
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -428,5 +428,15 @@ In JavaScript when you enable `debug=true` you can see:
 \begin{lstlisting}
     > {"t":104,"v":[{"t":100,"v":"bin"},
                     {"t":107,"v":"SERVER v1"}]}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Or by adding handling for BIN protocol:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > function (x) { console.log('BIN received: ' + x.v[1].v); }
+    > ws.send(enc(tuple(atom('bin'),bin('request'))));
+    > BIN received: SERVER v1
 \end{lstlisting}
 \vspace{1\baselineskip}
