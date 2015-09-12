@@ -440,3 +440,11 @@ Or by adding handling for BIN protocol:
     > BIN received: SERVER v1
 \end{lstlisting}
 \vspace{1\baselineskip}
+
+The formal description of BIN is simple relay:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    issue BERT {bin,_} expect {bin,_}
+\end{lstlisting}
+\vspace{1\baselineskip}
