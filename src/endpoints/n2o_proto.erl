@@ -26,8 +26,8 @@ init(_Transport, Req, _Opts, _) ->
 % N2O top level protocol NOP REPLY PUSH
 
 info(M,R,S)               -> push(M,R,S,protocols(),[]).
-stream(<<>>,R,S)          -> nop(R,S);
 stream({text,_}=M,R,S)    -> push(M,R,S,protocols(),[]);
+stream({binary,<<>>},R,S) -> nop(R,S);
 stream({binary,D},R,S)    -> push(upack(D),R,S,protocols(),[]);
 stream(_,R,S)             -> nop(R,S).
 
