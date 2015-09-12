@@ -18,9 +18,6 @@ info({init,Rest},Req,State) ->
     Actions = render_actions(wf:actions()),
     {reply,wf:format({io,iolist_to_binary([InitActions,Actions]),<<>>}),Req,wf:context(State,?MODULE,UserCx)};
 
-info({text,Message},Req,State) ->   info(Message,Req,State);
-info({binary,Message},Req,State) -> info(binary_to_term(Message,[safe]),Req,State);
-
 info({pickle,_,_,_}=Event, Req, State) ->
     wf:actions([]),
     Result = try html_events(Event,State) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)),
@@ -52,7 +49,8 @@ render_actions(Actions) ->
 
 % N2O events
 
-html_events({pickle,Source,Pickled,Linked}, State) ->
+html_events({pickle,Source,Pickled,Linked}=Pickle, State) ->
+    wf:info(?MODULE,"Pickle: ~tp",[Pickle]),
     Ev = wf:depickle(Pickled),
     case Ev of
          #ev{} -> render_ev(Ev,Source,Linked,State);

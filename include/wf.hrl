@@ -20,7 +20,7 @@
 % IO protocol
 
 -record(io,      { eval, data }).
--record(bin,     { meta, data }).
+-record(bin,     { data }).
 
 % Client/Server protocol
 

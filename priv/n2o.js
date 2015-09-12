@@ -19,7 +19,7 @@ function N2O_start() {
 function qi(name) { return document.getElementById(name); }
 function qs(name) { return document.querySelector(name);  }
 function qn(name) { return document.createElement(name);  }
-function is(x,num,name) { return (x.v.length === num && x.v[0].v === name); }
+function is(x,num,name) { return x.t==106?false:(x.v.length === num && x.v[0].v === name); }
 
 /// N2O Protocols
 

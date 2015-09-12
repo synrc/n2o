@@ -5,6 +5,15 @@
 
 % N2O Protocols
 
+info(#bin{data=Data}=BIN, Req, State) ->
+    wf:info(?MODULE,"BIN Message: ~p",[BIN]),
+    application:set_env(n2o,formatter,bert),
+    Module = State#cx.module,
+    Resp = try Module:event(BIN) catch
+    	E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), #bin{data = <<>>}
+    end,
+    {reply, wf:format(Resp), Req, State};
+
 info(#ftp{status="init"}=FTP, Req, #cx{}=State) ->
     wf:info(?MODULE,"File Transfer Init: ~p~n",[FTP]),
     application:set_env(n2o,formatter,bert),
