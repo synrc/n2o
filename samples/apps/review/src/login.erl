@@ -11,7 +11,7 @@ body() ->
  [ #span   { id=display },                #br{},
    #span   { body="Login: " },            #textbox{id=user,autofocus=true}, #br{},
    #span   { body="Join/Create Feed: " }, #textbox{id=pass},
-   #button { id=login, body="Login",postback=login,source=[user,pass]} ].
+   #button { id=loginButton, body="Login",postback=login,source=[user,pass]} ].
 
 event(init) ->
     n2o_session:ensure_sid([],?CTX,[]);

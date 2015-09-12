@@ -20,12 +20,16 @@ list() ->
      || File<-filelib:wildcard(code:priv_dir(review)++"/snippets/"++Room++"/*") ]}.
 
 body() ->
-    wf:update(heading,#b{body="Review: " ++ room()}),
-    wf:update(logoutButton,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
+    wf:update(heading,#b{id=heading,body="Review: " ++ room()}),
+    wf:update(logout,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
     [ #button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
 event({show,Short,File}) ->
     wf:redirect("index.htm?room="++Short++"&code="++File);
+
+event(#bin{data=Data}) ->
+    wf:info(?MODULE,"Binary Delivered ~p~n",[Data]),
+    #bin{data = "SERVER"};
 
 event(chat) ->
     wf:info(?MODULE,"Chat pressed~n",[]),
