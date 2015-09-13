@@ -7,6 +7,11 @@
 
 -define(IS_STRING(Term), (is_list(Term) andalso Term /= [] andalso is_integer(hd(Term)))).
 
+-ifndef(N2O_JSON).
+-define(N2O_JSON, (application:get_env(n2o,json,jsone))).
+-endif.
+
+
 to_list(L) when ?IS_STRING(L) -> L;
 to_list(L) when is_list(L) -> SubLists = [inner_to_list(X) || X <- L], lists:flatten(SubLists);
 to_list(A) -> inner_to_list(A).
@@ -166,16 +171,16 @@ list(Data)   -> binary_to_list(term_to_binary(Data)).
 format(Term) -> format(Term,application:get_env(n2o,formatter,json)).
 
 format({Io,Eval,Data},json) -> wf:info(?MODULE,"JSON {~p,_,_}: ~tp~n",[Io,io(Eval)]),
-                               jsone:encode([{t,104},{v,[[{t,100},{v,io}],
-                                                         [{t,109},{v,io(Eval)}],
-                                                         [{t,109},{v,list(Data)}]]}]);
+                               ?N2O_JSON:encode([{t,104},{v,[[{t,100},{v,io}],
+                                                             [{t,109},{v,io(Eval)}],
+                                                             [{t,109},{v,list(Data)}]]}]);
 format({Atom,Data},   json) -> wf:info(?MODULE,"JSON {~p,_}: ~tp~n",[Atom,list(Data)]),
-                               jsone:encode([{t,104},{v,[[{t,100},{v,Atom}],
-                                                         [{t,109},{v,list(Data)}]]}]);
+                               ?N2O_JSON:encode([{t,104},{v,[[{t,100},{v,Atom}],
+                                                             [{t,109},{v,list(Data)}]]}]);
 
 format({Io,Eval,Data},bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Io,io(Eval)]),
                                {binary,term_to_binary({Io,io(Eval),bin(Data)})};
-format({bin,Data},   bert)  -> wf:info(?MODULE,"BERT {bin,_}: ~tp~n",[Data]),
+format({bin,Data},    bert) -> wf:info(?MODULE,"BERT {bin,_}: ~tp~n",[Data]),
                                {binary,term_to_binary({bin,Data})};
 format({Atom,Data},   bert) -> wf:info(?MODULE,"BERT {~p,_}: ~tp~n",[Atom,bin(Data)]),
                                {binary,term_to_binary({Atom,bin(Data)})};
