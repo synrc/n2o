@@ -434,7 +434,6 @@ In JavaScript when you enable `debug=true` you can see:
 
 Or by adding handling for BIN protocol:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
     > $file.do = function (x)
         { console.log('BIN received: ' + x.v[1].v); }
@@ -445,8 +444,6 @@ Or by adding handling for BIN protocol:
 
 The formal description of BIN is simple relay:
 
-\vspace{1\baselineskip}
 \begin{lstlisting}
     issue BERT {bin,_} expect {bin,_}
 \end{lstlisting}
-\vspace{1\baselineskip}

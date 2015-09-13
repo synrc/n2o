@@ -104,7 +104,8 @@ Nitrogen DSL you can plug all of them separately.
             {app,review},
             {route,routes},
             {mq,n2o_mq},
-            {formatter,bert},
+            {formatter,json},
+            {json,jsone},
             {log_modules,config},
             {log_level,config},
             {log_backend,n2o_log},
@@ -190,7 +191,11 @@ message queue API. By default N2O provides {\bf n2o\_mq} module.
 
 \subsection*{Formatter}
 With {\bf formatter} option you may set the WebSocket channel
-termination formatter such as {\bf bert} or {\bf json}.
+termination formatter such as {\bf bert} or {\bf json}. If you will select json as formatter
+you may want also to chose a json encoder in {\bf json} option. By default in n2o enabled
+{\bf json} formatter and {\bf jsone} encoder. The main reason is that {\bf jsone} is
+written in pure erlang idiomatic code and is ready to run on LING without C NIF linkage.
+But you may want to switch to {\bf jsonx} on BEAM or whatever.
 
 \subsection*{Minimal Page}
 And then add a minimal {\bf index.erl} page:
