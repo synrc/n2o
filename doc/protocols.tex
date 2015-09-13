@@ -26,7 +26,8 @@ different server implementations in different languages.
 \subsection*{Web Protocols: {\bf nitro}, {\bf spa}, {\bf bin}}
 N2O protocols stack provides definition for several unoverlapped protocol layers.
 N2O application server implementaion of N2O protocol specification supports
-four protocol layers from this stack for WebSocket and IoT applications: {\bf heart}, {\bf nitro}, {\bf spa} and {\bf bin} protocols.
+four protocol layers from this stack for WebSocket and IoT applications:
+{\bf heart}, {\bf nitro}, {\bf spa} and {\bf bin} protocols.
 HEART protocol is designed for reliable managed connections and stream channel initialization.
 The domain of NITRO protocol is HTML5 client/server interoperability, HTML events and JavaScript delivery.
 SPA protocol dedicated for games and static page applications that involves no HTML,
@@ -411,7 +412,7 @@ asking is visible by router:
 \end{lstlisting}
 \vspace{1\baselineskip}
 
-Having enabled all loggin in module {\bf n2o\_file}, {\bf idnex} and {\bf wf\_convert}
+Having enabled all loggin in module {\bf n2o\_file}, {\bf index} and {\bf wf\_convert}
 you will see:
 
 \vspace{1\baselineskip}
@@ -435,7 +436,8 @@ Or by adding handling for BIN protocol:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    > function (x) { console.log('BIN received: ' + x.v[1].v); }
+    > $file.do = function (x)
+        { console.log('BIN received: ' + x.v[1].v); }
     > ws.send(enc(tuple(atom('bin'),bin('request'))));
     > BIN received: SERVER v1
 \end{lstlisting}

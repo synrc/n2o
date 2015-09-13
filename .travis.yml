@@ -1,6 +1,6 @@
 language: erlang
 otp_release:
-  - R16B
+  - 17.0
 notifications:
   email: 
     - maxim@synrc.com
