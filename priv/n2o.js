@@ -23,16 +23,15 @@ function is(x,num,name) { return x.t==106?false:(x.v.length === num && x.v[0].v 
 
 /// N2O Protocols
 
-var $io = {}; $io.on = function onio(x, cb) { if (is(x,3,'io')) {
-    try { eval(x.v[1].v); if (typeof cb == 'function') cb(x); }
-    catch (e) { console.log(e); return { status: '' }; }
-    return { status: "ok" }; } else return { status: '' }; }
+var $io = {}; $io.on = function onio(r, cb) { if (is(r,3,'io')) {
+    try { eval(r.v[1].v); if (typeof cb == 'function') cb(r); return { status: "ok" }; }
+    catch (e) { console.log(e); return { status: '' }; } } else return { status: '' }; }
 
-var $file = {}; $file.on = function onfile(x, cb) { if (is(x,12,'ftp')) {
-    if (typeof cb == 'function') cb(x); return { status: "ok" }; } else return { status: ''}; }
+var $file = {}; $file.on = function onfile(r, cb) { if (is(r,12,'ftp')) {
+    if (typeof cb == 'function') cb(r); return { status: "ok" }; } else return { status: ''}; }
 
-var $bin = {}; $bin.on = function onbin(x, cb) { if (is(x,2,'bin')) {
-    if (typeof cb == 'function') cb(x); return { status: "ok" }; } else return { status: '' }; }
+var $bin = {}; $bin.on = function onbin(r, cb) { if (is(r,2,'bin')) {
+    if (typeof cb == 'function') cb(r); return { status: "ok" }; } else return { status: '' }; }
 
 // BERT Formatter
 

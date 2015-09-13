@@ -7,21 +7,32 @@
 
 info({init,Rest},Req,State) ->
     Module = State#cx.module,
-    InitActions = case Rest of
-         <<>> -> Elements = try Module:main() catch X:Y -> wf:error_page(X,Y) end,
-                 wf_render:render(Elements),
-                 [];
+    InitActionsReply = case Rest of
+         <<>> -> try Elements = Module:main(),
+                     wf_render:render(Elements),
+                     {ok,[]}
+               catch X:Y -> Stack = wf:stack(X,Y),
+                            wf:error(?MODULE,"Event Main: ~p:~p~n~p", Stack),
+                            {error,Stack} end;
           Binary -> Pid = wf:depickle(Binary),
                     Pid ! {'N2O',self()},
-                    receive_actions(Req) end,
-    UserCx = try Module:event(init) catch C:E -> wf:error_page(C,E) end,
-    Actions = render_actions(wf:actions()),
-    {reply,wf:format({io,iolist_to_binary([InitActions,Actions]),<<>>}),Req,wf:context(State,?MODULE,UserCx)};
+                    {ok,receive_actions(Req)} end,
+    case InitActionsReply of
+         {ok,InitActions} -> UserCx = try Module:event(init)
+                                    catch C:E -> Error = wf:stack(C,E),
+                                                 wf:error(?MODULE,"Event Init: ~p:~p~n~p",Error),
+                                                 Error end,
+                             Actions = render_actions(wf:actions()),
+                             {reply,wf:format({io,iolist_to_binary([InitActions,Actions]),<<>>}),
+                                    Req,wf:context(State,?MODULE,UserCx)};
+           {error,E} ->  {reply,wf:format({io,<<>>,E}), Req, wf:context(State,?MODULE,E)} end;
 
 info({pickle,_,_,_}=Event, Req, State) ->
     wf:actions([]),
-    Result = try html_events(Event,State) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)),
-                 {io,render_actions(wf:actions()),<<>>} end,
+    Result = try html_events(Event,State)
+           catch E:R -> Stack = wf:stack(E,R),
+                        wf:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
+                        {io,render_actions(wf:actions()),Stack} end,
     {reply,wf:format(Result),Req,State};
 
 info({flush,Actions}, Req, State) ->
@@ -33,7 +44,10 @@ info({flush,Actions}, Req, State) ->
 info({direct,Message}, Req, State) ->
     wf:actions([]),
     Module = State#cx.module,
-    _Term = try Module:event(Message) catch E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), <<>> end,
+    _Term = try Module:event(Message)
+         catch E:R -> Stack = wf:stack(E, R),
+                      wf:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
+                      Stack end,
     {reply,wf:format({io,render_actions(wf:actions()),<<>>}),Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
@@ -52,7 +66,7 @@ render_actions(Actions) ->
 html_events({pickle,Source,Pickled,Linked}=Pickle, State) ->
     wf:info(?MODULE,"Pickle: ~tp",[Pickle]),
     Ev = wf:depickle(Pickled),
-    case Ev of
+    _Result = case Ev of
          #ev{} -> render_ev(Ev,Source,Linked,State);
          CustomEnvelop -> wf:error("Only #ev{} events for now: ~p",[CustomEnvelop]) end,
     {io,render_actions(wf:actions()),<<>>}.

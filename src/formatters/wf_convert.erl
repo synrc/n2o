@@ -166,7 +166,7 @@ hex(Bin) -> << << (digit(A1)),(digit(A2)) >> || <<A1:4,A2:4>> <= Bin >>.
 unhex(Hex) -> << << (erlang:list_to_integer([H1,H2], 16)) >> || <<H1,H2>> <= Hex >>.
 
 io(Data)     -> iolist_to_binary(Data).
-bin(Data)    -> term_to_binary(Data).
+bin(Data)    -> Data.
 list(Data)   -> binary_to_list(term_to_binary(Data)).
 format(Term) -> format(Term,application:get_env(n2o,formatter,json)).
 
@@ -178,7 +178,7 @@ format({Atom,Data},   json) -> wf:info(?MODULE,"JSON {~p,_}: ~tp~n",[Atom,list(D
                                ?N2O_JSON:encode([{t,104},{v,[[{t,100},{v,Atom}],
                                                              [{t,109},{v,list(Data)}]]}]);
 
-format({Io,Eval,Data},bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Io,io(Eval)]),
+format({Io,Eval,Data},bert) -> wf:info(?MODULE,"BERT {~p,_,_}: ~tp~n",[Io,{io,io(Eval),bin(Data)}]),
                                {binary,term_to_binary({Io,io(Eval),bin(Data)})};
 format({bin,Data},    bert) -> wf:info(?MODULE,"BERT {bin,_}: ~tp~n",[Data]),
                                {binary,term_to_binary({bin,Data})};
