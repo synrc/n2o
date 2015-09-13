@@ -9,9 +9,10 @@ info(#bin{data=Data}=BIN, Req, State) ->
     wf:info(?MODULE,"BIN Message: ~p",[BIN]),
     application:set_env(n2o,formatter,bert),
     Module = State#cx.module,
-    Resp = try Module:event(BIN) catch
-    	E:R -> wf:error(?MODULE,"Catch: ~p:~p~n~p", wf:stack(E, R)), #bin{data = <<>>}
-    end,
+    Resp = try Module:event(BIN)
+         catch E:R -> Stack = wf:stack(E, R),
+                      wf:error(?MODULE,"Catch: ~p:~p~n~p",Stack),
+                      #bin{data = Stack} end,
     {reply, wf:format(Resp), Req, State};
 
 info(#ftp{status="init"}=FTP, Req, #cx{}=State) ->
