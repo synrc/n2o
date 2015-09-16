@@ -27,6 +27,7 @@ body() ->
 event({show,Short,File}) ->
     wf:redirect("index.htm?room="++Short++"&code="++File);
 
+
 event(#bin{data=Data}) ->
     wf:info(?MODULE,"Binary Delivered ~p~n",[Data]),
     #bin{data = "SERVER"};
@@ -44,6 +45,10 @@ event({client,{User,Message}}=M) ->
     DTL = #dtl{file="message",app=review,
         bindings=[{user,User},{color,"gray"},{message,wf:html_encode(wf:jse(Message))}]},
     wf:insert_top(history, wf:jse(wf:render(DTL)));
+
+event(#client{data=Data}) ->
+    wf:info(?MODULE,"Client Delivered ~p~n",[Data]),
+    ok;
 
 event(init) ->
     Room = room(),

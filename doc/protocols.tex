@@ -155,14 +155,7 @@ It pings every 4-5 seconds from client-side to server thus allowing to
 determine client online presence. On reconnection or initial connect
 client sends N2O init marker telling to server to reinitialize the context.
 
-
-
-\vspace{1\baselineskip}
-\begin{lstlisting}
-    log_modules() -> [n2o_heart].
-\end{lstlisting}
-\vspace{1\baselineskip}
-
+\paragraph{}
 The {\bf heart} protocol defined client originated messages N2O, PING
 and server originated messages PONG, IO and NOP. IO message contains EVAL
 that contains UTF-8 JavaScript string and DATA reply contains any
@@ -192,31 +185,31 @@ will request new session otherwise you may put here information from
 previously settled cookies for attaching to existing session. This {\bf pid}
 disregarding set or empty will be bypassed as a parameter to N2O init marker.
 
-\newpage
 You can manually invoke session initialization inside existing session:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     ws.send('N2O,');
 \end{lstlisting}
-\vspace{1\baselineskip}
 
+\newpage
 In response on successfull WebSocket connection and enabled {\bf heart}
 protocol on the server you will recieve the IO message event.
 IO events are containers for function and data which can be used as parameters.
 There is no predefined semantic to IO message. Second element of a tuple
-will be directly evaluated in WebBrowser. IO events are normally not
-constructed on client. Heartbeat protocol PING request returns PONG
-or empty message NOP binary response; N2O messages returns IO messages
-with .
+will be directly evaluated in WebBrowser. Third element can contain data or error
+as for SPA and BIN protocols, and can contain only error for NITRO protocol.
+IO events are not constructed on client. N2O request returns IO messages with
+evaluation string and empty data or empty evaluation string
+with error in data field.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
     issue TEXT N2O expect IO
    N2O is TEXT "N2O," ++ PID
    PID is TEXT "" or any
-    IO is BERT {io,_,_} or
-          JSON {name:'io',eval,data}
+    IO is BERT {io,<<>>,Error}
+            or {io,Eval,<<>>}
 \end{lstlisting}
 \vspace{1\baselineskip}
 
@@ -234,6 +227,14 @@ module in {\bf log\_modules}:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
+    log_modules() -> [n2o_heart].
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Heartbeat protocol PING request returns PONG or empty NOP binary response.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
     issue TEXT PING expect PONG
   PONG is TEXT "PONG" or ""
 \end{lstlisting}
@@ -247,9 +248,9 @@ NITRO protocol consist of three protocol messages: {\bf pickle}, {\bf flush} and
 Pickled messages are used if you send messages over unencrypted
 channel and want to hide the content of the message,
 that was generated on server. You can use BASE64 pickling mechanisms
-with optional AES/RIPEMD160 encrypting.
-
-Here is definition to NITRO protocol in expect language:
+with optional AES/RIPEMD160 encrypting. NITRO messages on success alway
+return empty data field in IO message and
+error otherwise. Here is definition to NITRO protocol in expect language:
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
@@ -352,7 +353,8 @@ Thus you need still IO messages as a reply but originating massesage shouldn't
 rely in {\bf nitro} at all. For that purposes ingeneral and for {\bf synrc/games} sample
 in particular we created SPA protocol layer. SPA protocol consist of CLIENT originated message
 and SERVER message that could be originated both from client and server. All messages expects
-IO as a response.
+IO as a response. In IO response data field is always set with return value of the event
+while eval field is set with rendered actions as in NITRO protocol.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}

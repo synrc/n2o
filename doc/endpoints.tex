@@ -48,7 +48,7 @@ using various protocols. E.g. you man need to use client protocol:
 \vspace{1\baselineskip}
 \begin{lstlisting}
   JavaScript> ws.send(enc(tuple(atom('client'),
-                   tuple(atom('phone_auth'),"+380.."))));
+                   tuple(atom('phone_auth'),bin("+380..")))));
 \end{lstlisting}
 \vspace{1\baselineskip}
 
