@@ -1,4 +1,5 @@
 -name review@127.0.0.1
+-setcookie node_runner
 +pc unicode
 +K true
 +A 5
