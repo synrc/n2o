@@ -2,14 +2,19 @@ try { module.exports = {dec:dec,enc:enc}; } catch (e) { }
 
 // BERT Encoder
 
-function ar(o) { return Array.isArray(o.v)?o.v:utf8_toByteArray(o.v).v;}
-function fl(a) { return a.reduce(function(f,t){return f.concat(Array.isArray(t)?fl(t):t);},[]);}
+function uc(u1, u2) { var a = new Uint8Array(u1.byteLength + u2.byteLength);
+  a.set(u1, 0); a.set(u2, u1.byteLength); return a; };
+function ar(o) { return o.v instanceof Uint8Array ? o.v :
+    Array.isArray(o.v) ? new Uint8Array(o.v) : new Uint8Array(utf8_toByteArray(o.v).v);}
+function fl(a) { return a.reduce(function(f,t){ return uc(f, t instanceof Uint8Array ? t :
+    Array.isArray(t) ? fl(t) : new Uint8Array([t]) ); }, new Uint8Array()); }
 function atom(o)   { return {t:100,v:utf8_toByteArray(o).v}; }
-function bin(o)    { return {t:109,v:utf8_toByteArray(o).v}; }
+function bin(o)    { return {t:109,v:o instanceof ArrayBuffer ? new Uint8Array(o) :
+    o instanceof Uint8Array ? o : utf8_toByteArray(o).v}; }
 function tuple()   { return {t:104,v:Array.apply(null,arguments)}; }
 function list()    { return {t:108,v:Array.apply(null,arguments)}; }
 function number(o) { return {t:98,v:o}; }
-function enc(o)    { return new Uint8Array(fl([131,ein(o)])); }
+function enc(o)    { return fl([131,ein(o)]); }
 function ein(o)    { return Array.isArray(o)?en_108({t:108,v:o}):eval('en_'+o.t)(o); }
 function en_undefined(o) { return [106]; }
 function en_98(o)  { return [98,o.v>>>24,(o.v>>>16)&255,(o.v>>>8)&255,o.v&255]; }
