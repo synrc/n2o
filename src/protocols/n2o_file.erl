@@ -49,13 +49,13 @@ info(#ftp{status= <<"init">>, offset=Size, block=B, data=Msg}=FTP, Req, State) -
       {reply,wf:format(FTP#ftp{source=wf:version(), offset=0, block=(case B of 0 -> ?stop;_-> ?next end)}),Req,State} end;
 
 info(#ftp{sid=Sid,filename=File,hash=Hash,status= <<"send">>}=FTP, Req, State) ->
-  wf:info(?MODULE,"FTP:~p",[FTP] ),
+  wf:info(?MODULE,"FTP:~p",[FTP#ftp {data = <<>> }] ),
   Reply = try gen_server:call(n2o_async:pid({file,{Sid,File,Hash}}),FTP)
           catch E:R ->
             wf:error(?MODULE, "error call the sync: ~p ~p", [E, R]),
             FTP#ftp{data= wf:to_binary({E,R}), block=?stop} end,
 
-    wf:info(?MODULE,"reply ~p", [Reply]),
+    wf:info(?MODULE,"reply ~p", [Reply#ftp{data = <<>>}]),
     {reply,wf:format(Reply),Req, State};
 
 
