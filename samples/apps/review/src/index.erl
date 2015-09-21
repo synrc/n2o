@@ -4,6 +4,8 @@
 -include_lib("nitro/include/nitro.hrl").
 -include_lib("n2o/include/wf.hrl").
 
+-record(upload, {?ELEMENT_BASE(upload), name, value}).
+
 main() ->
     case wf:user() of
          undefined -> wf:redirect("login.htm"), #dtl{};
@@ -11,7 +13,7 @@ main() ->
 
 room() -> case wf:q(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
 content() -> case wf:q(<<"code">>) of undefined -> list(); _ -> code() end.
-code() -> case wf:q(<<"code">>) of <<>>  -> "NO CODE";
+code() -> case wf:q(<<"code">>) of <<>>  -> "no code";
                        E -> {ok,Bin} = file:read_file(E), wf:to_list(Bin) end.
 list() ->
     Room = room(),
@@ -22,7 +24,7 @@ list() ->
 body() ->
     wf:update(heading,#b{id=heading,body="Review: " ++ room()}),
     wf:update(logout,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
-    [ #button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
+    [ #upload{id=upload,value="",name=upload},#button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
 event({show,Short,File}) ->
     wf:redirect("index.htm?room="++Short++"&code="++File);
