@@ -4,8 +4,6 @@
 -include_lib("nitro/include/nitro.hrl").
 -include_lib("n2o/include/wf.hrl").
 
--record(upload, {?ELEMENT_BASE(upload), name, value}).
-
 main() ->
     case wf:user() of
          undefined -> wf:redirect("login.htm"), #dtl{};
