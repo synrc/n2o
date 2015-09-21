@@ -68,7 +68,7 @@ proc(init,Async) ->
   {ok, Async};
 
 proc(#ftp{sid=Sid, status= <<"send">>, data=Msg, offset=Offset, block=B}=FTP,
-    #handler{state=#ftp{data=State}}=Async) when erlang:byte_size(Msg) =< B ->
+    #handler{state=#ftp{data=State}}=Async) when erlang:byte_size(Msg) < B ->
     wf:info(?MODULE,"final peace", []),
 
     File = filename:join([?ROOT,wf:to_list(Sid),FTP#ftp.filename]),
