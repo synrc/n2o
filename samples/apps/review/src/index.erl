@@ -24,7 +24,7 @@ list() ->
 body() ->
     wf:update(heading,#b{id=heading,body="Review: " ++ room()}),
     wf:update(logout,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
-    [ #upload{id=upload,value="",name=upload},#button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
+    [ #span{id=upload},#button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
 event({show,Short,File}) ->
     wf:redirect("index.htm?room="++Short++"&code="++File);
@@ -54,6 +54,7 @@ event(#client{data=Data}) ->
 
 event(init) ->
     Room = room(),
+    wf:update(upload,#upload{id=upload}),
     wf:reg({topic,Room}),
     Res = wf:async("looper",fun index:loop/1),
     wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),

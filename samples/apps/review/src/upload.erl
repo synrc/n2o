@@ -4,15 +4,22 @@
 
 -record(upload, {?CTRL_BASE(upload), name, value}).
 
-render_element(#upload{id=Id} = R) ->
-  Uid = case Id of undefined -> wf:temp_id(); I -> I end,
-  Js = wf:json([{value,R#upload.value}]),
-  wf:wire(wf:f("Upload('#~s',~s);", [Uid, Js])),
-  E = wf_tags:emit_tag(<<"input">>, nitro:render(R#upload.body), [
-    {<<"id">>, Id},
-    {<<"type">>, <<"file">>},
-    {<<"class">>, R#upload.class},
-    {<<"style">>, <<"display:none">>},
-    {<<"name">>, R#upload.name} ]),
-  wf:info(index,"Render: ~p~n",[wf:to_binary(E)]),
-  wf:to_binary(E).
+render_element(#upload{id=Id} = U) ->
+    Uid = case Id of undefined -> wf:temp_id(); I -> I end,
+    wf:wire(select()),
+    wf:wire(browse()),
+    wf:wire(start()),
+    wf:wire(stop()),
+    Upload = #panel  { body = [
+             #input  { id   = Uid,         type    = <<"file">>, style = "display:none" },
+             #span   { id   = ftp_status,  body    = [] },
+             #span   { body = [
+             #button { id   = ftp_open,    body = "Browse" },
+             #button { id   = ftp_start,   body = "Upload" },
+             #button { id   = ftp_stop,    body = "Stop" }
+    ] } ] }, wf:render(Upload).
+
+browse() -> "{ var x=qi('ftp_open');  if (x) x.addEventListener('click', function(e) { qi('upload').click(); e.preventDefault(); }); }".
+start()  -> "{ var x=qi('ftp_start'); if (x) x.addEventListener('click', function(e) { ftp.start(); }); }".
+stop()   -> "{ var x=qi('ftp_stop');  if (x) x.addEventListener('click', function(e) { ftp.stop(); }); }".
+select() -> "{ var x=qi('upload');    if (x) x.addEventListener('change',function(e) { ftp.init(this.files[0],1); }); }".
