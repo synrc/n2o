@@ -8,7 +8,7 @@
 
 % temporaries
 -define(ROOT, code:priv_dir(n2o)).
--define(next, 1024).
+-define(next, 1024*1024).
 -define(stop, 0).
 
 % N2O Protocols
