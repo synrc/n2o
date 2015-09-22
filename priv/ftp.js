@@ -3,9 +3,9 @@ try { module.exports = {ftp:ftp}; } catch (e) { }
 // N2O File Transfer Protocol
 
 var ftp = {
-    $file: undefined, $reader: undefined, $block: undefined,
+    $file: undefined, $reader: undefined, $block: undefined, $offset: undefined,
     init: function(file, force) { ftp.$file = file; ftp.send('', 'init', 1); },
-    start: function() { ftp.$active = true; ftp.send_slice(0, ftp.$block); },
+    start: function() { ftp.$active = true; ftp.send_slice(ftp.$offset, ftp.$offset + ftp.$block); },
     stop: function() { ftp.$active = false; },
     send: function(data, status, force) {
         ws.send(enc(tuple(atom('ftp'),number(1), bin(ftp.$file.name), number(3),number(4),number(5),number(6),
@@ -19,6 +19,6 @@ var ftp = {
 
 $file.do = function(rsp) {
     var offset = rsp.v[6].v, block = rsp.v[10].v, status = rsp.v[9].v;
-    switch (status) { case 'init': console.log('Block: '+block); ftp.$block = block; break;
+    switch (status) { case 'init': ftp.$offset = offset; ftp.$block = block; break;
                       case 'send': var x = qi('ftp_status'); if(x) x.innerHTML = offset;
                                    if(block>0 && ftp.$active) ftp.send_slice(offset, offset+block); } }
