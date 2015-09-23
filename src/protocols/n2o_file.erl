@@ -10,7 +10,7 @@
 
 % N2O Protocols
 
-info(#ftp{sid=Sid,filename=Filename,hash=Hash,status= <<"init">>, offset=Size, block=B, data=Msg}=FTP, Req, State) ->
+info(#ftp{sid=Sid,filename=Filename,hash=Hash,status= <<"init">>, meta=MetaSize, offset=Size, block=B, data=Msg}=FTP, Req, State) ->
     application:set_env(n2o,formatter,bert),
 
     Dir   = lists:concat([?ROOT,'/',wf:to_list(Sid),'/']),
@@ -23,7 +23,7 @@ info(#ftp{sid=Sid,filename=Filename,hash=Hash,status= <<"init">>, offset=Size, b
     Name   = { Sid, Filename, Hash },
     Block  = case B of 0 -> ?stop; _ -> ?next end,
     Offset = case FSize >= Size of true -> FSize; false -> 0 end,
-    F2     = FTP#ftp{block = Block, offset = Offset, data = <<>> },
+    F2     = FTP#ftp{block = Block, offset = Offset, data = <<>>, meta=MetaSize },
 
     n2o_async:stop(file,Name),
     n2o_async:start(#handler{module=?MODULE,class=file,group=n2o, state=F2, name=Name}),
@@ -33,8 +33,8 @@ info(#ftp{sid=Sid,filename=Filename,hash=Hash,status= <<"init">>, offset=Size, b
 info(#ftp{sid=Sid,filename=File,hash=Hash,status= <<"send">>}=FTP, Req, State) ->
     wf:info(?MODULE,"FTP:~p",[FTP#ftp {data = <<>> }] ),
     Reply = try gen_server:call(n2o_async:pid({file,{Sid,File,Hash}}),FTP)
-          catch E:R -> wf:error(?MODULE, "error call the sync: ~p ~p", [E, R]),
-                       FTP#ftp{data= wf:to_binary({E,R}), block=?stop} end,
+          catch E:R -> wf:error(?MODULE, "error call the sync: ~p~n", [FTP#ftp{data = <<>>}]),
+                       FTP#ftp{data= <<>>, block=?stop} end,
     wf:info(?MODULE,"reply ~p", [Reply#ftp{data = <<>>}]),
     {reply,wf:format(Reply),Req, State};
 
@@ -44,11 +44,11 @@ info(Message, Req, State) -> {unknown,Message, Req, State}.
 
 proc(init,Async) -> {ok, Async};
 
-proc(#ftp{sid=Sid, data=Msg, status= <<"send">>, block=B,filename=Filename}=FTP,
-     #handler{state=#ftp{data=State,offset=Offset}}=Async) when erlang:byte_size(Msg) < B ->
-    case file:write_file(filename:join([?ROOT,wf:to_list(Sid),Filename]), <<Msg/binary>>, [append,raw]) of
-            ok -> {stop, normal, FTP#ftp{data= <<"">>,block=?stop}, Async#handler{state=FTP#ftp{block=?stop}}};
-   {error, Rw} -> {reply, {error, Rw}, Async} end;
+proc(#ftp{sid=Sid, data=Msg, status= <<"send">>, block=B, filename=Filename, hash=Hash}=FTP,
+     #handler{state=#ftp{data=State,meta=MetaSize,offset=Offset}}=Async) when Offset + B >= MetaSize ->
+    wf:info(?MODULE,"stop ~p", [FTP#ftp{data= <<"">>}]),
+    spawn(fun() -> supervisor:delete_child(n2o,{file,{Sid,Filename,Hash}}) end),
+    {stop, normal, FTP#ftp{data= <<"">>,block=?stop}, Async#handler{state=FTP#ftp{block=?stop, data= <<>>}}};
 
 proc(#ftp{sid=Sid,data=Msg, block=Block, filename=Filename}=FTP,
      #handler{state=#ftp{data=State, offset=Offset}}=Async) ->

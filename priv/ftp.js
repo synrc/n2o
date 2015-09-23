@@ -9,11 +9,14 @@ var ftp = {
     stop: function() { ftp.$active = false; },
     send: function(data, status, force) {
         ws.send(enc(tuple(atom('ftp'),number(1), bin(ftp.$file.name), number(3),number(4),number(5),number(6),
-        number(7),bin(data),bin(status||'send'),number(force || data.byteLength),number(11)))); },
+        number(ftp.$file.size),bin(data),bin(status||'send'),number(force || data.byteLength),number(11)))); },
     send_slice: function(start, end) {
         this.$reader = new FileReader();
         this.$reader.onloadend=function(e) {
              var res=e.target, data=e.target.result;
+             console.log(start);
+             console.log(end);
+             console.log(ftp.$file.size);
              if(res.readyState==FileReader.DONE&&data.byteLength>0) ftp.send(data); };
         this.$reader.readAsArrayBuffer(ftp.$file.slice(start,end)); } }
 
