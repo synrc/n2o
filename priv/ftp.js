@@ -14,9 +14,6 @@ var ftp = {
         this.$reader = new FileReader();
         this.$reader.onloadend=function(e) {
              var res=e.target, data=e.target.result;
-             console.log(start);
-             console.log(end);
-             console.log(ftp.$file.size);
              if(res.readyState==FileReader.DONE&&data.byteLength>0) ftp.send(data); };
         this.$reader.readAsArrayBuffer(ftp.$file.slice(start,end)); } }
 
