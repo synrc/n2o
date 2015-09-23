@@ -7,7 +7,7 @@ Features
 --------
 
 * Formatters: **BERT**, JSON — changeable on the fly
-* Protocols: [N2O](http://5ht.co/n2o.htm)
+* Protocols: [N2O](http://5ht.co/n2o.htm), [NITRO](http://5ht.co/n2o.htm), [SPA](http://5ht.co/n2o.htm), [FTP](http://5ht.co/ftp.htm)
 * Endpoints: **WebSocket**, HTTP, [REST](http://synrc.github.io/rest)
 * High Performance Protocol Relay
 * Smallest possible codebase — **1K** **LOC**
