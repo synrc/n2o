@@ -38,6 +38,8 @@ info(#ftp{sid=Sid,filename=File,hash=Hash,status= <<"send">>}=FTP, Req, State) -
     wf:info(?MODULE,"reply ~p", [Reply#ftp{data = <<>>}]),
     {reply,wf:format(Reply),Req, State};
 
+info(#ftp{status = <<"recv">>}=FTP, Req, State) -> {reply,wf:format(FTP),Req, State};
+
 info(#ftp{status = <<"relay">>}=FTP, Req, State) -> {reply,wf:format(FTP),Req, State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.
