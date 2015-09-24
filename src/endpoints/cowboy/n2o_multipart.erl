@@ -7,12 +7,6 @@
 % test multipart
 % curl -F file=@/Users/5HT/Desktop/40.tiff http://localhost:8000/multipart
 
-file_payload(FieldName, Filename, TempFilename, FileSize) ->
-    NewFileName = <<"/tmp/upload.jpg">>,
-    % error_logger:info_msg("FILE PAYLOAD: {~p, ~p, ~p}", [FieldName, Filename, TempFilename]),
-    {ok, BytesCopied} = file:copy(TempFilename, NewFileName),
-    ok.
-
 init(_Type, Req, []) ->
 	{ok, Req, undefined}.
 
