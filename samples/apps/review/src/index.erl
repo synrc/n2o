@@ -24,6 +24,16 @@ body() ->
     wf:update(logout,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
     [ #span{id=upload},#button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
+event(init) ->
+    Room = room(),
+    wf:update(upload,#upload{id=upload}),
+    wf:reg({topic,Room}),
+    Res = wf:async("looper",fun index:loop/1),
+    wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),
+    n2o_async:send("looper","waterline"),
+    [ event({client,{E#entry.from,E#entry.media}}) || E <-
+       lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
+
 event({show,Short,File}) ->
     wf:redirect("index.htm?room="++Short++"&code="++File);
 
@@ -50,15 +60,6 @@ event(#client{data=Data}) ->
     wf:info(?MODULE,"Client Delivered ~p~n",[Data]),
     ok;
 
-event(init) ->
-    Room = room(),
-    wf:update(upload,#upload{id=upload}),
-    wf:reg({topic,Room}),
-    Res = wf:async("looper",fun index:loop/1),
-    wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),
-    n2o_async:send("looper","waterline"),
-    [ event({client,{E#entry.from,E#entry.media}}) || E <-
-       lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
 
 event(logout) -> wf:logout(), wf:redirect("login.htm");
 event(Event) -> wf:info(?MODULE,"Event: ~p", [Event]).

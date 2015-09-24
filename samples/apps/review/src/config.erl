@@ -12,5 +12,7 @@ log_modules() -> % any
     n2o_client,
     n2o_stream,
     n2o_nitrogen,
+    kvs,
+    store_mnesia,
     index
   ].
