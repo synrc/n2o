@@ -14,3 +14,4 @@ samples/deps
 *.toc
 **/ebin/**
 **/Mnesia*/**
+test/bert.data
