@@ -50,9 +50,13 @@ proc(init,Async) -> {ok, Async};
 
 proc(#ftp{sid=Sid, data=Msg, status= <<"send">>, block=B, filename=Filename, hash=Hash}=FTP,
      #handler{state=#ftp{data=State,meta=MetaSize,offset=Offset}}=Async) when Offset + B >= MetaSize ->
-    wf:info(?MODULE,"stop ~p", [FTP#ftp{data= <<"">>}]),
-    spawn(fun() -> supervisor:delete_child(n2o,{file,{Sid,Filename,Hash}}) end),
-    {stop, normal, FTP#ftp{data= <<"">>,block=?stop}, Async#handler{state=FTP#ftp{block=?stop, data= <<>>}}};
+	wf:info(?MODULE,"stop ~p, last piece size: ~p", [FTP#ftp{data= <<"">>}, erlang:byte_size(Msg)]),
+	case file:write_file(filename:join([?ROOT,wf:to_list(Sid),Filename]), <<Msg/binary>>, [append,raw]) of
+		{error, Rw} -> {reply, {error, Rw}, Async};
+		ok ->
+			spawn(fun() -> supervisor:delete_child(n2o,{file,{Sid,Filename,Hash}}) end),
+			{stop, normal, FTP#ftp{data= <<"">>,block=?stop}, Async#handler{state=FTP#ftp{block=?stop, data= <<>>}}}
+	end;
 
 proc(#ftp{sid=Sid,data=Msg, block=Block, filename=Filename}=FTP,
      #handler{state=#ftp{data=State, offset=Offset}}=Async) ->
