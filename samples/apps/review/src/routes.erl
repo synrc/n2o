@@ -22,6 +22,7 @@ route_prefix(P) -> route(P).
 route(<<>>)              -> login;
 route(<<"counter",_/binary>>) -> counter;
 route(<<"chat",_/binary>>) -> chat;
+route(<<"doc",_/binary>>) -> doc;
 route(<<"index",_/binary>>) -> index;
 route(<<"static/spa/index",_/binary>>) -> index;
 route(<<"static/spa/login",_/binary>>) -> login;
