@@ -3,6 +3,7 @@
 
 var active      = false,
     debug       = false,
+    session     = "site-sid",
     protocol    = window.location.protocol == 'https:' ? "wss://" : "ws://",
     querystring = window.location.pathname + window.location.search,
     host        = null == transition.host ? window.location.hostname : transition.host,
@@ -20,6 +21,7 @@ function qi(name) { return document.getElementById(name); }
 function qs(name) { return document.querySelector(name);  }
 function qn(name) { return document.createElement(name);  }
 function is(x,num,name) { return x.t==106?false:(x.v.length === num && x.v[0].v === name); }
+function co(name) { match=document.cookie.match(new RegExp(name+'=([^;]+)')); return match?match[1]:undefined; }
 
 /// N2O Protocols
 
