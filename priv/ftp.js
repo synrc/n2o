@@ -8,7 +8,7 @@ var ftp = {
     start: function() { ftp.$active = true; ftp.send_slice(ftp.$offset, ftp.$offset + ftp.$block); },
     stop: function() { ftp.$active = false; },
     send: function(data, status, force) {
-        ws.send(enc(tuple(atom('ftp'),number(1), bin(ftp.$file.name), number(3),number(4),number(5),number(6),
+        ws.send(enc(tuple(atom('ftp'),bin(co(session)), bin(ftp.$file.name), number(3),number(4),number(5),number(6),
         number(ftp.$file.size),bin(data),bin(status||'send'),number(force || data.byteLength),number(11)))); },
     send_slice: function(start, end) {
         this.$reader = new FileReader();
