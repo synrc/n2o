@@ -53,6 +53,7 @@ html_encode(L, true) -> L;
 html_encode(L, whites) -> html_encode_whites(wf:to_list(lists:flatten([L]))).
 html_encode(<<>>) -> [];
 html_encode([]) -> [];
+html_encode([$\n|T]) -> "<br>" ++ html_encode(T);
 html_encode([H|T]) ->
 	case H of
 		$< -> "&lt;" ++ html_encode(T);
