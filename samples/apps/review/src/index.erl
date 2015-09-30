@@ -42,6 +42,10 @@ event(#bin{data=Data}) ->
     wf:info(?MODULE,"Binary Delivered ~p~n",[Data]),
     #bin{data = "SERVER"};
 
+event(#ftp{}=Data) ->
+    wf:info(?MODULE,"FTP Delivered ~p~n",[Data]),
+    ok;
+
 event(chat) ->
     wf:info(?MODULE,"Chat pressed~n",[]),
     User = wf:user(),
@@ -52,19 +56,19 @@ event(chat) ->
 
 event({client,{User,Message}}=M) ->
     wf:wire(#jq{target=message,method=[focus,select]}),
-    DTL = #dtl{file="message",app=review,
-        bindings=[{user,User},{color,"gray"},{message,wf:html_encode(wf:jse(Message))}]},
+    HTML = wf:html_encode(wf:to_list(Message)),
+    wf:info(?MODULE,"HTML: ~tp~n",[HTML]),
+    DTL = #dtl{file="message",app=review,bindings=[{user,User},{color,"gray"},{message,HTML}]},
     wf:insert_top(history, wf:jse(wf:render(DTL)));
 
 event(#client{data=Data}) ->
     wf:info(?MODULE,"Client Delivered ~p~n",[Data]),
     ok;
 
-
 event(logout) -> wf:logout(), wf:redirect("login.htm");
 event(Event) -> wf:info(?MODULE,"Event: ~p", [Event]).
 
 loop(M) ->
     DTL = #dtl{file="message",app=review,bindings=[{user,"system"},{message,M},{color,"silver"}]},
-    wf:insert_top(history, wf:jse(wf:render(DTL))),
+    wf:insert_top(history, wf:render(DTL)),
     wf:flush().
