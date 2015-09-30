@@ -18,21 +18,22 @@ event(search)         -> wf:update(results,#panel{id=results}),
                          Pid = self(), Query = wf:q(query), spawn(fun() -> search(Pid,Query) end), ok;
 event(_)              -> [].
 
+sections(Path,Match,Pid)  ->
+    Page=filename:basename(Path),
+    App = lists:nth(4,lists:reverse(filename:split(Path))),
+    Forms=#panel{body=[
+          #h5{body=filename:join([App,filename:basename(Page,".htm")])}, [ begin
+              Url=["http://synrc.com/apps/",
+                   wf:to_binary(App),"/doc/web/",Page,$#,Sec],
+              #panel{body=#link{body=T,href=Url,target="_blank"}}
+          end||[Sec,T] <- Match]]},
+    Pid ! {client,Forms}.
+
 re(Q) -> <<"(?:<h\\d[^>]*?\\ id=[\'\"](sec\\d{1,3})[\'\"][^>]*?>(.*?)<\\/h\\d>.*?)+",Q/binary,"[^>]+<">>.
 search(Pid,Q) ->
     lists:map(fun(Path) -> spawn(fun() ->
         {ok,Bin}=file:read_file(Path),
         case re:run(Bin,re(Q),[unicode,global,{capture,[1,2],binary},dotall,caseless]) of
-            {match,Match} ->
-                Page=filename:basename(Path),
-                App = lists:nth(4,lists:reverse(filename:split(Path))),
-                Forms=#panel{body=[
-                    #h5{body=Page},
-                    [ begin
-                        Url=["http://synrc.com/apps/",wf:to_binary(App),"/doc/web/",Page,$#,Sec],
-                        #panel{body=#link{body=T,href=Url,target="_blank"}}
-                        end||[Sec,T] <- Match]
-                    ]},
-                Pid ! {client,Forms};
+            {match,Match} -> sections(Path,Match,Pid);
             nomatch -> [] end end) end,
     filelib:wildcard(application:get_env(n2o,search,"/var/www/sites/synrc.com/apps/*/doc/web/*.htm"))).
