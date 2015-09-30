@@ -13,8 +13,8 @@ body() ->
    #span   { body="Join/Create Feed: " }, #textbox{id=pass},
    #button { id=loginButton, body="Login",postback=login,source=[user,pass]} ].
 
-%event(init) ->
-%    n2o_session:ensure_sid([],?CTX,[]), ok;
+event(init) ->
+    n2o_session:ensure_sid([],?CTX,[]), ok;
 
 event(login) ->
     User = case wf:q(user) of <<>> -> "anonymous";
