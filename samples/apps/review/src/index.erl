@@ -27,6 +27,7 @@ body() ->
 event(init) ->
     Room = room(),
     wf:update(upload,#upload{id=upload}),
+    wf:reg(n2o_session:session_id()),
     wf:reg({topic,Room}),
     Res = wf:async("looper",fun index:loop/1),
     wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),
