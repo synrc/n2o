@@ -13,7 +13,6 @@ ensure_sid(State, Ctx, []) -> ensure_sid(State, Ctx, site);
 ensure_sid(State, Ctx, From) ->
     SessionId   = wf:cookie_req(session_cookie_name(From), Ctx#cx.req),
     wf:info(?MODULE,"Ensure SID ~p-sid=~p~n",[From,SessionId]),
-    try wf:reg(SessionId) catch _:_ -> ok end,
     session_sid(State, Ctx, SessionId, From).
 
 session_sid(SID, Source) -> session_sid([], ?CTX, SID, Source).
