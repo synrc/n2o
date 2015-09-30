@@ -13,6 +13,7 @@ body() -> [
     #panel{id=results}
     ].
 
+event(init)           -> n2o_session:ensure_sid([],?CTX,[]), ok;
 event({client,Panel}) -> wf:insert_top(results,Panel);
 event(search)         -> wf:update(results,#panel{id=results}),
                          Pid = self(), Query = wf:q(query), spawn(fun() -> search(Pid,Query) end), ok;
