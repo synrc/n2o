@@ -18,7 +18,10 @@ info({init,Rest},Req,State) ->
                     Pid ! {'N2O',self()},
                     {ok,receive_actions(Req)} end,
     case InitActionsReply of
-         {ok,InitActions} -> UserCx = try Module:event(init)
+         {ok,InitActions} -> UserCx = try Module:event(init),
+                                     case wf:config(n2o,auto_session) of
+                              disabled -> skip;
+                                      _ -> n2o_session:ensure_sid([],?CTX,[]) end
                                     catch C:E -> Error = wf:stack(C,E),
                                                  wf:error(?MODULE,"Event Init: ~p:~p~n~p",Error),
                                                  Error end,
