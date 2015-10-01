@@ -29,9 +29,6 @@ event(init) ->
     [ event({client,{E#entry.from,E#entry.media}}) || E <-
        lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
 
-event({show,Short,File}) ->
-    wf:redirect("index.htm?room="++Short++"&code="++File);
-
 event(#bin{data=Data}) ->
     wf:info(?MODULE,"Binary Delivered ~p~n",[Data]),
     #bin{data = "SERVER"};
