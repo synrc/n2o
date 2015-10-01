@@ -30,14 +30,13 @@ event(init) ->
     wf:reg(n2o_session:session_id()),
     wf:reg({topic,Room}),
     Res = wf:async("looper",fun index:loop/1),
-    wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),
     n2o_async:send("looper","waterline"),
+    wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),
     [ event({client,{E#entry.from,E#entry.media}}) || E <-
        lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
 
 event({show,Short,File}) ->
     wf:redirect("index.htm?room="++Short++"&code="++File);
-
 
 event(#bin{data=Data}) ->
     wf:info(?MODULE,"Binary Delivered ~p~n",[Data]),
@@ -71,5 +70,5 @@ event(Event) -> wf:info(?MODULE,"Event: ~p", [Event]).
 
 loop(M) ->
     DTL = #dtl{file="message",app=review,bindings=[{user,"system"},{message,M},{color,"silver"}]},
-    wf:insert_top(history, wf:render(DTL)),
+    wf:insert_top(history, wf:jse(wf:render(DTL))),
     wf:flush().
