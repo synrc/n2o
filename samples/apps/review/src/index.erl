@@ -44,7 +44,7 @@ event(chat) ->
 
 event(#client{data={User,Message}}) ->
     wf:wire(#jq{target=message,method=[focus,select]}),
-    HTML = wf:html_encode(wf:to_list(Message)),
+    HTML = wf:to_list(Message),
     wf:info(?MODULE,"HTML: ~tp~n",[HTML]),
     DTL = #dtl{file="message",app=review,bindings=[{user,User},{color,"gray"},{message,HTML}]},
     wf:insert_top(history, wf:jse(wf:render(DTL)));
@@ -53,9 +53,11 @@ event(#bin{data=Data}) ->
     wf:info(?MODULE,"Binary Delivered ~p~n",[Data]),
     #bin{data = "SERVER"};
 
-event(#ftp{}=Data) ->
+event(#ftp{sid=Sid,filename=Filename}=Data) ->
     wf:info(?MODULE,"FTP Delivered ~p~n",[Data]),
-    ok;
+    erlang:put(message,wf:render(#link{href=iolist_to_binary(["/static/",Sid,"/",Filename]),
+                                       body=Filename})),
+    event(chat);
 
 event(Event) ->
     wf:info(?MODULE,"Event: ~p", [Event]),
