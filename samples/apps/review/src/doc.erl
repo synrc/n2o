@@ -6,13 +6,13 @@
 
 main() -> #dtl{file="doc",app=review,bindings=[{body,body()}]}.
 
-body() -> [
-    wf:user("anonymous"),
-    #h2{body= "Docs search"},
-    #textbox{ id=query },
-    #button {body="Search",postback=search,source=[query]},
-    #panel{id=results}
-    ].
+body() -> case wf:user() of
+               undefined -> wf:user("anonymous");
+                       _ -> skip end,
+  [ #h2      { body = "Docs search" },
+    #textbox { id   = query },
+    #button  { body = "Search", postback=search, source=[query] },
+    #panel   { id   = results } ].
 
 event({client,Panel}) -> wf:insert_top(results,Panel);
 event(search)         -> wf:update(results,#panel{id=results}),
