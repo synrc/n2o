@@ -25,7 +25,7 @@ sections(Path,Match,Pid)  ->
           #h5{body=filename:join([App,filename:basename(Page,".htm")])}, [ begin
               Url=["index.htm?code=",
                    wf:pickle(iolist_to_binary([wf:to_binary(App),"/doc/web/",Page,$#,Sec]))],
-              #panel{body=#link{body=T,href=Url,target="_blank"}}
+              #panel{body=#link{body=T,href=Url}}
           end||[Sec,T] <- Match]]},
     Pid ! {client,Forms}.
 
