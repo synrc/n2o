@@ -6,14 +6,15 @@ SUP { font-size:10pt; }
 html { zoom: 0.8; }
 BODY {   font-size:14pt; font-family: Calibri, Lucida Sans, "Lucida Grande"; }
 TD { font-size:18pt; margin: 0 auto; padding-right: 20px; }
-textarea { padding: 10px; }
+textarea { font-family: "Lucida Console", Monaco, monospace; padding: 10px; }
 input { font-size:28pt; width: 50%; margin:15px 15px 5px 5px; }
 button { font-size:20pt; margin-top:15px; padding: 10px; }
 H1 { color: blue; font-weight: bold; font-size:26pt; margin-top:20px; margin-bottom:10px; margin-right:6px; }
 H2 { color: darkblue; font-size:18pt; margin-top:20px; margin-bottom:10px; margin-right:6px; }
 H3 { font-size:14pt; margin-top:20px; margin-bottom:10px; margin-right:6px; } 
 P { font-size:18pt; margin-top: 0px; margin-bottom: 8px; }
-P.poem { font-size:14pt; margin-top: 0px; margin-bottom: 8px; white-space: pre;}
+#frame { width: 700px; height: 1000px; border: 1px solid black; }
+.poem { font-size:14pt; margin-top: 0px; margin-bottom: 8px; white-space: pre;}
 LI { font-size:12pt; }
 pre { font-size:10pt; font-family: Calibri, Lucida Console; }
 .menu { font-size:12pt; font-family: Calibri, Lucida Sans Unicode; color: red; }

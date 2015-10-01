@@ -23,8 +23,8 @@ sections(Path,Match,Pid)  ->
     App = lists:nth(4,lists:reverse(filename:split(Path))),
     Forms=#panel{body=[
           #h5{body=filename:join([App,filename:basename(Page,".htm")])}, [ begin
-              Url=["http://synrc.com/apps/",
-                   wf:to_binary(App),"/doc/web/",Page,$#,Sec],
+              Url=["http://localhost:8000/index.htm?code=",
+                   wf:pickle(iolist_to_binary([wf:to_binary(App),"/doc/web/",Page,$#,Sec]))],
               #panel{body=#link{body=T,href=Url,target="_blank"}}
           end||[Sec,T] <- Match]]},
     Pid ! {client,Forms}.

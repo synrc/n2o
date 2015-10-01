@@ -7,25 +7,19 @@
 main() ->
     case wf:user() of
          undefined -> wf:redirect("login.htm"), #dtl{};
-         _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,content()}]} end.
+         _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,list()}]} end.
 
-room() -> case wf:q(<<"room">>) of <<>> -> "lobby"; E -> wf:to_list(E) end.
-content() -> case wf:q(<<"code">>) of undefined -> list(); _ -> code() end.
-code() -> case wf:q(<<"code">>) of <<>>  -> "no code";
-                       E -> {ok,Bin} = file:read_file(E), wf:to_list(Bin) end.
-list() ->
-    Room = room(),
-    #ul{body=[ #li{body=#link{body=filename:basename(File),
-                              postback={show,filename:basename(File),File}}}
-     || File<-filelib:wildcard(code:priv_dir(review)++"/snippets/"++Room++"/*") ]}.
+code() -> case wf:q(<<"code">>) of undefined  -> "../privacy.htm";
+                                    Code -> wf:to_list(wf:depickle(Code)) end.
+list() -> "<iframe src=http://synrc.com/apps/"++code()++" frameborder=0 width=700 height=1250></iframe>".
 
 body() ->
-    wf:update(heading,#b{id=heading,body="Review: " ++ room()}),
+    wf:update(heading,#b{id=heading,body="Review: " ++ code()}),
     wf:update(logout,#button{id=logout, body="Logout " ++ wf:user(), postback=logout}),
     [ #span{id=upload},#button { id=send, body= <<"Chat">>, postback=chat, source=[message] } ].
 
 event(init) ->
-    Room = room(),
+    Room = code(),
     wf:update(upload,#upload{id=upload}),
     wf:reg(n2o_session:session_id()),
     wf:reg({topic,Room}),
@@ -50,7 +44,7 @@ event(chat) ->
     wf:info(?MODULE,"Chat pressed~n",[]),
     User = wf:user(),
     Message = wf:q(message),
-    Room = room(),
+    Room = code(),
     kvs:add(#entry{id=kvs:next_id("entry",1),from=wf:user(),feed_id={room,Room},media=Message}),
     wf:send({topic,Room},{client,{User,Message}});
 
