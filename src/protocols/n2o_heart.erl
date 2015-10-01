@@ -35,6 +35,5 @@ info({stop,Name}=Message,Req,State)              -> {reply, <<"OK">>, Req, State
 info({restart,Name}=Message,Req,State)           -> {reply, <<"OK">>, Req, State};
 info({async,Name,Function}=Message,Req,State)    -> {reply, <<"OK">>, Req, State};
 info({flush}=Message,Req,State)                  -> {reply, <<"OK">>, Req, State};
-info({flush,Key}=Message,Req,State)              -> {reply, <<"OK">>, Req, State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.
