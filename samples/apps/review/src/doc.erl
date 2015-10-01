@@ -7,6 +7,7 @@
 main() -> #dtl{file="doc",app=review,bindings=[{body,body()}]}.
 
 body() -> [
+    wf:user("anonymous"),
     #h2{body= "Docs search"},
     #textbox{ id=query },
     #button {body="Search",postback=search,source=[query]},
