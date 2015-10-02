@@ -30,9 +30,9 @@ function en_108(o) { var l=o.v.length,r=[]; for(var i=0;i<l;i++)r.push(ein(o.v[i
 
 function nop(b) { return []; };
 function int(b) { return b==1?sx.getUint8(ix++):sx.getInt32((a=ix,ix+=4,a)); };
-function dec(d) { sx=new DataView(d);ix=0; if(sx.getUint8(ix++)!==131)throw("BERT?"); return din();};
+function dec(d) { sx=new DataView(d);ix=0; if(sx.getUint8(ix++)!==131)throw("BERT?"); return din(); };
 function str(b) { var dv,sz=(b==2?sx.getUint16(ix):sx.getInt32(ix));ix+=b;
-                  return utf8_dec(new DataView(sx.buffer.slice(ix,ix+=sz))); };
+                  var r=new DataView(sx.buffer.slice(ix,ix+=sz)); return b==2?utf8_dec(r):r; };
 function run(b) { var sz=(b==1?sx.getUint8(ix):sx.getUint32(ix)),r=[]; ix+=b;
                   for(var i=0;i<sz;i++) r.push(din()); if(b==4)ix++; return r; };
 function din()  { var c=sx.getUint8(ix++),x; switch(c) { case 97: x=[int,1];break;
