@@ -5,7 +5,8 @@ try { module.exports = {dec:dec,enc:enc}; } catch (e) { }
 function uc(u1,u2) { if (u1.byteLength == 0) return u2; if (u2.byteLength == 0) return u1;
                      var a = new Uint8Array(u1.byteLength + u2.byteLength);
                      a.set(u1, 0); a.set(u2, u1.byteLength); return a; };
-function ar(o)     { return o.v instanceof Uint8Array ? o.v : Array.isArray(o.v) ? new Uint8Array(o.v) : new Uint8Array(utf8_toByteArray(o.v).v);}
+function ar(o)     { return o.v instanceof ArrayBuffer ? new Uint8Array(o.v) : o.v instanceof Uint8Array ? o.v :
+                     Array.isArray(o.v) ? new Uint8Array(o.v) : new Uint8Array(utf8_toByteArray(o.v).v);}
 function fl(a)     { return a.reduce(function(f,t){ return uc(f, t instanceof Uint8Array ? t :
                      Array.isArray(t) ? fl(t) : new Uint8Array([t]) ); }, new Uint8Array()); }
 function atom(o)   { return {t:100,v:utf8_toByteArray(o).v}; }
@@ -22,7 +23,8 @@ function en_106(o) { return [106];}
 function en_100(o) { return [100,o.v.length>>>8,o.v.length&255,ar(o)]; }
 function en_107(o) { return [107,o.v.length>>>8,o.v.length&255,ar(o)];}
 function en_104(o) { var l=o.v.length,r=[]; for(var i=0;i<l;i++)r[i]=ein(o.v[i]); return [104,l,r]; }
-function en_109(o) { var l=o.v.length;return[109,l>>>24,(l>>>16)&255,(l>>>8)&255,l&255,ar(o)]; }
+function en_109(o) { var l=o.v instanceof ArrayBuffer ? o.v.byteLength : o.v.length;
+                     return[109,l>>>24,(l>>>16)&255,(l>>>8)&255,l&255,ar(o)]; }
 function en_108(o) { var l=o.v.length,r=[]; for(var i=0;i<l;i++)r.push(ein(o.v[i]));
                      return o.v.length==0?[106]:[108,l>>>24,(l>>>16)&255,(l>>>8)&255,l&255,r,106]; }
 
@@ -32,7 +34,7 @@ function nop(b) { return []; };
 function int(b) { return b==1?sx.getUint8(ix++):sx.getInt32((a=ix,ix+=4,a)); };
 function dec(d) { sx=new DataView(d);ix=0; if(sx.getUint8(ix++)!==131)throw("BERT?"); return din(); };
 function str(b) { var dv,sz=(b==2?sx.getUint16(ix):sx.getInt32(ix));ix+=b;
-                  var r=new DataView(sx.buffer.slice(ix,ix+=sz)); return b==2?utf8_dec(r):r; };
+                  var r=sx.buffer.slice(ix,ix+=sz); return b==2?utf8_dec(r):r; };
 function run(b) { var sz=(b==1?sx.getUint8(ix):sx.getUint32(ix)),r=[]; ix+=b;
                   for(var i=0;i<sz;i++) r.push(din()); if(b==4)ix++; return r; };
 function din()  { var c=sx.getUint8(ix++),x; switch(c) { case 97: x=[int,1];break;
