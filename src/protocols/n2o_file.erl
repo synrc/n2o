@@ -10,7 +10,7 @@
 
 % N2O Protocols
 
-info(#ftp{status= <<"event">>}=FTP, Req, State) ->
+info(#ftp{status= <<"event-",_/binary>>}=FTP, Req, State) ->
     wf:info(?MODULE,"FTP Event Message: ~p",[FTP]),
     Module = State#cx.module,
     Reply = try Module:event(FTP)
@@ -53,14 +53,16 @@ info(Message, Req, State) -> {unknown,Message, Req, State}.
 
 % N2O Handlers
 
-proc(init,Async) -> {ok, Async};
+proc(init,Async=#handler{state=FTP=#ftp{sid=Sid}}) ->
+    wf:send(Sid,FTP#ftp{data = <<>>, status = <<"event-init">>}),
+    {ok, Async};
 
 proc(#ftp{sid=Sid, data=Msg, status= <<"send">>, block=B, filename=Filename, hash=Hash}=FTP,
      #handler{state=#ftp{data=State,meta=MetaSize,offset=Offset}}=Async) when Offset + B >= MetaSize ->
 	wf:info(?MODULE,"stop ~p, last piece size: ~p", [FTP#ftp{data= <<"">>}, erlang:byte_size(Msg)]),
 	case file:write_file(filename:join([?ROOT,wf:to_list(Sid),Filename]), <<Msg/binary>>, [append,raw]) of
 		{error, Rw} -> {reply, {error, Rw}, Async};
-		ok -> wf:send(Sid,FTP#ftp{data = <<>>, status = <<"event">>}),
+		ok -> wf:send(Sid,FTP#ftp{data = <<>>, status = <<"event-transmitted">>}),
 			spawn(fun() -> supervisor:delete_child(n2o,{file,{Sid,Filename,Hash}}) end),
 			{stop, normal, FTP#ftp{data= <<"">>,block=?stop}, Async#handler{state=FTP#ftp{block=?stop, data= <<>>}}}
 	end;
