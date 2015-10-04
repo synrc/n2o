@@ -8,6 +8,17 @@
 -define(next, 256*1024). % 256K chunks for best 22MB/s speed
 -define(stop, 0).
 
+% callbacks
+
+filename(Root,Sid,Filename,Hash,Options) ->
+    Dir   = lists:concat([Root,'/',wf:to_list(Sid),'/']),
+    case Options of
+        [ensure_dir] -> filelib:ensure_dir(Dir);
+        _ -> skip end,
+    File  = filename:join([Dir,Filename]).
+
+fn() -> wf:config(n2o,filename,n2o_file).
+
 % N2O Protocols
 
 info(#ftp{status= {event,_}}=FTP, Req, State) ->
@@ -20,10 +31,8 @@ info(#ftp{status= {event,_}}=FTP, Req, State) ->
 info(#ftp{sid=Sid,filename=Filename,hash=Hash,status= <<"init">>, meta=MetaSize, offset=Size, block=B, data=Msg}=FTP, Req, State) ->
     application:set_env(n2o,formatter,bert),
 
-    Dir   = lists:concat([?ROOT,'/',wf:to_list(Sid),'/']),
-    File  = filename:join([Dir,Filename]),
+    File = (fn()):filename(?ROOT,Sid,Filename,Hash,[ensure_dir]),
     FSize = case file:read_file_info(File) of {ok, Fi} -> Fi#file_info.size; {error, _} -> 0 end,
-    filelib:ensure_dir(Dir),
 
     wf:info(?MODULE, "File Transfer Init: ~p: Offset:~p Block: ~p~n",[File, FSize, B]),
 
@@ -60,17 +69,17 @@ proc(init,Async=#handler{state=FTP=#ftp{sid=Sid}}) ->
 proc(#ftp{sid=Sid, data=Msg, status= <<"send">>, block=B, filename=Filename, hash=Hash}=FTP,
      #handler{state=#ftp{data=State,meta=MetaSize,offset=Offset}}=Async) when Offset + B >= MetaSize ->
 	wf:info(?MODULE,"stop ~p, last piece size: ~p", [FTP#ftp{data= <<"">>}, erlang:byte_size(Msg)]),
-	case file:write_file(filename:join([?ROOT,wf:to_list(Sid),Filename]), <<Msg/binary>>, [append,raw]) of
+	case file:write_file((fn()):filename(?ROOT,Sid,Filename,Hash,skip),<<Msg/binary>>,[append,raw]) of
 		{error, Rw} -> {reply, {error, Rw}, Async};
 		ok -> wf:send(Sid,FTP#ftp{data = <<>>, status = {event,stop}}),
 			spawn(fun() -> supervisor:delete_child(n2o,{file,{Sid,Filename,Hash}}) end),
 			{stop, normal, FTP#ftp{data= <<"">>,block=?stop}, Async#handler{state=FTP#ftp{block=?stop, data= <<>>}}}
 	end;
 
-proc(#ftp{sid=Sid,data=Msg, block=Block, filename=Filename}=FTP,
+proc(#ftp{sid=Sid,data=Msg, block=Block, filename=Filename,hash=Hash}=FTP,
      #handler{state=#ftp{data=State, offset=Offset}}=Async) ->
     F2 = FTP#ftp{status= <<"send">>, offset=Offset + Block },
     wf:info(?MODULE,"send ~p", [F2#ftp{data= <<"">>}]),
-    case file:write_file(filename:join([?ROOT,wf:to_list(Sid),Filename]), <<Msg/binary>>, [append,raw]) of
+    case file:write_file((fn()):filename(?ROOT,Sid,Filename,Hash,skip),<<Msg/binary>>,[append,raw]) of
             ok -> {reply, F2#ftp{data= <<"">>}, Async#handler{state=F2}};
    {error, Rw} -> {reply, {error, Rw}, Async} end.
