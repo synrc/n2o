@@ -28,9 +28,9 @@ info(#ftp{sid=Sid,filename=FileName,status= <<"init">>,block=Block,offset=Offset
     FilePath=filename:join(Root,RelPath),
     ok=filelib:ensure_dir(FilePath),
     FileSize=case file:read_file_info(FilePath) of {ok,Fi} -> Fi#file_info.size; {error,_} -> 0 end,
-    
+
     wf:info(?MODULE,"Info Init: ~p Offset: ~p Block: ~p~n",[FilePath,FileSize,Block]),
-    
+
     Name={Sid,filename:basename(RelPath),TotalSize},
     Block2=case Block of 0 -> ?STOP; _ -> ?NEXT end,
     Offset2=case FileSize >= Offset of true -> FileSize; false -> 0 end,
