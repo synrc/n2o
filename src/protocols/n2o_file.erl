@@ -63,21 +63,21 @@ proc(init,#handler{state=#ftp{sid=Sid}=FTP}=Async) ->
     wf:send(Sid,FTP#ftp{data= <<>>,status={event,init}}),
     {ok,Async};
 
-proc(#ftp{sid=Sid,data=Data,status= <<"send">>,block=Block,filename=RelPath}=FTP,
-     #handler{state=#ftp{data=State,size=TotalSize,offset=Offset}}=Async) when Offset+Block >= TotalSize ->
+proc(#ftp{sid=Sid,data=Data,status= <<"send">>,block=Block}=FTP,
+     #handler{state=#ftp{data=State,size=TotalSize,offset=Offset,filename=RelPath}}=Async) when Offset+Block >= TotalSize ->
 	wf:info(?MODULE,"Proc Stop ~p, last piece size: ~p", [FTP#ftp{data= <<>>},byte_size(Data)]),
 	case file:write_file(filename:join(?ROOT,RelPath),<<Data/binary>>,[append,raw]) of
 		{error,Reason} -> {reply,{error,Reason},Async};
 		ok ->
             FTP2=FTP#ftp{data= <<>>,block=?STOP},
-            wf:send(Sid,FTP2#ftp{status={event,stop}}),
+            wf:send(Sid,FTP2#ftp{status={event,stop},filename=RelPath}),
 			spawn(fun() -> supervisor:delete_child(n2o,{file,{Sid,filename:basename(RelPath),TotalSize}}) end),
 			{stop,normal,FTP2,Async#handler{state=FTP2}} end;
 
-proc(#ftp{sid=Sid,data=Data,block=Block,filename=RelPath}=FTP,
-     #handler{state=#ftp{data=State,offset=Offset}}=Async) ->
+proc(#ftp{sid=Sid,data=Data,block=Block}=FTP,
+     #handler{state=#ftp{data=State,offset=Offset,filename=RelPath}}=Async) ->
     FTP2=FTP#ftp{status= <<"send">>,offset=Offset+Block },
     wf:info(?MODULE,"Proc Process ~p",[FTP2#ftp{data= <<>>}]),
     case file:write_file(filename:join(?ROOT,RelPath),<<Data/binary>>,[append,raw]) of
         {error,Reason} -> {reply,{error,Reason},Async};
-        ok -> {reply,FTP2#ftp{data= <<>>},Async#handler{state=FTP2}} end.
+        ok -> {reply,FTP2#ftp{data= <<>>},Async#handler{state=FTP2#ftp{filename=RelPath}}} end.
