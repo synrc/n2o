@@ -54,7 +54,7 @@ event(#bin{data=Data}) ->
 
 event(#ftp{sid=Sid,filename=Filename,status={event,stop}}=Data) ->
     wf:info(?MODULE,"FTP Delivered ~p~n",[Data]),
-    erlang:put(message,wf:render(#link{href=iolist_to_binary(["/static/",Sid,"/",wf:url_encode(Filename)]),
+    erlang:put(message,wf:render(#link{href=iolist_to_binary(["/static/",wf:url_encode(Filename)]),
                                        body=filename:basename(Filename)})),
     event(chat);
 
