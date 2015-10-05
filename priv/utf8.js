@@ -13,6 +13,7 @@ function utf8_toByteArray(str) {
     return {t:107,v:byteArray}; };
 
 function utf8_dec(ab) {
+    if (!(ab instanceof ArrayBuffer)) ab = new Uint8Array(utf8_toByteArray(ab).v).buffer;
     var t=new DataView(ab),i=c=c1=c2=0,itoa=String.fromCharCode,s=[]; while (i<t.byteLength ) {
     c=t.getUint8(i); if (c<128) { s+=itoa(c); i++; } else
     if ((c>191) && (c<224)) { c2=t.getUint8(i+1); s+=itoa(((c&31)<<6)|(c2&63)); i+=2; }
