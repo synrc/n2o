@@ -27,8 +27,7 @@ event(init) ->
     Res = wf:async("looper",fun index:loop/1),
     n2o_async:send("looper","waterline"),
     wf:info(?MODULE,"Async Process Created: ~p at Page Pid ~p~n",[Res,self()]),
-    [ event({client,{E#entry.from,E#entry.media}}) || E <-
-       lists:reverse(kvs:entries(kvs:get(feed,{room,Room}),entry,10)) ];
+    [ event({client,{E#entry.from,E#entry.media}}) || E <- kvs:entries(kvs:get(feed,{room,Room}),entry,10) ];
 
 event(logout) ->
     wf:logout(),
@@ -55,8 +54,8 @@ event(#bin{data=Data}) ->
 
 event(#ftp{sid=Sid,filename=Filename,status={event,stop}}=Data) ->
     wf:info(?MODULE,"FTP Delivered ~p~n",[Data]),
-    erlang:put(message,wf:render(#link{href=iolist_to_binary(["/static/",Sid,"/",wf:url_encode(Filename)]),
-                                       body=Filename})),
+    erlang:put(message,wf:render(#link{href=iolist_to_binary(["/static/",wf:url_encode(Filename)]),
+                                       body=filename:basename(Filename)})),
     event(chat);
 
 event(Event) ->
