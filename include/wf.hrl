@@ -36,6 +36,6 @@
 
 % File Transfer Protocol
 
--record(ftp,     { sid, filename, hash, source, target, offset, meta, data, status, block, priority }).
+-record(ftp,     { sid, filename, meta, size, offset, block, data, status }).
 
 -endif.
