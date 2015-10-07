@@ -10,7 +10,7 @@
 
 % Callbacks
 
-filename(_Root,Sid,FileName) -> filename:join(wf:to_list(Sid),FileName).
+filename(#ftp{sid=Sid,filename=FileName}) -> filename:join(wf:to_list(Sid),FileName).
 
 % N2O Protocols
 
@@ -24,7 +24,7 @@ info(#ftp{status={event,_}}=FTP, Req, State) ->
 info(#ftp{sid=Sid,filename=FileName,status= <<"init">>,block=Block,offset=Offset,size=TotalSize}=FTP,Req,State) ->
     application:set_env(n2o,formatter,bert),
     Root=?ROOT,
-    RelPath=(wf:config(n2o,filename,n2o_file)):filename(Root,Sid,FileName),
+    RelPath=(wf:config(n2o,filename,n2o_file)):filename(FTP),
     FilePath=filename:join(Root,RelPath),
     ok=filelib:ensure_dir(FilePath),
     FileSize=case file:read_file_info(FilePath) of {ok,Fi} -> Fi#file_info.size; {error,_} -> 0 end,
