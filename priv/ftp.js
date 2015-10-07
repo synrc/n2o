@@ -7,7 +7,7 @@ var ftp = {
     start: function() { ftp.active = true; ftp.send_slice(ftp.offset, ftp.offset + ftp.block); },
     stop:  function() { ftp.active = false; },
     send:  function(data, status, block) {
-        ws.send(enc(tuple(atom('ftp'),bin(co(session)),bin(ftp.hash || ''),bin(ftp.filename || ftp.file.name),
+        ws.send(enc(tuple(atom('ftp'),bin(co(session)),bin(ftp.filename || ftp.file.name),
             ftp.meta?ftp.meta:bin(''),number(ftp.file.size),number(ftp.offset || 0),
             number(block || data.byteLength),bin(data),bin(status||'send')))); },
     send_slice: function(start, end) {
@@ -17,9 +17,9 @@ var ftp = {
         this.reader.readAsArrayBuffer(ftp.file.slice(start,end)); } }
 
 $file.do = function(rsp) {
-    var hash = utf8_dec(rsp.v[2].v), offset = rsp.v[6].v, block = rsp.v[7].v, status = utf8_dec(rsp.v[9].v);
+    var offset = rsp.v[5].v, block = rsp.v[6].v, status = utf8_dec(rsp.v[8].v);
     switch (status) {
-        case 'init': ftp.hash = hash; ftp.offset = offset; ftp.block = block; if(ftp.autostart) ftp.start(); break;
+        case 'init': ftp.offset = offset; ftp.block = block; if(ftp.autostart) ftp.start(); break;
         case 'send': var x = qi('ftp_status'); if(x) x.innerHTML = offset;
            if(block>0 && ftp.active) ftp.send_slice(offset, offset+block); break;
         case 'relay': if (typeof ftp.relay === 'function') ftp.relay(rsp); break;
