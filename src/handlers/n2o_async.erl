@@ -34,7 +34,7 @@ flush() -> A=wf:actions(), wf:actions([]), get(parent) ! {flush,A}.
 flush(Pool) -> A=wf:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
 stop(Name) -> stop(async,{Name,key()}).
 stop(Class,Name) -> [ supervisor:F(n2o,{Class,Name})||F<-[terminate_child,delete_child]],
-                wf:cache({Class,{Name,key()}},undefined).
+                wf:cache({Class,Name},undefined).
 start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
     ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
     wf:info(?MODULE,"Async Start Attempt ~p~n",[Async#handler{config=[]}]),
