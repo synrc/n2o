@@ -7,7 +7,7 @@ var ftp = {
     start: function() { ftp.active = true; ftp.send_slice(ftp.offset, ftp.offset + ftp.block); },
     stop:  function() { ftp.active = false; },
     send:  function(data, status, block) {
-        ws.send(enc(tuple(atom('ftp'),bin(co(session)),bin(ftp.filename || ftp.file.name),
+        ws.send(enc(tuple(atom('ftp'),bin(ftp.sid || co(session)),bin(ftp.filename || ftp.file.name),
             ftp.meta?ftp.meta:bin(''),number(ftp.file.size),number(ftp.offset || 0),
             number(block || data.byteLength),bin(data),bin(status||'send')))); },
     send_slice: function(start, end) {
