@@ -27,14 +27,17 @@ pid({Class,Name}) -> wf:cache({Class,Name}).
 key() -> n2o_session:session_id().
 restart(Name) -> restart(async,{Name,key()}).
 restart(Class,Name) ->
-    case n2o_async:pid({Class,Name}) of
-        Pid when is_pid(Pid) -> Async = send(Pid,{get}), stop(Class,Name), start(Async);
-        Data -> {error,{not_pid,Data}} end.
+    case stop(Class,Name) of #handler{}=Async -> start(Async); Error -> Error end.
 flush() -> A=wf:actions(), wf:actions([]), get(parent) ! {flush,A}.
 flush(Pool) -> A=wf:actions(), wf:actions([]), wf:send(Pool,{flush,A}).
 stop(Name) -> stop(async,{Name,key()}).
-stop(Class,Name) -> [ supervisor:F(n2o,{Class,Name})||F<-[terminate_child,delete_child]],
-                wf:cache({Class,Name},undefined).
+stop(Class,Name) ->
+    case n2o_async:pid({Class,Name}) of
+        Pid when is_pid(Pid) ->
+            #handler{group=Group} = Async = send(Pid,{get}),
+            [ supervisor:F(Group,{Class,Name})||F<-[terminate_child,delete_child]],
+            wf:cache({Class,Name},undefined), Async;
+        Data -> {error,{not_pid,Data}} end.
 start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
     ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},transient,5000,worker,[Module]},
     wf:info(?MODULE,"Async Start Attempt ~p~n",[Async#handler{config=[]}]),
@@ -61,7 +64,7 @@ handle_info(Message,  #handler{module=Mod}=Async) -> {noreply,element(3,Mod:proc
 start_link(Parameters) -> gen_server:start_link(?MODULE, Parameters, []).
 code_change(_,State,_) -> {ok, State}.
 terminate(_Reason, #handler{name=Name,group=Group,class=Class}) ->
-    spawn(fun() -> supervisor:delete_child(Group,Name) end),
+    spawn(fun() -> supervisor:delete_child(Group,{Class,Name}) end),
     wf:cache({Class,Name},undefined), ok.
 
 % wf:async page workers
