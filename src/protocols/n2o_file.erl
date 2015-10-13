@@ -31,7 +31,7 @@ info(#ftp{sid=Sid,filename=FileName,status= <<"init">>,block=Block,offset=Offset
 
     wf:info(?MODULE,"Info Init: ~p Offset: ~p Block: ~p~n",[FilePath,FileSize,Block]),
 
-    Name={Sid,filename:basename(RelPath)},
+    Name={Sid,filename:basename(FileName)},
     Block2=case Block of 0 -> ?STOP; _ -> ?NEXT end,
     Offset2=case FileSize >= Offset of true -> FileSize; false -> 0 end,
     FTP2=FTP#ftp{block=Block2,offset=Offset2,filename=RelPath,data= <<>>},
@@ -42,8 +42,8 @@ info(#ftp{sid=Sid,filename=FileName,status= <<"init">>,block=Block,offset=Offset
     {reply,wf:format(FTP2),Req,State};
 
 info(#ftp{sid=Sid,filename=FileName,status= <<"send">>}=FTP,Req,State) ->
-    wf:info(?MODULE,"Info Send:~p",[FTP#ftp{data= <<>>}]),
-    Reply=try gen_server:call(n2o_async:pid({file,{Sid,FileName}}),FTP)
+    wf:info(?MODULE,"Info Send: ~p",[FTP#ftp{data= <<>>}]),
+    Reply=try gen_server:call(n2o_async:pid({file,{Sid,filename:basename(FileName)}}),FTP)
         catch E:R -> wf:error(?MODULE,"Info Error call the sync: ~p~n",[FTP#ftp{data= <<>>}]),
             FTP#ftp{data= <<>>,block=?STOP} end,
     wf:info(?MODULE,"reply ~p",[Reply#ftp{data= <<>>}]),
@@ -63,7 +63,7 @@ proc(init,#handler{state=#ftp{sid=Sid}=FTP}=Async) ->
     wf:send(Sid,FTP#ftp{data= <<>>,status={event,init}}),
     {ok,Async};
 
-proc(#ftp{sid=Sid,data=Data,status= <<"send">>,block=Block}=FTP,
+proc(#ftp{sid=Sid,data=Data,filename=FileName,status= <<"send">>,block=Block}=FTP,
      #handler{state=#ftp{data=State,size=TotalSize,offset=Offset,filename=RelPath}}=Async) when Offset+Block >= TotalSize ->
 	wf:info(?MODULE,"Proc Stop ~p, last piece size: ~p", [FTP#ftp{data= <<>>},byte_size(Data)]),
 	case file:write_file(filename:join(?ROOT,RelPath),<<Data/binary>>,[append,raw]) of
@@ -71,7 +71,7 @@ proc(#ftp{sid=Sid,data=Data,status= <<"send">>,block=Block}=FTP,
 		ok ->
             FTP2=FTP#ftp{data= <<>>,block=?STOP},
             wf:send(Sid,FTP2#ftp{status={event,stop},filename=RelPath}),
-			spawn(fun() -> supervisor:delete_child(n2o,{file,{Sid,filename:basename(RelPath)}}) end),
+			spawn(fun() -> n2o_async:stop(file,{Sid,filename:basename(FileName)}) end),
 			{stop,normal,FTP2,Async#handler{state=FTP2}} end;
 
 proc(#ftp{sid=Sid,data=Data,block=Block}=FTP,
