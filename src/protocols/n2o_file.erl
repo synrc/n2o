@@ -43,7 +43,7 @@ info(#ftp{sid=Sid,filename=FileName,status= <<"init">>,block=Block,offset=Offset
 
 info(#ftp{sid=Sid,hash=Hash,status= <<"send">>}=FTP,Req,State) ->
     wf:info(?MODULE,"Info Send:~p ~p",[FTP#ftp{data= <<>>}]),
-    Reply=try gen_server:call(n2o_async:pid({file,{Sid,Hash}}),FTP)
+    Reply=try gen_server:call(n2o_async:pid(file,{Sid,Hash}),FTP)
         catch E:R -> wf:error(?MODULE,"Info Error call the sync: ~p~n",[FTP#ftp{data= <<>>}]),
             FTP#ftp{data= <<>>,block=?STOP} end,
     wf:info(?MODULE,"reply ~p",[Reply#ftp{data= <<>>}]),
