@@ -19,7 +19,7 @@ async(Class,Name,F) ->
         {P,X} when is_pid(P)        -> init(P,Class,X),          {P,{Class,X}};
         Else -> Else end.
 
-init(Pid,Class,Name) when is_pid(Pid) -> wf:cache({Class,Name},Pid), send(Pid,{parent,self()}).
+init(Pid,Class,Name) when is_pid(Pid) -> wf:cache({Class,Name},Pid,infinity), send(Pid,{parent,self()}).
 send(Pid,Message) when is_pid(Pid) -> gen_server:call(Pid,Message);
 send(Name,Message) -> send(async,{Name,key()},Message).
 send(Class,Name,Message) -> gen_server:call(n2o_async:pid({Class,Name}),Message).
@@ -56,7 +56,7 @@ init_context(Req) ->
 
 % Generic Async Server
 
-init(#handler{module=Mod,class=Class,name=Name}=Handler) -> wf:cache({Class,Name},self()), Mod:proc(init,Handler).
+init(#handler{module=Mod,class=Class,name=Name}=Handler) -> wf:cache({Class,Name},self(),infinity), Mod:proc(init,Handler).
 handle_call({get},_,#handler{module=Mod}=Async)   -> {reply,Async,Async};
 handle_call(Message,_,#handler{module=Mod}=Async) -> Mod:proc(Message,Async).
 handle_cast(Message,  #handler{module=Mod}=Async) -> Mod:proc(Message,Async).

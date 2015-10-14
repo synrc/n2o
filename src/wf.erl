@@ -130,6 +130,7 @@ cache(Key) ->
     Res = ets:lookup(caching,Key),
     Val = case Res of [] -> undefined; [Value] -> Value; Values -> Values end,
     case Val of undefined -> undefined;
+                {_,infinity,X} -> X;
                 {_,Expire,X} -> case Expire < calendar:local_time() of
                                   true ->  ets:delete(caching,Key), undefined;
                                   false -> X end end.
