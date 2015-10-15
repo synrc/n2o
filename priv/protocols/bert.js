@@ -31,6 +31,7 @@ function en_108(o) { var l=o.v.length,r=[]; for(var i=0;i<l;i++)r.push(ein(o.v[i
 // BERT Decoder
 
 function nop(b) { return []; };
+function big(b) { var sk=b==1?sx.getUint8(ix++):sx.getInt32((a=ix,ix+=4,a)); ix+=sk+1; return []; };
 function int(b) { return b==1?sx.getUint8(ix++):sx.getInt32((a=ix,ix+=4,a)); };
 function dec(d) { sx=new DataView(d);ix=0; if(sx.getUint8(ix++)!==131)throw("BERT?"); return din(); };
 function str(b) { var dv,sz=(b==2?sx.getUint16(ix):sx.getInt32(ix));ix+=b;
@@ -39,6 +40,7 @@ function run(b) { var sz=(b==1?sx.getUint8(ix):sx.getUint32(ix)),r=[]; ix+=b;
                   for(var i=0;i<sz;i++) r.push(din()); if(b==4)ix++; return r; };
 function din()  { var c=sx.getUint8(ix++),x; switch(c) { case 97: x=[int,1];break;
                   case 98:  x=[int,4]; break; case 100: x=[str,2]; break;
+                  case 110: x=[big,1]; break; case 111: x=[big,4]; break;
                   case 104: x=[run,1]; break; case 107: x=[str,2]; break;
                   case 108: x=[run,4]; break; case 109: x=[str,4]; break;
                   default:  x=[nop,0]; } return {t:c,v:x[0](x[1])};};
