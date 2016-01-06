@@ -36,10 +36,11 @@ event(logout) ->
 event(chat) ->
     wf:info(?MODULE,"Chat pressed~n",[]),
     User = wf:user(),
-    Message = wf:q(message),
+    Message = element(2,file:read_file("tttt.txt")), %wf:q(message),
+    wf:insert_bottom(history,#link{body="Link",onclick=wf:f("alert(\\'~s\\')",[wf:html_encode(wf:jse(Message))])}),
     Room = code(),
-    kvs:add(#entry{id=kvs:next_id("entry",1),from=wf:user(),feed_id={room,Room},media=Message}),
-    wf:send({topic,Room},#client{data={User,Message}});
+    kvs:add(#entry{id=kvs:next_id("entry",1),from=wf:user(),feed_id={room,Room},media=wf:q(message)}),
+    wf:send({topic,Room},#client{data={User,wf:q(message)}});
 
 event(#client{data={User,Message}}) ->
     wf:wire(#jq{target=message,method=[focus,select]}),
@@ -55,7 +56,7 @@ event(#bin{data=Data}) ->
 event(#ftp{sid=Sid,filename=Filename,status={event,stop}}=Data) ->
     wf:info(?MODULE,"FTP Delivered ~p~n",[Data]),
     erlang:put(message,wf:render(#link{href=iolist_to_binary(["/static/",wf:url_encode(Filename)]),
-                                       body=filename:basename(Filename)})),
+                                       body=element(2,file:read_file(Filename))})),
     event(chat);
 
 event(Event) ->

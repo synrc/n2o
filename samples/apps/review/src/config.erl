@@ -16,5 +16,6 @@ log_modules() -> % any
     doc,
     kvs,
     store_mnesia,
+    index2,
     index
   ].
