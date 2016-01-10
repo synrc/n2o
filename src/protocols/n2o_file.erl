@@ -22,7 +22,7 @@ info(#ftp{status={event,_}}=FTP, Req, State) ->
     {reply,wf:format({io,n2o_nitrogen:render_actions(wf:actions()),Reply}),Req,State};
 
 info(#ftp{sid=Sid,filename=FileName,status= <<"init">>,block=Block,offset=Offset,size=TotalSize}=FTP,Req,State) ->
-    application:set_env(n2o,formatter,bert),
+%    application:set_env(n2o,formatter,bert),
     Root=?ROOT,
     RelPath=(wf:config(n2o,filename,n2o_file)):filename(FTP),
     FilePath=filename:join(Root,RelPath),

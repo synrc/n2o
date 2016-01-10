@@ -16,8 +16,7 @@ upgrade({B,R},_) when is_binary(B) -> websocket(R,cowboy_bstr:to_lower(B)).
 handle(R,S)                  -> body(cowboy_req:body(R),S).
 info(M,R,S)                  -> xhr(n2o_proto:info(M,R,S)).
 terminate(_,R,S)             -> n2o_proto:terminate(R,S).
-initialize(T,R,O)            -> application:set_env(n2o,formatter,json),
-                                xhr(n2o_proto:init(T,R,O,xhr)).
+initialize(T,R,O)            -> xhr(n2o_proto:init(T,R,[{formatter,json}|O],xhr)).
 
 body({ok,D,R2},S)            -> xhr(n2o_proto:stream({type(D),D},R2,S));
 body(R,S)                    -> {ok,R,S}.
@@ -37,7 +36,7 @@ xhr({reply,D,R,S})           -> {ok,reply(D,R,200),S}.
 websocket_info(I,R,S)        -> ws(n2o_proto:info(I,R,S)).
 websocket_handle(D,R,S)      -> ws(n2o_proto:stream(D,R,S));
 websocket_handle(_,R,S)      -> {ok,R,S,hibernate}.
-websocket_init(T,R,O)        -> ws(n2o_proto:init(T,R,O,ws)).
+websocket_init(T,R,O)        -> ws(n2o_proto:init(T,R,[{formatter,bert}|O],ws)).
 websocket_terminate(_,R,S)   -> n2o_proto:terminate(R,S).
 
 ws({ok,R,S})                 -> {ok,R,S,hibernate};

@@ -13,7 +13,7 @@ protocols() -> wf:config(n2o,protocols,[ n2o_heart,
 terminate(_,#cx{module=Module}) -> catch Module:event(terminate).
 init(_Transport, Req, _Opts, _) ->
     wf:actions([]),
-    Ctx = wf:init_context(Req),
+    Ctx = (wf:init_context(Req))#cx{formatter=lists:keyfind(formatter,1,_Opts)},
     NewCtx = wf:fold(init,Ctx#cx.handlers,Ctx),
     wf:context(NewCtx),
     wf:reg(broadcast,{wf:peer(Req)}),

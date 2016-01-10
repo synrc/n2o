@@ -2,7 +2,7 @@
 -define(N2O_HRL, true).
 
 -record(handler, { name, module, class, group, config, state}).
--record(cx,      { handlers, actions, req, module, lang, path, session, params, form, state=[] }).
+-record(cx,      { handlers, actions, req, module, lang, path, session, formatter=false, params, form, state=[] }).
 
 -define(CTX, (get(context))).
 -define(REQ, (get(context))#cx.req).
