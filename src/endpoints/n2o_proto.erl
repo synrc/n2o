@@ -4,6 +4,7 @@
 -include_lib("n2o/include/wf.hrl").
 -compile(export_all).
 
+formatter(O)-> case lists:keyfind(formatter,1,O) of {formatter,F} -> F; X -> X end.
 upack(D)    -> binary_to_term(D,[safe]).
 protocols() -> wf:config(n2o,protocols,[ n2o_heart,
                                          n2o_nitrogen,
@@ -13,7 +14,7 @@ protocols() -> wf:config(n2o,protocols,[ n2o_heart,
 terminate(_,#cx{module=Module}) -> catch Module:event(terminate).
 init(_Transport, Req, _Opts, _) ->
     wf:actions([]),
-    Ctx = (wf:init_context(Req))#cx{formatter=lists:keyfind(formatter,1,_Opts)},
+    Ctx = (wf:init_context(Req))#cx{formatter=formatter(_Opts)},
     NewCtx = wf:fold(init,Ctx#cx.handlers,Ctx),
     wf:context(NewCtx),
     wf:reg(broadcast,{wf:peer(Req)}),
