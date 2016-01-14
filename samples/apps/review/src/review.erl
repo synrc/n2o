@@ -13,16 +13,12 @@ stop(_)    -> ok.
                 #user{id="doxtop",email="doxtop@synrc.com"},
                 #user{id="roman",email="roman@github.com"}]).
 
-init([]) -> case cowboy:start_http(http,3,port(),env()) of
-                 {ok, _}   -> ok;
-                 {error,_} -> halt(abort,[]) end,
+init([]) -> users:init(),
+            users:populate(?USERS),
+            kvs:join(),
+            {ok, {{one_for_one, 5, 10}, [spec()]}}.
 
-    users:init(),
-    users:populate(?USERS),
-    kvs:join(),
-
-                 {ok, {{one_for_one, 5, 10}, []}}.
-
+spec()   -> ranch:child_spec(http, 100, ranch_tcp, port(), cowboy_protocol, env()).
 env()    -> [ { env, [ { dispatch, points() } ] } ].
 static() ->   { dir, "apps/review/priv/static", mime() }.
 n2o()    ->   { dir, "deps/n2o/priv",           mime() }.

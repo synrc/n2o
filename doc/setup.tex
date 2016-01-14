@@ -43,11 +43,9 @@ for passing HTTP, REST, WebSocket and Static N2O endpoints:
   main(A)    -> mad:main(A).
   start(_,_) -> supervisor:start_link({local,review},review,[]).
   stop(_)    -> ok.
-  init([])   -> case cowboy:start_http(http,3,port(),env()) of
-                     {ok, _}   -> ok;
-                     {error,_} -> halt(abort,[]) end, sup().
+  init([])   -> { ok, { { one_for_one, 5, 100 }, [spec()] } }.
 
-  sup()    -> { ok, { { one_for_one, 5, 100 }, [] } }.
+  spec()   -> ranch:child_spec(http, 100, ranch_tcp, port(), cowboy_protocol, env()).
   port()   -> [ { port, wf:config(n2o,port,8000)  } ].
   env()    -> [ { env, [ { dispatch, points() } ] } ].
   static() ->   { dir, "apps/sample/priv/static", mime() }.
