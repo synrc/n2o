@@ -12,8 +12,12 @@ info({text,<<"N2O,",Process/binary>> = _InitMarker}=Message, Req, State) ->
     n2o_proto:push({init,Process},Req,State,n2o_proto:protocols(),[]);
 
 % ETS access protocol
-info({cache,Operation,Key,Value}=Message,Req,State)   -> {reply, <<"OK">>, Req, State};
-info({session,Operation,Key,Value}=Message,Req,State) -> {reply, <<"OK">>, Req, State};
+info({cache,Operation,Key,Value},Req,State)   -> {reply, case Operation of
+                                                              get -> wf:cache(Key);
+                                                              set -> wf:cache(Key,Value) end, Req, State};
+info({session,Operation,Key,Value},Req,State) -> {reply, case Operation of
+                                                              get -> wf:session(Key);
+                                                              set -> wf:session(Key,Value) end, Req, State};
 
 % MQ protocol
 info({pub,Topic,Message}=Message,Req,State) -> {reply, <<"OK">>, Req, State};
