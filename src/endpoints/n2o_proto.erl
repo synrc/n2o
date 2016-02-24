@@ -26,11 +26,15 @@ init(_Transport, Req, _Opts, _) ->
 
 % N2O top level protocol NOP REPLY PUSH
 
-info(M,R,S)               -> push(M,R,S,protocols(),[]).
-stream({text,_}=M,R,S)    -> push(M,R,S,protocols(),[]);
+info(M,R,S)               -> filter(M,R,S,protocols(),[]).
+stream({text,_}=M,R,S)    -> filter(M,R,S,protocols(),[]);
 stream({binary,<<>>},R,S) -> nop(R,S);
-stream({binary,D},R,S)    -> push(upack(D),R,S,protocols(),[]);
+stream({binary,D},R,S)    -> filter(upack(D),R,S,protocols(),[]);
 stream(_,R,S)             -> nop(R,S).
+
+filter(M,R,S,Protos,Acc)  -> case application:get_env(n2o,filter,{?MODULE,push}) of
+                                  undefined -> push(M,R,S,Protos,Acc);
+                                  {Mod,Fun} -> Mod:Fun(M,R,S,Protos,Acc) end.
 
 nop(R,S)                  -> {reply,<<>>,R,S}.
 reply(M,R,S)              -> {reply,M,R,S}.

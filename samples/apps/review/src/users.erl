@@ -11,5 +11,5 @@ exists(Id)           -> ets:member(users, wf:to_list(Id)).
 get()                -> ets:tab2list(users).
 get(Id)              -> #user{id=Id}.
 delete(Id)           -> ets:delete(users, wf:to_list(Id)).
-post(#user{} = User) -> ets:insert(users, User);
-post(Data)           -> post(from_json(Data, #user{})).
+post(#user{} = User) -> ets:insert(users, User), true;
+post(Data)           -> post(from_json(Data, #user{})), true.
