@@ -22,10 +22,9 @@ proc(init,#handler{}=Async) ->
 proc(X,#handler{state=Timer}=Async) ->
     case Timer of undefined -> skip; _ -> erlang:cancel_timer(Timer) end,
     wf:info(?MODULE,"N2O Timer: ~p~n",[X]),
-    NewTimer = timer_restart(ping()),
     n2o_session:invalidate_sessions(),
     wf:invalidate_cache(),
-    {reply,ok,Async#handler{state=NewTimer}}.
+    {reply,ok,Async#handler{state=timer_restart(ping())}}.
 
 timer_restart(Diff) -> {X,Y,Z} = Diff, erlang:send_after(500*(Z+60*Y+60*60*X),self(),{timer,ping}).
 ping() -> application:get_env(n2o,timer,{0,50,0}).
