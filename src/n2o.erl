@@ -26,5 +26,5 @@ proc(X,#handler{state=Timer}=Async) ->
     wf:invalidate_cache(),
     {reply,ok,Async#handler{state=timer_restart(ping())}}.
 
-timer_restart(Diff) -> {X,Y,Z} = Diff, erlang:send_after(500*(Z+60*Y+60*60*X),self(),{timer,ping}).
-ping() -> application:get_env(n2o,timer,{0,50,0}).
+timer_restart(Diff) -> {X,Y,Z} = Diff, erlang:send_after(1000*(Z+60*Y+60*60*X),self(),{timer,ping}).
+ping() -> application:get_env(n2o,timer,{0,10,0}).
