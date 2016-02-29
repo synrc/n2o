@@ -21,7 +21,7 @@ proc(init,#handler{}=Async) ->
 
 proc({timer,ping},#handler{state=Timer}=Async) ->
     case Timer of undefined -> skip; _ -> erlang:cancel_timer(Timer) end,
-    wf:info(?MODULE,"N2O Timer: ~p~n",[X]),
+    wf:info(?MODULE,"N2O Timer: ~p~n",[ping]),
     n2o_session:invalidate_sessions(),
     wf:invalidate_cache(),
     {reply,ok,Async#handler{state=timer_restart(ping())}}.
