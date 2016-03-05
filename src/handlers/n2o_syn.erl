@@ -2,7 +2,13 @@
 -include_lib("n2o/include/wf.hrl").
 -export(?MESSAGE_API).
 
-send(Pool, Message) -> syn:publish(Pool,Message).
-reg(Pool)           -> reg(Pool,self()).
-reg(Pool,Pid)       -> syn:join(Pool,Pid).
-unreg(Pool)         -> syn:leave(Pool,self()).
+send(Pool, Message) -> syn:publish(term_to_binary(Pool),Message).
+reg(Pool) -> reg(Pool,undefined).
+reg(Pool, Value) ->
+    case get({pool,Pool}) of
+         undefined -> syn:register(term_to_binary(Pool),self(),Value), syn:join(term_to_binary(Pool),self()), put({pool,Pool},Pool);
+         _Defined -> skip end.
+unreg(Pool) ->
+    case get({pool,Pool}) of
+         undefined -> skip;
+         _Defined -> syn:leave(Pool, self()), erase({pool,Pool}) end.
