@@ -60,6 +60,7 @@ init(#handler{module=Mod,class=Class,name=Name}=Handler) -> wf:cache({Class,Name
 handle_call({get},_,#handler{module=Mod}=Async)   -> {reply,Async,Async};
 handle_call(Message,_,#handler{module=Mod}=Async) -> Mod:proc(Message,Async).
 handle_cast(Message,  #handler{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_info(timeout,  #handler{module=Mod}=Async) -> Mod:proc(timeout,Async);
 handle_info(Message,  #handler{module=Mod}=Async) -> {noreply,element(3,Mod:proc(Message,Async))}.
 start_link(Parameters) -> gen_server:start_link(?MODULE, Parameters, []).
 code_change(_,State,_) -> {ok, State}.
