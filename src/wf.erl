@@ -56,7 +56,7 @@ insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements)
 insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
 
 remove(Target) ->
-    wf:wire(wf:f("qi('~s').parentNode.removeChild(qi('~s'));",[Target,Target])).
+    wf:wire("var x=qi('"++wf:to_list(Target)++"'); x && x.parentNode.removeChild(x);").
 
 % Wire JavaScript wf:wire
 
