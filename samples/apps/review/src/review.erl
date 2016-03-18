@@ -13,7 +13,7 @@ stop(_)    -> ok.
                 #user{id="doxtop",email="doxtop@synrc.com"},
                 #user{id="roman",email="roman@github.com"}]).
 
-init([]) -> users:init(),
+init([]) -> users:init(), syn:init(),
             users:populate(?USERS),
             kvs:join(),
             {ok, {{one_for_one, 5, 10}, [spec()]}}.

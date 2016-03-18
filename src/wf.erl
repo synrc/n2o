@@ -56,7 +56,7 @@ insert_before(Target, Elements) -> insert_adjacent(beforebegin,Target, Elements)
 insert_after(Target, Elements) -> insert_adjacent(afterend,Target, Elements).
 
 remove(Target) ->
-    wf:wire(wf:f("qi('~s').parentNode.removeChild(qi('~s'));",[Target,Target])).
+    wf:wire("var x=qi('"++wf:to_list(Target)++"'); x && x.parentNode.removeChild(x);").
 
 % Wire JavaScript wf:wire
 
@@ -123,6 +123,7 @@ user() -> wf:session(<<"user">>).
 user(User) -> wf:session(<<"user">>,User).
 clear_user() -> wf:session(<<"user">>,undefined).
 logout() -> clear_user(), clear_session().
+invalidate_cache() -> ets:foldl(fun(X,A) -> wf:cache(element(1,X)) end, 0, caching).
 cache(Key, undefined) -> ets:delete(caching,Key);
 cache(Key, Value) -> ets:insert(caching,{Key,n2o_session:till(calendar:local_time(), n2o_session:ttl()),Value}), Value.
 cache(Key, Value, Till) -> ets:insert(caching,{Key,Till,Value}), Value.

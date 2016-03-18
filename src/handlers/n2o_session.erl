@@ -110,8 +110,13 @@ set_value(Key, Value) ->
     ets:insert(cookies,{{session_id(),Key},<<"/">>,os:timestamp(),NewTill,Value}),
     Value.
 
+invalidate_sessions() ->
+    ets:foldl(fun(X,A) -> {Sid,Key} = element(1,X), n2o_session:get_value(Sid,Key,undefined), A end, 0, cookies).
+
 get_value(Key, DefaultValue) ->
-    SID = session_id(),
+    get_value(session_id(), Key, DefaultValue).
+
+get_value(SID, Key, DefaultValue) ->
     Res = case lookup_ets({SID,Key}) of
                undefined -> DefaultValue;
                {{SID,Key},_,Issued,Till,Value} -> case expired(Issued,Till) of
