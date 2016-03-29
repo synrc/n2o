@@ -117,6 +117,13 @@ LINUX NOTE: if you want to have online recompilation you should install `inotify
 
     $ sudo apt-get install inotify-tools
 
+Tests
+-----
+
+    $ cd tests
+    $ npm install -g casperjs
+    $ casperjs test casper
+
 Erlang version
 --------------
 
