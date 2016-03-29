@@ -7,7 +7,11 @@
 main() ->
     case wf:user() of
          undefined -> wf:redirect("login.htm"), redirect_wait();
-         _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,list()}]} end.
+         _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,list()},{javascript,(?MODULE:(wf:config(n2o,mode,dev)))()}]} end.
+
+prod() ->   [ #script{src="/static/review.js"} ].
+dev()  -> [ [ #script{src=lists:concat(["/n2o/protocols/",X,".js"])} || X <- [bert,nitrogen] ],
+            [ #script{src=lists:concat(["/n2o/",Y,".js"])}           || Y <- [bullet,n2o,ftp,utf8,validation] ] ].
 
 redirect_wait() -> #dtl{}.
 list() -> "<iframe src=http://synrc.com/apps/"++code()++" frameborder=0 width=700 height=1250></iframe>".
