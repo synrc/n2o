@@ -27,25 +27,25 @@ session_sid(State, Ctx, SessionId, From) ->
                     undefined -> new_cookie_value(From);
                     Csid -> new_cookie_value(Csid, From) end;
                 _ -> new_cookie_value(SessionId,From) end,
-            Cookie = {{CookieValue,<<"auth">>},<<"/">>,os:timestamp(),NewTill,new},
+            Cookie = {{CookieValue,<<"auth">>},<<"/">>,os:timestamp(),NewTill,new,wf:peer(Ctx#cx.req)},
             ets:insert(cookies,Cookie),
             wf:info(?MODULE,"Auth Cookie New: ~p~n",[Cookie]),
             Cookie;
-        {{Session,Key},Path,Issued,Till,Status} ->
+        {{Session,Key},Path,Issued,Till,Status,Extra} ->
             case expired(Issued,Till) of
                 false ->
-                    Cookie = {{Session,Key},Path,Issued,Till,Status},
+                    Cookie = {{Session,Key},Path,Issued,Till,Status,Extra},
                     wf:info(?MODULE,"Auth Cookie Same: ~p",[Cookie]),
                     Cookie;
                 true ->
-                    Cookie = {{new_cookie_value(From),<<"auth">>},<<"/">>,os:timestamp(),NewTill,new},
+                    Cookie = {{new_cookie_value(From),<<"auth">>},<<"/">>,os:timestamp(),NewTill,new,wf:peer(?REQ)},
                     clear(Session),
                     ets:insert(cookies,Cookie),
                     wf:info(?MODULE,"Auth Cookie Expired in Session ~p~n",[Session]),
                     Cookie end;
         What -> wf:info(?MODULE,"Auth Cookie Error: ~p",[What]), What
     end,
-    {{ID,_},_,_,_,_} = SessionCookie,
+    {{ID,_},_,_,_,_,_} = SessionCookie,
     put(session_id,ID),
     wf:info(?MODULE,"State: ~p",[SessionCookie]),
     {ok, State, Ctx#cx{session=SessionCookie}}.
@@ -102,12 +102,12 @@ session_cookie_name(From) -> wf:to_binary([wf:to_binary(From), <<"-sid">>]).
 
 set_session_value(Session, Key, Value) ->
     Till = till(calendar:local_time(), ttl()),
-    ets:insert(cookies,{{Session,Key},<<"/">>,os:timestamp(),Till,Value}),
+    ets:insert(cookies,{{Session,Key},<<"/">>,os:timestamp(),Till,Value,wf:peer(?REQ)}),
     Value.
 
 set_value(Key, Value) ->
     NewTill = till(calendar:local_time(), ttl()),
-    ets:insert(cookies,{{session_id(),Key},<<"/">>,os:timestamp(),NewTill,Value}),
+    ets:insert(cookies,{{session_id(),Key},<<"/">>,os:timestamp(),NewTill,Value,wf:peer(?REQ)}),
     Value.
 
 invalidate_sessions() ->
@@ -119,10 +119,14 @@ get_value(Key, DefaultValue) ->
 get_value(SID, Key, DefaultValue) ->
     Res = case lookup_ets({SID,Key}) of
                undefined -> DefaultValue;
-               {{SID,Key},_,Issued,Till,Value} -> case expired(Issued,Till) of
+               {{SID,Key},_,Issued,Till,Value,_} -> case expired(Issued,Till) of
                        false -> Value;
                        true -> ets:delete(cookies,{SID,Key}), DefaultValue end end,
     %wf:info(?MODULE,"Session Lookup Key ~p Value ~p",[Key,Res]),
     Res.
 
 remove_value(Key) -> ets:delete(cookies,Key).
+
+session_extra(UserId) ->
+    ets:select(cookies,
+	       ets:fun2ms(fun(A) when (element(2,element(5,A)) == UserId) -> {element(3,A), element(6,A)} end)).
