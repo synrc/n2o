@@ -3,14 +3,22 @@ defmodule N2O.Mixfile do
 
   def project do
     [app: :n2o,
-     version: "2.9",
+     version: "2.9.0",
      description: "N2O Application Server",
-     package: package]
+     package: package,
+     deps: deps]
   end
 
   defp package do
     [files: ~w(c_src doc include priv src LICENSE mix.exs README.md rebar.config),
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/synrc/n2o"}]
-   end
+  end
+
+  defp deps do [
+    {:jsone,  github: "sile/jsone"},
+    {:cowboy, github: "extend/cowboy"},
+    {:gproc,  gitbub: "uwiger/gproc"},
+  ]
+  end
 end
