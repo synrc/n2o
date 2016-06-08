@@ -9,6 +9,11 @@ defmodule N2O.Mixfile do
      deps: deps]
   end
 
+  def application do
+    [mod: {:n2o, []}
+    ]
+  end
+
   defp package do
     [files: ~w(c_src doc include priv src LICENSE mix.exs README.md rebar.config),
      licenses: ["MIT"],
