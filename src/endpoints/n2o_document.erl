@@ -4,7 +4,13 @@
 -include_lib("n2o/include/wf.hrl").
 -compile (export_all).
 
-transition(Actions) -> receive {'INIT',A} -> transition(A); {'N2O',Pid} -> Pid ! {actions,Actions} end.
+transition(Actions) ->
+    receive
+        {'INIT',A} -> transition(A);
+        {'N2O',Pid} -> Pid ! {actions,Actions}
+    after wf:config(n2o,transition_timeout,30000) -> {timeout,transition}
+    end.
+
 run(Req) ->
     wf:state(status,200),
     Pid = spawn(fun() -> transition([]) end),
