@@ -9,7 +9,7 @@ main() ->
          undefined -> wf:redirect("login.htm"), redirect_wait();
          _ -> #dtl{file = "index", app=review,bindings=[{body,body()},{list,list()},{javascript,(?MODULE:(wf:config(n2o,mode,dev)))()}]} end.
 
-prod() ->   [ #script{src="/static/review.js"} ].
+prod() ->   [ #script{src="/static/review.min.js"} ].
 dev()  -> [ [ #script{src=lists:concat(["/n2o/protocols/",X,".js"])} || X <- [bert,nitrogen] ],
             [ #script{src=lists:concat(["/n2o/",Y,".js"])}           || Y <- [bullet,n2o,ftp,utf8,validation] ] ].
 
