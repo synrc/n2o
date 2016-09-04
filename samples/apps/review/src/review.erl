@@ -14,7 +14,6 @@ stop(_)    -> ok.
                 #user{id="roman",email="roman@github.com"}]).
 
 init([]) -> users:init(),
-            case wf:config(n2o,mq) of n2o_syn -> syn:init(); _ -> skip end,
             users:populate(?USERS),
             kvs:join(),
             {ok, {{one_for_one, 5, 10}, [spec()]}}.

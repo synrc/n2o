@@ -12,6 +12,7 @@ start(_,_) -> X = supervisor:start_link({local,n2o},n2o,[]),
               X.
 stop(_)    -> ok.
 init([])   -> [ ets:new(T,opt()) || T <- tables() ],
+              case wf:config(n2o,mq) of n2o_syn -> syn:init(); _ -> ok end,
               { ok, { { one_for_one, 5, 10 }, [] } }.
 
 proc(init,#handler{}=Async) ->
