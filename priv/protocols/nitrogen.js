@@ -4,7 +4,7 @@ function querySourceRaw(Id) {
     var val, el = document.getElementById(Id);
     if (!el) return "";
     switch (el.tagName) {
-        case 'FIELDSET': val = document.querySelector('#' + Id + ' :checked');
+        case 'FIELDSET': val = document.querySelector('[id="' + Id + '"] :checked');
                          val = val ? val.value : ""; break;
         case 'INPUT':
             switch (el.getAttribute("type")) {
@@ -25,3 +25,6 @@ function querySource(Id) {
     if(qs instanceof Date) { return tuple(number(qs.getFullYear()),number(qs.getMonth()+1),number(qs.getDate())); }
     else { return utf8_toByteArray(qs); } }
 
+(function() {
+    window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame || window.msRequestAnimationFrame; })();

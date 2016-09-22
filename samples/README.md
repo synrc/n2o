@@ -19,6 +19,7 @@ Prerequisites
 * erlang
 * mad
 * inotify-tools (Linux, for filesystem watching)
+* uglify (assets)
 
 Run
 ---
@@ -35,6 +36,12 @@ connects to Erlang N2O Application Server you should use
 [http://localhost:8000/static/spa/spa.htm](http://localhost:8000/static/spa/spa.htm)
 
 For full features of make please refer to [https://github.com/synrc/otp.mk](https://github.com/synrc/otp.mk)
+
+Production Assets
+-----------------
+
+    $ ./mad static min
+    > application:set_env(n2o,mode,prod).
 
 Xen
 ---
