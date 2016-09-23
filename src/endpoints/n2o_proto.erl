@@ -9,7 +9,8 @@ upack(D)    -> binary_to_term(D,[safe]).
 protocols() -> wf:config(n2o,protocols,[ n2o_heart,
                                          n2o_nitrogen,
                                          n2o_file,
-                                         n2o_client ]).
+                                         n2o_client,
+                                         n2o_http ]).
 
 terminate(_,#cx{module=Module}) -> catch Module:event(terminate).
 init(_Transport, Req, _Opts, _) ->
