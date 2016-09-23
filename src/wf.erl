@@ -150,11 +150,6 @@ qp(Key) -> qp(Key,?REQ).
 qp(Key,Req) -> {Params,_} = params(Req), proplists:get_value(to_binary(Key),Params).
 lang() -> ?CTX#cx.lang.
 
-% Key/Value pairs from Post Request if the body was sent using the application/x-www-form-urlencoded content-type.
-p(Key) -> Val = get(Key), case Val of undefined -> pp(Key); A -> A end.
-pp(Key) -> pp(Key, ?REQ).
-pp(Key,Req) -> {Params,_} = form(Req), proplists:get_value(to_binary(Key),Params).
-
 % Cookies
 
 cookies() -> n2o_cx:cookies().
