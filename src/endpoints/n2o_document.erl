@@ -27,7 +27,6 @@ run(Req) ->
     Ctx2 = wf:fold(finish,Ctx#cx.handlers,?CTX),
     Req2 = wf:response(Html,set_cookies(wf:cookies(),Ctx2#cx.req)),
     wf:info(?MODULE,"Cookies Req: ~p",[Req2]),
-    exit(Pid, {}),
     {ok, _ReqFinal} = wf:reply(wf:state(status), Req2).
 
 set_cookies([],Req)-> Req;
