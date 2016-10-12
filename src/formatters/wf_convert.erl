@@ -185,7 +185,7 @@ format({bin,Data},    bert) -> wf:info(?MODULE,"BERT {bin,_}: ~tp~n",[Data]),
                                {binary,term_to_binary({bin,Data})};
 format({Atom,Data},   bert) -> wf:info(?MODULE,"BERT {~p,_}: ~tp~n",[Atom,bin(Data)]),
                                {binary,term_to_binary({Atom,bin(Data)})};
-format(#ftp{}=FTP,    bert) -> wf:info(?MODULE,"BERT {ftp,_,_,_,_,_,_,_,_,_,_,_}: ~tp~n",[FTP#ftp{data= <<>>}]),
+format(#ftp{}=FTP,    bert) -> wf:info(?MODULE,"BERT {ftp,_,_,_,_,_,_,_,_,_,_,_,_}: ~tp~n",[FTP#ftp{data= <<>>}]),
                                {binary,term_to_binary(FTP)};
 format(Term,          bert) -> {binary,term_to_binary(Term)};
 
