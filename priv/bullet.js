@@ -7,7 +7,7 @@ $ws = { heart: true, interval: 4000,
 
 // N2O Reliable Connection
 
-$conn = { onopen: nop, onmessage: nop, onclose: nop,
+$conn = { onopen: nop, onmessage: nop, onclose: nop, onconnect: nop,
           send:  function(data)   { if (this.port.channel) this.port.channel.send(data); },
           close: function()       { if (this.port.channel) this.port.channel.close(); } };
 
@@ -28,6 +28,7 @@ function connect() {
     $conn.port.channel.onmessage = function(e) { $conn.onmessage(e); };
     $conn.port.channel.onopen = function() {
         if ($conn.port.heart) heartbeat = setInterval(function(){$conn.port.onheartbeat();}, $conn.port.interval);
-        $conn.onopen(); };
+        $conn.onopen();
+        $conn.onconnect(); };
     $conn.port.channel.onclose = function() { $conn.onclose(); clearInterval(heartbeat); reconnect(); };
     return $conn; }
