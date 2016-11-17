@@ -13,8 +13,8 @@ REST endpoint handlers with Cowboy Web Server.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:resource",     rest_cowboy, []},
-    {"/rest/:resource/:id", rest_cowboy, []},
+    {"/rest/:resource",     cowboy_rest, []},
+    {"/rest/:resource/:id", cowboy_rest, []},
     {"/ws/[...]",           n2o_stream,  []},
     {'_',                   n2o_cowboy,  []}
 \end{lstlisting}
@@ -82,13 +82,13 @@ With catching at Erlang side:
 \subsection{HTTP API over REST}
 REST handler's request context initialization differs for the one
 used by HTML and JavaScript handlers. N2O handler chains are not
-applied to REST requests. {\bf rest\_cowboy} is a default REST
+applied to REST requests. {\bf cowboy\_rest} is a default REST
 handler.
 
 \vspace{1\baselineskip}
 \begin{lstlisting}
-    {"/rest/:resource", rest_cowboy, []},
-    {"/rest/:resource/:id", rest_cowboy, []},
+    {"/rest/:resource", cowboy_rest, []},
+    {"/rest/:resource/:id", cowboy_rest, []},
 \end{lstlisting}
 
 \lstset{captionpos=b}
