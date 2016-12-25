@@ -25,7 +25,7 @@ different server implementations in different languages.
 
 \subsection*{Web Protocols: {\bf nitro}, {\bf spa}, {\bf bin}}
 N2O protocols stack provides definition for several unoverlapped protocol layers.
-N2O application server implementaion of N2O protocol specification supports
+N2O application server implementation of N2O protocol specification supports
 four protocol layers from this stack for WebSocket and IoT applications:
 {\bf heart}, {\bf nitro}, {\bf spa} and {\bf bin} protocols.
 HEART protocol is designed for reliable managed connections and stream channel initialization.
@@ -89,7 +89,7 @@ through more that one formatter you should write an echo protocol.
 \newpage
 \subsection*{Protocol Loop}
 After message arrives to endpoint and handlers chain is being initializes,
-message then comes to protocol stack. N2O selects appropropriative protocol
+message then comes to protocol stack. N2O selects appropriative protocol
 module and handle the message. After than message is being formatted and
 replied back to stream channel. Note that protocol loop is applicable
 only to WebSocket stream channel endpoint.
@@ -163,7 +163,7 @@ binary string, including BERT encoded data. "PING" and "N2O," are
 defined as text 4-bytes messages and second could be followed by
 any text string. NOP is 0-byte acknowledging packet.
 This is heart essence protocol which is enough for any rpc and code
-transfering interface. Normally heart protocol is not for active
+transferring interface. Normally heart protocol is not for active
 client usage but for supporting active connection with notifications
 and possibly DOM updates.
 
@@ -193,8 +193,8 @@ You can manually invoke session initialization inside existing session:
 \end{lstlisting}
 
 \newpage
-In response on successfull WebSocket connection and enabled {\bf heart}
-protocol on the server you will recieve the IO message event.
+In response on successful WebSocket connection and enabled {\bf heart}
+protocol on the server you will receive the IO message event.
 IO events are containers for function and data which can be used as parameters.
 There is no predefined semantic to IO message. Second element of a tuple
 will be directly evaluated in WebBrowser. Third element can contain data or error
@@ -349,8 +349,8 @@ NITRO protocol messages. All client requests originate IO message as a response.
 If you are creating SVG based game you don't need HTML5 nitro elements at all.
 Instead you need simple and clean JavaScript based protocol for updating DOM SVG elements
 but based on {\bf shen} generated or manual JavaScript code sent from server.
-Thus you need still IO messages as a reply but originating massesage shouldn't
-rely in {\bf nitro} at all. For that purposes ingeneral and for {\bf synrc/games} sample
+Thus you need still IO messages as a reply but originating massage shouldn't
+rely in {\bf nitro} at all. For that purposes in general and for {\bf synrc/games} sample
 in particular we created SPA protocol layer. SPA protocol consist of CLIENT originated message
 and SERVER message that could be originated both from client and server. All messages expects
 IO as a response. In IO response data field is always set with return value of the event
