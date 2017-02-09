@@ -31,7 +31,14 @@ function en_108(o) { var l=o.v.length,r=[]; for(var i=0;i<l;i++)r.push(ein(o.v[i
 // BERT Decoder
 
 function nop(b) { return []; };
-function big(b) { var sk=b==1?sx.getUint8(ix++):sx.getInt32((a=ix,ix+=4,a)); ix+=sk+1; return []; };
+function big(b) { var sk=b==1?sx.getUint8(ix++):sx.getInt32((a=ix,ix+=4,a));
+                  var ret=0, sig=sx.getUint8(ix++), count=sk;
+                  while (count-->0) {
+                    ret = 256 * ret + sx.getUint8(ix+count)
+                  }
+                  ix += sk;
+                  return ret*(sig==0?1:-1);
+                }
 function int(b) { return b==1?sx.getUint8(ix++):sx.getInt32((a=ix,ix+=4,a)); };
 function dec(d) { sx=new DataView(d);ix=0; if(sx.getUint8(ix++)!==131)throw("BERT?"); return din(); };
 function str(b) { var dv,sz=(b==2?sx.getUint16(ix):sx.getInt32(ix));ix+=b;
