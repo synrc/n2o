@@ -14,7 +14,7 @@ Features
 * BEAM/LING support on posix, arm, mips and xen platforms
 * Single-file atomic packaging with [MAD](http://synrc.github.io/mad)
 * Handlers
-  * PubSub: MQS, GPROC
+  * PubSub: MQS, GPROC, SYN
   * Templates: DTL, [NITRO](http://synrc.github.io/nitro)
   * Sessions: server driven
   * DOM Language: SHEN JavaScript Compiler
