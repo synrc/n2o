@@ -44,45 +44,25 @@ to_integer(F) when is_float(F) -> round(F).
 
 % HTML encode/decode
 
-html_encode(L,Fun) when is_function(Fun) -> Fun(L);
-html_encode(L,EncType) when is_atom(L) -> html_encode(wf:to_list(L),EncType);
-html_encode(L,EncType) when is_integer(L) -> html_encode(integer_to_list(L),EncType);
-html_encode(L,EncType) when is_float(L) -> html_encode(float_to_list(L,[{decimals,9},compact]),EncType);
-html_encode(L, false) -> L;
-html_encode(L, true) -> L;
-html_encode(L, whites) -> html_encode_whites(wf:to_list(lists:flatten([L]))).
-html_encode(<<>>) -> [];
-html_encode([]) -> [];
-html_encode([$\n|T]) -> "<br>" ++ html_encode(T);
-html_encode([H|T]) ->
-	case H of
-		$< -> "&lt;" ++ html_encode(T);
-		$> -> "&gt;" ++ html_encode(T);
-		$" -> "&quot;" ++ html_encode(T);
-		$' -> "&#39;" ++ html_encode(T);
-		$& -> "&amp;" ++ html_encode(T);
-		BigNum when is_integer(BigNum) andalso BigNum > 255 ->
-			%% Any integers above 255 are converted to their HTML encode equivilant,
-			%% Example: 7534 gets turned into &#7534;
-			[$&,$# | wf:to_list(BigNum)] ++ ";" ++ html_encode(T);
-		Tup when is_tuple(Tup) -> 
-			throw({html_encode,encountered_tuple,Tup});
-		_ -> [H|html_encode(T)]
-	end.
+html_encode(B) -> html_encode(B,normal).
+html_encode(X,Fun) when is_function(Fun) -> Fun(X);
+html_encode(Y,Encode) when is_atom(Y); is_integer(Y); is_float(Y) -> html_encode(wf:to_binary(Y),Encode);
+html_encode(X, false) -> X;
+html_encode(X, true) -> html_encode(X,normal);
+html_encode(B,Encode) when is_binary(B) -> html_encode_aux(B,Encode);
+html_encode(L,Encode) when is_list(L) -> html_encode_aux(iolist_to_binary(L),Encode).
 
-html_encode_whites([]) -> [];
-html_encode_whites([H|T]) ->
-	case H of
-		$\s -> "&nbsp;" ++ html_encode_whites(T);
-		$\t -> "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ++ html_encode_whites(T);
-		$< -> "&lt;" ++ html_encode_whites(T);
-		$> -> "&gt;" ++ html_encode_whites(T);
-		$" -> "&quot;" ++ html_encode_whites(T);
-		$' -> "&#39;" ++ html_encode_whites(T);
-		$& -> "&amp;" ++ html_encode_whites(T);
-		$\n -> "<br>" ++ html_encode_whites(T);
-		_ -> [H|html_encode_whites(T)]
-	end.
+html_encode_aux(<<"\s", T/binary>>,whites) -> [<<"&nbsp;">> | html_encode_aux(T,whites)];
+html_encode_aux(<<"\t", T/binary>>,whites) -> [<<"&nbsp; &nbsp; &nbsp;">> | html_encode_aux(T,whites)];
+html_encode_aux(<<"\n", T/binary>>,E)      -> [<<"<br>">>   | html_encode_aux(T,E)];
+html_encode_aux(<<"\\", T/binary>>,E)      -> [<<"&#92;">>  | html_encode_aux(T,E)];
+html_encode_aux(<<"<",  T/binary>>,E)      -> [<<"&lt;">>   | html_encode_aux(T,E)];
+html_encode_aux(<<">",  T/binary>>,E)      -> [<<"&gt;">>   | html_encode_aux(T,E)];
+html_encode_aux(<<"\"", T/binary>>,E)      -> [<<"&quot;">> | html_encode_aux(T,E)];
+html_encode_aux(<<"'",  T/binary>>,E)      -> [<<"&#39;">>  | html_encode_aux(T,E)];
+html_encode_aux(<<"&",  T/binary>>,E)      -> [<<"&amp;">>  | html_encode_aux(T,E)];
+html_encode_aux(<<C:8,  T/binary>>,E)      -> [C            | html_encode_aux(T,E)];
+html_encode_aux(<<>>, _)                   -> [].
 
 %% URL encode/decode
 
