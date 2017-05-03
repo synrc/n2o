@@ -3,7 +3,7 @@ defmodule N2O.Mixfile do
 
   def project do
     [app: :n2o,
-     version: "2.9.0",
+     version: "4.4.0",
      description: "N2O Application Server",
      package: package,
      deps: deps]
