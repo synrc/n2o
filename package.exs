@@ -10,20 +10,18 @@ defmodule N2O.Mixfile do
   end
 
   def application do
-    [mod: {:n2o, []}
-    ]
+    [mod: {:n2o, []}]
   end
 
   defp package do
-    [files: ~w(c_src doc include priv src LICENSE mix.exs README.md rebar.config),
+    [files: ["include", "priv", "samples", "src", "LICENSE", "README.md", "rebar.config"],
      licenses: ["MIT"],
+     maintainers: ["Andy Martemyanov", "Namdak Tonpa"],
+     name: :n2o,
      links: %{"GitHub" => "https://github.com/synrc/n2o"}]
   end
 
-  defp deps do [
-    {:jsone,  github: "sile/jsone"},
-    {:cowboy, github: "extend/cowboy"},
-    {:gproc,  gitbub: "uwiger/gproc"},
-  ]
+  defp deps do
+     [{:ex_doc, ">= 0.0.0", only: :dev}]
   end
 end
