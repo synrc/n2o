@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+  <link rel=stylesheet type="text/css" href="http://synrc.com/synrc.css">
+  <meta name="Author" content="5HT">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta property="og:image" content="images/s_64.png"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=IE10,chrome=1" />
+  <title>N2O
+</title>
+</head>
+<body >
+<!--HEVEA command line is: hevea index.tex -o index.htm -->
+<!--CUT STYLE article--><!--HTMLHEAD-->
+
+<div class="nonselectedwrapper white" style="padding: 10px 0px 10px 0px;margin: 0px 0px 10px 0px;">
+    <a href="//synrc.com/">
+    <img style="float:left; margin-left: 55px; margin-top: 5px; margin-bottom:-5px;" src="http://synrc.com/images/synrc.png" border="0"></a>
+
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="display:none;margin-top:39px;">
+      <input type="hidden" name="cmd" value="_s-xclick">
+      <input type="hidden" name="hosted_button_id" value="P8WQHAQK5HWWW">
+      <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" style="width:74px;margin-top:0px;">
+     </form>
+
+    <div align=right style="float:right;width:700px;height: auto; margin: 20px 50px 0px 0px;">
+          <script type="text/javascript">
+
+        var args = (window.location).toString().split('/');
+        var page_name = args[args.length-1];
+        var menu = {'http://synrc.com/index.htm':    'Home',
+                    'http://synrc.com/research.htm': 'Showcase',
+                    'http://synrc.com/apps/':   'Apps',
+                    'http://synrc.com/feedback.htm': 'Contacts',
+                    'http://spawnproc.com':   '<b>Spawnproc</b>', };
+
+        Object.keys(menu).forEach(function (key) {
+            if (page_name == key) { document.write('<div class="menu" style="font-weight: bold;">'+menu[key]+'</div>'); }
+            else { document.write('<a class="menu" href="'+key+'">'+menu[key]+'</a>'); }
+        });
+
+        </script>
+    </div>
+</div>
+
+<hr size="1">
+
+<!--ENDHTML-->
+<!--CUT DEF section 1 --><div class="nonselectedwrapper">
+<div class="article">
+<div class="toc">
+<!--TOC section id="sec1" TOC-->
+<h2 id="sec1" class="section">TOC</h2><!--SEC END -->
+<!--TOC paragraph id="sec2" -->
+<!--SEC END --><p>
+<a href="http://synrc.com/apps/n2o/doc/web">1. Framework</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/setup.htm">2. Setup</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/processes.htm">3. Processes</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/endpoints.htm">4. Endpoints</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/handlers.htm">5. Handlers</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/protocols.htm">6. Protocols</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/api.htm">7. API</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/elements.htm">8. Elements</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/actions.htm">9. Actions</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/macros.htm">10. JavaScript</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/utf8.htm">11. UTF-8</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/packages.htm">12. Packages</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/persistence.htm">13. Persistence</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/web/last.htm">14. History</a> <br>
+
+<a href="http://synrc.com/apps/n2o/doc/book.pdf">Download PDF</a> <br>
+
+</p></div>
+
+<div class="articlecol">
+
+<!--TOC section id="sec3" N2O: Application Server-->
+<h2 id="sec3" class="section">N2O: Application Server</h2><!--SEC END --><p>N2O was started as the first Erlang Web Framework
+that uses WebSocket protocol only. We saved great compatibility with Nitrogen
+and added many improvements, such as binary page construction,
+binary data transfer, minimized process spawns, transmission of all events over the WebSocket
+and work within Cowboy processes. N2O renders pages several times faster than Nitrogen.</p>
+<!--TOC subsection id="sec4" Wide Coverage-->
+<h3 id="sec4" class="subsection">Wide Coverage</h3><!--SEC END --><p>
+N2O is unusual in that it solves problems in different web development domains
+and stays small and concise at the same time. Started as a Nitrogen concept
+of server-side framework it can also build offline client-side applications
+using the same source code. This became possible with powerful Erlang JavaScript Parse
+Transform which enables running Erlang on JavaScript platform and brings in Erlang and JavaScript
+interoperability. You can use Elixir, LFE and Joxa languages for backend development as well.</p>
+<!--TOC paragraph id="sec5" -->
+<!--SEC END --><p>
+N2O supports DSL and HTML templates. It lets you build JavaScript
+control elements in Erlang and perform inline rendering with DSL using
+the same code base for both client and server-side.
+How to use N2O is up to you. You can build mobile applications using server-side rendering
+for both HTML and JavaScript thus reducing CPU cycles and saving the battery of a mobile device.
+Or you can create rich offline desktop applications using Erlang JavaScript compiler.</p><!--TOC subsection id="sec6" Why Erlang in Web?-->
+<h3 id="sec6" class="subsection">Why Erlang in Web?</h3><!--SEC END --><p>
+We have benchmarked all the existing modern web frameworks that were built using functional
+languages and Cowboy was still the winner. The chart below shows raw HTTP
+performance of functional and C-based languages with concurrent
+primitives (Go, D and Rust) on a VAIO Z notebook with i7640M processor.</p><p>
+
+<img src="http://synrc.com/apps/n2o/doc/images/n2o_benchmark.png" style="margin-left: -20px;margin-botton: 30px; padding:20 20 20 20px;"><br>
+
+Picture. <span style="font-weight:bold">Web-Servers raw performance grand congregation</span><br>
+<br>
+
+
+
+Erlang was built for low latency streaming of binary data in telecom systems.
+It’s fundamental design goal included high manageability, scalability
+and extreme concurrency. Thinking of WebSocket channels as binary
+telecom streams and web pages as user binary sessions
+helps to get an understanding reasons behind choosing Erlang
+over other alternatives for web development.</p>
+<!--TOC paragraph id="sec7" -->
+<!--SEC END --><p>
+Using Erlang for web allows you to unleash the full power of telecom systems for
+building web-scale, event-driven, message-passing, NoSQL, asynchronous, non-blocking,
+reliable, highly-available, performant, secure, real-time, distributed applications.
+See Erlang: The Movie II.</p>
+<!--TOC paragraph id="sec8" -->
+<!--SEC END --><p>
+N2O outperforms full Nitrogen stack with only 2X raw HTTP Cowboy
+performance downgrade thus upgrading rendering performance several
+times compared to any other functional web framework. And
+sure it’s faster than raw HTTP performance of Node.js.</p>
+<!--TOC subsection id="sec9" Rich and Lightweight Applications-->
+<h3 id="sec9" class="subsection">Rich and Lightweight Applications</h3><!--SEC END --><p>
+There are two approaches for designing client/server communication.
+The first one is called ’data-on-wire’. With this approach only JSON, XML or binary
+data are transferred over RPC and REST channels. All HTML rendering
+is performed on the client-side. This is the most suitable approach for building desktop
+applications. Examples include React, Meteor and ClojureScript.
+This approach can also be used for building mobile clients.</p>
+<!--TOC paragraph id="sec10" -->
+<!--SEC END --><p>
+Another approach is sending pre-rendered parts of pages and JS
+and then replacing HTML and executing JavaScript on the client-side. This approach
+is better suited for mobile web development since the
+client doesn’t have much resources.</p>
+<!--TOC paragraph id="sec11" -->
+<!--SEC END --><p>
+With N2O you can create both types of applications. You can use N2O REST framework
+for desktop applications based on Cowboy REST API along with DTL
+templates for initial HTML rendering for mobile applications.
+You can also use Nitrogen DSL-based approach for modeling parts of pages
+as widgets and control elements, thanks to Nitrogen
+rich collection of elements provided by Nitrogen community.</p>
+<!--TOC paragraph id="sec12" -->
+<!--SEC END --><p>
+In cases when your system is built around Erlang infrastructure, N2O
+is the best choice for fast web prototyping, bringing simplicity
+of use and clean codebase. Despite HTML being transfered over the wire,
+you still have access to all your Erlang services directly.</p>
+<!--TOC paragraph id="sec13" -->
+<!--SEC END --><p>
+You can also create offline applications using Erlang JavaScript compiler
+just the way you would use ClojureScript, Scala.js, Elm, WebSharper
+or any other similar tool. N2O includes: REST micro frameworks,
+server-side and client-side rendering engines,
+WebSocket events streaming, JavaScript generation
+and JavaScript macro system along with <span style="font-weight:bold">AVZ</span> authorization
+library (Facebook, Google, Twitter, Github, Microsoft), key-value storages
+access library <span style="font-weight:bold">KVS</span> and <span style="font-weight:bold">MQS</span> Message Bus client library (gproc, emqttd).</p>
+<!--TOC subsection id="sec14" JSON and BERT-->
+<h3 id="sec14" class="subsection">JSON and BERT</h3><!--SEC END --><p>
+N2O uses JSON and BERT. All messages passed over
+WebSockets are encoded in native Erlang External Term Format.
+It is easy to parse it in JavaScript with <span style="font-weight:bold">dec(msg)</span>
+and it helps to avoid complexity on the server-side. Please refer
+to <a href="http://bert-rpc.org">http://bert-rpc.org</a> for detailed information.</p>
+<!--TOC subsection id="sec15" DSL and Templates-->
+<h3 id="sec15" class="subsection">DSL and Templates</h3><!--SEC END --><p>
+We like Nitrogen for the simple and elegant way it constructs typed
+HTML with internal DSL. This is analogous to Scala Lift,
+OCaml Ocsigen and Haskell Blaze approach. It lets you develop reusable control
+elements and components in the host language.</p>
+<!--TOC paragraph id="sec16" -->
+<!--SEC END --><p>
+Template-based approach (Yesod, ASP, PHP, JSP, Rails, Yaws and ChicagoBoss)
+requires developers to deal with raw HTML. It allows
+defining pages in terms of top-level controls, placeholders
+and panels. N2O also support this approach by proving bindings
+to DTL and ET template engines.</p>
+<!--TOC paragraph id="sec17" -->
+<!--SEC END --><p>
+The main N2O advantage is its suitability for large-scale projects
+without sacrificing simplicity and comfort of prototyping solutions
+in fast and dynamic manner. Below is an example of complete Web Chat
+implementation using WebSockets that shows how Templates, DSL and
+asynchronous inter-process communication work in N2O.</p><div class="center">Listing 1: chat.erl</div><p><br>
+</p><div class="lstlisting">    -module(chat).
+    -include_lib("nitro/include/nitro.hrl").
+    -compile(export_all).
+
+    main() -&gt;
+       #dtl { file     = "login",
+              app      = review,
+              bindings = [ { body, body() } ] }.
+
+    body() -&gt;
+      [ #span    { id=title,       body="Your nickname: " },
+        #textbox { id=user,        body="Anonymous" },
+        #panel   { id=history },
+        #textbox { id=message },
+        #button  { id=send,        source=[user,message],
+                                   body="Send",
+                                   postback=chat } ].
+
+    event(init) -&gt; wf:reg(room), wf:async("looper",fun loop/1);
+    event(chat) -&gt; User    = wf:q(user),
+                   Message = wf:q(message),
+                   n2o_async:send("looper",{chat,User,Message}).
+
+    loop({chat,User,Message}) -&gt;
+        Terms = #panel { body = [
+                #span  { body = User }, ": ",
+                #span  { body = Message } ]},
+        wf:insert_bottom(history, Terms),
+        wf:flush(room).</div><p>Just try to build the similar functionality with your favorite
+language/framework and feel the difference! Here are one message bus,
+one async <span style="font-weight:bold">gen_server</span> worker under supervision, NITRO DSL, DTL template,
+WebSockets, HTML and JavaScript generation in a simple file that you can
+put in your N2O application directory tree without restart and
+manual compilation. Also you can create single-file bundle
+which is able to run in Windows, Linux and Mac. Moreover this
+application is ready to run under multiplatform LING Erlang virtual machine.</p><!--TOC subsection id="sec18" Changes from Nitrogen-->
+<h3 id="sec18" class="subsection">Changes from Nitrogen</h3><!--SEC END --><p>
+We took a liberty to break some compatibility with the original
+Nitrogen framework, mostly because we wanted to have a clean codebase
+and achieve better performance. However, it’s still possible to port
+Nitrogen web sites to N2O quite easily. E.g., N2O returns id and
+class semantics of HTML and not <span style="font-weight:bold">html_id</span>.
+We simplified HTML rendering without using
+<span style="font-weight:bold">html_encode</span> which should be handled by application layer.</p>
+<!--TOC paragraph id="sec19" -->
+<!--SEC END --><p>
+Nitrogen.js, originally created by Rusty Klophaus, was removed
+because of the pure WebSocket nature of N2O which doesn’t
+require jQuery on the client-side anymore. In terms of lines of code
+we have impressive showing. New <span style="font-weight:bold">xhr.js</span> 25 LOC and <span style="font-weight:bold">bullet.js</span> 18 LOC
+was added as the replacement, also <span style="font-weight:bold">nitrogen.js</span> takes only 45 LOC.
+UTF-8 <span style="font-weight:bold">utf8.js</span> 38 LOC could be plugged separately only when you’re
+using <span style="font-weight:bold">bert.js</span> 200 LOC formatter. <span style="font-weight:bold">n2o.js</span> protocol handler is about 20 LOC.</p>
+<!--TOC paragraph id="sec20" -->
+<!--SEC END --><p>
+We also removed <span style="font-weight:bold">simple_bridge</span> and optimized N2O on each level to
+unlock maximum performance and simplicity. We hope you will enjoy
+using N2O. We are fully convinced it is the most efficient way to
+build Web applications in Erlang.</p>
+<!--TOC paragraph id="sec21" -->
+<!--SEC END --><p>
+Original Nitrogen was already tested in production under high load and we
+decided to remove <span style="font-weight:bold">nprocreg</span> process registry along
+with <span style="font-weight:bold">action_comet</span> heavy process creation. N2O creates a single
+process for an async WebSocket handler, all operations
+are handled within Cowboy processes.</p>
+<!--TOC paragraph id="sec22" -->
+<!--SEC END --><p>
+Also, we introduced new levels of abstraction. You can extend
+the set of available protocols (Nitrogen, Heartbeat, Binary),
+change protocol formatters to BERT, JSON or MessagePack, inject
+your code on almost any level. The code structure
+is clean and Nitrogen compatibility layer NITRO is fully detachable
+from N2O and lives in a separate <span style="font-weight:bold">synrc/nitro</span> application.
+
+<br><br>
+<h2><a name="testimonials"><b>N2O in Production</b></a></h2><blockquote>In this framework, most of all I liked the fact that most of the
+tasks solving in one code, in one language. And is not spread to the
+front-end & back-end.<div align=right>Alex Radetsky,
+<a href="http://pearlpbx.com/">PearlPBX</a></div></blockquote>
+
+<blockquote>Writing asynchronous web-applications has never been so easy for me.
+Now I really like to push data to client!<div align=right>Max Treskin,
+<a href="http://metachord.com/">Metachord</a></div></blockquote>
+
+<blockquote>N2O is the easiest way how to write different webapps. It just works.
+<div align=right>Alexander Karpich,
+<a href="http://rontel.ru/">RON-Telecom CJSC</a></div></blockquote>
+
+<blockquote>N2O is nice way to deal with WebSockets.
+<div align=right>Roman Gladkov
+<a href="http://crashkeeper.com/">Crashkeeper, Inc.</a></div></blockquote>
+
+<h2><a name="trendsetters"><b>Erlang Trendsetters on N2O</b></a></h2>
+
+<!--blockquote>This [N2O] makes Websockets so easy. Thanks for this, it's great.
+<div align=right>Joe Armstrong,
+<a href="http://ericsson.com/">Ericsson AG</a></div></blockquote-->
+
+<blockquote>Excited to see these guys pushing boundaries; that's exactly what
+inspired Nitrogen in the first place. My hat is off to the <a href="http://synrc.com">synrc.com</a>
+team for their work on N2O...
+<div align=right style="margin-top: 10px;">Rusty Klophaus, Nitrogen author,
+<a href="http://basho.com/">Basho Technologies, Inc.</a></div></blockquote>
+
+<blockquote>N2O is one of the most interesting Cowboy based frameworks.
+<div align=right style="margin-top: 10px;">Loïc Hoguin, Cowboy,
+<a href="http://ninenines.eu/">Nine Nines</a></div></blockquote>
+
+<br><center>
+<iframe src="http://slid.es/maximsokhatsky/n2o/embed" width="600" height="400" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</center><br>
+
+
+    <!--div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'synrc'; // required: replace example with your forum shortname
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a-->
+
+
+</p></div>
+</div>
+</div><div class="clear"> </div><!--CUT END -->
+<!--HTMLFOOT-->
+
+<div class="nonselectedwrapper">
+<div class="verywidecol">
+
+    <div style="width:100%;height:300px;float:left;font-size:16pt;" align=center>
+    	<hr size=1>
+    	<br><br><br>
+        <a href="//synrc.com/news/index.htm">Events</a> |
+    	<a href="//synrc.com/privacy.htm">Privacy Policy</a> |
+        <a href="//synrc.com/feedback.htm">Feedback</a> |
+        <a href="//synrc.com/brandbook.htm">Brandbook</a><br>
+    	Copyright &copy; 2005&ndash;2016 <a href="//synrc.com/index.htm"> Synrc Research Center s.r.o.</a>
+    </div>
+
+</div>
+</div>
+
+
+<div class="clear"></div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29227518-1']);
+      _gaq.push(['_trackPageview']);
+      
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'https://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                      })();
+                      
+                      </script>
+
+<script type="text/javascript" src="http://synrc.com/hi.js"></script>
+<!--ENDHTML-->
+</body>
+</html>
