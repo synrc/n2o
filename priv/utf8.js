@@ -1,5 +1,9 @@
 try { module.exports = { dec: utf8_dec, enc: utf8_toByteArray }; } catch (e) { }
 
+var te = require('./te.js');
+var TextEncoder = te.TextEncoder;
+var TextDecoder = te.TextDecoder;
+
 // N2O UTF-8 Support
 
 function utf8_toByteArray(str) { return { t: 107, v: (new TextEncoder("utf-8")).encode(str) }; };

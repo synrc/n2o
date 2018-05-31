@@ -1,3 +1,4 @@
+
 var bert = require('../priv/protocols/bert.js');
 var utf8 = require('../priv/utf8.js');
 var fs = require('fs');
