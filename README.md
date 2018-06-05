@@ -146,8 +146,6 @@ issues to GitHub related to misuses of N2O, all such issues will be closed.
 
 Support
 -------
-* [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/synrc/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-* IRC Channel #n2o on FreeNode 24/7
 * [![Chat on Telegram](https://img.shields.io/badge/Chat%20on-Telegram-brightgreen.svg)](http://t.me/erlang_n2o)
 
 Documentation
