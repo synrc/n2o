@@ -147,15 +147,9 @@ issues to GitHub related to misuses of N2O, all such issues will be closed.
 Free Support
 ------------
 
-* Official Channel #1 Stack Overflow: https://stackoverflow.com/questions/tagged/n2o
-* Official Channel #2 Erlang Mailing List: http://erlang.org/pipermail/erlang-questions/
-* Official Channel #3 Private E-Mail: maxim@synrc.com, doxtop@synrc.com
-
-Private Support
----------------
-
-* Internal Channel #1 Telegram: [![Chat on Telegram](https://img.shields.io/badge/Chat%20on-Telegram-brightgreen.svg)](http://t.me/erlang_n2o)
-* Paid Service at Synrc
+* Channel #1 Stack Overflow: https://stackoverflow.com/questions/tagged/n2o
+* Channel #2 Erlang Mailing List: http://erlang.org/pipermail/erlang-questions/
+* Channel #3 Private E-Mail: maxim@synrc.com, doxtop@synrc.com
 
 Documentation
 -------
