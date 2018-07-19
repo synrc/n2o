@@ -153,9 +153,9 @@ lang() -> ?CTX#cx.lang.
 % Cookies
 
 cookies() -> n2o_cx:cookies().
-cookie(Name) -> lists:keyfind(Name,1,cookies()).
+cookie(Name) -> lists:keyfind(to_list(Name),1,cookies()).
 cookie(Name,Value) -> cookie(Name,Value,"/", 24 * 60 * 60).
-cookie(Name,Value,Path,TTL) -> n2o_cx:add_cookie(Name,Value,Path,TTL).
+cookie(Name,Value,Path,TTL) -> n2o_cx:add_cookie(to_list(Name),to_list(Value),Path,TTL).
 
 % Bridge Information
 
