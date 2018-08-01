@@ -128,7 +128,7 @@ Erlang version
 --------------
 
 We don't accept any reports of problems related to ESL or Ubuntu packaging.
-We only support Erlang built from sources, official Windows package,
+We only support latest Erlang built from sources, official Windows package,
 built with kerl or installed on Mac with homebrew. If you have any problems
 with your favourite Erlang package for your OS, please report issues
 to package maintainer.
