@@ -14,7 +14,7 @@ dev()  -> [ [ #script{src=lists:concat(["/n2o/protocols/",X,".js"])} || X <- [be
             [ #script{src=lists:concat(["/n2o/",Y,".js"])}           || Y <- [bullet,n2o,ftp,utf8,validation] ] ].
 
 redirect_wait() -> #dtl{}.
-list() -> "<iframe src=http://synrc.com/apps/"++code()++" frameborder=0 width=700 height=1250></iframe>".
+list() -> "<iframe src=http://synrc.space/apps/"++code()++" frameborder=0 width=700 height=1250></iframe>".
 code() -> case wf:q(<<"code">>) of undefined  -> "../privacy.htm";
                                     Code -> wf:to_list(wf:depickle(Code)) end.
 

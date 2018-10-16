@@ -61,7 +61,7 @@ get_file(Req, State={Path, {ok, #file_info{size=_Size}}, _}) ->
             case file:read_file(filename:join([code:lib_dir(Name)|RestPath])) of
             {ok,ReleaseFile} -> ReleaseFile;
             {error,_} -> <<>> end end end,
-    wf:info(?MODULE,"Cowboy Requested Static File: ~p~n\r ~p~n\r",[Raw,filename:absname(StringPath)]),
+    wf:info(?MODULE,"Cowboy Requested Static File: ~p~n\r",[filename:absname(StringPath)]),
 	Sendfile = fun (Socket, Transport) ->
 		case Transport:send(Socket, Raw) of
 			{ok, _} -> ok;

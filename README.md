@@ -128,7 +128,7 @@ Erlang version
 --------------
 
 We don't accept any reports of problems related to ESL or Ubuntu packaging.
-We only support Erlang built from sources, official Windows package,
+We only support latest Erlang built from sources, official Windows package,
 built with kerl or installed on Mac with homebrew. If you have any problems
 with your favourite Erlang package for your OS, please report issues
 to package maintainer.
@@ -144,10 +144,12 @@ of existing code, bug, etc, that needs to be posted to GitHub for the
 contributing development community of N2O to incorporate. DO NOT post
 issues to GitHub related to misuses of N2O, all such issues will be closed.
 
-Support
--------
-* [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/synrc/n2o?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-* IRC Channel #n2o on FreeNode 24/7
+Free Support
+------------
+
+* Channel #1 Stack Overflow: https://stackoverflow.com/questions/tagged/n2o
+* Channel #2 Erlang Mailing List: http://erlang.org/pipermail/erlang-questions/
+* Channel #3 Private E-Mail: maxim@synrc.com, doxtop@synrc.com
 
 Documentation
 -------
@@ -155,7 +157,7 @@ Documentation
 If you are new or you need to decide whether the N2O architecture
 and philosophy is a fit for your project
 
-* Official N2O Book [PDF](http://synrc.com/apps/n2o/doc/book.pdf)
+* Official N2O Book [PDF](http://synrc.space/apps/n2o/doc/book.pdf)
 
 Windows Users
 -------------

@@ -37,4 +37,4 @@ search(Pid,Q) ->
         case re:run(Bin,re(Q),[unicode,global,{capture,[1,2],binary},dotall,caseless]) of
             {match,Match} -> sections(Path,Match,Pid);
             nomatch -> [] end end) end,
-    filelib:wildcard(application:get_env(n2o,search,"/var/www/sites/synrc.com/apps/*/doc/web/*.htm"))).
+    filelib:wildcard(application:get_env(n2o,search,"/var/www/sites/synrc.space/apps/*/doc/web/*.htm"))).
