@@ -2,9 +2,15 @@
 -define(N2O_HRL, true).
 
 -record(handler, { name, module, class, group, config, state}).
--record(cx,      { handlers, actions, req, module, lang, path, session, formatter=false, params, form, state=[] }).
+% N2O 4.4
+%-record(cx,{ handlers, actions, req, module, lang, path, session, formatter=false, params, form, state=[] }).
+% N2O 4.5
+-record(cx, { handlers=[], actions=[], req=[], module=[], lang=[], path=[],
+              session=[], formatter=false, params=[], node=[], client_pid=[], state=[], from=[], vsn = [] }).
 
+-ifndef(CTX).
 -define(CTX, (get(context))).
+-endif.
 -define(REQ, (get(context))#cx.req).
 
 % API
