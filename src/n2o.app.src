@@ -1,6 +1,6 @@
 {application, n2o, [
     {description,  "N2O WebSocket Application Server"},
-    {vsn,          "4.4"},
+    {vsn,          "5.10"},
     {applications, [kernel, stdlib, cowboy]},
     {modules, []},
     {registered,   []},
