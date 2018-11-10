@@ -1,5 +1,5 @@
-N2O: Erlang Application Server
-==============================
+N2O: WebSocket Application Server
+=================================
 
 [![Build Status](https://travis-ci.org/synrc/n2o.svg?branch=master)](https://travis-ci.org/synrc/n2o)
 
