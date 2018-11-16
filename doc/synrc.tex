@@ -1,0 +1,137 @@
+% Copyright (c) 2010 Synrc Research Center
+
+\usepackage{afterpage}
+
+\usepackage{hevea}
+\usepackage[english]{babel}
+\usepackage{palatino}
+\usepackage{graphicx}
+\usepackage{tocloft}
+\usepackage{cite}
+\usepackage[utf8]{inputenc}
+\usepackage{moreverb}
+\usepackage{listings}
+\usepackage[none]{hyphenat}
+\usepackage{caption}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[top=18mm, bottom=25.4mm,
+            inner=16mm,outer=18mm,
+            paperwidth=142mm, paperheight=200mm]{geometry}
+
+%left=18mm, right=18mm,
+
+% \usepackage[hmarginratio=3:2]{geometry}
+
+\hyphenation{framework nitrogen javascript facebook streaming JavaScript micro-frameworks}
+
+\setlength{\cftsubsecnumwidth}{2.5em}
+
+% include image for HeVeA and LaTeX
+
+\makeatletter
+\def\@seccntformat#1{\llap{\csname the#1\endcsname\hskip0.7em\relax}}
+\makeatother
+
+\newcommand{\includeimage}[2]
+{\ifhevea
+    {\imgsrc{#1}}
+\else{
+    \begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{#1}
+    \caption{#2}
+    \end{figure}}
+\fi}
+
+% HeVeA header
+
+{\ifhevea
+  \let\oldmeta=\@meta
+  \renewcommand{\@meta}{%
+  \oldmeta
+  \begin{rawhtml}
+  <meta name="Author" content="Maxim Sokhatsky">
+  <meta http-equiv="expires" content="Tue, 01 Jan 2020 1:00:00 GMT" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=IE10,chrome=1" />
+  \end{rawhtml}}
+
+  \htmlhead{\rawhtmlinput{templates/head-hevea.htx}}
+  \htmlfoot{\rawhtmlinput{templates/foot.htx}}
+  \footerfalse
+\fi}
+
+% title page for N2O
+
+\newcommand*{\titleWF}
+{
+    \begingroup
+   \thispagestyle{empty}
+    \hbox{
+        \hspace*{0.2\textwidth}
+        \rule{1pt}{\textheight}
+        \hspace*{0.05\textwidth}
+        \parbox[b]{0.75\textwidth}
+        {
+            {\noindent\Huge \bfseries N2O}\\[2\baselineskip]
+            {\LARGE \textsc{
+                No Bullshit\\[0.5\baselineskip]
+                Sane Framework\\[0.5\baselineskip]
+                for Wild Web}}\\[4\baselineskip]
+            \vspace{0.5\textheight}
+%            {\Large \textit{Maxim Sokhatsky}}\\[2\baselineskip]
+%            {\large {\bf {\color{Blue}syn}{\color{OrangeRed}rc} research center}
+%            {\copyright} 2013-2014}\\[1\baselineskip]
+        }
+    }
+    \endgroup
+}
+
+% define images store
+
+\graphicspath{{./images/}}
+
+% start each section from new page
+
+\let\stdsection\section
+\renewcommand\section{\newpage\stdsection}
+
+% define style for code listings
+
+\lstset{
+    backgroundcolor=\color{white},
+    keywordstyle=\color{blue},
+    basicstyle=\bf\ttfamily\footnotesize,
+    columns=fixed}
+
+%\headsep = 0cm
+%\voffset = -1.5cm
+%\hoffset = -0.7cm
+%\topmargin = 0cm
+%\textwidth = 12cm
+%\textheight = 17.5cm
+%\footskip = 1cm
+\parindent = 0cm
+
+\hyphenpenalty=5000
+  \tolerance=1000
+
+\newenvironment{dedication}
+{
+   \thispagestyle{empty}
+   \cleardoublepage
+   \thispagestyle{empty}
+   \vspace*{\stretch{1}}
+   \hfill\begin{minipage}[t]{0.66\textwidth}
+   \raggedright
+}%
+{
+   \end{minipage}
+   \vspace*{\stretch{3}}
+   \clearpage
+}
+
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \newpage}

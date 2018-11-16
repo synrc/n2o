@@ -1,0 +1,2 @@
+-define(APP, n2o).
+-define(TEMPLATE, filename:join(lists:reverse(tl(lists:reverse(filename:split(code:priv_dir(?APP)))))) ++ "/test/index.html").

@@ -1,0 +1,446 @@
+\section{API}
+
+\subsection{Update DOM \bf{wf:update}}
+You can update part of the page or DOM element with a given
+element or even raw HTML. N2O comes with NITRO template engine
+based on Erlang records syntax and optimized to be as fast as DTL or EEX template engines.
+You may use them with {\bf \#dtl} and {\bf \#eex} template NITRO elements.
+N2O Review application provides a sample how to use DTL templates.
+For using Nitrogen like DSL first you should include {\bf nitro} application to your
+rebar.config
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    {nitro,".*",{git,"git://github.com/synrc/nitro",{tag,"2.9"}}},
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+And also plug it in headers to your erlang page module:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -include("nitro/include/nitro.hrl").
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Here is an example of simple {\bf \#span} NITRO element with an HTML counterpart.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:update(history,[#span{body="Hello"}]).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+It generates DOM update script and sends it to
+WebSocket channel for evaluation:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    document.querySelector('#history')
+            .outerHTML = '<span>Hello</span>';
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Companions are also provided for updating head and tail
+of the elements list: {\bf wf:insert\_top/2} and
+{\bf wf:insert\_bottom/2}. These are translated to appropriate
+JavaScript methods {\bf insertBefore} and {\bf appendChild} during rendering.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:insert_top(history,
+        #panel{id=banner, body= [
+            #span{ id=text,
+                   body = wf:f("User ~s logged in.",[wf:user()]) },
+            #button{id=logout, body="Logout", postback=logout },
+            #br{} ]}),
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Remember to envelop all elements in common root element before inserts.
+
+\paragraph{}
+For relative updates use {\bf wf:insert\_before/2} and {\bf wf:insert\_after/2}.
+To remove an element use {\bf wf:remove/2}.
+
+\paragraph{\bf Element Naming}
+You can specify element's id with Erlang atoms,
+lists or binaries. During rendering the value will be converted
+with {\bf wf:to\_list}. Conversion will be consistent only if you use atoms.
+Otherwise you need to care about illegal symbols for element accessors.
+
+\paragraph{}
+During page updates you can create additional elements with
+runtime generated event handlers, perform HTML rendering for
+template elements or even use distributed map/reduce to calculate view.
+You have to be aware that heavy operations will consume
+more power in the browser, but you can save it by rendering
+HTML on server-side. All DOM updates API works both using
+JavaScript/OTP and server pages.
+
+\paragraph{}
+List of elements you can use is given in {\bf Chapter 9}. You can also create
+your own elements with a custom render function.
+If you want to see how custom element are being implemented you may refer
+to {\bf synrc/extra} packages where some useful controls may be found like
+file uploader, calendar, autocompletion textboxlist and HTML editor.
+
+\newpage
+\subsection{Wire JavaScript \bf{wf:wire}}
+Just like HTML is generated from Elements, Actions are rendered into
+JavaScript to handle events raised in the browser. Actions are always
+transformed into JavaScript and sent through WebSockets pipe.
+
+\subsection*{Direct Wiring}
+There are two types of actions. First class are direct JavaScript
+strings provided directly as Erlang lists or via JavaScript/OTP
+transformations.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire("window.location='http://synrc.com'").
+\end{lstlisting}
+
+\subsection*{Actions Render}
+Second class actions are in fact Erlang records
+rendered during page load, server events or client events.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire(#alert{text="Hello!"}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+However basic N2O actions that are part of N2O API, {\bf wf:update} and {\bf wf:redirect},
+are implemented as Erlang records as given in the example. If you need deferred
+rendering of JavaScript, you can use Erlang records instead of direct wiring with
+Erlang lists or JavaScript/OTP.
+
+\paragraph{}
+Any action, wired with {\bf wf:wire}, is enveloped in {\bf \#wire\{actions=[]\}},
+which is also an action capable of polymorphic rendering of custom or built-in actions, specified in the list.
+Following nested action embedding is also valid:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    wf:wire(#wire{actions=[#alert{text="N2O"}]}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You may try to see how internally wiring is working:
+
+\begin{lstlisting}
+    > wf:actions().
+      []
+
+    > wf:wire(#alert{text="N2O"}).
+      [#wire{ancestor = action,trigger = undefined,
+             target = undefined,module = action_wire,
+             actions = #alert{ancestor = action,
+                              trigger = undefined,
+                              target = undefined,
+                              module = action_alert,
+                              actions = undefined,
+                              source = [], text = "N2O"},
+              source = []}]
+
+    > iolist_to_binary(wf:render(wf:actions())).
+      <<"alert(\"N2O\");">>
+\end{lstlisting}
+
+Consider wiring {\bf \#event} if you want to add listener to
+existed element on page:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+
+    > wf:wire(#event{target=btn,postback=evt,type=click}),
+      []
+
+    > rp(iolist_to_binary(wf:render(wf:actions()))).
+      <<"{var x=qi('element_id'); x && x.addEventListener('cl
+      ick',function (event){{ if (validateSources([])) ws.sen
+      d(enc(tuple(atom('pickle'),bin('element_id'),bin('g2gCa
+      AVkAAJldmQABWluZGV4ZAADZXZ0awAKZWxlbWVudF9pZGQABWV2ZW50
+      aANiAAAFoWIAB8kuYgAOvJA='),[tuple(tuple(utf8_toByteArra
+      y('element_id'),bin('detail')),event.detail)])));else c
+      onsole.log('Validation Error'); }});};">>
+\end{lstlisting}
+
+
+\newpage
+\subsection{Message Bus {\bf wf:reg} and {\bf wf:send}}
+N2O uses {\bf gproc} process registry for managing async processes pools.
+It is used as a PubSub message bus for N2O communications.
+You can associate a process with the pool with {\bf wf:reg}
+and send a message to the pool with {\bf wf:send}.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    loop() ->
+        receive M ->
+            wf:info(?MODULE, "P: ~p, M: ~p",[self(),M]) end, loop().
+\end{lstlisting}
+
+Now you can test it
+
+\begin{lstlisting}
+    > spawn(fun() -> wf:reg(topic), loop() end).
+    > spawn(fun() -> wf:reg(topic), loop() end).
+    > wf:send(topic,"Hello").
+\end{lstlisting}
+
+It should print in REPL something like:
+
+\begin{lstlisting}
+    > [info] P: <0.2012.0>, M: "Hello"
+    > [info] P: <0.2015.0>, M: "Hello"
+\end{lstlisting}
+
+\paragraph{\bf Custom Registrator}
+
+You may want to replace built-in {\bf gproc} based PubSub registrator
+with something more robust like MQTT and AMQP or something more
+internal like {\bf pg2}. All you need is to implement following API:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -module(mqtt_mq).
+    -compile(export_all).
+
+    send(Topic, Message) -> mqtt:publish(Topic, Message).
+    reg(Topic)           -> mqtt:subscribe(Topic, Message).
+    reg(Topic,Tag)       -> mqtt:subscribe(Topic, Tag, Message).
+    unreg(Topic)         -> mqtt:unsubscribe(Topic).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+And set it in runtime:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > application:set_env(n2o,mq,mqtt_mq).
+\end{lstlisting}
+
+\subsection{Async Processes {\bf wf:async} and {\bf wf:flush}}
+Function {\bf wf:async/2} creates Erlang process, which communicate with the primary page
+process by sending messages. {\bf wf:flush/0} should be called to redirect all updates and
+wire actions back to the page process from its async counterpart. But function {\bf wf:flush/1}
+has completly another meaning, it uses pubsub to deliver a rendered actions in async worker to
+any process, previously registered with {\bf wf:reg/1}, by its topic.
+Usually you send messages to async processes over N2O
+message bus {\bf wf:send/2} which is similar to how {\bf wf:flush/1} works.
+But you can use also {\bf n2o\_async:send/2} selectively to async worker what reminds
+{\bf wf:flush/0}. In following
+example different variants are gives, both incrementing counter by 2. Also notice
+the async process initialization through {\bf init} message. It is not nessesary
+to include init clause to async looper.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    body()      -> [ #span   { id=display, body="0"},
+                     #button { id=send, body="Inc",
+                               postback=inc} ].
+
+    event(init) -> wf:async("counter",fun loop/1);
+    event(inc)  -> wf:send(counter,up),
+                   n2o_async:send("counter",up).
+
+    loop(init)  -> wf:reg(counter), put(counter,0);
+    loop(up)    -> C = get(counter) + 1,
+                   put(counter,C),
+                   wf:update(display,
+                      #span{id=display,body=wf:to_binary(C)}),
+                   wf:flush().
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\paragraph{\bf Process Naming}
+The name of async process is globally unique. There are two
+versions, {\bf wf:async/1} and {\bf wf:async/2}. In the given example
+the name of async process is specified as ``counter'', otherwise,
+if the first parameter was not specified, the default name ``looper''
+will be used. Internally each async process includes custom key which
+is settled by default to session id.
+
+\newpage
+So let's mimic {\bf session\_id} and {\bf \#cx} in the shell:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > put(session_id,<<"d43adcc79dd64393a1eb559227a2d3fd">>).
+      undefined
+
+    > wf:context(wf:init_context(undefined)).
+      {cx,[{query,n2o_query},
+           {session,n2o_session},
+           {route,routes}],
+           [],[],index,undefined,[],
+           undefined,[],undefined,[]}
+
+    > wf:async("ho!",
+         fun(X) -> io:format("Received: ~p~n",[X]) end).
+      index:Received: init
+      {<0.507.0>,{async,
+        {"ho!",<<"d43adcc79dd64393a1eb559227a2d3fd">>}}}
+
+    > supervisor:which_children(n2o_sup).
+      [{{async,
+          {"counter",<<"d43adcc79dd64393a1eb559227a2d3fd">>}},
+        <0.11564.0>,worker,
+        [n2o_async]}]
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Async workers suppors both sync and async messages, you may use {\bf gen\_server}
+for calling by pid, {\bf n2o\_async} for named or even built-in erlang way of
+sending messages. All types of handlilng like info, cast and call are supported.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > pid(0,507,0) ! "hey".
+      Received: "hey"
+      ok
+
+    > n2o_async:send("ho!","hola").
+      Received: "hola"
+      ok
+
+    > gen_server:call(pid(0,507,0),"sync").
+      Received: "sync"
+      ok
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Parse URL and Context parameters {\bf wf:q} and {\bf wf:qp}}
+These are used to extract URL parameters or read from the process context.
+{\bf wf:q} extracts variables from the context stored by controls postbacks.
+{\bf wf:qp} extracts variables from URL params provieded by cowboy bridge.
+{\bf wf:qc} extracts variables from {\bf \#cx.params} context parsed with
+custom query handler during endpoint initialization usually performed
+inside N2O with something like.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    Ctx = wf:init_context(Req),
+    NewCtx = wf:fold(init,Ctx#cx.handlers,Ctx),
+    wf:context(NewCtx),
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+\subsection{Render {\bf wf:render} or {\bf nitro:render}}
+Render elements or actions with common render. Rendering is usually
+done automatically inside N2O, when you use DOM or Wiring API, but sometime you may
+need manual render, e.g. in static site generators and other NITRO applications
+which couldn't be even dependent from N2O. For that purposes you may use NITRO API
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > nitro:render(#button{id=id,postback=signal}).
+      <<"<button id=\"id\" type=\"button\"></button>">>
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\paragraph{}
+This is simple sample you may use in static site generators, but in N2O context
+you also may need to manual render JavaScript actions produced during HTML rendering.
+First of all you should know that process in which you want to render should be
+initialized with N2O {\bf \#cx} context. Here is example of JavaScript
+produced during previous {\bf \#button} rendering:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > wf:context(wf:init_context([])).
+      undefined
+
+    > rp(iolist_to_binary(nitro:render(wf:actions()))).
+      <<"{var x=qi('id'); x && x.addEventListener('click',
+      function (event){{ if (validateSources([])) ws.send(
+      enc(tuple(atom('pickle'),bin('id'),bin('g2gCaAVkAAJl
+      dmQABWluZGV4ZAAGc2lnbmFsawACaWRkAAVldmVudGgDYgAABaFi
+      AAbo0GIACnB4'),[tuple(tuple(utf8_toByteArray('id'),b
+      in('detail')),event.detail)])));else console.log('Va
+      lidation Error'); }});};">>
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+\paragraph{}
+Here is another more complex example of menu rendering using NITRO DSL:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+   menu(Files,Author) ->
+      #panel{id=navcontainer,body=[#ul{id=nav,body=[
+
+      #li{body=[#link{href="#",body="Navigation"},#ul{body=[
+                #li{body=#link{href="/1.htm",body="Root"}},
+                #li{body=#link{href="../1.htm",body="Parent"}},
+                #li{body=#link{href="1.htm",body="This"}}]}]},
+
+      #li{body=[#link{href="#",body="Download"},#ul{body=[
+                #li{body=#link{href=F,body=F}}|| F <- Files ] }]},
+
+      #li{body=[#link{href="#",body="Translations"},#ul{body=[
+                #li{body=#link{href="#",body=Author}}]}]}]}]}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > rp(iolist_to_binary(wf:render(menu(["1","2"],"5HT")))).
+      <<"<div id=\"navcontainer\"><ul id=\"nav\"><li>
+      <a href=\"#\">Navigation</a><ul><li><a href=\"/
+      1.htm\">Root</a></li><li><a href=\"../1.htm\">P
+      arent</a></li><li><a href=\"1.htm\">This</a></l
+      i></ul></li><li><a href=\"#\">Download</a><ul><
+      li><a href=\"1\">1</a></li><li><a href=\"2\">2<
+      /a></li></ul></li><li><a href=\"#\">Translation
+      s</a><ul><li><a href=\"#\">5HT</a></li></ul></l
+      i></ul></div>">>
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\paragraph{}
+Also notice some helpful functions to preprocess HTML and JavaScript
+escaping to avois XSS attacks:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > wf:html_encode(wf:js_escape("alert('N2O');")).
+    "alert(\\&#39;N2O\\&#39;);"
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Redirects {\bf wf:redirect}}
+Redirects are implemented not with HTTP headers, but with JavaScript action modifying {\bf window.location}.
+This saves login context information which is sent in the first packet upon establishing a WebSocket connection.
+
+\subsection{Session Information {\bf wf:session}}
+Store any session information in ETS tables. Use {\bf wf:user}, {\bf wf:role} for
+login and authorization. Consult {\bf AVZ} library documentation.
+
+\newpage
+\subsection{Bridge information {\bf wf:header} and {\bf wf:cookie}}
+You can read and issue cookie and headers information using internal Web-Server routines.
+You can also read peer IP with {\bf wf:peer}. Usually you do Bridge operations
+inside handlers or endpoints.
+
+\begin{lstlisting}
+    wf:cookies_req(?REQ),
+    wf:cookie_req(Name,Value,Path,TTL,Req)
+\end{lstlisting}
+
+You can set cookies for the page using public cookies API during initial page rendering.
+
+\begin{lstlisting}
+    body() -> wf:cookie("user","Joe"), [].
+\end{lstlisting}
+
+You should use wiring inside WebSocket events:
+
+\begin{lstlisting}
+    event(_) ->
+        wf:wire(wf:f("document.cookie='~s=~s'",["user","Joe"])).
+\end{lstlisting}

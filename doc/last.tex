@@ -1,0 +1,168 @@
+\begingroup
+
+\section{History}
+
+\paragraph{}
+The N2O was born in 2013 in spring. It's started as a process of
+reimplementation of Nitrogen Web Framework behavior for better
+performance and code reducing. The initial version had its own
+render core along with pure websocket nature of the IO protocol.
+
+\paragraph{}
+First official release of N2O was made in October 2013 when
+N2O was presented as one having AES/CBC pickling,
+REST transformations, own TeX handbook and
+JavaScript compiler. It is also known as version 0.10.
+
+\paragraph{}
+In this minor release BERT transformations mainly were improved using parse\_transform.
+Was introduced ETS caching. Tiny 50 LOC Makefile called {\bf otp.mk} was
+suggested for easy production deployment. It's still best option to deploy
+ applications. It was release 0.11.
+
+\paragraph{}
+In January 2014 release xen hosting in LING VM
+was initially introduced. Dependencies
+start to freezing; asset and deploy options were improved.
+
+\paragraph{}
+April 2014 release was a giving hand to pure
+JavaScript SPA applications. Now pages could be served
+in nginx behind Erlang cowboy web server. Initial version of
+N2O protocol was introduced in this release. New twitter-format
+stack trace messages was added for error reporting. {\bf bert.js}
+was rewritten and jQuery was removed in this release. In 1.4 release
+was also introduced unified logging schema for KVS and N2O. And main
+WebSocket endpoint was totally rewritten to support N2O protocol.
+
+\paragraph{}
+The release of May 2014 is still supported. In this release
+new build tool {\bf mad} was initially introduced. Version 1.5.
+
+\newpage
+\paragraph{}
+August 2014 version 1.8 received new cookie session manager
+synchronized with ETS table where all entries zipped with session keys.
+Client binary requests was made to exists in {\bf bin} sub-protocol.
+KVS was first added to sample application in this release.
+Full HTML elements and attributes were added, which caused the growth of
+the nitrogen DSL size to the size of N2O.
+
+\paragraph{}
+September 2014 release was numbered 1.9.
+New client side protocol pipeline along with new {\bf n2o.js}.
+For mad was issued new dynamic loader
+which is able to host working directory inside ETS table and readable
+from erlang executable script on Windows, Linux and Mac. UTF-8 support
+was optimized in {\bf utf8.js}. New experimental {\bf rails} protocol and {\bf crashdump.io}
+logging backend module were added in version 1.9.
+
+\paragraph{}
+October 2014 version 1.10 was minor again. The only message in changelog
+were added: "nothing special". The first malfunction bug which was fixed is the
+racing which happened during async DOM bulding. Yes, N2O is faster than browser.
+
+\paragraph{}
+January 2015 version 2.1. Major Release. N2O book from now
+on can be purchased in a hardcover print. For business
+applications validations were introduced. {\bf n2o.js}, {\bf binary.js}, {\bf nitrogen.js},
+{\bf template.js} were slightly optimized. KJELL color support from now on enabled in
+new {\bf review} sample application.
+Log level support and several field and racing fixes in HTML elements.
+
+\paragraph{}
+March 2015 version 2.3. Initial Haskell implentation of N2O server is introduced.
+New N2O WebSocket protocol specification for all stack of {\bf synrc} and {\bf spawnproc} applications.
+New auto-expiring cookie-based session and cache managers. Revised and more sane XHR fallback.
+Automatic language detection from routes in context.
+Several element fixes and latest Cowboy 1.0.1.
+
+\newpage
+\begin{lstlisting}[caption=Bootstraping in a minute]
+
+  $ ./mad app sample
+  Create File: "sample/sys.config"
+  Create File: "sample/apps/sample/priv/static/synrc.css"
+  Create File: "sample/apps/sample/src/web_app.erl"
+  Create File: "sample/apps/rebar.config"
+  Create File: "sample/apps/sample/rebar.config"
+  Create File: "sample/apps/sample/src/sample.app.src"
+  Create File: "sample/apps/sample/src/index.erl"
+  Create File: "sample/apps/sample/src/web_sup.erl"
+  Create File: "sample/apps/sample/priv/static/spa/index.htm"
+  Create File: "sample/rebar.config"
+  Create File: "sample/apps/sample/priv/templates/index.html"
+  Create File: "sample/apps/sample/src/routes.erl"
+  $ cd sample
+  $ time ./mad dep com pla
+  ...
+  Ordered: [kernel,stdlib,fs,cowlib,crypto,
+            compiler,syntax_tools,ranch,gproc,
+            cowboy,erlydtl,n2o,sample,active,mad,sh]
+
+  real    0m41.901s
+  user    0m17.785s
+  sys 0m5.108s
+  $ ./mad rep
+  Configuration: [{n2o,[{port,8000},
+                        {route,routes},
+                        {log_modules,web_app}]},
+                  {kvs,[{dba,store_mnesia},
+                        {schema,[kvs_user,
+                                 kvs_acl,kvs_feed,
+                                 kvs_subscription]}]}]
+  Applications: [kernel,stdlib,fs,cowlib,crypto,
+                 compiler,syntax_tools,ranch,
+                 gproc,cowboy,erlydtl,n2o,
+                 sample,active,mad,sh]
+
+  Erlang/OTP 17 [erts-6.2] [source] [64-bit] [smp:4:4]
+         [async-threads:10] [hipe] [kernel-poll:false]
+
+  Eshell V6.2  (abort with ^G)
+  1>
+\end{lstlisting}
+
+\paragraph{}
+N2O is fast energy efficient binary protocol for IoT and WebSocket applications.
+I hope you will find this retrospective useful in your discovering of N2O.
+
+\newpage
+\section{Afterword}
+
+Hope you find \footahref{http://synrc.com/apps/n2o}{N2O},
+\footahref{http://synrc.com/apps/kvs}{KVS}, and
+\footahref{http://synrc.com/apps/mad}{MAD} stack small and concise,
+because it was the main goal during development.
+We stay with minimal viable functionality criteria.
+
+\paragraph{}
+N2O is free from unnecessary layers and code calls as much as possible.
+At the same time it covers all your needs to build
+flexible web messaging relays using rich stack of protocols.
+
+\paragraph{}
+Minimalistic criteria allows you to see the system's
+most general representation, which drives you to describe efficiently.
+You could be more productive by focusing on core.
+Erlang N2O and companion libraries altogether make
+your life managing web applications easy without
+efforts due to its naturally compact and simple design, and absence of code bloat.
+
+\paragraph{}
+You can see that parse\_transform is very useful, especially in JavaScript
+protocol generation (SHEN) and REST record-to-proplist generators. So having
+quote/unquote in language would be very useful. Fast and small
+Erlang Lisp (LOL) is expecting compiler is this field as universal
+Lisp-based macro system.
+
+\paragraph{}
+All apps in stack operate on its own DSL records-based language:
+N2O --- \#action/\#element; KVS --- \#iterator/\#container.
+This language is accessible directly from Erlang-based languages: Joxa, Elixir, Erlang, Lol.
+
+\paragraph{}
+We hope that this book will guide you in the wild world of Erlang web development
+and you will be enlightened by its minimalistic power.
+
+\endgroup

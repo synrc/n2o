@@ -1,0 +1,129 @@
+\section{Endpoints}
+N2O Erlang Processes are instantiated and run by Web Server.
+Depending on Web Server endpoint bindings you can specify
+module for HTTP requests handling.
+
+\paragraph{}
+N2O comes with three endpoint handlers for each Web Server supported.
+However you are not required to use any of these.
+You can implement your own endpoint handlers, e.g. for using with
+Meteor.js or Angular.js and providing Erlang back-end event streaming
+from server-side. Here is an example of using HTTP, WebSocket and
+REST endpoint handlers with Cowboy Web Server.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    {"/rest/:resource",     rest_cowboy, []},
+    {"/rest/:resource/:id", rest_cowboy, []},
+    {"/ws/[...]",           n2o_stream,  []},
+    {'_',                   n2o_cowboy,  []}
+\end{lstlisting}
+
+\subsection{HTML Pages over HTTP}
+This handler is used for serving initial dynamic HTML page.
+In case you are serving static HTML content this handler is
+not included into the running stack. {\bf {n2o}\_{cowboy}} is
+a default HTML page handler.
+
+\paragraph{}
+On initial page load {\bf {n2o}\_{document}:run} of page document endpoint is started.
+During its execution {\bf {wf}\_{render}:render} proceeds
+by calling {\bf Module:main} selected by the routing handler.
+
+\newpage
+\subsection{JavaScript Events over WebSocket}
+JavaScript handler shares the same router information as the
+HTML handler because during its initial phase the same chain
+of N2O handlers is called.
+
+\paragraph{}
+This handler knows how to deal with XHR and WebSocket requests.
+{\bf {n2o}\_{stream}} is a default JavaScript event handler
+based on Bullet library created by Loïc Hoguin, optimized and refined.
+
+\paragraph{}
+You can send several types of events directly from JavaScript
+using various protocols. E.g. you may need to use client protocol:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+  JavaScript> ws.send(enc(tuple(atom('client'),
+                   tuple(atom('phone_auth'),bin("+380..")))));
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+And catch this event at Erlang side:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+  event({client,{phone_auth,Phone}}) ->
+      io:format("Phone: ~p~n",[Phone]).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can also send direct messages to event/1, but use it carefully
+because it may violate security rules.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    > ws.send(enc(tuple(atom('direct'),atom('init'))));
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+With catching at Erlang side:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    event(init) -> io:format("Init called~n").
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+\subsection{HTTP API over REST}
+REST handler's request context initialization differs for the one
+used by HTML and JavaScript handlers. N2O handler chains are not
+applied to REST requests. {\bf rest\_cowboy} is a default REST
+handler.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    {"/rest/:resource", rest_cowboy, []},
+    {"/rest/:resource/:id", rest_cowboy, []},
+\end{lstlisting}
+
+\lstset{captionpos=b}
+\vspace{1\baselineskip}
+\begin{lstlisting}[caption=users.erl]
+    -module(users).
+    -behaviour(rest).
+    -compile({parse_transform, rest}).
+    -include("users.hrl").
+    -export(?REST_API).
+    -rest_record(user).
+
+    init() -> ets:new(users,
+                    [public, named_table, {keypos, #user.id}]).
+
+    populate(Users) -> ets:insert(users, Users).
+    exists(Id) -> ets:member(users, wf:to_list(Id)).
+    get() -> ets:tab2list(users).
+    get(Id) -> [User] = ets:lookup(users, wf:to_list(Id)), User.
+    delete(Id) -> ets:delete(users, wf:to_list(Id)).
+    post(#user{} = User) -> ets:insert(users, User);
+    post(Data) -> post(from_json(Data, #user{})).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+To add users to in-memory storage perform POST requests:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    curl -i -X POST -d "id=vlad" localhost:8000/rest/users
+    curl -i -X POST -d "id=doxtop" localhost:8000/rest/users
+    curl -i -X GET localhost:8000/rest/users
+    curl -i -X PUT -d "id=5HT" localhost:8000/rest/users/vlad
+    curl -i -X GET localhost:8000/rest/users/5HT
+    curl -i -X DELETE localhost:8000/rest/users/5HT
+\end{lstlisting}
+\vspace{1\baselineskip}
+

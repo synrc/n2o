@@ -1,0 +1,69 @@
+
+\section{Handlers}
+HTML and JavaScript Web Server HTTP handlers share the same system
+of context initialization.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    init_context(Req) -> #cx{
+        actions=[], module=index, path=[],
+        req=Req, params=[], session=undefined,
+        handlers= [ {'query', wf:config('query', n2o_query)},
+                    {session, wf:config(session, n2o_session)},
+                    {route,   wf:config(route,   n2o_route)} ]}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Chain of three N2O handlers that are always called
+on each HTTP request. You can redefine any of them or plug your own
+additional handler in the chain to transform web server requests.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}[caption=wf:fold/3]
+    fold(Fun,Handlers,Ctx) ->
+        lists:foldl(fun({_,Module},Ctx1) ->
+            {ok,_,NewCtx} = Module:Fun([],Ctx1),
+            NewCtx end,Ctx,Handlers).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Query}
+Query Handler parses URL query and HTTP form information from HTTP request.
+
+\subsection{Session}
+Session Handler manages key-value in-memory database ETS table.
+
+\newpage
+\subsection{Router}
+You can specify routing table with application config:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    {n2o, [{route,n2o_route}]}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Remember that routing handler should be kept very simple because it
+influences overall initial page load latency and HTTP capacity.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -module(n2o_route).
+    -include_lib("n2o/include/wf.hrl").
+    -export(?ROUTING_API).
+
+    finish(S, Cx) -> {ok, S, Cx}.
+    init(S, Cx)   -> P = wf:path(Cx#context.req),
+                     M = prefix(Path),
+                     {ok, S, Cx#cx{path=P,module=M}}.
+
+    prefix(<<"/ws/",P/binary>>) -> route(P);
+    prefix(<<"/",P/binary>>)    -> route(P);
+    prefix(P)                   -> route(P).
+
+    route(<<>>)                 -> index;
+    route(<<"index">>)          -> index;
+    route(<<"login">>)          -> login;
+    route(<<"favicon.ico">>)    -> index;
+    route(_)                    -> index.
+\end{lstlisting}

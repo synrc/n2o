@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="2407px" height="997px" viewBox="0 0 2407 997" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.1 (12002) - http://www.bohemiancoding.com/sketch -->
+    <title>WebSocket + MQTT</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="WebSocket-+-MQTT" sketch:type="MSLayerGroup" transform="translate(-3.000000, 0.000000)">
+            <g id="WebSocket">
+                <g id="Group-+-Rectangle-35">
+                    <g id="Group" transform="translate(78.000000, 50.000000)">
+                        <g transform="translate(0.000000, 362.000000)">
+                            <path d="M34.5,55.5 L34.5,472.5" id="Line-Copy-9" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                            <g id="Rectangle-13-+-INIT" transform="translate(1.000000, 105.000000)">
+                                <rect id="Rectangle-13" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="139" height="62"></rect>
+                                <text id="INIT" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                    <tspan x="29" y="43">INIT</tspan>
+                                </text>
+                            </g>
+                            <g id="Rectangle-1-Copy-6-+-P-Copy-3">
+                                <rect id="Rectangle-1-Copy-6" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                <text id="P-Copy-3" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                    <tspan x="20" y="47">P</tspan>
+                                </text>
+                            </g>
+                            <g id="Rectangle-13-Copy-2-+-NITRO" transform="translate(1.000000, 269.000000)">
+                                <rect id="Rectangle-13-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="195" height="62"></rect>
+                                <text id="NITRO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                    <tspan x="29" y="39">NITRO</tspan>
+                                </text>
+                            </g>
+                            <g id="Rectangle-13-Copy-3-+-BPE" transform="translate(1.000000, 351.000000)">
+                                <rect id="Rectangle-13-Copy-3" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="139" height="62"></rect>
+                                <text id="BPE" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                    <tspan x="20" y="42">BPE</tspan>
+                                </text>
+                            </g>
+                            <g id="Rectangle-13-Copy-4-+-KVS" transform="translate(1.000000, 433.000000)">
+                                <rect id="Rectangle-13-Copy-4" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="139" height="62"></rect>
+                                <text id="KVS" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                    <tspan x="20" y="40">KVS</tspan>
+                                </text>
+                            </g>
+                            <g id="Rectangle-13-Copy-+-AUTH" transform="translate(1.000000, 187.000000)">
+                                <rect id="Rectangle-13-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="139" height="62"></rect>
+                                <text id="AUTH" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                    <tspan x="19" y="41">AUTH</tspan>
+                                </text>
+                            </g>
+                        </g>
+                        <text id="1.-N2O-WebSocket" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                            <tspan x="0" y="34">1. N2O WebSocket</tspan>
+                            <tspan x="0" y="79"></tspan>
+                            <tspan x="0" y="124">L — N2O Looper</tspan>
+                            <tspan x="0" y="169">P — Protocol Sum</tspan>
+                            <tspan x="0" y="214">IO — Return Value</tspan>
+                            <tspan x="0" y="259">C — Client Process</tspan>
+                        </text>
+                        <text id="L-:-P--&gt;-IO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                            <tspan x="335" y="797">L : P -&gt; IO</tspan>
+                            <tspan x="335" y="842">P = INIT + AUTH + NITRO + BPE + KVS</tspan>
+                        </text>
+                        <g transform="translate(452.000000, 14.000000)">
+                            <g id="Line-+-Rectangle-7-Copy-+-iOS" transform="translate(177.000000, 31.000000)">
+                                <path d="M43.5,44.5 L168.5,44.5" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                <g id="Rectangle-7-Copy-+-iOS">
+                                    <rect id="Rectangle-7-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                    <text id="iOS" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="12" y="54">iOS</tspan>
+                                    </text>
+                                </g>
+                            </g>
+                            <g id="Line-Copy-+-Rectangle-18-+-Android" transform="translate(68.000000, 186.000000)">
+                                <path d="M164.142875,46.5 L260.142875,46.5" id="Line-Copy" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                <g id="Rectangle-18-+-Android">
+                                    <rect id="Rectangle-18" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="192" height="76"></rect>
+                                    <text id="Android" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="26" y="50">Android</tspan>
+                                    </text>
+                                </g>
+                            </g>
+                            <g id="Line-Copy-2-+-Rectangle-18-Copy-+-Web" transform="translate(114.000000, 330.000000)">
+                                <path d="M114.5,35 L237,35" id="Line-Copy-2" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                <g id="Rectangle-18-Copy-+-Web">
+                                    <rect id="Rectangle-18-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="139" height="76"></rect>
+                                    <text id="Web" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="33" y="50">Web</tspan>
+                                    </text>
+                                </g>
+                            </g>
+                            <g>
+                                <g>
+                                    <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO" transform="translate(341.000000, 0.000000)">
+                                        <path d="M0.5,81.5 L113.5,27.5" id="Line-Copy-3" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <path d="M0.5,81.5 L109.5,120.5" id="Line-Copy-4" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <g id="Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO" transform="translate(86.000000, 0.000000)">
+                                            <g id="Rectangle-7-Copy-2-+-L" transform="translate(33.000000, 33.000000)">
+                                                <rect id="Rectangle-7-Copy-2" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                <text id="L" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="45" y="56">L</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-+-P">
+                                                <rect id="Rectangle-1" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                <text id="P" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="20" y="47">P</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-Copy-+-IO" transform="translate(0.000000, 81.000000)">
+                                                <rect id="Rectangle-1-Copy" stroke="#979797" fill="#D8D8D8" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                <text id="IO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="15" y="46">IO</tspan>
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                    <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy" transform="translate(341.000000, 0.000000)">
+                                        <path d="M0.5,81.5 L113.5,27.5" id="Line-Copy-3" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <path d="M0.5,81.5 L109.5,120.5" id="Line-Copy-4" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <g id="Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO" transform="translate(86.000000, 0.000000)">
+                                            <g id="Rectangle-7-Copy-2-+-L" transform="translate(33.000000, 33.000000)">
+                                                <rect id="Rectangle-7-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                <text id="L" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="45" y="56">L</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-+-P">
+                                                <rect id="Rectangle-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                <text id="P" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="20" y="47">P</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-Copy-+-IO" transform="translate(0.000000, 81.000000)">
+                                                <rect id="Rectangle-1-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                <text id="IO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="15" y="46">IO</tspan>
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                    <g id="Line-Copy-6-+-Line-Copy-5-+-Rectangle-7-Copy-3-+-L-Copy-+-Rectangle-1-Copy-3-+-P-Copy-+-Rectangle-1-Copy-2-+-IO-Copy" transform="translate(341.000000, 163.000000)">
+                                        <path d="M0.5,78.5 L113.5,24.5" id="Line-Copy-6" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <path d="M0.5,78.5 L109.5,117.5" id="Line-Copy-5" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <g id="Rectangle-7-Copy-3-+-L-Copy-+-Rectangle-1-Copy-3-+-P-Copy-+-Rectangle-1-Copy-2-+-IO-Copy" transform="translate(86.000000, 0.000000)">
+                                            <g id="Rectangle-7-Copy-3-+-L-Copy" transform="translate(33.000000, 33.000000)">
+                                                <rect id="Rectangle-7-Copy-3" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                <text id="L-Copy" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="45" y="53">L</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-Copy-3-+-P-Copy">
+                                                <rect id="Rectangle-1-Copy-3" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                <text id="P-Copy" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="20" y="44">P</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-Copy-2-+-IO-Copy" transform="translate(0.000000, 80.000000)">
+                                                <rect id="Rectangle-1-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0.783225227" width="65" height="65"></rect>
+                                                <text id="IO-Copy" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="15" y="44">IO</tspan>
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                    <g id="Line-Copy-8-+-Line-Copy-7-+-Rectangle-7-+-L-Copy-2-+-Rectangle-1-Copy-5-+-P-Copy-2-+-Rectangle-1-Copy-4-+-IO-Copy-2" transform="translate(356.000000, 326.000000)">
+                                        <path d="M5.5,46.5 L98.5,21.5" id="Line-Copy-8" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <path d="M0.5,47.5 L94.5,114.5" id="Line-Copy-7" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <g id="Rectangle-7-+-L-Copy-2-+-Rectangle-1-Copy-5-+-P-Copy-2-+-Rectangle-1-Copy-4-+-IO-Copy-2" transform="translate(71.000000, 0.000000)">
+                                            <g id="Rectangle-7-+-L-Copy-2" transform="translate(33.000000, 28.000000)">
+                                                <rect id="Rectangle-7" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                <text id="L-Copy-2" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="45" y="55">L</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-Copy-5-+-P-Copy-2">
+                                                <rect id="Rectangle-1-Copy-5" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                <text id="P-Copy-2" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="20" y="41">P</tspan>
+                                                </text>
+                                            </g>
+                                            <g id="Rectangle-1-Copy-4-+-IO-Copy-2" transform="translate(0.000000, 81.000000)">
+                                                <rect id="Rectangle-1-Copy-4" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                <text id="IO-Copy-2" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="15" y="40">IO</tspan>
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                    <g id="Line-+-Line-+-Oval-1-Copy-3-+-Sup-+-ranch" transform="translate(0.000000, 63.000000)">
+                                        <g id="Line-+-Line-+-Oval-1-Copy-3-+-Sup">
+                                            <path d="M346.5,466.5 L0.429198027,466.5" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                            <g id="Line-+-Oval-1-Copy-3-+-Sup" transform="translate(286.000000, 0.000000)">
+                                                <g>
+                                                    <path d="M75.5,0.5 L75.5,446.90451" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                                    <g id="Oval-1-Copy-3-+-Sup" transform="translate(0.000000, 398.000000)">
+                                                        <path d="M70.6428753,117.642875 C99.6378246,117.642875 123.142875,96.6002585 123.142875,70.6428753 C123.142875,44.685492 99.6378246,23.6428753 70.6428753,23.6428753 C41.6479259,23.6428753 18.1428753,44.685492 18.1428753,70.6428753 C18.1428753,96.6002585 41.6479259,117.642875 70.6428753,117.642875 Z" id="Oval-1-Copy-3" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.642875) rotate(-45.000000) translate(-70.642875, -70.642875) "></path>
+                                                        <text id="Sup" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                            <tspan x="38" y="82">Sup</tspan>
+                                                        </text>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <text id="ranch" sketch:type="MSTextLayer" font-family="Geometria" font-size="58" font-weight="260" fill="#000000">
+                                            <tspan x="80" y="441">ranch</tspan>
+                                        </text>
+                                    </g>
+                                </g>
+                                <g id="Oval-1-Copy-+-C-Copy" transform="translate(286.000000, 155.000000)">
+                                    <path d="M70.5,118 C99.4949494,118 123,96.9573832 123,71 C123,45.0426168 99.4949494,24 70.5,24 C41.5050506,24 18,45.0426168 18,71 C18,96.9573832 41.5050506,118 70.5,118 Z" id="Oval-1-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.500000, 71.000000) rotate(-45.000000) translate(-70.500000, -71.000000) "></path>
+                                    <text id="C-Copy" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="55" y="78">C</tspan>
+                                    </text>
+                                </g>
+                                <g id="Oval-1-+-C" transform="translate(286.000000, 13.000000)">
+                                    <path d="M70.6428753,117.357125 C99.6378246,117.357125 123.142875,96.314508 123.142875,70.3571247 C123.142875,44.3997415 99.6378246,23.3571247 70.6428753,23.3571247 C41.6479259,23.3571247 18.1428753,44.3997415 18.1428753,70.3571247 C18.1428753,96.314508 41.6479259,117.357125 70.6428753,117.357125 Z" id="Oval-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.357125) rotate(-45.000000) translate(-70.642875, -70.357125) "></path>
+                                    <text id="C" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="57" y="77">C</tspan>
+                                    </text>
+                                </g>
+                                <g id="Oval-1-Copy-2-+-C-Copy-2" transform="translate(286.000000, 299.000000)">
+                                    <path d="M70.6428753,117.642875 C99.6378246,117.642875 123.142875,96.6002585 123.142875,70.6428753 C123.142875,44.685492 99.6378246,23.6428753 70.6428753,23.6428753 C41.6479259,23.6428753 18.1428753,44.685492 18.1428753,70.6428753 C18.1428753,96.6002585 41.6479259,117.642875 70.6428753,117.642875 Z" id="Oval-1-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.642875) rotate(-45.000000) translate(-70.642875, -70.642875) "></path>
+                                    <text id="C-Copy-2" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="58" y="82">C</tspan>
+                                    </text>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+            <g id="MQTT" transform="translate(3.000000, 0.000000)">
+                <path d="M2137.5,343.5 L2137.5,700.5" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                <g id="Group-+-2.-EMQ-SCHEMA-+-Line-Copy-12-+-n2o-+-Oval-1-Copy-3-+-Sup-Copy-Copy-+-Line-Copy-13-+-esockd-+-Oval-1-Copy-3-+-Sup-Copy-Copy-Copy" transform="translate(1320.000000, 68.000000)">
+                    <g id="Group-+-2.-EMQ-SCHEMA-+-Line-Copy-12-+-n2o-+-Oval-1-Copy-3-+-Sup-Copy-Copy" transform="translate(39.000000, 0.000000)">
+                        <g id="Group-+-2.-EMQ-SCHEMA">
+                            <g id="Group" transform="translate(10.000000, 0.000000)">
+                                <g id="Line-+-Rectangle-7-Copy-+-iOS-Copy" transform="translate(101.000000, 169.000000)">
+                                    <path d="M44.5,44.5 L258.5,44.5" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                    <g id="Rectangle-7-Copy-+-iOS">
+                                        <rect id="Rectangle-7-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                        <text id="iOS" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                            <tspan x="12" y="54">iOS</tspan>
+                                        </text>
+                                    </g>
+                                </g>
+                                <g id="Line-Copy-+-Rectangle-18-+-Android-Copy" transform="translate(0.000000, 331.000000)">
+                                    <path d="M96.1428753,39.5 L356.499992,39.5" id="Line-Copy" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                    <g id="Rectangle-18-+-Android">
+                                        <rect id="Rectangle-18" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="192" height="76"></rect>
+                                        <text id="Android" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                            <tspan x="26" y="50">Android</tspan>
+                                        </text>
+                                    </g>
+                                </g>
+                                <g id="Line-Copy-2-+-Rectangle-18-Copy-+-Web-Copy" transform="translate(52.000000, 466.000000)">
+                                    <path d="M40.5,37 L311.5,37" id="Line-Copy-2" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                    <g id="Rectangle-18-Copy-+-Web">
+                                        <rect id="Rectangle-18-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="139" height="76"></rect>
+                                        <text id="Web" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                            <tspan x="33" y="50">Web</tspan>
+                                        </text>
+                                    </g>
+                                </g>
+                                <g id="Oval-1-Copy-+-C-Copy-Copy" transform="translate(193.000000, 287.000000)">
+                                    <path d="M70.5,118 C99.4949494,118 123,96.9573832 123,71 C123,45.0426168 99.4949494,24 70.5,24 C41.5050506,24 18,45.0426168 18,71 C18,96.9573832 41.5050506,118 70.5,118 Z" id="Oval-1-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.500000, 71.000000) rotate(-45.000000) translate(-70.500000, -71.000000) "></path>
+                                    <text id="C-Copy" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="55" y="78">C</tspan>
+                                    </text>
+                                </g>
+                                <g id="Oval-1-+-C-Copy-4" transform="translate(193.000000, 143.500000)">
+                                    <path d="M70.6428753,118.357125 C99.6378246,118.357125 123.142875,97.314508 123.142875,71.3571247 C123.142875,45.3997415 99.6378246,24.3571247 70.6428753,24.3571247 C41.6479259,24.3571247 18.1428753,45.3997415 18.1428753,71.3571247 C18.1428753,97.314508 41.6479259,118.357125 70.6428753,118.357125 Z" id="Oval-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 71.357125) rotate(-45.000000) translate(-70.642875, -71.357125) "></path>
+                                    <text id="C" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="57" y="78">C</tspan>
+                                    </text>
+                                </g>
+                                <g id="Oval-1-Copy-2-+-C-Copy-2-Copy" transform="translate(193.000000, 430.500000)">
+                                    <path d="M70.6428753,117.642875 C99.6378246,117.642875 123.142875,96.6002585 123.142875,70.6428753 C123.142875,44.685492 99.6378246,23.6428753 70.6428753,23.6428753 C41.6479259,23.6428753 18.1428753,44.685492 18.1428753,70.6428753 C18.1428753,96.6002585 41.6479259,117.642875 70.6428753,117.642875 Z" id="Oval-1-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.642875) rotate(-45.000000) translate(-70.642875, -70.642875) "></path>
+                                    <text id="C-Copy-2" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                        <tspan x="58" y="82">C</tspan>
+                                    </text>
+                                </g>
+                                <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-Copy-+-Oval-1-+-C-Copy-3-+-Line-+-Line-+-Line-Copy-10-+-Rectangle-28-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-+-Oval-1-+-C-Copy-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-+-Oval-1-+-C-Copy-2-+-Oval-1-Copy-3-+-Sup-Copy-+-Line-+-Line-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-Copy-+-Oval-1-+-C-Copy-3-Copy" transform="translate(360.000000, 0.000000)">
+                                    <g id="Line-+-Line-+-Line-Copy-10-+-Rectangle-28-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-+-Oval-1-+-C-Copy-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-+-Oval-1-+-C-Copy-2-+-Oval-1-Copy-3-+-Sup-Copy-+-Line-+-Line">
+                                        <path d="M259.5,660.5 L259.5,486.5" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <path d="M68.5,631.5 L68.5,505.5" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                        <g id="Line-+-Line-+-Line-Copy-10-+-Rectangle-28-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-+-Oval-1-+-C-Copy-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-+-Oval-1-+-C-Copy-2-+-Oval-1-Copy-3-+-Sup-Copy">
+                                            <path d="M611.5,80.5 L265.429198,80.5" id="Line-Copy-11" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                            <text id="emqttd" sketch:type="MSTextLayer" font-family="Geometria" font-size="58" font-weight="260" fill="#000000">
+                                                <tspan x="344.5" y="55">emqttd</tspan>
+                                            </text>
+                                            <path d="M266.5,73.5 L266.5,244.5" id="Line" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                            <g id="Line-+-Line-Copy-10-+-Rectangle-28-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-+-Oval-1-+-C-Copy-+-Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-+-Oval-1-+-C-Copy-2" transform="translate(0.000000, 169.000000)">
+                                                <g id="Line-+-Line-Copy-10-+-Rectangle-28" stroke="#979797" sketch:type="MSShapeGroup">
+                                                    <path d="M381.5,119.5 L261.5,119.5" id="Line" stroke-linecap="square"></path>
+                                                    <path d="M381.5,289.5 L261.5,289.5" id="Line-Copy-10" stroke-linecap="square"></path>
+                                                    <rect id="Rectangle-28" fill="#FFFFFF" x="0" y="0" width="308" height="374"></rect>
+                                                </g>
+                                                <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-+-Oval-1-+-C-Copy" transform="translate(332.000000, 30.000000)">
+                                                    <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy" transform="translate(70.000000, 0.000000)">
+                                                        <path d="M0.5,81.5 L113.5,27.5" id="Line-Copy-3" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                                        <path d="M0.5,81.5 L109.5,120.5" id="Line-Copy-4" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                                        <g id="Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO" transform="translate(86.000000, 0.000000)">
+                                                            <g id="Rectangle-7-Copy-2-+-L" transform="translate(33.000000, 33.000000)">
+                                                                <rect id="Rectangle-7-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                                <text id="L" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                                    <tspan x="45" y="56">L</tspan>
+                                                                </text>
+                                                            </g>
+                                                            <g id="Rectangle-1-+-P">
+                                                                <rect id="Rectangle-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                                <text id="P" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                                    <tspan x="20" y="47">P</tspan>
+                                                                </text>
+                                                            </g>
+                                                            <g id="Rectangle-1-Copy-+-IO" transform="translate(0.000000, 81.000000)">
+                                                                <rect id="Rectangle-1-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                                <text id="IO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                                    <tspan x="15" y="46">IO</tspan>
+                                                                </text>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                    <g id="Oval-1-+-C-Copy" transform="translate(0.000000, 4.000000)">
+                                                        <path d="M70.6428753,118.357125 C99.6378246,118.357125 123.142875,97.314508 123.142875,71.3571247 C123.142875,45.3997415 99.6378246,24.3571247 70.6428753,24.3571247 C41.6479259,24.3571247 18.1428753,45.3997415 18.1428753,71.3571247 C18.1428753,97.314508 41.6479259,118.357125 70.6428753,118.357125 Z" id="Oval-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 71.357125) rotate(-45.000000) translate(-70.642875, -71.357125) "></path>
+                                                        <text id="S" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                            <tspan x="57" y="78">S</tspan>
+                                                        </text>
+                                                    </g>
+                                                </g>
+                                                <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-+-Oval-1-+-C-Copy-2" transform="translate(332.000000, 200.000000)">
+                                                    <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy" transform="translate(71.000000, 0.000000)">
+                                                        <path d="M0.5,81.5 L113.5,27.5" id="Line-Copy-3" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                                        <path d="M0.5,81.5 L109.5,120.5" id="Line-Copy-4" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                                        <g id="Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO" transform="translate(86.000000, 0.000000)">
+                                                            <g id="Rectangle-7-Copy-2-+-L" transform="translate(33.000000, 33.000000)">
+                                                                <rect id="Rectangle-7-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                                <text id="L" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                                    <tspan x="45" y="56">L</tspan>
+                                                                </text>
+                                                            </g>
+                                                            <g id="Rectangle-1-+-P">
+                                                                <rect id="Rectangle-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                                <text id="P" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                                    <tspan x="20" y="47">P</tspan>
+                                                                </text>
+                                                            </g>
+                                                            <g id="Rectangle-1-Copy-+-IO" transform="translate(0.000000, 81.000000)">
+                                                                <rect id="Rectangle-1-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                                <text id="IO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                                    <tspan x="15" y="46">IO</tspan>
+                                                                </text>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                    <g id="Oval-1-+-C-Copy-2" transform="translate(0.000000, 5.000000)">
+                                                        <path d="M70.6428753,117.357125 C99.6378246,117.357125 123.142875,96.314508 123.142875,70.3571247 C123.142875,44.3997415 99.6378246,23.3571247 70.6428753,23.3571247 C41.6479259,23.3571247 18.1428753,44.3997415 18.1428753,70.3571247 C18.1428753,96.314508 41.6479259,117.357125 70.6428753,117.357125 Z" id="Oval-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.357125) rotate(-45.000000) translate(-70.642875, -70.357125) "></path>
+                                                        <text id="S" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                            <tspan x="57" y="77">S</tspan>
+                                                        </text>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                            <g id="Oval-1-Copy-3-+-Sup-Copy" transform="translate(194.000000, 0.000000)">
+                                                <path d="M70.6428753,117.642875 C99.6378246,117.642875 123.142875,96.6002585 123.142875,70.6428753 C123.142875,44.685492 99.6378246,23.6428753 70.6428753,23.6428753 C41.6479259,23.6428753 18.1428753,44.685492 18.1428753,70.6428753 C18.1428753,96.6002585 41.6479259,117.642875 70.6428753,117.642875 Z" id="Oval-1-Copy-3" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.642875) rotate(-45.000000) translate(-70.642875, -70.642875) "></path>
+                                                <text id="Sup" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                    <tspan x="38" y="82">Sup</tspan>
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                    <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-Copy-+-Oval-1-+-C-Copy-3" transform="translate(34.000000, 192.000000)">
+                                        <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-Copy" transform="translate(141.000000, 452.000000)">
+                                            <path d="M76.5,0.5 L131.5,138.5" id="Line-Copy-3" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                            <path d="M76.5,0.5 L20.5,118.5" id="Line-Copy-4" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                            <g id="Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO" transform="translate(0.000000, 98.000000)">
+                                                <g id="Rectangle-7-Copy-2-+-L" transform="translate(32.000000, 33.000000)">
+                                                    <rect id="Rectangle-7-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                    <text id="L" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                        <tspan x="35" y="66">L</tspan>
+                                                    </text>
+                                                </g>
+                                                <g id="Rectangle-1-+-P" transform="translate(86.000000, 0.000000)">
+                                                    <rect id="Rectangle-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                    <text id="P" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                        <tspan x="20" y="47">P</tspan>
+                                                    </text>
+                                                </g>
+                                                <g id="Rectangle-1-Copy-+-IO" transform="translate(0.000000, 1.000000)">
+                                                    <rect id="Rectangle-1-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                    <text id="IO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                        <tspan x="15" y="46">IO</tspan>
+                                                    </text>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <g id="Oval-1-+-C-Copy-3" transform="translate(146.000000, 382.000000)">
+                                            <path d="M70.6428753,117.357125 C99.6378246,117.357125 123.142875,96.314508 123.142875,70.3571247 C123.142875,44.3997415 99.6378246,23.3571247 70.6428753,23.3571247 C41.6479259,23.3571247 18.1428753,44.3997415 18.1428753,70.3571247 C18.1428753,96.314508 41.6479259,117.357125 70.6428753,117.357125 Z" id="Oval-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.357125) rotate(-45.000000) translate(-70.642875, -70.357125) "></path>
+                                            <text id="S" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                <tspan x="57" y="77">S</tspan>
+                                            </text>
+                                        </g>
+                                        <text id="route" sketch:type="MSTextLayer" font-family="Geometria" font-size="32" font-weight="260" fill="#000000">
+                                            <tspan x="0" y="30">route</tspan>
+                                            <tspan x="0" y="70">subproperty</tspan>
+                                            <tspan x="0" y="110">subscriber</tspan>
+                                            <tspan x="0" y="150">subscription</tspan>
+                                            <tspan x="0" y="190">topic</tspan>
+                                            <tspan x="0" y="230">trie</tspan>
+                                            <tspan x="0" y="270">trie_node</tspan>
+                                            <tspan x="0" y="310">inflight</tspan>
+                                        </text>
+                                    </g>
+                                    <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-Copy-+-Oval-1-+-C-Copy-3-Copy" transform="translate(0.000000, 574.000000)">
+                                        <g id="Line-Copy-3-+-Line-Copy-4-+-Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO-Copy-Copy-Copy-Copy" transform="translate(0.000000, 70.000000)">
+                                            <path d="M76.5,0.5 L131.5,138.5" id="Line-Copy-3" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                            <path d="M76.5,0.5 L20.5,118.5" id="Line-Copy-4" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                                            <g id="Rectangle-7-Copy-2-+-L-+-Rectangle-1-+-P-+-Rectangle-1-Copy-+-IO" transform="translate(0.000000, 98.000000)">
+                                                <g id="Rectangle-7-Copy-2-+-L" transform="translate(32.000000, 33.000000)">
+                                                    <rect id="Rectangle-7-Copy-2" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="86" height="86"></rect>
+                                                    <text id="L" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                        <tspan x="35" y="66">L</tspan>
+                                                    </text>
+                                                </g>
+                                                <g id="Rectangle-1-+-P" transform="translate(86.000000, 0.000000)">
+                                                    <rect id="Rectangle-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                    <text id="P" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                        <tspan x="20" y="47">P</tspan>
+                                                    </text>
+                                                </g>
+                                                <g id="Rectangle-1-Copy-+-IO" transform="translate(0.000000, 1.000000)">
+                                                    <rect id="Rectangle-1-Copy" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="65" height="65"></rect>
+                                                    <text id="IO" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                        <tspan x="15" y="46">IO</tspan>
+                                                    </text>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <g id="Oval-1-+-C-Copy-3" transform="translate(5.000000, 0.000000)">
+                                            <path d="M70.6428753,117.357125 C99.6378246,117.357125 123.142875,96.314508 123.142875,70.3571247 C123.142875,44.3997415 99.6378246,23.3571247 70.6428753,23.3571247 C41.6479259,23.3571247 18.1428753,44.3997415 18.1428753,70.3571247 C18.1428753,96.314508 41.6479259,117.357125 70.6428753,117.357125 Z" id="Oval-1" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.357125) rotate(-45.000000) translate(-70.642875, -70.357125) "></path>
+                                            <text id="S" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                                <tspan x="57" y="77">S</tspan>
+                                            </text>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                            <text id="2.-N2O-MQTT-" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                <tspan x="0" y="34">2. N2O MQTT </tspan>
+                            </text>
+                        </g>
+                        <g id="Line-Copy-12-+-n2o-+-Oval-1-Copy-3-+-Sup-Copy-Copy" transform="translate(709.000000, 563.000000)">
+                            <path d="M272.5,80.5 L71.429198,80.5" id="Line-Copy-12" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                            <text id="n2o" sketch:type="MSTextLayer" font-family="Geometria" font-size="58" font-weight="260" fill="#000000">
+                                <tspan x="151" y="55">n2o</tspan>
+                            </text>
+                            <g id="Oval-1-Copy-3-+-Sup-Copy-Copy">
+                                <path d="M70.6428753,117.642875 C99.6378246,117.642875 123.142875,96.6002585 123.142875,70.6428753 C123.142875,44.685492 99.6378246,23.6428753 70.6428753,23.6428753 C41.6479259,23.6428753 18.1428753,44.685492 18.1428753,70.6428753 C18.1428753,96.6002585 41.6479259,117.642875 70.6428753,117.642875 Z" id="Oval-1-Copy-3" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.642875) rotate(-45.000000) translate(-70.642875, -70.642875) "></path>
+                                <text id="Sup" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                    <tspan x="38" y="82">Sup</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </g>
+                    <g id="Line-Copy-13-+-esockd-+-Oval-1-Copy-3-+-Sup-Copy-Copy-Copy" transform="translate(0.000000, 573.000000)">
+                        <path d="M282.5,80.5 L0.429198027,80.5" id="Line-Copy-13" stroke="#979797" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                        <text id="esockd" sketch:type="MSTextLayer" font-family="Geometria" font-size="58" font-weight="260" fill="#000000">
+                            <tspan x="8" y="55">esockd</tspan>
+                        </text>
+                        <g id="Oval-1-Copy-3-+-Sup-Copy-Copy-Copy" transform="translate(229.000000, 0.000000)">
+                            <path d="M70.6428753,117.642875 C99.6378246,117.642875 123.142875,96.6002585 123.142875,70.6428753 C123.142875,44.685492 99.6378246,23.6428753 70.6428753,23.6428753 C41.6479259,23.6428753 18.1428753,44.685492 18.1428753,70.6428753 C18.1428753,96.6002585 41.6479259,117.642875 70.6428753,117.642875 Z" id="Oval-1-Copy-3" stroke="#979797" fill="#FFFFFF" sketch:type="MSShapeGroup" transform="translate(70.642875, 70.642875) rotate(-45.000000) translate(-70.642875, -70.642875) "></path>
+                            <text id="Sup" sketch:type="MSTextLayer" font-family="Geometria" font-size="36" font-weight="260" fill="#000000">
+                                <tspan x="38" y="82">Sup</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+                <rect id="Rectangle-36" stroke="#979797" sketch:type="MSShapeGroup" x="0" y="0" width="2407" height="997"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

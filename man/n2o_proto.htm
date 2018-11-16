@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>PROTO</title>
+    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://synrc.space/'>SYNRC</a>
+    <a href='https://n2o.space'>N2O ECO</a>
+    <a href='https://mqtt.n2o.space'>N2O</a>
+</nav>
+
+<header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>PROTO</h1>
+</header>
+
+<main>
+    <section>
+
+<h3>INTRO</h3>
+
+<p>N2O as an embaddable framework provides two exports for loop entrance.</p>
+
+    </section>
+    <section>
+
+<h3>API</h3>
+
+<p>The n2o_proto protocol loop is compatible with cowboy and emqttd versions of N2O.
+The main purpose of this API is to embedd N2O into your functional endpoint.
+In other cases it's called automatically by configuration.</p>
+
+<a name=stream></a>
+<h4>stream({ text | binary, binary() }, term(), term()) -> #reply{}.</h4>
+
+<p>The stream function is dedicated for <b>cowboy</b> version of n2o.</p>
+
+<a name=info></a>
+<h4>info(term(), term(), term()) -> #reply{}.</h4>
+
+<p>The info function is dedicated for <b>emqttd</b> version of n2o.</p>
+
+<h4>push(term(), term(), term(), term(), term()) -> #reply{}.</h4>
+
+<p>The raw protocol chain processing without using using filtering.
+You can intercept all messages from <a href="#stream">stream/3</a> and <a href="#info">info/3</a> by
+setting filter function in sys.config.</p>
+
+    </section>
+    <section>
+
+
+<h3>CONFIG</h3>
+
+<figure>
+<code>
+  [{n2o,[{protocols,[n2o_nitro]},
+         {filter,{n2o_proto,push}}]}].
+
+</code></figure>
+
+    </section>
+    <section>
+
+
+<h3>IMPLEMENTATION</h3>
+
+<figure>
+<code>
+ nop(R,S)                  -> {reply,{binary,<<>>},R,S}.
+ reply(M,R,S)              -> {reply,M,R,S}.
+ push(_,R,S,[],_)          -> nop(R,S);
+ push(M,R,S,[H|T],Acc)     ->
+     case H:info(M,R,S) of
+          {unknown,_,_,_}  -> push(M,R,S,T,Acc);
+          {reply,M1,R1,S1} -> reply(M1,R1,S1);
+                         A -> push(M,R,S,T,[A|Acc]) end.
+
+</code></figure>
+
+    </section>
+    <section>
+
+<p>This module may refer to:
+<a href="n2o.htm"><b>n2o</b></a>,
+<a href="n2o_async.htm"><b>n2o_async</b></a>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2018 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>

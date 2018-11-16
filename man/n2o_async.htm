@@ -1,0 +1,224 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>ASYNC</title>
+    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://synrc.space/'>SYNRC</a>
+    <a href='https://n2o.space'>N2O ECO</a>
+    <a href='https://mqtt.n2o.space'>N2O</a>
+</nav>
+
+<header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>ASYNC</h1>
+</header>
+
+<main>
+    <section>
+
+
+<h3>INTRO</h3>
+
+<p>The <b>n2o_async</b> module dedicated for creating and tracking supervised
+processes across all applications, using any ETS tables. Any supervised process in N2O
+is created using n2o_async, such as: ring vnodes, timers, authorization,
+web page processes, test processes and other services. Loop process inside <b>info/2</b> protocol handlers
+should spawn new async processes <b>proc/2</b> in case of time consuming opetations,
+because protocol handler is a critical path and it should be handled as soon as possible.</p>
+
+    </section>
+    <section>
+
+<h3>CALLBACK</h3>
+
+<h4>proc(term(),#handler{}) -> #ok{} | #reply{}.</h4>
+
+<p>The <b>proc/2</b> is a callback that will be called on each
+<b>gen_server</b>'s calls: <b>handle_call</b>,
+<b>handle_cast</b> and <b>handle_info</b>, its <b>init</b>
+and <b>terminate</b>. It returns either #ok as initial state of the process (which is the #handler{} too)
+or its response to <b>gen_server:call/2</b> with new state included in #reply.</p>
+
+    </section>
+    <section>
+
+<h3>EXAMPLE</h3>
+
+<p>Here is literal implementation of N2O Timer which invalidates
+   the <b>caching</b> table used for session variables.</p>
+
+<figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
+ proc(init,#handler{}=Async) ->
+     {ok,Async#handler{state=timer(ping())}};
+
+ proc({timer,ping},#handler{state=Timer}=Async) ->
+     erlang:cancel_timer(Timer),
+     io:format("n2o Timer: ~p\r~n",[ping]),
+     n2o:invalidate_cache(caching),
+     {reply,ok,Async#handler{state=timer_restart(ping())}}.
+
+ timer(Diff) ->
+     {X,Y,Z} = Diff,
+     erlang:send_after(1000*(Z+60*Y+60*60*X),self(),{timer,ping}).
+
+ ping() ->
+     application:get_env(n2o,timer,{0,1,0}).
+
+</code></figure>
+
+<figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
+ > n2o_async:start(#handler{ module=n2o,
+                             class=caching,
+                             group=n2o,
+                             state=[],
+                             name="timer"}).
+
+</code></figure>
+
+<p>Main purpose of <b>n2o_async</b> is to create such processes from
+single <b>proc/2</b> function and track pid in ETS table which is specified during
+process #handler{} initialization.</p>
+
+<figure><figcaption>Listing 2. Understaning n2o_async</figcaption><code>
+ 1> supervisor:which_children(n2o).
+ [{{ring,4},<0.1661.0>,worker,[n2o_vnode]},
+  {{ring,3},<0.1655.0>,worker,[n2o_vnode]},
+  {{ring,2},<0.1653.0>,worker,[n2o_vnode]},
+  {{ring,1},<0.1651.0>,worker,[n2o_vnode]},
+  {{caching,"timer"},<0.1604.0>,worker,[n2o]}]
+
+ 2> ets:tab2list(ring).
+ [{{ring,4},infinity,<0.1661.0>},
+ {{ring,1},infinity,<0.1651.0>},
+ {{ring,2},infinity,<0.1653.0>},
+ {{ring,3},infinity,<0.1655.0>}]
+
+ 3> ets:tab2list(caching).
+ [{{caching,"timer"},infinity,<0.1604.0>}]
+
+ 4> n2o_async:send(caching,"timer",{timer,ping}).
+ n2o Timer: ping
+ ok
+
+ 5> n2o_async:pid(caching,"timer").
+ <0.1604.0>
+
+</code></figure>
+
+    </section>
+    <section>
+
+<h3>RECORDS</h3>
+
+<p>Each process is driven by its protocol which in fact a sum of protocol messages.
+Though n2o_async as being generic don't limit the protocol messages,
+however it defines the type of process state, the #handler{} record.</p>
+
+<figure><figcaption>Listing 3. Erlang/OTP Records</figcaption><code>
+      #ok { code = [] :: [] | #handler{} }.
+
+   #error { code = [] :: [] | term() }.
+
+   #reply { data = [] :: [] | term() ,
+            code = [] :: [] | #handler{} }.
+
+</code></figure>
+
+<p>According to N2O agreement each protocol message filed should include [] in its type as default nil.</p>
+
+<figure><figcaption>Listing 4. N2O Records</figcaption><code>
+ #handler { name   = [] :: [] | term(),
+            module = [] :: [] | atom(),
+            class  = [] :: [] | atom(),
+            group  = [] :: [] | atom(),
+            config = [] :: [] | term(),
+            state  = [] :: [] | term(),
+            seq    = [] :: [] | integer() }.
+
+</code></figure>
+
+<ul>
+<li>Name &mdash; process name, key in supervised chain.</li>
+<li>Module &mdash; the module name where <b>proc/2</b> is placed.</li>
+<li>Class &mdash; ETS table name where cached pids are stored.</li>
+<li>Group &mdash; the application, where supervised processes will be created.</li>
+<li>Config &mdash; any term used to start the supervised procedd.</li>
+<li>State &mdash; the state of the running supervised process.</li>
+<li>Seq &mdash; custom integer counter you can use during processing.</li>
+</ul>
+
+    </section>
+    <section>
+
+<h3>API</h3>
+
+<h4>start(#handler{}) -> {pid(),term()} | #error{}.</h4>
+
+<p>Spawns <b>proc/2</b> function inside a process under supervision.</p>
+
+<h4>stop(Class,Name) -> #handler{} | #error{}.</h4>
+
+<p>Kills the process and remove from supervision.</p>
+
+<h4>restart(Class,Name) -> {pid(),term()} | #error{} | #handler{}.</h4>
+
+<p>Tries to stop the process. On success it starts the new one, else return error.</p>
+
+<h4>send(Class,Name,term()) -> term(). </h4>
+
+<p>Sends <b>gen_call</b> message to process, taken from Class table with Name key.
+Returns the response from <b>gen_server:call</b>.</p>
+</p>
+
+<h4>pid(Class,Name) -> pid(). </h4>
+
+<p>Returns pid that was stored during process initialization in Class table with Name key.</p>
+
+<figure><figcaption>Listing 5. gen_server compatibility.</figcaption><code>
+ 1> n2o_async:pid(caching,"timer") 
+                 ! {timer,ping}.
+ n2o Timer: ping
+ {timer,ping}
+
+ 2> n2o_async:send(caching,"timer",
+                   {timer,ping}).
+ n2o Timer: ping
+ ok
+
+ 3> gen_server:call(
+    n2o_async:pid(caching,"timer"),
+                  {timer,ping}).
+ n2o Timer: ping
+ ok
+
+</code></figure>
+
+    </section>
+    <section>
+
+<p>This module may refer to:
+<b>
+<a href="n2o.htm">n2o</a></b>,
+<a href="n2o_proto.htm">n2o_proto</a></b>,
+<a href="n2o_vnode.htm">n2o_vnode</a></b>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2018 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>

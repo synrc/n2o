@@ -1,0 +1,240 @@
+\section{KVS: Abstract Erlang Database}
+
+KVS is an Erlang abstraction over various native Erlang key-value databases,
+like Mnesia. Its meta-schema includes only concept
+of iterators (persisted linked lists) that are locked or guarded by
+containers (list head pointers). All write operations to the list are
+serialized using a single Erlang process to provide sequential consistency. The application
+which starts Erlang processes per container called \footahref{https://github.com/synrc/feeds}{feeds}.
+
+\paragraph{}
+The best use-case for KVS and key-value storages is to store operational data.
+This data should be later fed to SQL data warehouses for analysis. Operational data
+stores should be scalable, secure, fault-tolerant and available. That is why
+we store work-in-progress data in key-value storages.
+
+\paragraph{}
+KVS also supports queries that require secondary indexes, which
+are not supported by all backends.
+Currently KVS includes following storage backends: Mnesia, Riak and \footahref{https://github.com/synrc/kai}{KAI}.
+
+\subsection{Polymorphic Records}
+
+Any data in KVS is represented by regular Erlang records.
+The first element of the tuple as usual indicates the name of bucket.
+The second element usually corresponds to the index key field.
+
+\begin{lstlisting}
+            Rec = {user,"maxim@synrc.com",[]}.
+
+     RecordName = element(1, Rec).
+             Id = element(2, Rec).
+\end{lstlisting}
+
+\newpage
+\subsection{Iterators}
+
+Iterator is a sequence of fields used as interface for all tables
+represented as doubly-linked lists. It defines id, next, prev,
+feed\_id fields. This fields should be at the beginning of user's record,
+because KVS core is accessing relative position of the
+field (like \#iterator.next) with setelement/element BIF, e.g.
+
+\begin{lstlisting}
+    setelement(#iterator.next, Record, NewValue).
+\end{lstlisting}
+
+All records could be chained into the double-linked lists in the database.
+So you can inherit from the ITERATOR record just like that:
+
+\begin{lstlisting}
+    -record(access, {?ITERATOR(acl),
+        entry_id,
+        acl_id,
+        accessor,
+        action}).
+\end{lstlisting}
+
+\begin{lstlisting}
+    #iterator { record_name,
+                id,
+                version,
+                container,
+                feed_id,
+                prev,
+                next,
+                feeds,
+                guard }
+\end{lstlisting}
+
+This means your table will support add/remove linked list operations to lists.
+
+\begin{lstlisting}
+    1> kvs:add(#user{id="mes@ua.fm"}).
+    2> kvs:add(#user{id="dox@ua.fm"}).
+\end{lstlisting}
+
+Read the chain (undefined means all)
+
+\begin{lstlisting}
+    3> kvs:entries(kvs:get(feed, user), user, undefined).
+    [#user{id="mes@ua.fm"},#user{id="dox@ua.fm"}]
+\end{lstlisting}
+
+or just
+
+\begin{lstlisting}
+    4> kvs:entries(user).
+    [#user{id="mes@ua.fm"},#user{id="dox@ua.fm"}]
+\end{lstlisting}
+
+Read flat values by all keys from table:
+
+\begin{lstlisting}
+    4> kvs:all(user).
+    [#user{id="mes@ua.fm"},#user{id="dox@ua.fm"}]
+\end{lstlisting}
+
+\subsection{Containers}
+
+If you are using iterators records this automatically
+means you are using containers. Containers are just boxes
+for storing top/heads of the linked lists. Here is layout
+of containers:
+
+\begin{lstlisting}
+    #container { record_name,
+                 id,
+                 top,
+                 entries_count }
+\end{lstlisting}
+
+\subsection{Extending Schema}
+
+Usually you only need to specify custom Mnesia indexes and tables tuning.
+Riak and KAI backends don't need it. Group your table into table packages
+represented as modules with handle\_notice API.
+
+\begin{lstlisting}
+    -module(kvs_feed).
+    -inclue_lib("kvs/include/kvs.hrl").
+
+    metainfo() ->
+        #schema{name=kvs,tables=[
+
+            #table{ name = feed, container = true,
+                    fields = record_info(fields,feed)},
+
+            #table{ name = entry, container = feed,
+                    fields = record_info(fields,entry),
+                    keys = [feed_id,entry_id,from] },
+
+            #table{ name = comment, container = feed,
+                    fields = record_info(fields,comment),
+                    keys = [entry_id,author_id] } ]}.
+\end{lstlisting}
+
+And plug it into schema sys.config:
+
+\begin{lstlisting}
+    {kvs, {schema,[kvs_user,kvs_acl,kvs_feed,kvs_subscription]}},
+\end{lstlisting}
+
+After run you can create schema on local node with:
+
+\begin{lstlisting}
+    1> kvs:join().
+\end{lstlisting}
+
+It will create your custom schema.
+
+\subsection{KVS API}
+
+\subsection{Service}
+System functions for start and stop service:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -spec start() -> ok | {error,any()}.
+    -spec stop() -> stopped.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Schema Change}
+This API allows you to create, initialize and destroy the database schema.
+Depending on database the format and/or feature set may differ. {\bf join/1} function
+is used to initialize database, replicated from remote node along with its schema.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -spec destroy() -> ok.
+    -spec join() -> ok | {error,any()}.
+    -spec join(string()) -> [{atom(),any()}].
+    -spec init(atom(), atom()) -> list(#table{}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Meta Info}
+This API allows you to build forms from table metainfo.
+You can also use this API for metainfo introspection.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -spec modules() -> list(atom()).
+    -spec containers() -> list(tuple(atom(),list(atom()))).
+    -spec tables() -> list(#table{}).
+    -spec table(atom()) -> #table{}.
+    -spec version() -> {version,string()}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Chain Ops}
+This API allows you to modify the data, chained lists.
+You can use {\bf create/1} to create the container.
+You can add and remove nodes from lists.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -spec create(atom()) -> integer().
+    -spec remove(tuple()) -> ok | {error,any()}.
+    -spec remove(atom(), any()) -> ok | {error,any()}.
+    -spec add(tuple()) -> {ok,tuple()} |
+                          {error,exist} |
+                          {error,no_container}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Raw Ops}
+These functions will patch the Erlang record inside database.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -spec put(tuple()) -> ok | {error,any()}.
+    -spec delete(atom(), any()) -> ok | {error,any()}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Read Ops}
+Allows you to read the Value by Key and list records with given secondary indexes.
+{\bf get/3} API is used to specify default value.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -spec index(atom(), any(), any()) -> list(tuple()).
+    -spec get(atom(),any(), any()) -> {ok,any()}.
+    -spec get(atom(), any()) -> {ok,any()} |
+                                {error,duplicated} |
+                                {error,not_found}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Import/Export}
+You can use this API to store all database
+in a single file when it is possible. It's ok for development but not very good for production API.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -spec load_db(string()) -> list(ok | {error,any()}).
+    -spec save_db(string()) -> ok | {error,any()}.
+\end{lstlisting}
+\vspace{1\baselineskip}

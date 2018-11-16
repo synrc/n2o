@@ -1,0 +1,262 @@
+\section{Elements}
+
+\paragraph{}
+With N2O you don't need to use HTML at all. Instead you define your page
+in the form of Erlang records so that the page is type checked at the compile time.
+This is a classic CGI approach for compiled pages and it gives us all the benefits of
+compile time error checking and provides DSL for client and server-side rendering.
+
+\paragraph{}
+Nitrogen elements, by their nature, are UI control primitives
+that can be used to construct Nitrogen pages with Erlang internal DSL.
+They are compiled into HTML and JavaScript.
+Behavior of all elements is controlled on server-side and all the communication
+between browser and server-side is performed over WebSocket channels.
+Hence there is no need to use POST requests or HTML forms.
+
+\subsection{Static Elements: HTML}
+The core set of HTML elements includes br, headings, links, tables, lists and image tags.
+Static elements are transformed into HTML during rendering.
+
+\paragraph{}
+Static elements could also be used as placeholders for other HTML elements.
+Usually ``static'' means elements that don't use postback parameter:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    #textbox { id=userName, body= <<"Anonymous">> },
+    #panel { id=chatHistory, class=chat_history }
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+This will produce the following HTML code:
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    <input value="Anonymous" id="userName" type="text"/>
+    <div id="chatHistory" class="chat_history"></div>
+\end{lstlisting}
+
+\newpage
+\subsection{Active Elements: HTML and JavaScript}
+There are form elements that provide information for the server
+and gather user input: button, radio and check buttons, text box area and password box.
+Form elements usually allow to assign an Erlang postback handler to specify action behavior.
+These elements are compiled into HTML and JavaScript. For example, during rendering, some
+Actions are converted to JavaScript and sent to be executed in the browser.
+Element definition specifies the list of {\bf source} elements that provide data for event's callback.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    {ok,Pid} = wf:async(fun() -> chat_loop() end),
+    #button { id=sendButton, body= <<"Send">>,
+              postback={chat,Pid}, source=[userName,message] }.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+This will produce the following HTML:
+\begin{lstlisting}
+    <input value="Chat" id="sendButton" type="button"/>
+\end{lstlisting}
+and JavaScript code:
+\begin{lstlisting}
+    $('#sendButton').bind('click',function anonymous(event) {
+        ws.send(Bert.encodebuf({
+            source: Bert.binary('sendButton'),
+            pickle: Bert.binary('g1AAAINQAAAAdX...'),
+            linked: [
+                Bert.tuple(Bert.atom('userName'),
+                utf8.toByteArray($('#userName').val())),
+                Bert.tuple(Bert.atom('message'),
+                utf8.toByteArray($('#message').val()))] })); });
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+If postback action is specified then the page module must include a callback to handle postback info:
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    event({chat,Pid}) ->
+        wf:info(?MODULE, "User ~p Msg ~p",
+                [wf:q(userName),wf:q(message)]).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+\subsection{Base Element}
+Each HTML element in N2O DSL has record compatibility with the base element.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    #element { ancestor=element,
+               module,
+               id,
+               actions,
+               class=[],
+               style=[],
+               source=[],
+               data_fields=[],
+               aria_states=[],
+               body,
+               role,
+               tabindex,
+               show_if=true,
+               html_tag=Tag,
+               title }.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Here {\bf module} is an Erlang module that contains a render function.
+Data and Aria HTML custom fields are common attributes for all elements.
+In case element name doesn't correspond to HTML tag, {\bf html\_tag} field provided.
+{\bf body} field is used as element contents for all elements.
+
+\paragraph{}
+Most HTML elements are defined as basic elements. You can even choose element's
+name different from its original HTML tag name:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(h6,    ?DEFAULT_BASE).
+    -record(tbody, ?DEFAULT_BASE).
+    -record(panel, ?DEFAULT_BASE_TAG(<<"div">>)).
+    -record('div', ?DEFAULT_BASE_TAG(<<"div">>)).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\newpage
+\subsection{DTL Template {\bf \#dtl}}
+DTL stands for Django Template Language. A DTL element lets to construct HTML
+snippet from template with given placeholders for further substitution.
+Fields contain substitution bindings proplist, filename and templates folder.
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(dtl, {?ELEMENT_BASE(element_dtl),
+            file="index",
+            bindings=[],
+            app=web,
+            folder="priv/templates",
+            ext="html",
+            bind_script=true }).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Consider we have {\bf prod.dtl} file in {\bf priv/templates} folder with two
+placeholders \{\{title\}\}, \{\{body\}\} and default placeholder for JavaScript \{\{script\}\}.
+All placeholders except \{\{script\}\} should be specified in \#dtl element.
+Here is an example of how to use it:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    body() -> "HTML Body".
+    main() ->
+      [ #dtl { file="prod", ext="dtl",
+               bindings=[{title,<<"Title">>},{body,body()}]} ].
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+You can use templates not only for pages, but for controls as well. Let's say we want
+to use DTL iterators for constructing list elements:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}[caption=table.html]
+    {% for i in items %} <a href="{{i.url}}">{{i.name}}</a><br>
+             {% empty %} <span>No items available :-(</span>
+            {% endfor %}
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+Here is an example of how to pass variables to the DTL template we've just defined:
+
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    #dtl{file="table", bind_script=false, bindings=[{items,
+      [ {[{name, "Apple"},     {url, "http://apple.com"}]},
+        {[{name, "Google"},    {url, "http://google.com"}]},
+        {[{name, "Microsoft"}, {url, "http://microsoft.com"}]} ]}]}.
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+bind\_script should be set to true for page templates. When control elements are rendered from DTL,
+bind\_script should be set to false.
+
+\subsection{Button {\bf \#button}}
+
+\paragraph{}
+\begin{lstlisting}
+    -record(button, {?ELEMENT_BASE(element_button),
+            type= <<"button">>,
+            name,
+            value,
+            postback,
+            delegate,
+            disabled}).
+\end{lstlisting}
+
+\paragraph{}
+Sample:
+
+\begin{lstlisting}
+#button { id=sendButton, body= <<"Send">>,
+          postback={chat,Pid}, source=[userName,message] }.
+\end{lstlisting}
+
+\subsection{Link {\bf \#dropdown}}
+
+\begin{lstlisting}
+    -record(dropdown, {?ELEMENT_BASE(element_dropdown),
+            options,
+            postback,
+            delegate,
+            value,
+            multiple=false,
+            disabled=false,
+            name}).
+
+    -record(option, {?ELEMENT_BASE(element_select),
+            label,
+            value,
+            selected=false,
+            disabled}).
+\end{lstlisting}
+
+\paragraph{}
+Sample:
+
+\begin{lstlisting}
+    #dropdown { id=drop,
+                value="2",
+                postback=combo,
+                source=[drop], options=[
+        #option { label= <<"Microsoft">>, value= <<"Windows">> },
+        #option { label= <<"Google">>,    value= <<"Android">> },
+        #option { label= <<"Apple">>,     value= <<"Mac">> }
+    ]},
+\end{lstlisting}
+
+\newpage
+\subsection{Link {\bf \#link}}
+
+\paragraph{}
+\begin{lstlisting}
+    -record(link, {?ELEMENT_BASE(element_link),
+            target,
+            url="javascript:void(0);",
+            postback,
+            delegate,
+            name}).
+\end{lstlisting}
+\vspace{1\baselineskip}
+
+\subsection{Text Editor {\bf \#textarea}}
+
+\paragraph{}
+\vspace{1\baselineskip}
+\begin{lstlisting}
+    -record(textarea, {?ELEMENT_BASE(element_textarea),
+            placeholder,
+            name,
+            cols,
+            rows,
+            value}).
+\end{lstlisting}
+\vspace{1\baselineskip}

@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>NITRO</title>
+    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://synrc.space/'>SYNRC</a>
+    <a href='https://n2o.space'>N2O ECO</a>
+    <a href='https://mqtt.n2o.space'>N2O</a>
+</nav>
+
+<header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>NITRO</h1>
+</header>
+
+<main>
+    <section>
+
+
+<h3>INTRO</h3>
+
+<p>The <b>n2o_nitro</b> module provides
+   <a href="http://nitrogenproject.com/demos">Nitrogen Web Framework</a>
+   protocol specification and implementation.</p>
+
+    </section>
+    <section>
+        <h3>INIT</h3>
+        <div>
+        <figure><code>
+ -record(init, { token :: binary() }).
+        </code></figure>
+        </div>
+    </section>
+    <section>
+        <h3>PICKLE</h3>
+        <div>
+        <figure><code>
+ -record(pickle, { source  = [] :: [] | binary(),
+                   pickled = [] :: [] | binary(),
+                   args    = [] :: list({atom(),any()}) }).
+        </code></figure>
+        </div>
+    </section>
+    <section>
+        <h3>DIRECT</h3>
+        <div>
+        <figure><code>
+ -record(direct, { data = [] :: any() }).
+        </code></figure>
+        </div>
+    </section>
+    <section>
+        <h3>FLUSH</h3>
+        <div>
+        <figure><code>
+ -record(flush, { data = [] :: [] | list(#action{}) }).
+
+ -record(ev,    { module  = [] :: [] | atom(),
+                  msg     = [] :: any(),
+                  trigger = [] :: [] | binary(),
+                  name    = [] :: [] | binary() }).
+        </code></figure>
+        </div>
+    </section>
+    <section>
+
+<p>You may also want to read:
+<b>
+<a href="n2o_heart.htm">n2o_heart</a></b>,
+<a href="n2o_ftp.htm">n2o_ftp</a></b>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2018 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>

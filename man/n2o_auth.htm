@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>AUTH</title>
+    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://synrc.space/'>SYNRC</a>
+    <a href='https://n2o.space'>N2O ECO</a>
+    <a href='https://mqtt.n2o.space'>N2O</a>
+</nav>
+
+<header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>AUTH</h1>
+</header>
+
+<main>
+    <section>
+
+
+<h3>INTRO</h3>
+
+<p>The <b>n2o_auth</b> module provides EMQ auth hook that perform
+   client's autisubscribe to client topic.</p>
+
+    </section>
+    <section>
+
+<h3>CALLBACK</h3>
+
+<h4>check(#mqtt_client{},binary(),term()) -> ok | ignore.</h4>
+
+<p>The default implementation performs client topic autosubscribe at server side.</p>
+
+<figure><code>
+  check(#mqtt_client{client_id = ClientId, username  = PageModule,
+    client_pid = ClientPid,
+    ws_initial_headers = _Headers}, Password, Listeners) ->
+    ClientId = ensure_id(Client),
+    case ClientId of
+        <<"emqttd_", _/binary>> ->
+            emqttd_client:subscribe(ClientPid,
+                [{n2o:to_binary(["actions/1/",PageModule,"/",ClientId]), 2}]),
+             ignore;
+        _ -> ignore
+    end.
+
+</code></figure>
+
+    </section>
+    <section>
+
+<p>This module may refer to:
+<b>
+<a href="n2o.htm">n2o</a></b>,
+<a href="n2o_proto.htm">n2o_proto</a></b>,
+<a href="n2o_vnode.htm">n2o_vnode</a></b>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2018 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>

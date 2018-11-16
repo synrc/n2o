@@ -1,0 +1,350 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>N2O</title>
+    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://synrc.space/'>SYNRC</a>
+    <a href='https://n2o.space'>N2O ECO</a>
+    <a href='https://mqtt.n2o.space'>N2O</a>
+</nav>
+
+<header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>N2O</h1>
+</header>
+
+<main>
+    <section>
+
+<h3>INTRO</h3>
+
+
+<p>The <b>N2O</b> defines the way you create, configure and run
+arbitrary applications and protocols inside some hosts, into
+which N2O can be injected, such as <b>cowboy</b> and <a href="http://github.com/synrc/emqttd">emqttd</a>.
+Each application can spawn its instance in its own way, like
+web pages spawn WebSocket connections, workflow engines
+spawn business proceseses and chat applications spawns roster
+and chatroom processes. With N2O everything is managed by protocols.</p>
+
+<center><img src="N2O.svg" width=60%></center>
+
+<p>N2O shipped to work in two modes: 1) inside cowboy processes, implemented in <a href="n2o_stream.htm">n2o_stream</a>
+2) inside <a href="n2o_vnode.htm">n2o_vnode</a> workers. In second case
+MQTT server is used for transfering message between clients and server workers.
+In first case no more processes are being introduced except clients.
+You can create your own configuration of N2O processing loop.</p>
+
+<p><img src="WebSocket + MQTT.svg" width=100%></p>
+
+<p>The N2O itself a an enbeddable protocol loop in <a href="n2o_proto.htm">n2o_proto</a>. However besides that
+it handles cache and session ETS tables along with flexible <a href="n2o_async.htm">n2o_async</a>
+processes with no ownership restriction. It also introduces logging
+approach, AES/CBC&mdash;128 pickling and BERT/JSON formatter.</p>
+
+
+    </section>
+    <section>
+
+<h3>RECORDS</h3>
+
+<figure><figcaption>Listing 1. Erlang/OTP records</figcaption><code>
+      #ok { data  = [] :: term() }.
+   #error { data  = [] :: term() }.
+
+</code></figure>
+
+<figure><figcaption>Listing 2. N2O Protocol</figcaption><code>
+   #reply { data  = [] :: [] | { Formatter :: atom(), binary() },
+            req   = [] :: [] | term(),
+            state = [] :: [] | term() }.
+
+ #unknown { data  = [] :: [] | binary(),
+            req   = [] :: [] | term(),
+            state = [] :: [] | term() }.
+
+</code></figure>
+
+<figure><figcaption>Listing 3. N2O State</figcaption><code>
+      #cx { session   = [] :: [] | binary(),
+            formatter = bert :: bert | json,
+            actions   = [] :: list(tuple()),
+            state     = [] :: [] | term(),
+            module    = [] :: [] | atom(),
+            lang      = [] :: [] | atom(),
+            path      = [] :: [] | binary(),
+            node      = [] :: [] | atom(),
+            pid       = [] :: [] | pid(),
+            vsn       = [] :: [] | integer() }).
+
+</code></figure>
+
+    </section>
+    <section>
+
+<h3>PROTOCOLS</h3>
+
+<p>While all application protocols in the system
+are desired to be placed in the single effectful
+environment or same error handling path, <b>n2o</b> defines
+single protocol loop for all applications in its federation of protocols.</p>
+
+<p>In core bundle <b>n2o</b> is shipped with NITRO and FTP protocols which
+allows you to create real-time web applications with binary-based protocols,
+priving also robust and performant upload client and file transfer protocol.
+For bulding web based NITRO applications you need to include
+<b>nitro</b> dependency.</p>
+
+<h4>info(term(),term(),#cx{}) -> #reply{} | #unknown{}.</h4>
+
+<p>The <b>info/2</b> is a N2O protocol callback that will be called on each
+incoming request. N2O code should be embedded into applications host:
+MQTT (as ring of MQTT clients), or HTTP server or WebSocket, or raw TCP.</p>
+
+    </section>
+    <section>
+
+<h3>RPC MQTT</h3>
+
+<p>N2O provides RPC over MQ mechanism for MQTT devices. N2O spawn a set of
+<a href="n2o_vnode.htm">n2o_vnode</a> workers as <a href="n2o_async.htm">n2o_async</a>
+processes that listen to <b>events</b> topic. Response are sent to <b>actions</b> topic,
+which is subscribed automatically on MQTT session init.</p>
+
+<figure><figcaption>Listing 4. MQTT RPC Topics</figcaption><code>
+ actions/:vsn/:module/:client
+  events/:vsn/:node/:module/:client
+
+</code></figure>
+
+    </section>
+    <section>
+
+<h3>RPC WebSocket</h3>
+
+<p>In pure WebSocket case N2O implements <a href="n2o_proto.htm">n2o_proto</a> as cowboy module supporting binary and text messages.</p>
+
+<figure><figcaption>Listing 5. Cowboy stream protocol</figcaption><code>
+ #binary { data :: binary() }.
+   #text { data :: binary() }.
+
+</code></figure>
+
+    </section>
+    <section>
+
+<h3>EXAMPLE</h3>
+
+<p>Here is little example of overriding INIT protocol message from NITRO protocol
+and generate standart token stored in KVS.</p>
+
+<figure><figcaption>Listing 6. Custom INIT Protocol</figcaption><code>
+ -module(custom_init).
+ -compile(export_all).
+
+ info({init, <<>>}, Req, State = #cx{session = Session}) ->
+      {'Token', Token} = n2o_auth:gen_token([], Session),
+      #cx{params = Client} = get(context),
+      kvs:put(#'Token'{token = Token, client = Client}),
+      n2o_nitro:info({init, Token}, Req, State);
+
+ info(Message,Req,State) -> {unknown,Message,Req,State}.
+
+</code></figure>
+
+    </section>
+    <section>
+
+<h3>CONFIG</h3>
+
+<p>Just put protocol implementation module name to <b>protocol</b> option in sys.config.</p>
+
+<figure><code>
+  [{n2o,[{cache,n2o},
+         {mq,n2o},
+         {logging,n2o_io},
+         {log_modules,n2o},
+         {log_level,n2o},
+         {session,n2o_session},
+         {pickler,n2o_secret},
+         {protocols,[custom_init,n2o_ftp,n2o_nitro]},
+         {timer,{0,10,0}}]}].
+
+</code></figure>
+
+<p>N2O is the facade of the following services: cache, mq, message formating, loging,
+   sessions, pickling and protocol loops. The other part of N2O is <a href="n2o_async.htm">n2o_async</a> module
+   for spawning supervised application processes tha use N2O API. In this simple
+   configuration you may set any implementation to any service.</p>
+
+    </section>
+    <section>
+
+<h3>CACHE</h3>
+
+<p>Cache is fast expirable memory store. Just put values onto keys using these
+functions and system timer will clear expired entries eventually.
+You can select caching module implementation by seting <b>cache</b> n2o parameter to module name.
+Default n2o cache implementation just turns each ets store into expirable.</p>
+
+<h4>cache(Tab, Key, Value, Till) -> term().</h4>
+
+<p>Sets a Value with a given TTL.</p>
+
+<h4>cache(Tab, Key) -> term().</h4>
+
+<p>Gets a Value.</p>
+
+    </section>
+    <section>
+
+<h3>BUS</h3>
+
+<p>The minimal requirement for any framework is to pub/sub API.
+   N2O provides selectable API through <b>mq</b> environment parameter.</p>
+
+<h4>subscribe(Client, Topic, Options) -> term().</h4>
+
+<p>Subscribe an absctract client to a transient topic. In particular
+   implementation the semantics could differ. In MQTT you can subscribe
+   offline/online clients to any persistent topics.</p>
+
+<h4>unsubscribe(Client, Topic, Options) -> term().</h4>
+
+<p>Unsubscribe an abstract client from a transient topic. In MQTT
+   we remove the subscription from persistent database.</p>
+
+<h4>publish(Topic, Message, Options) -> term().</h4>
+
+<p>Publish a message to a topic. In MQTT if clients are offline
+they will receive offline messages from the
+inflight srotarge once they become online.</p>
+
+    </section>
+    <section>
+
+<h3>FORMATTER</h3>
+
+<p>You specify formatter in the <b>#reply/3</b> return from procotol.
+   N2O is shipped with two formatters: <b>{bert,_}</b> and <b>{json,_}</b>.
+   You can use <b>{binary,_}</b> for unformatted messages. For unhandled messages
+   protocol should return in #reply.data <b>{unknown,_}</b>.
+
+<h4>encode(record()) -> binary().</h4>
+<h4>decode(binary()) -> record().</h4>
+
+<p>Here is example of formatter and its usage in <b>info/3</b> protocol implementation.</P>
+
+<figure><code>
+ encode(Erl) -> term_to_binary(Erl).
+ decode(Bin) -> binary_to_term(Bin,[safe]).
+</code></figure>
+
+    </section>
+    <section>
+
+<h3>LOG</h3>
+
+<p>First you need specify global module in sys.config,
+where functions <b>log_level</b> and <b>log_modules</b> are placed.
+See options in config with with same names as functions.</p>
+
+<p>Then implement these function in way of returning the list
+modules you want to trace, and global log level for them.</p>
+
+<figure><figcaption>Listing 7. Log Framework</figcaption>
+<code>
+ log_modules() -> [n2o,n2o_async,n2o_proto].
+ log_level() -> info.
+
+</code></figure>
+
+<p>In your code you should use following trace functions
+   which are the same as callback API for n2o logging
+   environment variable.</p>
+
+<h4>error(Module, Format, Args) -> ok | skip.</h4>
+
+<h4>info(Module, Format, Args) -> ok | skip.</h4>
+
+<h4>warning(Module, Format, Args) -> ok | skip.</h4>
+
+    </section>
+    <section>
+
+<h3>SESSION</h3>
+
+<p>Sessions are stored in <b>cookies</b> table and indexed by security token which
+is usually a password based token. All session variables from all users are stored in this table.
+each user see only its variables indexed by his token. Sessions like a cache are expirable.
+Technically, N2O sessions are the server controlling mechanism of JavaScript cookies.</p>
+
+<h4>session(Key, Value) -> term().</h4>
+
+<p>Sets a Value into ETS table <b>cookies</b> for a token from #cx.session which
+is set there earlier from INIT message or MQTT headers,
+before entering the top level N2O loop.</p>
+
+<figure><figcaption>Listing 8. Sessions</figcaption>
+<code>
+ 1> rr(n2o).
+ [bin,client,cx,direct,ev,flush,ftp,ftpack,handler,
+  mqtt_client,mqtt_message,pickle,server]
+ 2> put(context,#cx{session=10}).
+ undefined
+ 3> n2o:session(user,maxim).
+ maxim
+ 4> ets:tab2list(cookies).
+ [{{10,user},
+   <<"/">>,
+   {1504,977449,476430},
+   {{2017,9,9},{20,32,29}},
+   maxim}]
+
+</code></figure>
+
+<h4>session(Key) -> term().</h4>
+
+<p>Gets a Value by any Key.</p>
+
+    </section>
+    <!--section>
+
+<h3>PICKLE</h3>
+
+<p>Call this function for changeable at runtime term pickling.</p>
+
+<h4>pickle(term()) -> binary().</h4>
+
+<h4>depickle(binary()) -> term().</h4>
+
+    </section-->
+    <section>
+
+<p>This module may refer to:
+<a href="n2o_async.htm">n2o_asynrc</a></b>,
+<a href="n2o_auth.htm">n2o_auth</a></b>,
+<a href="n2o_stream.htm">n2o_stream</a></b>,
+<a href="n2o_vnode.htm">n2o_vnode</a></b>,
+<a href="n2o_proto.htm">n2o_proto</a>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2018 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>
