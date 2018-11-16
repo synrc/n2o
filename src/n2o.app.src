@@ -1,6 +1,6 @@
 {application,n2o,
              [{description,"N2O DAS MQTT TCP WebSocket"},
-              {vsn,"5.11"},
+              {vsn,"5.11.1"},
               {license,"ISC"},
               {applications,[kernel,stdlib]},
               {modules,[]},
