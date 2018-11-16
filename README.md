@@ -1,7 +1,7 @@
 N2O: Distributed Application Server
 ===================================
 
-[![Build Status](https://travis-ci.org/synrc/mqtt.svg?branch=master)](https://travis-ci.org/synrc/mqtt)
+[![Build Status](https://travis-ci.org/synrc/n2o.svg?branch=master)](https://travis-ci.org/synrc/n2o)
 
 N2O is a embeddable message protocol loop library for
 WebSocket, HTTP, MQTT and TCP servers. It provides basic
