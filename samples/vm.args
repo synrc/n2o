@@ -1,7 +1,0 @@
--name review@127.0.0.1
--setcookie node_runner
-+pc unicode
-+K true
-+A 5
--env ERL_MAX_PORTS 4096
--env ERL_FULLSWEEP_AFTER 10
