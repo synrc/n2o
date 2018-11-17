@@ -4,3 +4,7 @@ ebin
 Mnesia.nonode@nohost
 log
 deps
+*.toc
+*.log
+*.aux
+*.pdf
