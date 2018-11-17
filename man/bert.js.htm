@@ -33,7 +33,36 @@
         uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">DataView</a> and
         <b>getUint8</b>, <b>getUint16</b>, <b>getUint32</b> word accessors which is
         the fastest way of dealing with binaries in JavaScript.
-        The library is compatible with both Erang and Haskell N2O versions.</p>
+        The library is used in Erang and Haskell N2O versions.</p>
+
+        <p>Note that this library is low-level, fast version
+           of BERT encoder/decoder. If you want to generate
+           JavaScript SDK with field names as in Erlang include
+           files, take <a href="https://synrc.github.io/bert">BERT</a>
+           as high-level counterpart library that generates
+           wrappers around <b>bert.js</b> and provides
+           more slick JavaScript experience.</p>
+        <p>Erlang structure that compiles to BERT format:</p>
+        <figure><code>
+ #io{ code = login,
+      data = { 'Token', 42 } }
+        </code></figure>
+           <p>Target structure of <a href="#">bert.js</a> &mdash; low-level fast handcoded parser from BERT format.<p>
+        <figure><code>
+ { t: 104,
+   v: [ { t: 100, v: "io" },
+        { t: 100, v: "login" },
+        { t: 104, v: [ { t: 100, v: "Token" },
+                       { t: 97,  v: 42 } ] } ] }
+        </code></figure>
+           <p>Target structure of generated parser with <a href="https://synrc.github.io/bert">BERT</a> parse transform:<p>
+        <figure><code>
+ { tup: 'io',
+   code: 'login',
+   data: { tup: '$',
+           0: 'Token',
+           1: 42 } },
+        </code></figure>
     </section>
     <section>
         <h3>97</h3>
