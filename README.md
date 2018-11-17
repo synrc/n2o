@@ -14,7 +14,7 @@ Features
 
 * Purpose: High performance protocol relay
 * Endpoints: WebSockets, MQTT, TCP
-* Codebase: 1K LOC
+* Codebase: 1K LOC (Erlang), 500 LOC (JavaScript)
 * Buildtools: REBAR, MAD
 * Templates: DTL, NITRO
 * Hosts: COWBOY, EMQ, MOCHIWEB
