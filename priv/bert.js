@@ -87,8 +87,8 @@ function dec(d) {
     throw ("BERT?"); return din();
 };
 function str(b) {
-  var dv, sz = (b == 2 ? sx.getUint16(ix) : sx.getInt32(ix)); ix += b;
-  var r = sx.buffer.slice(ix, ix += sz); return utf8_dec(r);
+  var dv, sz = (b==2?sx.getUint16(ix):(b==1?sx.getUint8(ix):sx.getUint32(ix)));
+  ix += b; var r = sx.buffer.slice(ix, ix += sz); return utf8_dec(r);
 };
 function run(b) {
   var sz = (b == 1 ? sx.getUint8(ix) : sx.getUint32(ix)), r = []; ix += b;
