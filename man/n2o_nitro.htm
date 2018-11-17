@@ -36,24 +36,36 @@
     </section>
     <section>
         <h3>INIT</h3>
+        <p>Init message invokes event(init) function in page module.
+           There are two binary representations of INIT message.</p>
         <div>
         <figure><code>
  -record(init, { token :: binary() }).
+        </code></figure>
+        <figure><code>
+ <<"N2O,",Token/binary>>
         </code></figure>
         </div>
     </section>
     <section>
         <h3>PICKLE</h3>
+        <p>Pickle message sends to server prerendered (by server) encripted message.</p>
         <div>
         <figure><code>
  -record(pickle, { source  = [] :: [] | binary(),
                    pickled = [] :: [] | binary(),
                    args    = [] :: list({atom(),any()}) }).
+
+ -record(ev,     { module  = [] :: [] | atom(),
+                   msg     = [] :: any(),
+                   trigger = [] :: [] | binary(),
+                   name    = [] :: [] | binary() }).
         </code></figure>
         </div>
     </section>
     <section>
         <h3>DIRECT</h3>
+        <p>Direct message sends data without any convertation or encription.</p>
         <div>
         <figure><code>
  -record(direct, { data = [] :: any() }).
@@ -62,14 +74,11 @@
     </section>
     <section>
         <h3>FLUSH</h3>
+        <p>Flush message only redirects data to the socket.</p>
         <div>
         <figure><code>
  -record(flush, { data = [] :: [] | list(#action{}) }).
 
- -record(ev,    { module  = [] :: [] | atom(),
-                  msg     = [] :: any(),
-                  trigger = [] :: [] | binary(),
-                  name    = [] :: [] | binary() }).
         </code></figure>
         </div>
     </section>
