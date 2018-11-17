@@ -119,9 +119,7 @@
     </section>
     <section>
         <h3>107</h3>
-        <p>String does not have a corresponding Erlang representation,
-           but is an optimization for sending lists of bytes (integer in the range 0-255)
-           more efficiently over the distribution. As field Length is an unsigned 2
+        <p>String encoding. As field N is an unsigned 2
            byte integer (big-endian), implementations must ensure that lists longer
            than 65535 elements are encoded as 108.
         </p>
@@ -132,12 +130,12 @@
     </section>
     <section>
         <h3>108</h3>
-        <p>Length is the number of elements that follows in section Elements.
+        <p>List encoding. N is the number of elements that follows in section Characters.
            Tail is the final tail of the list; it is 106 for a proper list,
            but can be any type if the list is improper (for example, [a|b]).
         </p>
         <figure><code>
- 1    2    N
+ 1    4    N
  108  N    Characters  Tail
         </code><figure>
     </section>
