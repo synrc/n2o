@@ -76,7 +76,7 @@
     </section>
     <section>
         <h3>97</h3>
-        <p>Unsigned 8-bit integer.</p>
+        <p>Byte encoding. Unsigned 8-bit integer.</p>
         <figure><code>
  1    1
  97   Int
@@ -84,7 +84,7 @@
     </section>
     <section>
         <h3>98</h3>
-        <p>Signed 32-bit integer in big-endian format.</p>
+        <p>Integer encoding. Signed 32-bit integer in big-endian format.</p>
         <figure><code>
  1    4
  98   Int
@@ -92,7 +92,7 @@
     </section>
     <section>
         <h3>100</h3>
-        <p>An atom is stored with a 2 byte unsigned length in big-endian order,
+        <p>Atom encoding. An atom is stored with a 2 byte unsigned length in big-endian order,
            followed by N numbers of 8-bit Latin-1 characters that forms the name.
            The maximum allowed value for Len is 255.</p>
         <figure><code>
@@ -102,7 +102,7 @@
     </section>
     <section>
         <h3>104</h3>
-        <p>Encodes a tuple. The Arity field is an unsigned byte N that determines
+        <p>Tuple encoding. The Arity field is an unsigned byte N that determines
            how many elements that follows in section Elements.</p>
         <figure><code>
  1    1    N
@@ -141,7 +141,7 @@
     </section>
     <section>
         <h3>109</h3>
-        <p>Binaries are generated with bit syntax expression or with
+        <p>Binary encoding. Binaries are generated with bit syntax expression or with
            erlang:list_to_binary/1, erlang:term_to_binary/1, or as
            input from binary ports. The Len length field is an unsigned
            4 byte integer (big-endian).
@@ -153,7 +153,7 @@
     </section>
     <section>
         <h3>110</h3>
-        <p>Bignums are stored in unary form with a Sign byte, that is,
+        <p>Small bignum encoding. Bignums are stored in unary form with a Sign byte, that is,
            0 if the binum is positive and 1 if it is negative.
            The digits are stored with the least significant byte stored first.
            To calculate the integer, the following formula can be used:</p>
@@ -171,7 +171,8 @@
     </section>
     <section>
         <h3>111</h3>
-        <p>Same as 110 except that the length field is an unsigned 4 byte integer.</p>
+        <p>Large bignum encoding.
+           Same as 110 except that the length field is an unsigned 4 byte integer.</p>
         <figure><code>
  1    4    1    n
  111  n    Sign d(0)...d(n-1)
