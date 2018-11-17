@@ -41,7 +41,7 @@ number of such instanses is usually equals to the number of cores.</p>
 
 <h3>PROTOCOL</h3>
 
-<p>On <b>#init/0</b> n2o_vnode makes connection to MQTT server.
+<p>On <b>init</b> n2o_vnode makes connection to MQTT server.
 On connection established in <b>#mqttc/2</b> it subscribes to events topic.</p>
 
 <figure>
@@ -57,8 +57,6 @@ embedded as handler to that message.</p>
 
 <figure>
 <code>
-    #init { }
-
  #publish { topic   = [] :: binary(),
             message = [] :: binary()}.
 
