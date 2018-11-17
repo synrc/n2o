@@ -143,7 +143,7 @@
         <h3>109</h3>
         <p>Binary encoding. Binaries are generated with bit syntax expression or with
            erlang:list_to_binary/1, erlang:term_to_binary/1, or as
-           input from binary ports. The Len length field is an unsigned
+           input from binary ports. The N length field is an unsigned
            4 byte integer (big-endian).
         </p>
         <figure><code>
@@ -177,6 +177,39 @@
  1    4    1    n
  111  n    Sign d(0)...d(n-1)
         </code></figure>
+    </section>
+    <section>
+        <h3>115</h3>
+        <p>Small atom encoding. An atom is stored with a 1 byte unsigned
+           length, followed by N numbers of 8-bit Latin-1 characters
+           that forms the Characters.
+        </p>
+        <figure><code>
+ 1    1    N
+ 115  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>118</h3>
+        <p>UTF8 atom encoding. An atom is stored with a 2 byte unsigned
+           length in big-endian order, followed by Len bytes containing
+           the Characters encoded in UTF-8.
+        </p>
+        <figure><code>
+ 1    2    N
+ 118  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>119</h3>
+        <p>UTF8 small atom encoding. An atom is stored with a 1 byte unsigned
+           length, followed by Len bytes containing the Characters encoded in UTF-8.
+           Longer atoms encoded in UTF-8 can be represented using 118.
+        </p>
+        <figure><code>
+ 1    1    N
+ 119  N    Characters
+        </code><figure>
     </section>
     <section>
 
