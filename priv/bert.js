@@ -107,6 +107,6 @@ function din() {
     case 109: x = [str, 4]; break; case 110: x = [big, 1]; break;
     case 111: x = [big, 4]; break; case 115: x = [str, 1]; break;
     case 118: x = [str, 2]; break; case 119: x = [str, 1]; break;
-    default:  x = [nop, 0];
+    case 105: x = [run, 4]; break; default:  x = [nop, 0];
   } return { t: c, v: x[0](x[1]) };
 };
