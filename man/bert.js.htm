@@ -27,19 +27,21 @@
     <section>
         <h3>INTRO</h3>
 
-        <p>The <b>bert.js</b> module provides JavaScript encoder/decoder for
-        <a href="http://erlang.org/doc/apps/erts/erl_ext_dist.html">External Term Format</a> used in Erlang distribution protocol. That means
+        <p>The <a href"https://github.com/synrc/n2o/blob/master/priv/bert.js">bert.js</a>
+        module provides JavaScript encoder/decoder for
+        <a href="http://erlang.org/doc/apps/erts/erl_ext_dist.html">External Term Format</a>
+        used in Erlang distribution protocol. That means
         your JavaScript applications talk to Erlang natively. This module
-        uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">DataView</a> and
-        <b>getUint8</b>, <b>getUint16</b>, <b>getUint32</b> word accessors which is
+        uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">DataView</a>
+        and <b>getUint8</b>, <b>getUint16</b>, <b>getUint32</b> word accessors which is
         the fastest way of dealing with binaries in JavaScript.
         The library is used in Erang and Haskell N2O versions.
-        The size of <b>bert.js</b> is 3363 bytes.</p>
+        The size of <b>bert.js</b> is 4K bytes.</p>
 
         <p>Note that this library is low-level, fast version
            of BERT encoder/decoder. If you want to generate
            JavaScript SDK with field names as in Erlang include
-           files, take <a href="https://synrc.github.io/bert">BERT</a>
+           files, please take <a href="https://synrc.github.io/bert">BERT</a>
            as high-level counterpart library that generates
            wrappers around <b>bert.js</b> and provides
            more slick JavaScript experience.</p>
