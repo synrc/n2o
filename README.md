@@ -98,6 +98,7 @@ JavaScript
 
 * [bert.js](https://ws.n2o.space/man/bert.js.htm) — BERT encoder/decoder
 * [utf8.js](https://ws.n2o.space/man/utf8.js.htm) — UTF8 encoder/decoder
+* [ieee754.js](https://ws.n2o.space/man/ieee754.js.htm) — IEEE754 encoder/decoder
 * [bullet.js](https://ws.n2o.space/man/bullet.js.htm)  — HEART protocol
 * [nitrogen.js](https://ws.n2o.space/man/nitrogen.js.htm)  — NITRO protocol
 * [ftp.js](https://ws.n2o.space/man/ftp.js.htm)  — FTP protocol
