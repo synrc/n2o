@@ -71,8 +71,16 @@
         <h3>API</h3>
         <h4>enс(json)</h4>
         <p>Encodes JSON to binary buffer.</p>
+        <figure><code>
+ > enc({t: 119, v: "日本"})
+ Uint8Array([131,119,6,230,151,165,230,156,172])
+         </code></figure>
         <h4>dec(buffer)</h4>
         <p>Decodes binary buffer to formatted JSON.</p>
+        <figure><code>
+ > dec((new Uint8Array([131,119,6,230,151,165,230,156,172])).buffer)
+ {t: 119, v: "日本"}
+         </code></figure>
         <h4>bin(x)</h4>
         <figure><code>
  > dec(enc(bin('N2O,')).buffer))

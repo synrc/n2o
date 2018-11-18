@@ -61,6 +61,9 @@ function en_undefined(o) { return [106]; }
 function en_98(o) { return [98, o.v >>> 24, (o.v >>> 16) & 255, (o.v >>> 8) & 255, o.v & 255]; }
 function en_97(o) { return [97, o.v]; }
 function en_106(o) { return [106]; }
+function en_115(o) { return [115, o.v.length, ar(o)]; }
+function en_119(o) { return [119, ar(o).length, ar(o)]; }
+function en_118(o) { return [118, ar(o).length >>> 8, ar(o).length & 255, ar(o)]; }
 function en_100(o) { return [100, o.v.length >>> 8, o.v.length & 255, ar(o)]; }
 function en_107(o) { return [107, o.v.length >>> 8, o.v.length & 255, ar(o)]; }
 function en_104(o) {
