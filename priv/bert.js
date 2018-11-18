@@ -21,8 +21,13 @@ function bin(o) {
 function enc(o) { return fl([131, ein(o)]); }
 function ein(o) { return Array.isArray(o) ? en_108({ t: 108, v: o }) : eval('en_' + o.t)(o); }
 function en_undefined(o) { return [106]; }
-function en_98(o) { return [98, o.v >>> 24, (o.v >>> 16) & 255, (o.v >>> 8) & 255, o.v & 255]; }
+function en_70(o) {
+  var x = Array(8).fill(0).flat();
+  write_Float(x,o.v,0,false,52,8);
+  return [70].concat(x);
+}
 function en_97(o) { return [97, o.v]; }
+function en_98(o) { return [98, o.v >>> 24, (o.v >>> 16) & 255, (o.v >>> 8) & 255, o.v & 255]; }
 function en_99(o) {
   var obj = o.v.toExponential(20),
       match = /([^e]+)(e[+-])(\d+)/.exec(obj),
@@ -97,11 +102,6 @@ function dic(b) {
   var sz = sx.getUint32(ix), r = []; ix += 4;
   for (var i = 0; i < sz; i++) r.push({k:din(),v:din()});
   return r;
-}
-function en_70(o) {
-  var x = Array(8).fill(0).flat();
-  write_Float(x,o.v,0,false,52,8);
-  return [70].concat(x);
 }
 function iee(x) {
   return read_Float(new Uint8Array(sx.buffer.slice(ix,ix+=8)),0,false,52,8);
