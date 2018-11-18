@@ -38,6 +38,15 @@ function int_to_bytes(Int) {
   return s;
 };
 
+function float(o) { return { t: 99, v: o }; }
+function en_99(o) {
+  var obj = o.v.toExponential(20),
+      match = /([^e]+)(e[+-])(\d+)/.exec(obj),
+      exponentialPart = match[3].length == 1 ? "0" + match[3] : match[3],
+      num = Array.from(bin(match[1] + match[2] + exponentialPart).v);
+  return [o.t].concat(num).concat(Array(31 - num.length).fill(0).flat());
+}
+
 function number(Obj) {
   var s, isInteger = (Obj % 1 === 0);
   if (isInteger && Obj >= 0 && Obj < 256) { return { t: 97, v: Obj };  }
@@ -94,7 +103,12 @@ function run(b) {
   var sz = (b == 1 ? sx.getUint8(ix) : sx.getUint32(ix)), r = []; ix += b;
   for (var i = 0; i < sz; i++) r.push(din()); if (b == 4) ix++; return r;
 };
-
+function en_70(o) {
+  var x = Array(8).fill(0).flat(); write_Float(x,1.23,0,false,52,8);
+  return [70].concat(x);
+}
+function iee(x) { return read_Float(new Uint8Array(sx.buffer.slice(ix,ix+=8)),0,false,52,8); }
+function flo(x) { return parseFloat(utf8_dec(sx.buffer.slice(ix, ix += 31))); }
 function arr(b) {
   var dv, sz = sx.getUint16(ix); ix += b; return new Uint8Array(sx.buffer.slice(ix, ix += sz));
 };
@@ -102,6 +116,7 @@ function arr(b) {
 function din() {
   var c = sx.getUint8(ix++), x; switch (c) {
     case  97: x = [int, 1]; break; case  98: x = [int, 4]; break;
+    case  99: x = [flo, 0]; break; case  70: x = [iee, 0]; break;
     case 100: x = [str, 2]; break; case 104: x = [run, 1]; break;
     case 107: x = [arr, 2]; break; case 108: x = [run, 4]; break;
     case 109: x = [str, 4]; break; case 110: x = [big, 1]; break;

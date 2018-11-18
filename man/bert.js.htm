@@ -71,13 +71,25 @@
         <h3>API</h3>
         <h4>enс(json)</h4>
         <h4>dec(buffer)</h4>
-        <h4>tuple(x,y,...)</h4>
-        <h4>list(x,y,...)</h4>
+        <h4>list(x,...)</h4>
+        <h4>tuple(x,...)</h4>
+        <h4>map(x)</h4>
         <h4>bin(x)</h4>
         <h4>atom(x)</h4>
+        <h4>float(x)</h4>
+        <h4>number(x)</h4>
     </section>
     <section>
        <p>The following practical subset of BERT format is supported:</p>
+    </section>
+    <section>
+        <h3>70</h3>
+        <p>IEEE float encoding. A float is stored as 8 bytes in big-endian IEEE format.
+           This term is used in minor version 1 of the external format.</p>
+        <figure><code>
+ 1    8
+ 70   IEEE float
+        </code></figure>
     </section>
     <section>
         <h3>97</h3>
@@ -93,6 +105,17 @@
         <figure><code>
  1    4
  98   Int
+        </code></figure>
+    </section>
+    <section>
+        <h3>99</h3>
+        <p>Float encoding. A float is stored in string format. The format used
+           in sprintf to format the float is "%.20e" (there are more bytes
+           allocated than necessary). To unpack the float, use sscanf with format "%lf".
+           </p>
+        <figure><code>
+ 1    31
+ 99   Float string.
         </code></figure>
     </section>
     <section>
@@ -201,6 +224,20 @@
         <figure><code>
  1    1    N
  115  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>116</h3>
+        <p>Maps encoding. The N field is an unsigned 4 byte integer
+           in big-endian format that determines the number of key-value
+           pairs in the map. Key and value pairs (Ki => Vi) are encoded
+           in section Pairs in the following order: K1, V1, K2, V2,...,
+           Kn, Vn. Duplicate keys are not allowed within the same map.
+           Requires OTP 17.
+        </p>
+        <figure><code>
+ 1    4    N
+ 116  N    K1,V1,K2,V2,...
         </code><figure>
     </section>
     <section>
