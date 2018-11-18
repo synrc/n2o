@@ -68,69 +68,6 @@
         </code></figure>
     </section>
     <section>
-        <h3>API</h3>
-        <h4>enс(json)</h4>
-        <p>Encodes internal JSON to binary buffer.</p>
-        <figure><code>
- > enc({t: 119, v: "日本"})
- Uint8Array([131,119,6,230,151,165,230,156,172])
-         </code></figure>
-        <h4>dec(buffer)</h4>
-        <p>Decodes binary buffer to internal JSON.</p>
-        <figure><code>
- > dec((new Uint8Array([131,119,6,230,151,165,230,156,172])).buffer)
- {t: 119, v: "日本"}
-         </code></figure>
-        <h4>bin(x)</h4>
-        <figure><code>
- > dec(enc(bin('N2O,')).buffer))
- {t: 109, v: "N2O,"}
-         </code></figure>
-        <p>Creates JSON for binary encoding.</p>
-        <h4>atom(x)</h4>
-        <p>Creates JSON for atom encoding.</p>
-        <figure><code>
- > dec(enc(atom('ok')).buffer))
- {t: 100, v: "ok"}
-         </code></figure>
-        <h4>float(x)</h4>
-        <p>Creates JSON for float encoding.</p>
-        <figure><code>
- > dec(enc(float('123.13')).buffer)
- {t: 70, v: 123.13}
-         </code></figure>
-        <h4>number(x)</h4>
-        <p>Creates JSON for integers and big numbers encoding.</p>
-        <figure><code>
- > dec(enc(number('1')).buffer)
- {t: 97, v: 1}
-
- > dec(enc(number('100000000')).buffer)
- {t: 98, v: 100000000}
-
- > dec(enc(number('10000000000000000000000')).buffer)
- {t: 110, v: 1e+22}
-         </code></figure>
-        <h4>list(x,...)</h4>
-        <p>Creates JSON for list encoding.</p>
-        <figure><code>
- > dec(enc(list(atom('1'),number('1'),bin('1'))).buffer)
- {t: 108, v: [{t: 100, v: "1"},
-              {t: 97, v: 1},
-              {t: 109, v: "1"}]}
-         </code></figure>
-        <h4>tuple(x,...)</h4>
-        <p>Creates JSON for tuple encoding.</p>
-        <figure><code>
- > dec(enc(tuple(atom('1'),number('1'),bin('1'))).buffer)
- {t: 104, v: [{t: 100, v: "1"},
-              {t: 97, v: 1},
-              {t: 109, v: "1"}]}
-         </code></figure>
-        <h4>map(x)</h4>
-        <p>Creates JSON for map encoding.</p>
-    </section>
-    <section>
        <p>The following practical subset of BERT format is supported:</p>
     </section>
     <section>
@@ -312,6 +249,109 @@
  1    1    N
  119  N    Characters
         </code><figure>
+    </section>
+    <section>
+        <h3>API</h3>
+        <h4>enс(json)</h4>
+        <p>Encodes internal JSON to binary buffer.</p>
+        <figure><code>
+ > enc({t: 119, v: "日本"})
+
+ Uint8Array([131,119,6,230,151,165,230,156,172])
+         </code></figure>
+        <h4>dec(buffer)</h4>
+        <p>Decodes binary buffer to internal JSON.</p>
+        <figure><code>
+ > dec((new Uint8Array([131,119,6,230,151,165,230,156,172])).buffer)
+
+ {t: 119, v: "日本"}
+         </code></figure>
+        <h4>bin(x)</h4>
+        <figure><code>
+ > dec(enc(bin('N2O,')).buffer))
+
+ {t: 109, v: "N2O,"}
+
+ [131,109,0,0,0,4,78,50,79,44]
+         </code></figure>
+        <p>Creates JSON for binary encoding.</p>
+        <h4>atom(x)</h4>
+        <p>Creates JSON for atom encoding.</p>
+        <figure><code>
+ > dec(enc(atom('ok')).buffer))
+
+ {t: 100, v: "ok"}
+
+ [131,100,0,2,111,107]
+         </code></figure>
+        <h4>float(x)</h4>
+        <p>Creates JSON for float encoding.</p>
+        <figure><code>
+ > dec(enc(float('123.13')).buffer)
+
+ {t: 70, v: 123.13}
+
+ [131,70,64,94,200,81,235,133,30,184]
+         </code></figure>
+        <h4>number(x)</h4>
+        <p>Creates JSON for integers and big numbers encoding.</p>
+        <figure><code>
+ > dec(enc(number('1')).buffer)
+
+ {t: 97, v: 1}
+
+ [131,97,1]
+
+ > dec(enc(number('100000000')).buffer)
+ {t: 98, v: 100000000}
+
+ [131,98,5,245,225,0]
+
+ > dec(enc(number('10000000000000000000000')).buffer)
+
+ {t: 110, v: 1e+22}
+
+ [131,110,10,0,0,0,64,178,186,201,224,25,30,2]
+         </code></figure>
+        <h4>list(x,...)</h4>
+        <p>Creates JSON for list encoding.</p>
+        <figure><code>
+ > dec(enc(list(atom('1'),number('1'),bin('1'))).buffer)
+
+ {t: 108, v: [{t: 100, v: "1"},
+              {t: 97, v: 1},
+              {t: 109, v: "1"}]}
+
+ [131,108,0,0,0,3,100,0,1,49,97,1,109,0,0,0,1,49,106]
+         </code></figure>
+        <h4>tuple(x,...)</h4>
+        <p>Creates JSON for tuple encoding.</p>
+        <figure><code>
+ > dec(enc(tuple(atom('1'),number('1'),bin('1'))).buffer)
+
+ {t: 104, v: [{t: 100, v: "1"},
+              {t: 97, v: 1},
+              {t: 109, v: "1"}]}
+
+ [131,104,3,100,0,1,49,97,1,109,0,0,0,1,49]
+         </code></figure>
+        <h4>map(x)</h4>
+        <p>Creates JSON for map encoding.</p>
+        <figure><code>
+ > dec(enc(map(
+        {k:bin('rent'),v:float(1.2)},
+       {k:atom('ok'),  v:list(number(1),float(1.0),bin('1'))})).buffer)
+
+ {t:116, v:[{k:{t:109,v:"rent"},v:{t:70, v:1.2}},
+            {k:{t:100,v:"ok"},  v:{t:108,v:[{t:97, v:1},
+                                            {t:70, v:1},
+                                            {t:109,v:"1"}]}}]}
+
+ [131,116,0,0,0,2,109,0,0,0,4,114,101,110,
+  116,70,63,243,51,51,51,51,51,51,100,0,2,
+  111,107,108,0,0,0,3,97,1,70,63,240,0,0,0,
+  0,0,0,109,0,0,0,1,49,106]
+         </code></figure>
     </section>
     <section>
 
