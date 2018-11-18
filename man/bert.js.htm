@@ -72,11 +72,11 @@
     </section>
     <section>
         <h3>70</h3>
-        <p>IEEE float encoding. A float is stored as 8 bytes in big-endian IEEE format.
+        <p>IEEE-754 float encoding. A float is stored as 8 bytes in big-endian IEEE format.
            This term is used in minor version 1 of the external format.</p>
         <figure><code>
  1    8
- 70   IEEE float
+ 70   IEEE-754 float
         </code></figure>
     </section>
     <section>
@@ -285,7 +285,7 @@
  [131,100,0,2,111,107]
          </code></figure>
         <h4>float(x)</h4>
-        <p>Creates JSON for float encoding.</p>
+        <p>Creates JSON for IEEE-754 float encoding.</p>
         <figure><code>
  > dec(enc(float('123.13')).buffer)
 
