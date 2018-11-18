@@ -51,8 +51,7 @@ function number(Obj) {
   var s, isInteger = (Obj % 1 === 0);
   if (isInteger && Obj >= 0 && Obj < 256) { return { t: 97, v: Obj };  }
   if (isInteger && Obj >= -134217728 && Obj <= 134217727) { return {t: 98, v: Obj}; }
-  if (Number.isSafeInteger(Obj)) { return {t: 110, v: Obj}; } else {
-     throw ("Need to impelement bigInt: " + Obj); } }
+  return {t: 110, v: Obj}; }
 
 function tuple() { return { t: 104, v: Array.apply(null, arguments) }; }
 function list() { return { t: 108, v: Array.apply(null, arguments) }; }
@@ -84,11 +83,8 @@ function nop(b) { return []; };
 function big(b) {
   var sk = b == 1 ? sx.getUint8(ix++) : sx.getInt32((a = ix, ix += 4, a));
   var ret = 0, sig = sx.getUint8(ix++), count = sk;
-  while (count-- > 0) {
-    ret = 256 * ret + sx.getUint8(ix + count)
-  }
-  ix += sk;
-  return ret * (sig == 0 ? 1 : -1);
+  while (count-- > 0) { ret = 256 * ret + sx.getUint8(ix + count); }
+  ix += sk; return ret * (sig == 0 ? 1 : -1);
 }
 function int(b) { return b == 1 ? sx.getUint8(ix++) : sx.getInt32((a = ix, ix += 4, a)); };
 function dec(d) {
