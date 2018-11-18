@@ -38,7 +38,7 @@ function int_to_bytes(Int) {
   return s;
 };
 
-function float(o) { return { t: 99, v: o }; }
+function float(o) { return { t: 70, v: o }; }
 function en_99(o) {
   var obj = o.v.toExponential(20),
       match = /([^e]+)(e[+-])(\d+)/.exec(obj),
@@ -104,7 +104,7 @@ function run(b) {
   for (var i = 0; i < sz; i++) r.push(din()); if (b == 4) ix++; return r;
 };
 function en_70(o) {
-  var x = Array(8).fill(0).flat(); write_Float(x,1.23,0,false,52,8);
+  var x = Array(8).fill(0).flat(); write_Float(x,o.v,0,false,52,8);
   return [70].concat(x);
 }
 function iee(x) { return read_Float(new Uint8Array(sx.buffer.slice(ix,ix+=8)),0,false,52,8); }
