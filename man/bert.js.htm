@@ -70,14 +70,57 @@
     <section>
         <h3>API</h3>
         <h4>enс(json)</h4>
+        <p>Encodes JSON to binary buffer.</p>
         <h4>dec(buffer)</h4>
-        <h4>list(x,...)</h4>
-        <h4>tuple(x,...)</h4>
-        <h4>map(x)</h4>
+        <p>Decodes binary buffer to formatted JSON.</p>
         <h4>bin(x)</h4>
+        <figure><code>
+ > dec(enc(bin('N2O,')).buffer))
+ {t: 109, v: "N2O,"}
+         </code></figure>
+        <p>Creates JSON for binary encoding.</p>
         <h4>atom(x)</h4>
+        <p>Creates JSON for atom encoding.</p>
+        <figure><code>
+ > dec(enc(atom('ok')).buffer))
+ {t: 100, v: "ok"}
+         </code></figure>
         <h4>float(x)</h4>
+        <p>Creates JSON for float encoding.</p>
+        <figure><code>
+ > dec(enc(float('123.13')).buffer)
+ {t: 70, v: 123.13}
+         </code></figure>
         <h4>number(x)</h4>
+        <p>Creates JSON for integers and big numbers encoding.</p>
+        <figure><code>
+ > dec(enc(number('1')).buffer)
+ {t: 97, v: 1}
+
+ > dec(enc(number('100000000')).buffer)
+ {t: 98, v: 100000000}
+
+ > dec(enc(number('10000000000000000000000')).buffer)
+ {t: 110, v: 1e+22}
+         </code></figure>
+        <h4>list(x,...)</h4>
+        <p>Creates JSON for list encoding.</p>
+        <figure><code>
+ > dec(enc(list(atom('1'),number('1'),bin('1'))).buffer)
+ {t: 108, v: [{t: 100, v: "1"},
+              {t: 97, v: 1},
+              {t: 109, v: "1"}]}
+         </code></figure>
+        <h4>tuple(x,...)</h4>
+        <p>Creates JSON for tuple encoding.</p>
+        <figure><code>
+ > dec(enc(tuple(atom('1'),number('1'),bin('1'))).buffer)
+ {t: 104, v: [{t: 100, v: "1"},
+              {t: 97, v: 1},
+              {t: 109, v: "1"}]}
+         </code></figure>
+        <h4>map(x)</h4>
+        <p>Creates JSON for map encoding.</p>
     </section>
     <section>
        <p>The following practical subset of BERT format is supported:</p>
