@@ -1,133 +1,96 @@
 -module(n2o_session).
--description('N2O In-Memory Sessions').
+-description('N2O Session').
 -compile(export_all).
 
-authenticate(ClientSessionId, ClientSessionToken) ->
-    n2o:info(?MODULE, "Session Init ~nClientId ~p: Token ~p~n~n", [ClientSessionId, ClientSessionToken]),
-    Expiration = till(calendar:local_time(), ttl()),
-    Response = case ClientSessionToken of
-        [] ->
-            NewSID = generate_sid(),
-            ClientToken = encode_token(NewSID),
-            Token = {{NewSID,<<"auth">>},os:timestamp(),Expiration},
-            ets:insert(cookies,Token),
-            n2o:info(?MODULE, "Auth Token New: ~p~n~p~n~n", [Token, ClientToken]),
-            {'Token', ClientToken};
-        ExistingToken ->
-            SessionId = decode_token(ClientSessionToken),
-            case SessionId of
-                [] -> {error, "Invalid token signature"};
-                _Val ->
-                 Lookup = lookup_ets({SessionId,<<"auth">>}),
-                 InnerResponse = case Lookup of
-                    [] -> {error, "Invalid authentication token"};
-                    {{TokenValue,Key},Issued,Till} ->
-                        case expired(Issued,Till) of
-                            false ->
-                                Token = {{TokenValue,Key},Issued,Till},
-                                io:format("Auth Token Ok: ~p~n", [Token]),
-                                {'Token', ExistingToken};
-                            true ->
-                                UpdatedSID = generate_sid(),
-                                UpdatedClientToken = encode_token(UpdatedSID),
-                                Token = {{UpdatedSID,<<"auth">>},os:timestamp(),Expiration},
-                                delete_old_token({TokenValue,<<"auth">>}),
-                                ets:insert(cookies,Token),
-                                n2o:info(?MODULE, "Auth Token Expired: ~p~nGenerated new token ~p~n", [TokenValue, Token]),
-                                {'Token', UpdatedClientToken} end;
-                    What -> n2o:info(?MODULE, "Auth Cookie Error: ~p~n",[What]), {fail, What} end,
-                 InnerResponse end
-        end,
-    Response.
-
-encode_token(Data) ->
-    n2o_secret:pickle(Data).
-
-decode_token(Data) ->
-    Res = n2o_secret:depickle(Data),
-    case Res of
-        <<>> -> [];
-        Value -> Value end.
-
-expired(_Issued,Till) -> Till < calendar:local_time().
-
-lookup_ets(Key) ->
-    Res = ets:lookup(cookies,Key),
-    case Res of
-         [] -> [];
-         [Value] -> Value;
-         Values -> Values end.
-
-delete_old_token(Session) ->
-    ets:delete_object(cookies, lookup_ets(Session)).
-
-ttl() -> application:get_env(n2o,ttl,60*15).
-
-till(Now,TTL) ->
-    calendar:gregorian_seconds_to_datetime(
-        calendar:datetime_to_gregorian_seconds(Now) + TTL).
+to(X)         -> calendar:datetime_to_gregorian_seconds(X).
+from(X)       -> calendar:gregorian_seconds_to_datetime(X).
+cut(Bin)      -> binary:part(Bin,0,20).
+expired(Till) -> Till < to(calendar:local_time()).
+expire()      -> to(till(calendar:local_time(), ttl())).
+auth(Sid)     -> {{Sid,<<"auth">>},{expire(),[]}}.
+new(Auth)     -> ets:insert(cookies,Auth), {'Token',n2o:pickle(Auth)}.
+ttl()         -> application:get_env(n2o,ttl,60*15).
+till(Now,TTL) -> from(to(Now)+TTL).
 
 generate_sid() ->
     nitro_conv:hex(binary:part(crypto:hmac(application:get_env(n2o,hmac,sha256),
          n2o_secret:secret(),term_to_binary(os:timestamp())),0,16)).
 
+authenticate([], Pickle) ->
+    case n2o:depickle(Pickle) of
+        <<>> -> new(auth(generate_sid()));
+        {{Sid,<<"auth">>},{Till,[]}} = Auth ->
+            case expired(Till) of
+                false -> case application:get_env(n2o,nitro_prolongate,no) of
+                              no -> new(Auth);
+                               _ -> new(auth(Sid)) end;
+                 true -> delete_auth({Sid,<<"auth">>}),
+                         new(auth(generate_sid()))
+            end
+    end.
+
+lookup_ets(Key) ->
+    Res = ets:lookup(cookies,Key),
+    case Res of
+         [Value] -> Value;
+         Values -> Values end.
+
+delete_auth(Session) ->
+    case lookup_ets(Session) of
+         [] -> skip;
+          X -> ets:delete_object(cookies, X) end.
+
 invalidate_sessions() ->
-    ets:foldl(fun(X,A) -> {Sid,Key} = element(1,X), get_value(Sid,Key,[]), A end, 0, cookies).
+    ets:foldl(fun(X,A) -> {Sid,Key} = element(1,X),
+              get_value(Sid,Key,[]), A end, 0, cookies),ok.
 
 get_value(SID, Key, DefaultValue) ->
     Res = case lookup_ets({SID,Key}) of
                [] -> DefaultValue;
-               {{SID,Key},_,Issued,Till,Value} -> case expired(Issued,Till) of
-                       false -> Value;
-                       true -> ets:delete(cookies,{SID,Key}), DefaultValue end end,
+               {{SID,Key},{Till,[]}} -> case expired(Till) of
+                    false -> [];
+                    true -> ets:delete(cookies,{SID,Key}) end;
+               {{SID,Key},{Till,{_,Value}}} -> case expired(Till) of
+                    false -> Value;
+                    true -> ets:delete(cookies,{SID,Key}), DefaultValue end end,
     Res.
 
 set_value(SID, Key, Value) ->
-    NewTill = till(calendar:local_time(), ttl()),
-    ets:insert(cookies,{{SID,Key},<<"/">>,os:timestamp(),NewTill,Value}),
+    ets:insert(cookies,{{SID,Key},{expire(),{<<"/">>,Value}}}),
     Value.
 
 positive_test() ->
-  {'Token',B}=n2o_session:authenticate("",""),
-  32=size(n2o_session:decode_token(B)),
-  {'Token',C}=n2o_session:authenticate("",B),
-  %  need to delete all test data
-  delete_old_token({decode_token(C),<<"auth">>}),
-  true=(C==B).
+    application:set_env(n2o,nitro_prolongate,no),
+    {'Token',B}=n2o_session:authenticate("",""),
+    {{SID,Key},{Till,[]}} = n2o:depickle(B),
+    {'Token',C}=n2o_session:authenticate("",B),
+    {{SID,Key},{Till,[]}} = n2o:depickle(C),
+    delete_auth({SID,<<"auth">>}),
+    true=(C==B).
 
-negative_test1() ->
-    InputValue = os:timestamp(),
-    {error, Reason} = n2o_session:authenticate("", InputValue),
-    Reason=="Invalid token signature".
-
-negative_test2() ->
-    InputValue = n2o_secret:pickle(os:timestamp()),
-    {error, Reason} = n2o_session:authenticate("", InputValue),
-    Reason=="Invalid authentication token".
-
-negative_test3() ->
+negative_test() ->
+    application:set_env(n2o,nitro_prolongate,no),
     application:set_env(n2o, ttl, 2),
     {'Token', TokenA} = n2o_session:authenticate("", ""),
+    {{SID0,_},{_,[]}} = n2o:depickle(TokenA),
     timer:sleep(3000),
     {'Token', TokenB} = n2o_session:authenticate("", TokenA),
+    {{SID1,_},{_,[]}} = n2o:depickle(TokenB),
     application:set_env(n2o, ttl, 60*15),
-    TokenWasChanged = TokenA/=TokenB,
+    TokenWasChanged = TokenA /= TokenB,
     {'Token', TokenC} = n2o_session:authenticate("", TokenB),
+    {{SID2,_},{_,[]}} = n2o:depickle(TokenC),
     NewTokenIsValid = TokenB == TokenC,
-    delete_old_token({decode_token(TokenC),<<"auth">>}),
+    delete_auth({SID0,<<"auth">>}),
+    delete_auth({SID1,<<"auth">>}),
+    delete_auth({SID2,<<"auth">>}),
     TokenWasChanged == NewTokenIsValid.
 
 test_set_get_value() ->
     InputValue = base64:encode(crypto:strong_rand_bytes(8)),
-    SID = base64:encode(crypto:strong_rand_bytes(8)),
+    SID = generate_sid(),
     Key = base64:encode(crypto:strong_rand_bytes(8)),
     set_value(SID, Key, InputValue),
     ResultValue = get_value(SID, Key, []),
-    delete_old_token({SID,Key}),
+    delete_auth({SID,Key}),
     InputValue == ResultValue.
-
-% TODO:
-% 1. plug n2o:session API to cookies ETS
-% 2. session invalidation by timer
-% 3. moar tests
-

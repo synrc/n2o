@@ -141,6 +141,7 @@ proc({timer,ping},#handler{state=Timer}=Async) ->
     erlang:cancel_timer(Timer),
     n2o:info(?MODULE,"n2o Timer: ~p\r~n",[ping]),
     n2o:invalidate_cache(caching),
+    n2o_session:invalidate_sessions(),
     {reply,ok,Async#handler{state=timer_restart(ping())}}.
 
 invalidate_cache(Table) -> ets:foldl(fun(X,_) -> n2o:cache(Table,element(1,X)) end, 0, Table).
