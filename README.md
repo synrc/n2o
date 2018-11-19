@@ -99,10 +99,11 @@ JavaScript
 * [bert.js](https://ws.n2o.space/man/bert.js.htm) — BERT encoder/decoder
 * [utf8.js](https://ws.n2o.space/man/utf8.js.htm) — UTF8 encoder/decoder
 * [ieee754.js](https://ws.n2o.space/man/ieee754.js.htm) — IEEE754 encoder/decoder
-* [bullet.js](https://ws.n2o.space/man/bullet.js.htm)  — HEART protocol
-* [nitrogen.js](https://ws.n2o.space/man/nitrogen.js.htm)  — NITRO protocol
+* [heart.js](https://ws.n2o.space/man/heart.js.htm) — HEART protocol
+* [nitro.js](https://ws.n2o.space/man/nitro.js.htm) — NITRO protocol
 * [ftp.js](https://ws.n2o.space/man/ftp.js.htm)  — FTP protocol
 * [n2o.js](https://ws.n2o.space/man/n2o.js.htm) — N2O protocol looper
+* [mq.js](https://ws.n2o.space/man/mq.js.htm) — MQTT client
 
 Literature
 ----------
