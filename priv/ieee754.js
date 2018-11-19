@@ -1,5 +1,4 @@
-// BSD 3 Clause. Copyright (c) 2008, Fair Oaks Labs, Inc.
-// https://github.com/feross/ieee754
+
 function read_Float(buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
