@@ -2,13 +2,13 @@ Credits
 -------
 
 * Maxim Sokhatsky — core, shen, windows
-* Dmitry Bushmelev — endpoints, yaws, cowboy
-* Andrii Zadorozhnii — elements, actions, handlers
-* Vladimir Kirillov — mac, bsd, xen, linux support
-* Andrey Martemyanov — binary protocols
+* Dmitry Bushmelev — yaws, cowboy
+* Andrii Zadorozhnii — elements, actions
+* Vladimir Kirillov — mac, bsd, xen, linux
+* Andrey Martemyanov — bert
 * Oleksandr Nikitin — security
 * Anton Logvinenko — doc
-* Roman Shestakov — advanced elements, ct
+* Roman Shestakov — elements, ct
 * Jesse Gumm — nitrogen, help
 * Yuri Maslovsky — mqtt
 * Igor Kharin — k8s, ekka
