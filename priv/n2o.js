@@ -54,7 +54,6 @@ var $bert = {}; $bert.protos = [$io, $file]; $bert.on = function onbert(evt, cb)
         r.addEventListener("loadend", function () {
             try {
                 erlang = dec(r.result);
-                console.log(erlang);
                 if (typeof cb == 'function') cb(erlang);
                 for (var i = 0; i < $bert.protos.length; i++) {
                     p = $bert.protos[i];
