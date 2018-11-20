@@ -11,7 +11,9 @@ info({text,<<"N2O,",Auth/binary>>}, Req, State) ->
     Sid = case n2o:depickle(Token) of
               {{S,_},_} -> S;
               E -> E end,
-    info(#init{token=Token},Req,State#cx{session = Sid})
+    New = State#cx{session = Sid},
+    put(context,New),
+    info(#init{token=Token},Req,New)
     catch _:R -> io:format("ERR: ~p~n",[{R,erlang:get_stacktrace()}]),
                  {reply,{binary,<<>>},Req,State} end;
 
