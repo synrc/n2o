@@ -5,8 +5,8 @@ function tuple() { return { t: 104, v: Array.apply(null, arguments) }; }
 function list() { return { t: 108, v: Array.apply(null, arguments) }; }
 function map() { return { t: 116, v: Array.apply(null, arguments) }; }
 function atom(o) { return { t: 100, v: utf8_enc(o) }; }
+function string(o) { return { t: 107, v: utf8_enc(o) }; }
 function float(o) { return { t: 70, v: o }; }
-function string(o) { return { t: 107, v: utf8_enc(o) }; };
 function number(o) {
   var s, isInteger = (o % 1 === 0);
   if (isInteger && o >= 0 && o < 256) { return { t: 97, v: o };  }
@@ -14,7 +14,7 @@ function number(o) {
   return {t: 110, v: o}; }
 function bin(o) {
   return { t: 109, v: o instanceof ArrayBuffer ? new Uint8Array(o) :
-                      o instanceof Uint8Array  ? o : string(o).v }; }
+                      o instanceof Uint8Array  ? o : utf8_enc(o) }; }
 
 // ENCODER
 

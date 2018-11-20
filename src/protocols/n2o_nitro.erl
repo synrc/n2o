@@ -84,7 +84,6 @@ html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{sessio
           #ev{} -> render_ev(Ev,Source,Linked,State), n2o_session:authenticate([], Token);
           CustomEnvelop -> n2o:error(?MODULE,"EV expected: ~p~n",[CustomEnvelop]),
                            {error,"EV expected"} end,
-    io:format("Res: ~p~n",[Res]),
     {io,render_actions(nitro:actions()),Res}.
 
 render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->

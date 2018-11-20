@@ -31,7 +31,7 @@ var $io = {}; $io.on = function onio(r, cb) {
             r.v[2].v.length == 2 && (r.v[2].v[0].v == "Token" || r.v[2].v[0].v == "Auth")) {
             localStorage.setItem("token",utf8_arr(r.v[2].v[1].v));
         }
-        try { eval(utf8_dec(r.v[1].v));
+        try { eval(utf8_arr(r.v[1].v));
               if (typeof cb == 'function') cb(r);
               return { status: "ok" };
         } catch (e)  { console.log("Eval error: "+r);
@@ -54,6 +54,7 @@ var $bert = {}; $bert.protos = [$io, $file]; $bert.on = function onbert(evt, cb)
         r.addEventListener("loadend", function () {
             try {
                 erlang = dec(r.result);
+                console.log(erlang);
                 if (typeof cb == 'function') cb(erlang);
                 for (var i = 0; i < $bert.protos.length; i++) {
                     p = $bert.protos[i];
