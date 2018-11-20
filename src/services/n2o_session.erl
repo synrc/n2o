@@ -1,63 +1,57 @@
 -module(n2o_session).
+-include_lib("stdlib/include/ms_transform.hrl").
 -description('N2O Session').
 -compile(export_all).
+
+% PRELUDE
 
 to(X)         -> calendar:datetime_to_gregorian_seconds(X).
 from(X)       -> calendar:gregorian_seconds_to_datetime(X).
 cut(Bin)      -> binary:part(Bin,0,20).
 expired(Till) -> Till < to(calendar:local_time()).
 expire()      -> to(till(calendar:local_time(), ttl())).
-auth(Sid)     -> {{Sid,<<"auth">>},{expire(),[]}}.
+auth(Sid)     -> {{Sid,<<"auth">>},{expire(),{[],[]}}}.
 new(Auth)     -> ets:insert(cookies,Auth), {'Token',n2o:pickle(Auth)}.
 ttl()         -> application:get_env(n2o,ttl,60*15).
 till(Now,TTL) -> from(to(Now)+TTL).
+prolongate()  -> application:get_env(n2o,nitro_prolongate,no).
+sid(Seed)     -> nitro_conv:hex(binary:part(crypto:hmac(application:get_env(n2o,hmac,sha256),
+                 n2o_secret:secret(),term_to_binary(Seed)),0,16)).
 
-generate_sid() ->
-    nitro_conv:hex(binary:part(crypto:hmac(application:get_env(n2o,hmac,sha256),
-         n2o_secret:secret(),term_to_binary(os:timestamp())),0,16)).
+% API
 
 authenticate([], Pickle) ->
     case n2o:depickle(Pickle) of
-        <<>> -> new(auth(generate_sid()));
-        {{Sid,<<"auth">>},{Till,[]}} = Auth ->
-            case expired(Till) of
-                false -> case application:get_env(n2o,nitro_prolongate,no) of
-                              no -> new(Auth);
-                               _ -> new(auth(Sid)) end;
-                 true -> delete_auth({Sid,<<"auth">>}),
-                         new(auth(generate_sid()))
-            end
-    end.
+        <<>> -> new(auth(sid(os:timestamp())));
+        {{Sid,<<"auth">>},{Till,{[],[]}}} = Auth -> case expired(Till) of
+                false -> case prolongate() of no -> new(Auth); _ -> new(auth(Sid)) end;
+                true -> delete_auth({Sid,<<"auth">>}), new(auth(Sid)) end end.
+
+get_value(Session, Key, Default) ->
+    case lookup_ets({Session,Key}) of
+         [] -> Default;
+         {{Session,Key},{Till,{_,Value}}} -> case expired(Till) of
+                false -> Value;
+                true -> ets:delete(cookies,{Session,Key}), Default end end.
+
+set_value(Session, Key, Value) ->
+    ets:insert(cookies,{{Session,Key},{expire(),{<<"/">>,Value}}}), Value.
+
+clear(Session) ->
+    [ ets:delete(cookies,X) || X <- ets:select(cookies,
+        ets:fun2ms(fun(A) when (element(1,element(1,A)) == Session) -> element(1,A) end)) ], ok.
 
 lookup_ets(Key) ->
-    Res = ets:lookup(cookies,Key),
-    case Res of
-         [Value] -> Value;
-         Values -> Values end.
+    case ets:lookup(cookies,Key) of [Value] -> Value; Values -> Values end.
 
 delete_auth(Session) ->
-    case lookup_ets(Session) of
-         [] -> skip;
-          X -> ets:delete_object(cookies, X) end.
+    case lookup_ets(Session) of [] -> ok; X -> ets:delete_object(cookies, X) end.
 
 invalidate_sessions() ->
     ets:foldl(fun(X,A) -> {Sid,Key} = element(1,X),
-              get_value(Sid,Key,[]), A end, 0, cookies),ok.
+    get_value(Sid,Key,[]), A end, 0, cookies),ok.
 
-get_value(SID, Key, DefaultValue) ->
-    Res = case lookup_ets({SID,Key}) of
-               [] -> DefaultValue;
-               {{SID,Key},{Till,[]}} -> case expired(Till) of
-                    false -> [];
-                    true -> ets:delete(cookies,{SID,Key}) end;
-               {{SID,Key},{Till,{_,Value}}} -> case expired(Till) of
-                    false -> Value;
-                    true -> ets:delete(cookies,{SID,Key}), DefaultValue end end,
-    Res.
-
-set_value(SID, Key, Value) ->
-    ets:insert(cookies,{{SID,Key},{expire(),{<<"/">>,Value}}}),
-    Value.
+% TESTS
 
 positive_test() ->
     application:set_env(n2o,nitro_prolongate,no),
@@ -88,7 +82,7 @@ negative_test() ->
 
 test_set_get_value() ->
     InputValue = base64:encode(crypto:strong_rand_bytes(8)),
-    SID = generate_sid(),
+    SID = sid(os:timestamp()),
     Key = base64:encode(crypto:strong_rand_bytes(8)),
     set_value(SID, Key, InputValue),
     ResultValue = get_value(SID, Key, []),

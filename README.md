@@ -70,7 +70,7 @@ As such buses are optional in MQTT setup we include bus drivers in WebSocket pac
 $ mad app web sample
 $ cd sample
 $ mad dep com pla rep
-$ open http://127.0.0.1:8001
+$ open http://127.0.0.1:8001/app/index.htm
 ```
 
 Protocols
