@@ -5,27 +5,30 @@
 
 % PRELUDE
 
+part(X)       -> binary:part(X,0,10).
 to(X)         -> calendar:datetime_to_gregorian_seconds(X).
 from(X)       -> calendar:gregorian_seconds_to_datetime(X).
 cut(Bin)      -> binary:part(Bin,0,20).
 expired(Till) -> Till < to(calendar:local_time()).
 expire()      -> to(till(calendar:local_time(), ttl())).
-auth(Sid)     -> {{Sid,<<"auth">>},{expire(),{[],[]}}}.
-new(Auth)     -> ets:insert(cookies,Auth), {'Token',n2o:pickle(Auth)}.
-ttl()         -> application:get_env(n2o,ttl,60*15).
+auth(Sid,Exp) -> {{Sid,<<"auth">>},{Exp,{[],[]}}}.
+token(Auth)   -> ets:insert(cookies,Auth), {'Token',n2o:pickle(Auth)}.
+ttl()         -> application:get_env(n2o,ttl,60*1).
 till(Now,TTL) -> from(to(Now)+TTL).
-prolongate()  -> application:get_env(n2o,nitro_prolongate,no).
+prolongate()  -> application:get_env(n2o,nitro_prolongate,false).
 sid(Seed)     -> nitro_conv:hex(binary:part(crypto:hmac(application:get_env(n2o,hmac,sha256),
-                 n2o_secret:secret(),term_to_binary(Seed)),0,16)).
+                 n2o_secret:secret(),term_to_binary(Seed)),0,10)).
 
 % API
 
 authenticate([], Pickle) ->
     case n2o:depickle(Pickle) of
-        <<>> -> new(auth(sid(os:timestamp())));
-        {{Sid,<<"auth">>},{Till,{[],[]}}} = Auth -> case expired(Till) of
-                false -> case prolongate() of no -> new(Auth); _ -> new(auth(Sid)) end;
-                true -> delete_auth({Sid,<<"auth">>}), new(auth(Sid)) end end.
+        <<>> -> token(auth(sid(os:timestamp()),expire()));
+        {{Sid,<<"auth">>},{Till,{[],[]}}} ->
+            case expired(Till) orelse prolongate() of
+                false -> {'Token', Pickle};
+                 true -> delete_auth({Sid,<<"auth">>}),
+                         token(auth(Sid,expire())) end end.
 
 get_value(Session, Key, Default) ->
     case lookup_ets({Session,Key}) of

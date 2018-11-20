@@ -6,12 +6,17 @@
 % Nitrogen pickle handler
 
 info({text,<<"N2O,",Auth/binary>>}, Req, State) ->
-    {'Token', Token} = n2o_session:authenticate([], Auth), % WS
-    info(#init{token=Token},Req,State#cx{session = Token});
+    try
+    {'Token', Token} = n2o_session:authenticate([], Auth),
+    Sid = case n2o:depickle(Token) of
+              {{S,_},_} -> S;
+              E -> E end,
+    info(#init{token=Token},Req,State#cx{session = Sid})
+    catch _:R -> io:format("ERR: ~p~n",[{R,erlang:get_stacktrace()}]),
+                 {reply,{binary,<<>>},Req,State} end;
 
-info(#init{token=Token}, Req, State = #cx{module = Module, session = _Session}) ->
-    Bin = binary:part(Token,0,20),
-    n2o:info(?MODULE,"N2O TOKEN: ~p~n",[<<"N2O,",Bin/binary>>]),
+info(#init{token=Token}, Req, State = #cx{module = Module, session = Session}) ->
+    n2o:info(?MODULE,"N2O TOKEN: ~p~n",[<<"N2O,",Session/binary>>]),
      case try Elements = Module:main(),
               nitro:render(Elements),
               {ok,[]}
@@ -73,12 +78,13 @@ render_actions(Actions) ->
 
 html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{session = Token}) ->
     Ev  = n2o:depickle(Pickled),
+    L   = n2o_session:prolongate(),
     Res = case Ev of
-          #ev{} -> render_ev(Ev,Source,Linked,State),
-                   case application:get_env(n2o,nitro_prolongate,no) of no -> <<>>;
-                               _ -> n2o_session:authenticate([], Token) end;
+          #ev{} when L =:= false -> render_ev(Ev,Source,Linked,State), <<>>;
+          #ev{} -> render_ev(Ev,Source,Linked,State), n2o_session:authenticate([], Token);
           CustomEnvelop -> n2o:error(?MODULE,"EV expected: ~p~n",[CustomEnvelop]),
                            {error,"EV expected"} end,
+    io:format("Res: ~p~n",[Res]),
     {io,render_actions(nitro:actions()),Res}.
 
 render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->

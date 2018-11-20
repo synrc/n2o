@@ -16,8 +16,7 @@ function template(html, data) { // template("{this.name}",{name:"Maxim"})
 
 function xml(html) { return new DOMParser().parseFromString(html, "application/xhtml+xml").firstChild; }
 function dom(html) {
-    try { return new DOMParser().parseFromString(html, "text/html")
-                                .firstChild.getElementsByTagName("body")[0].firstChild; } 
+    try { return new DOMParser().parseFromString(html, "text/html").firstChild.getElementsByTagName("body")[0].firstChild; } 
     catch (ex) { var temp = document.createElement("DIV");
                      temp.innerHTML = html;
                      return temp.firstChild; }

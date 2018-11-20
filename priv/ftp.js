@@ -1,4 +1,3 @@
-try { module.exports = { ftp: ftp }; } catch (e) { }
 
 // N2O File Transfer Protocol
 

@@ -1,12 +1,12 @@
-try { module.exports = { dec: dec, enc: enc }; } catch (e) { }
 
 // API
 
 function tuple() { return { t: 104, v: Array.apply(null, arguments) }; }
 function list() { return { t: 108, v: Array.apply(null, arguments) }; }
 function map() { return { t: 116, v: Array.apply(null, arguments) }; }
-function atom(o) { return { t: 100, v: utf8_toByteArray(o).v }; }
+function atom(o) { return { t: 100, v: utf8_enc(o) }; }
 function float(o) { return { t: 70, v: o }; }
+function string(o) { return { t: 107, v: utf8_enc(o) }; };
 function number(o) {
   var s, isInteger = (o % 1 === 0);
   if (isInteger && o >= 0 && o < 256) { return { t: 97, v: o };  }
@@ -14,7 +14,7 @@ function number(o) {
   return {t: 110, v: o}; }
 function bin(o) {
   return { t: 109, v: o instanceof ArrayBuffer ? new Uint8Array(o) :
-                      o instanceof Uint8Array  ? o : utf8_toByteArray(o).v }; }
+                      o instanceof Uint8Array  ? o : string(o).v }; }
 
 // ENCODER
 
@@ -86,7 +86,7 @@ function dec(d) {
 function str(b) {
   var dv, sz = (b==2?sx.getUint16(ix):(b==1?sx.getUint8(ix):sx.getUint32(ix)));
   ix += b; var r = sx.buffer.slice(ix, ix += sz);
-  return utf8_dec(r);
+  return utf8_arr(r);
 }
 function run(b) {
   var sz = (b == 1 ? sx.getUint8(ix) : sx.getUint32(ix)), r = []; ix += b;
@@ -107,7 +107,7 @@ function iee(x) {
   return read_Float(new Uint8Array(sx.buffer.slice(ix,ix+=8)),0,false,52,8);
 }
 function flo(x) {
-  return parseFloat(utf8_dec(sx.buffer.slice(ix, ix += 31)));
+  return parseFloat(utf8_arr(sx.buffer.slice(ix, ix += 31)));
 }
 function arr(b) {
   var dv, sz = sx.getUint16(ix); ix += b;
@@ -148,7 +148,7 @@ function uc(u1, u2) {
 }
 function ar(o) {
   return o.v instanceof ArrayBuffer ? new Uint8Array(o.v) : o.v instanceof Uint8Array ? o.v :
-    Array.isArray(o.v) ? new Uint8Array(o.v) : new Uint8Array(utf8_toByteArray(o.v).v);
+    Array.isArray(o.v) ? new Uint8Array(o.v) : new Uint8Array(utf8_enc(o.v));
 }
 function fl(a) {
   return a.reduce(function (f, t) {
