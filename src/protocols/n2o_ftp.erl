@@ -42,7 +42,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
     Offset2 = case FileSize >= Offset of true -> FileSize; false -> 0 end,
     FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>},
 
-    n2o_async:stop(file, Link),
+    catch n2o_async:stop(file, Link),
     n2o_async:start(#handler{module=?MODULE, class=file, group=n2o, state=FTP2, name=Link}),
 
     {reply, {bert, FTP2}, Req, State};

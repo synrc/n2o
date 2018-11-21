@@ -61,20 +61,20 @@ var ftp = {
 };
 
 $file.do = function (rsp) {
-    var offset = rsp.v[6].v, block = rsp.v[7].v, status = utf8_dec(rsp.v[9].v);
+    var offset = rsp.v[6].v, block = rsp.v[7].v, status = utf8_arr(rsp.v[9].v);
     switch (status) {
         case 'init':
             if(block == 1) return;
-            var item = ftp.item(utf8_dec(rsp.v[1].v)) || '0';
+            var item = ftp.item(utf8_arr(rsp.v[1].v)) || '0';
             item.offset = offset;
             item.block = block;
-            item.name = utf8_dec(rsp.v[3].v);
+            item.name = utf8_arr(rsp.v[3].v);
             item.status = undefined;
             if (item.autostart) ftp.start(item.id);
             break;
         case 'send':
             var x = qi('ftp_status'); if (x) x.innerHTML = offset;
-            var item = ftp.item(utf8_dec(rsp.v[1].v));
+            var item = ftp.item(utf8_arr(rsp.v[1].v));
             item.offset = offset;
             item.block = block;
             (block > 0 && ftp.active) ? ftp.send_slice(item) : ftp.stop(item.id)
