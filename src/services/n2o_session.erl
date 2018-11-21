@@ -11,7 +11,7 @@ from(X)       -> calendar:gregorian_seconds_to_datetime(X).
 cut(Bin)      -> binary:part(Bin,0,20).
 expired(Till) -> Till < to(calendar:local_time()).
 expire()      -> to(till(calendar:local_time(), ttl())).
-auth(Sid,Exp) -> {{Sid,<<"auth">>},{Exp,{[],[]}}}.
+auth(Sid,Exp) -> {{Sid,'auth'},{Exp,[]}}.
 token(Auth)   -> ets:insert(cookies,Auth), {'Token',n2o:pickle(Auth)}.
 ttl()         -> application:get_env(n2o,ttl,60*15).
 till(Now,TTL) -> from(to(Now)+TTL).
@@ -24,21 +24,22 @@ sid(Seed)     -> nitro_conv:hex(binary:part(crypto:hmac(application:get_env(n2o,
 authenticate([], Pickle) ->
     case n2o:depickle(Pickle) of
         <<>> -> token(auth(sid(os:timestamp()),expire()));
-        {{Sid,<<"auth">>},{Till,{[],[]}}} ->
+        {{Sid,'auth'},{Till,[]}} = Auth ->
             case expired(Till) orelse prolongate() of
-                false -> {'Token', Pickle};
-                 true -> delete_auth({Sid,<<"auth">>}),
+                false -> ets:insert(cookies,Auth),
+                         {'Token', Pickle};
+                 true -> delete_auth({Sid,auth}),
                          token(auth(Sid,expire())) end end.
 
 get_value(Session, Key, Default) ->
     case lookup_ets({Session,Key}) of
          [] -> Default;
-         {{Session,Key},{Till,{_,Value}}} -> case expired(Till) of
+         {{Session,Key},{Till,Value}} -> case expired(Till) of
                 false -> Value;
                 true -> ets:delete(cookies,{Session,Key}), Default end end.
 
 set_value(Session, Key, Value) ->
-    ets:insert(cookies,{{Session,Key},{expire(),{<<"/">>,Value}}}), Value.
+    ets:insert(cookies,{{Session,Key},{expire(),Value}}), Value.
 
 clear(Session) ->
     [ ets:delete(cookies,X) || X <- ets:select(cookies,
@@ -59,28 +60,28 @@ invalidate_sessions() ->
 positive_test() ->
     application:set_env(n2o,nitro_prolongate,false),
     {'Token',B}=n2o_session:authenticate("",""),
-    {{SID,Key},{Till,{[],[]}}} = n2o:depickle(B),
+    {{SID,Key},{Till,[]}} = n2o:depickle(B),
     {'Token',C}=n2o_session:authenticate("",B),
-    {{SID,Key},{Till,{[],[]}}} = n2o:depickle(C),
-    delete_auth({SID,<<"auth">>}),
+    {{SID,Key},{Till,[]}} = n2o:depickle(C),
+    delete_auth({SID,'auth'}),
     true=(C==B).
 
 negative_test() ->
     application:set_env(n2o,nitro_prolongate,false),
     application:set_env(n2o, ttl, 2),
     {'Token', TokenA} = n2o_session:authenticate("", ""),
-    {{SID0,_},{_,{[],[]}}} = n2o:depickle(TokenA),
+    {{SID0,_},{_,[]}} = n2o:depickle(TokenA),
     timer:sleep(3000),
     {'Token', TokenB} = n2o_session:authenticate("", TokenA),
-    {{SID1,_},{_,{[],[]}}} = n2o:depickle(TokenB),
+    {{SID1,_},{_,[]}} = n2o:depickle(TokenB),
     application:set_env(n2o, ttl, 60*15),
     TokenWasChanged = TokenA /= TokenB,
     {'Token', TokenC} = n2o_session:authenticate("", TokenB),
-    {{SID2,_},{_,{[],[]}}} = n2o:depickle(TokenC),
+    {{SID2,_},{_,[]}} = n2o:depickle(TokenC),
     NewTokenIsValid = TokenB == TokenC,
-    delete_auth({SID0,<<"auth">>}),
-    delete_auth({SID1,<<"auth">>}),
-    delete_auth({SID2,<<"auth">>}),
+    delete_auth({SID0,auth}),
+    delete_auth({SID1,auth}),
+    delete_auth({SID2,auth}),
     TokenWasChanged == NewTokenIsValid.
 
 test_set_get_value() ->

@@ -20,6 +20,7 @@ debug(Name,Topic,BERT,Address,Return) ->
 send(C,T,M)      -> send(C, T, M, [{qos,2}]).
 send(C,T,M,Opts) -> emqttc:publish(C, T, M, Opts).
 
+sid() -> application:get_env(n2o,token_as_sid,false).
 fix('')          -> index;
 fix(<<"index">>) -> index;
 fix(Module)      -> list_to_atom(binary_to_list(Module)).
@@ -47,7 +48,11 @@ proc({publish, To, Request},
     Return = case Addr of
         [ _Origin, Vsn, Node, Module, _Username, Id, Token | _ ] ->
         From = n2o:to_binary(["actions/", Vsn, "/", Module, "/", Id]),
-        Sid  = n2o:to_binary(Token),
+        Sid  = case sid() of
+                    true -> n2o:to_binary(Token);
+                    false -> case n2o:depickle(n2o:to_binary(Token)) of
+                             {{A,_},_} -> A; B -> B end
+               end,
         Ctx  = #cx { module=fix(Module), session=Sid, node=Node,
                      params=Id, client_pid=C, from = From, vsn = Vsn},
         put(context, Ctx),

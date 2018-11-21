@@ -7,7 +7,7 @@ info({text,<<"PING">> = _Ping}=Message, Req, State) ->
     {reply, {text, <<"PONG">>}, Req, State};
 
 info({text,<<>>}=Message, Req, State) ->
-    n2o:info(?MODULE,"PING: ~p",[Message]),
+    n2o:info(?MODULE,"NOP: ~p",[Message]),
     {reply, {text, <<>>}, Req, State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.

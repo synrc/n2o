@@ -6,19 +6,14 @@
 % Nitrogen pickle handler
 
 info({text,<<"N2O,",Auth/binary>>}, Req, State) ->
-    try
-    {'Token', Token} = n2o_session:authenticate([], Auth),
-    Sid = case n2o:depickle(Token) of
-              {{S,_},_} -> S;
-              E -> E end,
-    New = State#cx{session = Sid},
-    put(context,New),
-    info(#init{token=Token},Req,New)
-    catch _:R -> io:format("ERR: ~p~n",[{R,erlang:get_stacktrace()}]),
-                 {reply,{binary,<<>>},Req,State} end;
+    info(#init{token=Auth},Req,State);
 
-info(#init{token=Token}, Req, State = #cx{module = Module, session = Session}) ->
-    n2o:info(?MODULE,"N2O TOKEN: ~p~n",[<<"N2O,",Session/binary>>]),
+info(#init{token=Auth}, Req, State = #cx{module = Module}) ->
+     {'Token', Token} = n2o_session:authenticate([], Auth),
+     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
+     n2o:info(?MODULE,"N2O SESSION: ~p~n",[Sid]),
+     New = State#cx{session = Sid},
+     put(context,New),
      case try Elements = Module:main(),
               nitro:render(Elements),
               {ok,[]}
@@ -31,7 +26,7 @@ info(#init{token=Token}, Req, State = #cx{module = Module, session = Session}) -
          catch Err1:Rea1 -> StackInit = n2o:stack_trace(Err1,Rea1),
                             n2o:error(?MODULE,"Catch:~p~n",[StackInit]),
                             {stack,StackInit} end,
-              {reply, {bert,{io,Actions,{'Token',Token}}},Req,State};
+              {reply, {bert,{io,Actions,{'Token',Token}}},Req,New};
  {error,E} -> {reply, {bert,{io,<<>>,E}},Req,State} end;
 
 info(#client{data=Message}, Req, State) ->
