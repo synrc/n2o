@@ -284,6 +284,15 @@
 
  [131,100,0,2,111,107]
          </code></figure>
+        <h4>string(x)</h4>
+        <p>Creates JSON for string encoding.</p>
+        <figure><code>
+ > dec(enc(string('ok')).buffer))
+
+ {t: 107, v: "ok"}
+
+ [131,107,0,2,111,107]
+         </code></figure>
         <h4>float(x)</h4>
         <p>Creates JSON for IEEE-754 float encoding.</p>
         <figure><code>
