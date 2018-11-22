@@ -37,19 +37,29 @@
     <section>
         <h3>INIT</h3>
         <p>Init message invokes event(init) function in page module.
-           There are two binary representations of INIT message.</p>
-        <div>
+           There are two binary representations of INIT message.
+           The first one is BERT encoded #init record with binary
+           token that usually issued by n2o_session, transported in #io record
+           as data parameter and stored on client side in localStorage or Key Chain.
+           Clients with invalid tokens are being registered and reissued.</p>
         <figure><code>
  -record(init, { token :: binary() }).
         </code></figure>
+        <p>The second one is TEXT encoded version of message, &lt;&lt;"N2O,"&gt;&gt;
+           that usually works for hosts with raw binary falicities as WebSockets.
+           </p>
         <figure><code>
  <<"N2O,",Token/binary>>
         </code></figure>
-        </div>
+        <p>For token issue protocol see <a href="n2o_session.htm">n2o_session</a> module.</p>
     </section>
     <section>
         <h3>PICKLE</h3>
-        <p>Pickle message sends to server prerendered (by server) encripted message.</p>
+        <p>Pickle message sends to server prerendered (by server) encripted message.
+           These messages hold #ev record with callee information (encripted).
+           Pickled messaged can prolongate expiration field in session token (renewed)
+           by updating client token on each UI request (tracking user activity) when
+           n2o application variable <b>nitro_prolongate</b> equals <b>true</b>.</p>
         <div>
         <figure><code>
  -record(pickle, { source  = [] :: [] | binary(),
@@ -65,7 +75,7 @@
     </section>
     <section>
         <h3>DIRECT</h3>
-        <p>Direct message sends data without any convertation or encription.</p>
+        <p>Direct message sends data without any convertation or encription or session logic.</p>
         <div>
         <figure><code>
  -record(direct, { data = [] :: any() }).

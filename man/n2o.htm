@@ -91,6 +91,20 @@
            on each incoming request. N2O is expected to be embedded
            into applications host: MQTT (as a ring of MQTT clients),
            or HTTP server or WebSocket, or raw TCP.</p>
+        <figure><code>
+ -type formatter() :: binary | json | bert | text | default | atom().
+        </code></figure>
+        <figure><code>
+ -record(reply, { { format :: formatter(),
+                    data   :: binary() } ,
+                  request  :: term(),
+                  state    :: term() }).
+        </code></figure>
+        <figure><code>
+ -record(unknown, { message :: term(),
+                    request  :: term(),
+                    state    :: term() }).
+        </code></figure>
     </section>
     <section>
         <h3>RPC MQTT</h3>
@@ -100,7 +114,7 @@
            as <a href="n2o_async.htm">n2o_async</a> processes that listen to
            events topic. The responses send to actions topic, which is
            subscribed automatically on MQTT session init.</p>
-        <figure><figcaption>Listing 4. MQTT RPC Topics</figcaption><code>
+        <figure><figcaption>Listing 5. MQTT RPC Topics</figcaption><code>
  actions/:vsn/:module/:client
   events/:vsn/:node/:module/:client
         </code></figure>
@@ -109,7 +123,7 @@
         <h3>RPC WebSocket</h3>
         <p>In pure WebSocket case, N2O implements <a href="n2o_proto.htm">n2o_proto</a>
            as cowboy module supporting binary and text messages.</p>
-        <figure><figcaption>Listing 5. Cowboy stream protocol</figcaption><code>
+        <figure><figcaption>Listing 6. Cowboy stream protocol</figcaption><code>
  #binary { data :: binary() }.
    #text { data :: binary() }.
         </code></figure>
@@ -118,7 +132,7 @@
         <h3>EXAMPLE</h3>
         <p>Here is the little example of overriding INIT protocol message from NITRO protocol
             and generate standard token stored in KVS.</p>
-<figure><figcaption>Listing 6. Custom INIT Protocol</figcaption><code>
+<figure><figcaption>Listing 7. Custom INIT Protocol</figcaption><code>
  -module(custom_init).
  -compile(export_all).
 
@@ -135,14 +149,24 @@
         <h3>CONFIG</h3>
         <p>Just put protocol implementation module name to <b>protocol</b> option in sys.config.</p>
         <figure><code>
-  [{n2o,[{cache,n2o},
-         {mq,n2o},
-         {logging,n2o_io},
-         {log_modules,n2o},
+  [{n2o,[{log_modules,[n2o]},
          {log_level,n2o},
+         {logging,n2o_io},
+         {cache,n2o},
+         {upload,"priv/static"},
+         {mq,n2o_syn},
+         {ttl,900},
+         {timer,{0,1,0}}
+         {tables,[cookies,file,caching,ring,async]},
+         {hmac,sha256},
+         {filename,n2o_ftp},
+         {formatter,n2o_bert},
          {session,n2o_session},
          {pickler,n2o_secret},
-         {protocols,[custom_init,n2o_ftp,n2o_nitro]},
+         {protocols,[n2o_ftp,n2o_nitro]},
+         {nitro_prolongate,false},
+         {filter,{n2o_proto,push}},
+         {origin,<<"*">>},
          {timer,{0,10,0}}]}].
         </code></figure>
         <p>N2O is the facade of the following services: cache, MQ, message formatting, logging,
@@ -163,7 +187,7 @@
         <p>Gets a Value.</p>
     </section>
     <section>
-        <h3>BUS</h3>
+        <h3>MQ</h3>
         <p>The minimal requirement for any framework is to pub/sub API.
            N2O provides selectable API through <b>mq</b> environment parameter.</p>
         <h4>subscribe(Client, Topic, Options) -> term().</h4>
@@ -194,7 +218,7 @@
     </section>
     <section>
         <h3>LOG</h3>
-        <figure><figcaption>Listing 7. Log Framework</figcaption>
+        <figure><figcaption>Listing 8. Log Framework</figcaption>
         <code>
  log_modules() -> [n2o,n2o_async,n2o_proto].
  log_level() -> info.
@@ -224,9 +248,8 @@
  3> n2o:session(user,maxim).
  maxim
  4> ets:tab2list(cookies).
-[{{[],user},{63710014344,{<<"/">>,"maxim"}}},
- {{<<"5842b7e749a8cf44c920">>,<<"auth">>},
-  {63710014069,{[],[]}}}]
+[{{[],user},{63710014344,"maxim"}},
+ {{<<"5842b7e749a8cf44c920">>,auth},{63710014069,[]}]
         </code></figure>
         <h4>session(Key) -> term().</h4>
         <p>Gets a Value by any Key.</p>
