@@ -1,7 +1,8 @@
 -module(n2o_session).
 -include_lib("stdlib/include/ms_transform.hrl").
 -description('N2O Session').
--compile(export_all).
+-export([authenticate/2, get_value/3, set_value/3, storage/0, prolongate/0, from/1, ttl/0, till/2]).
+-export([clear/1, delete/1, update/1, lookup/1, invalidate_sessions/0]).
 
 % PRELUDE
 
@@ -12,12 +13,13 @@ cut(Bin)      -> binary:part(Bin,0,20).
 expired(Till) -> Till < to(calendar:local_time()).
 expire()      -> to(till(calendar:local_time(), ttl())).
 auth(Sid,Exp) -> {{Sid,'auth'},{Exp,[]}}.
-token(Auth)   -> ets:insert(cookies,Auth), {'Token',n2o:pickle(Auth)}.
+storage()     -> application:get_env(n2o,session_storage,n2o_session).
+token(A)      -> (storage()):update(A), {'Token',n2o:pickle(A)}.
+token(A,P)    -> (storage()):update(A), {'Token',P}.
 ttl()         -> application:get_env(n2o,ttl,60*15).
 till(Now,TTL) -> from(to(Now)+TTL).
 prolongate()  -> application:get_env(n2o,nitro_prolongate,false).
-sid(Seed)     -> nitro_conv:hex(binary:part(crypto:hmac(application:get_env(n2o,hmac,sha256),
-                 n2o_secret:secret(),term_to_binary(Seed)),0,10)).
+sid(Seed)     -> n2o_secret:sid(Seed).
 
 % API
 
@@ -25,31 +27,36 @@ authenticate([], Pickle) ->
     case n2o:depickle(Pickle) of
         <<>> -> token(auth(sid(os:timestamp()),expire()));
         {{Sid,'auth'},{Till,[]}} = Auth ->
-            case expired(Till) orelse prolongate() of
-                false -> ets:insert(cookies,Auth),
-                         {'Token', Pickle};
-                 true -> delete_auth({Sid,auth}),
-                         token(auth(Sid,expire())) end end.
+            case {expired(Till), prolongate()} of
+                 {false,false} -> token(Auth,Pickle);
+                  {false,true} -> token(auth(Sid,expire()));
+                      {true,_} -> (storage()):delete({Sid,auth}),
+                                  token(auth(sid(os:timestamp()),expire()))
+            end
+    end.
 
 get_value(Session, Key, Default) ->
-    case lookup_ets({Session,Key}) of
+    case (storage()):lookup({Session,Key}) of
          [] -> Default;
          {{Session,Key},{Till,Value}} -> case expired(Till) of
                 false -> Value;
-                true -> ets:delete(cookies,{Session,Key}), Default end end.
+                true -> (storage()):delete({Session,Key}), Default end end.
 
 set_value(Session, Key, Value) ->
-    ets:insert(cookies,{{Session,Key},{expire(),Value}}), Value.
+    (storage()):update({{Session,Key},{expire(),Value}}), Value.
 
 clear(Session) ->
     [ ets:delete(cookies,X) || X <- ets:select(cookies,
         ets:fun2ms(fun(A) when (element(1,element(1,A)) == Session) -> element(1,A) end)) ], ok.
 
-lookup_ets(Key) ->
-    case ets:lookup(cookies,Key) of [Value] -> Value; Values -> Values end.
+lookup({Session,Key}) ->
+    case ets:lookup(cookies,{Session,Key}) of [Value] -> Value; Values -> Values end.
 
-delete_auth(Session) ->
-    case lookup_ets(Session) of [] -> ok; X -> ets:delete_object(cookies, X) end.
+update(Token) ->
+    ets:insert(cookies,Token).
+
+delete({Session,Key}) ->
+    ets:delete(cookies,{Session,Key}).
 
 invalidate_sessions() ->
     ets:foldl(fun(X,A) -> {Sid,Key} = element(1,X),
@@ -63,7 +70,7 @@ positive_test() ->
     {{SID,Key},{Till,[]}} = n2o:depickle(B),
     {'Token',C}=n2o_session:authenticate("",B),
     {{SID,Key},{Till,[]}} = n2o:depickle(C),
-    delete_auth({SID,'auth'}),
+    delete({SID,'auth'}),
     true=(C==B).
 
 negative_test() ->
@@ -79,9 +86,9 @@ negative_test() ->
     {'Token', TokenC} = n2o_session:authenticate("", TokenB),
     {{SID2,_},{_,[]}} = n2o:depickle(TokenC),
     NewTokenIsValid = TokenB == TokenC,
-    delete_auth({SID0,auth}),
-    delete_auth({SID1,auth}),
-    delete_auth({SID2,auth}),
+    delete({SID0,auth}),
+    delete({SID1,auth}),
+    delete({SID2,auth}),
     TokenWasChanged == NewTokenIsValid.
 
 test_set_get_value() ->
@@ -90,5 +97,5 @@ test_set_get_value() ->
     Key = base64:encode(crypto:strong_rand_bytes(8)),
     set_value(SID, Key, InputValue),
     ResultValue = get_value(SID, Key, []),
-    delete_auth({SID,Key}),
+    delete({SID,Key}),
     InputValue == ResultValue.

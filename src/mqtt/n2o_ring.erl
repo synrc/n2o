@@ -1,7 +1,7 @@
 -module(n2o_ring).
 -description('N2O Ring').
 -include("n2o.hrl").
--compile(export_all).
+-export([ring/0,init/1,send/1,lookup/1,add/1,delete/1]).
 -record(state, { ring, nodes }).
 
 send(Msg) ->
@@ -84,7 +84,7 @@ init(Peers) ->
         ]
     ),
     Ring = array:from_list(assemble_ring([], lists:reverse(RawRing), [], length(Peers))),
-    n2o:info(?MODULE,"Created a ring with ~b points in it.\r~n", [array:sparse_size(Ring)]),
+    n2o:info(?MODULE,"RING: ~p~n", [array:sparse_size(Ring)]),
     application:set_env(n2o,ring,Ring),
     application:set_env(n2o,nodes,Peers),
     {ok, #state{ring=Ring,nodes=Peers}}.

@@ -1,10 +1,10 @@
 -module(n2o_async).
--description('N2O Async Processes').
+-description('N2O Process').
 -include("n2o.hrl").
 -behaviour(gen_server).
 -export([start_link/1]).
 -export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
--compile(export_all).
+-export([start/1,stop/2,send/2,send/3,pid/2,restart/2]).
 
 start(#handler{class=Class,name=Name,module=Module,group=Group} = Async) ->
     ChildSpec = {{Class,Name},{?MODULE,start_link,[Async]},

@@ -1,7 +1,6 @@
 -module(n2o_cowboy).
 -include("n2o.hrl").
 -description('N2O Cowboy HTTP Backend').
-%-behaviour(cowboy_http_handler).
 -export([init/3, handle/2, terminate/3]).
 -compile(export_all).
 -record(state, {headers, body}).

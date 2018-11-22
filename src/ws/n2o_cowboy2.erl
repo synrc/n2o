@@ -1,4 +1,5 @@
 -module(n2o_cowboy2).
+-description('N2O Cowboy2 WebSocket Backend').
 -compile(export_all).
 
 init(Req,_Opts) -> {cowboy_websocket, Req, Req}.

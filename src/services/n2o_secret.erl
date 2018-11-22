@@ -1,7 +1,7 @@
 -module(n2o_secret).
 -description('N2O HMAC AES/CBC-128').
 -include("n2o.hrl").
--export([pickle/1,depickle/1,secret/0,hex/1,unhex/1]).
+-export([pickle/1,depickle/1,hex/1,unhex/1,sid/1]).
 
 pickle(Data) ->
     Message = term_to_binary(Data),
@@ -24,3 +24,5 @@ hex(Bin) -> << << (digit(A1)),(digit(A2)) >> || <<A1:4,A2:4>> <= Bin >>.
 unhex(Hex) -> << << (erlang:list_to_integer([H1,H2], 16)) >> || <<H1,H2>> <= Hex >>.
 digit(X) when X >= 0 andalso X =< 9 -> X + 48;
 digit(X) when X >= 10 andalso X =< 15 -> X + 87.
+sid(Seed) -> hex(binary:part(crypto:hmac(application:get_env(n2o,hmac,sha256),
+             secret(),term_to_binary(Seed)),0,10)).

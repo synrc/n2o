@@ -1,7 +1,7 @@
 -module(n2o_nitro).
--description('N2O Nitro Protocol').
+-description('N2O Nitrogen Web Framework Protocol').
 -include("n2o.hrl").
--compile(export_all).
+-export([info/3,render_actions/1]).
 
 % Nitrogen pickle handler
 
@@ -18,12 +18,12 @@ info(#init{token=Auth}, Req, State = #cx{module = Module}) ->
               nitro:render(Elements),
               {ok,[]}
         catch Err:Rea ->
-              StackMain = n2o:stack_trace(Err,Rea),
+              StackMain = n2o:stack(Err,Rea),
               n2o:error(?MODULE,"Catch:~p~n",[StackMain]),
               {error,StackMain} end of
    {ok, _} -> Actions = try Module:event(init),
                             render_actions(nitro:actions())
-         catch Err1:Rea1 -> StackInit = n2o:stack_trace(Err1,Rea1),
+         catch Err1:Rea1 -> StackInit = n2o:stack(Err1,Rea1),
                             n2o:error(?MODULE,"Catch:~p~n",[StackInit]),
                             {stack,StackInit} end,
               {reply, {bert,{io,Actions,{'Token',Token}}},Req,New};
@@ -34,7 +34,7 @@ info(#client{data=Message}, Req, State) ->
     n2o:info(?MODULE,"Client Message: ~p",[Message]),
     Module = State#cx.module,
     Reply = try Module:event(#client{data=Message})
-          catch Err:Rea -> Stack = n2o:stack_trace(Err,Rea),
+          catch Err:Rea -> Stack = n2o:stack(Err,Rea),
                            n2o:error(?MODULE,"Catch:~p~n",[Stack]),
                            {error,Stack} end,
     {reply,{bert,{io,render_actions(nitro:actions()),Reply}},Req,State};
@@ -42,7 +42,7 @@ info(#client{data=Message}, Req, State) ->
 info(#pickle{}=Event, Req, State) ->
     nitro:actions([]),
     Result = try html_events(Event,State)
-           catch E:R -> Stack = n2o:stack_trace(E,R),
+           catch E:R -> Stack = n2o:stack(E,R),
                         n2o:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
                         {io,render_actions(nitro:actions()),Stack} end,
     {reply,{bert,Result}, Req,State};
@@ -55,7 +55,7 @@ info(#direct{data=Message}, Req, State) ->
     nitro:actions([]),
     Module = State#cx.module,
     Result = try Res = Module:event(Message), {direct,Res}
-           catch E:R -> Stack = n2o:stack_trace(E, R),
+           catch E:R -> Stack = n2o:stack(E, R),
                         n2o:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
                         {stack,Stack} end,
     {reply,{bert,{io,render_actions(nitro:actions()),Result}}, Req,State};
