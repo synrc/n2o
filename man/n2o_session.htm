@@ -36,7 +36,9 @@
            It consists of session id, key, expiration time and value.
            Session token used both for auth and for session variales.</p>
         <figure><code>
- -type session() :: { { binary(), term() } , { integer(), term() } }.
+ -type session_sid() :: binary().
+ -type session_key() :: { session_sid(), term() }.
+ -type session() :: { session_key() , { integer(), term() } }.
         </code></figure>
         <p>Session token encoded with pickler tagged as <b>'Token'</b> tuple.</p>
         <figure><code>
@@ -45,18 +47,37 @@
     </section>
     <section>
         <h3>API</h3>
-        <h4>authenticate([],binary()) -> #'Token'{}.</h4>
-        <p>If token is unknown a new token is being issued.
-           If token is valid and not expired and not nitro_prolongate is false the token remains unchanged.
-           If token is valid but expired or nitro_prolongate is true the token renewed with same session id.</p>
+        <h4>authenticate([],binary()) -> token().</h4>
+        <p>The protocol is following. If session is expired or session
+           token is invalid then new session token issued. If session token
+           is not expired and valid then two cases could happen:
+           1) if <b>nitro_prolongate</b> n2o parameter is true,
+              then new expiration value is updated for current session, while
+              session sid remains unchanged;
+           2) if <b>nitro_prolongate</b> is false then full session token remains unchanged.</p>
         <h4>get_value(binary(),term(),term()) -> term().</h4>
-        <p>Gets session variable.</p>
+        <p>Gets session variable from session storage.</p>
         <h4>set_value(binary(),term(),term()) -> term().</h4>
-        <p>Sets session variable.</p>
+        <p>Sets session variable to session storage.</p>
+        <h4>storage() -> atom().</h4>
+        <p>Returns current sessions backend. <b>n2o_session</b> by default.</p>
+        <h4>prolongate() -> boolean().</h4>
+        <p>Returns <b>nitro_prolongate</b> n2o parameter. <b>false</b> by default.</p>
+        <h4>sid(term()) -> binary().</h4>
+        <p>Returns new session id based on seed.</p>
+    </section>
+    <section>
+        <h3>BACKEND</h3>
         <h4>clear(binary()) -> ok.</h4>
-        <p>Clear all session variables along with authentication.</p>
+        <p>Clears all session ovariables by session sid.</p>
+        <h4>update(session()) -> ok.</h4>
+        <p>Updates session.</p>
+        <h4>delete(session_key()) -> ok.</h4>
+        <p>Removes session by key.</p>
+        <h4>lookup(session_key()) -> ok.</h4>
+        <p>Lookups session by key.</p>
         <h4>invalidate_sessions() -> ok.</h4>
-        <p>Removes all expired session tokens.</p>
+        <p>Removes all expired variables across all sessions.</p>
     </section>
     <section>
         <p>You may also want to read:
