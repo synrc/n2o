@@ -39,7 +39,7 @@
  -type expires()     :: integer().
  -type session_sid() :: binary().
  -type session_key() :: { session_sid() , term()        }.
- -type session_vak() :: { expires()     , term()        }.
+ -type session_val() :: { expires()     , term()        }.
  -type session()     :: { session_key() , session_val() }.
         </code></figure>
         <p>Session token encoded with pickler tagged as <b>'Token'</b> tuple.</p>
