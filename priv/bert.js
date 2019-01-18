@@ -130,6 +130,7 @@ function din() {
 // HELPERS
 
 function int_to_bytes(Int) {
+  if (Int % 1 !== 0) return [0];
   var isNegative, OriginalInt, i, Rem, s = [];
   isNegative = (Int < 0);
   if (isNegative) { Int = - Int - 1; }
