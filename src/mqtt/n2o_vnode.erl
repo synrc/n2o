@@ -3,7 +3,7 @@
 -include("n2o.hrl").
 -include("emqttd.hrl").
 -export([proc/2]).
--export([get_vnode/1,get_vnode/2,validate/1,send_reply/3,send_reply/4,send/3,send/4]).
+-export([get_vnode/1,get_vnode/2,validate/2,send_reply/3,send_reply/4,send/3,send/4]).
 -export([subscribe/3,subscribe/2,unsubscribe/3,unsubscribe/2,subscribe_cli/2,unsubscribe_cli/2]).
 -export([load/1,unload/0]).
 -export([on_client_connected/3, on_client_disconnected/3, on_client_subscribe/4,
@@ -190,4 +190,4 @@ get_vnode(ClientId, _) ->
     [H|_] = binary_to_list(erlang:md5(ClientId)),
     integer_to_binary(H rem (length(n2o:ring())) + 1).
 
-validate(_Payload) -> ok.
+validate(_Payload, ClientId) -> ok.
