@@ -3,6 +3,8 @@
 -behaviour(supervisor).
 -behaviour(application).
 -include("n2o.hrl").
+-include("n2o_core.hrl").
+-include("n2o_api.hrl").
 -export([start/2, stop/1, init/1, proc/2, version/0, ring/0, to_binary/1, bench/0]).
 
 % SERVICES

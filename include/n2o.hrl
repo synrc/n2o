@@ -1,9 +1,28 @@
 -ifndef(N2O_HRL).
 -define(N2O_HRL, true).
 
--record(handler, { name, module, class, group, config, state, seq}).
--record(cx,      { handlers=[], actions=[], req=[], module=[], lang=[], path=[],
-                   session=[], formatter=bert, params=[], node=[], client_pid=[], state=[], from=[], vsn = [] }).
+-record(handler, { name     :: atom(),
+                   module   :: atom(),
+                   class    :: term(),
+                   group    :: atom(),
+                   config   :: term(),
+                   state    :: term(),
+                   seq      :: term()}).
+
+-record(cx,      { handlers  = [] :: list(#handler{}),
+                   actions   = [] :: list(tuple()),
+                   req       = [] :: [] | term(),
+                   module    = [] :: [] | atom(),
+                   lang      = [] :: [] | atom(),
+                   path      = [] :: [] | binary(),
+                   session   = [] :: [] | binary(),
+                   formatter = bert :: bert | json,
+                   params    = [] :: [] | list(tuple()),
+                   node      = [] :: [] | atom(),
+                   client_pid= [] :: [] | pid(),
+                   state     = [] :: [] | term(),
+                   from      = [] :: [] | binary(),
+                   vsn       = [] :: [] | binary() }).
 
 -define(CTX(ClientId), n2o:cache(ClientId)).
 -define(REQ(ClientId), (n2o:cache(ClientId))#cx.req).
