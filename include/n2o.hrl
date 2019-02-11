@@ -19,7 +19,7 @@
                    formatter = bert :: bert | json,
                    params    = [] :: [] | list(tuple()),
                    node      = [] :: [] | atom(),
-                   client_pid= [] :: [] | pid(),
+                   client_pid= [] :: [] | term(),
                    state     = [] :: [] | term(),
                    from      = [] :: [] | binary(),
                    vsn       = [] :: [] | binary() }).
