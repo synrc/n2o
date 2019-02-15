@@ -34,7 +34,8 @@ var $io = {}; $io.on = function onio(r, cb) {
         try { eval(utf8_arr(r.v[1].v));
               if (typeof cb == 'function') cb(r);
               return { status: "ok" };
-        } catch (e)  { console.log("Eval error: "+r);
+        } catch (e)  { console.error("Eval failed:",r);
+                       console.error(e);
                        return { status: '' }; }
     } else return { status: '' };
 }
@@ -59,7 +60,7 @@ var $bert = {}; $bert.protos = [$io, $file]; $bert.on = function onbert(evt, cb)
                     p = $bert.protos[i];
                     if (p.on(erlang, p.do).status == "ok") return;
                 }
-            } catch (e) { console.log(e); }
+            } catch (e) { console.error(e); }
         });
         r.readAsArrayBuffer(evt.data);
         return { status: "ok" };
