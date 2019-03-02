@@ -1,4 +1,5 @@
 -module(n2o_async).
+-deprecated([]).
 -description('N2O Process').
 -include("n2o.hrl").
 -include("n2o_async.hrl").

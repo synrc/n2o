@@ -52,17 +52,17 @@ gen_name(Pos) -> n2o:to_binary([lists:flatten([io_lib:format("~2.16.0b",[X])
 proc(init,#pi{name=Name}=Async) ->
     n2o:info(?MODULE,"VNode Init: ~p\r~n",[Name]),
     case catch emqttc:module_info() of
-         {'EXIT',_} -> {ok,Async#pi{state=[],seq=0}};
+         {'EXIT',_} -> {ok,Async#pi{state=[]}};
          _ -> {ok, C} = emqttc:start_link([{host, "127.0.0.1"},
                             {client_id, gen_name(Name)},
                             {clean_sess, false},
                             {logger, {console, error}},
                             {reconnect, 5}]),
-                  {ok,Async#pi{state=C,seq=0}} end;
+                  {ok,Async#pi{state=C}} end;
 
 proc({publish,_,_}, State=#pi{state=[]}) -> {reply,[],State};
 proc({publish, To, Request},
-    State  = #pi{name=Name,state=C,seq=S}) ->
+    State  = #pi{name=Name,state=C}) ->
     Addr   = emqttd_topic:words(To),
     Bert   = n2o:decode(Request),
     Return = case Addr of
@@ -90,14 +90,14 @@ proc({publish, To, Request},
         end;
         Addr -> {error,{"Unknown Address",Addr}} end,
     debug(Name,To,Bert,Addr,Return),
-    {reply, Return, State#pi{seq=S+1}};
+    {reply, Return, State};
 
-proc({mqttc, C, connected}, State=#pi{name=Name,state=C,seq=S}) ->
+proc({mqttc, C, connected}, State=#pi{name=Name,state=C}) ->
     emqttc:subscribe(C, n2o:to_binary([<<"events/+/">>, lists:concat([Name]),"/#"]), 2),
-    {ok, State#pi{seq = S+1}};
+    {ok, State};
 
-proc(Unknown,#pi{seq=S}=Async) ->
-    {reply,{uknown,Unknown,S},Async#pi{seq=S+1}}.
+proc(Unknown,Async) ->
+    {reply,{uknown,Unknown,0},Async}.
 
 % MQTT HELPERS
 
@@ -172,14 +172,16 @@ on_message_publish(#mqtt_message{topic = <<"events/", _TopicTail/binary>> = Topi
     case Module:ValidateFun(Payload, ClientId) of
         ok ->
             case emqttd_topic:words(Topic) of
-                [E, V, '', M, U, _C, T] -> {Mod, F} = application:get_env(n2o, vnode, {?MODULE, get_vnode}),
+                [E, V, '', M, U, _C, T] ->
+                    {Mod, F} = application:get_env(n2o, vnode, {?MODULE, get_vnode}),
                     NewTopic = emqttd_topic:join([E, V, Mod:F(ClientId, Payload), M, U, ClientId, T]),
                     emqttd:publish(emqttd_message:make(ClientId, Qos, NewTopic, Payload)), skip;
                 %% @NOTE redirect to vnode
                 [_E, _V, _N, _M, _U, ClientId, _T] -> {ok, Message};
-                [E, V, N, M, U, _C, T] -> NewTopic = emqttd_topic:join([E, V, N, M, U, ClientId, T]),
+                [E, V, N, M, U, _C, T] ->
+                    NewTopic = emqttd_topic:join([E, V, N, M, U, ClientId, T]),
                     emqttd:publish(emqttd_message:make(ClientId, Qos, NewTopic, Payload)), skip;
-                %% @NOTE redirects to event topic with correct ClientId
+                %% @NOTE redirect to event topic with correct ClientId
                 _ -> {ok, Message}
             end;
         _ -> skip end;
@@ -190,4 +192,4 @@ get_vnode(ClientId, _) ->
     [H|_] = binary_to_list(erlang:md5(ClientId)),
     integer_to_binary(H rem (length(n2o:ring())) + 1).
 
-validate(_Payload, ClientId) -> ok.
+validate(_Payload, _ClientId) -> ok.
