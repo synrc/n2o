@@ -49,20 +49,20 @@ gen_name(Pos) when is_integer(Pos) -> gen_name(integer_to_list(Pos));
 gen_name(Pos) -> n2o:to_binary([lists:flatten([io_lib:format("~2.16.0b",[X])
               || <<X:8>> <= list_to_binary(atom_to_list(node())++"_"++Pos)])]).
 
-proc(init,#handler{name=Name}=Async) ->
+proc(init,#pi{name=Name}=Async) ->
     n2o:info(?MODULE,"VNode Init: ~p\r~n",[Name]),
     case catch emqttc:module_info() of
-         {'EXIT',_} -> {ok,Async#handler{state=[],seq=0}};
+         {'EXIT',_} -> {ok,Async#pi{state=[],seq=0}};
          _ -> {ok, C} = emqttc:start_link([{host, "127.0.0.1"},
                             {client_id, gen_name(Name)},
                             {clean_sess, false},
                             {logger, {console, error}},
                             {reconnect, 5}]),
-                  {ok,Async#handler{state=C,seq=0}} end;
+                  {ok,Async#pi{state=C,seq=0}} end;
 
-proc({publish,_,_}, State=#handler{state=[]}) -> {reply,[],State};
+proc({publish,_,_}, State=#pi{state=[]}) -> {reply,[],State};
 proc({publish, To, Request},
-    State  = #handler{name=Name,state=C,seq=S}) ->
+    State  = #pi{name=Name,state=C,seq=S}) ->
     Addr   = emqttd_topic:words(To),
     Bert   = n2o:decode(Request),
     Return = case Addr of
@@ -90,14 +90,14 @@ proc({publish, To, Request},
         end;
         Addr -> {error,{"Unknown Address",Addr}} end,
     debug(Name,To,Bert,Addr,Return),
-    {reply, Return, State#handler{seq=S+1}};
+    {reply, Return, State#pi{seq=S+1}};
 
-proc({mqttc, C, connected}, State=#handler{name=Name,state=C,seq=S}) ->
+proc({mqttc, C, connected}, State=#pi{name=Name,state=C,seq=S}) ->
     emqttc:subscribe(C, n2o:to_binary([<<"events/+/">>, lists:concat([Name]),"/#"]), 2),
-    {ok, State#handler{seq = S+1}};
+    {ok, State#pi{seq = S+1}};
 
-proc(Unknown,#handler{seq=S}=Async) ->
-    {reply,{uknown,Unknown,S},Async#handler{seq=S+1}}.
+proc(Unknown,#pi{seq=S}=Async) ->
+    {reply,{uknown,Unknown,S},Async#pi{seq=S+1}}.
 
 % MQTT HELPERS
 
