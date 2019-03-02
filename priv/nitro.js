@@ -11,7 +11,7 @@ function querySourceRaw(Id) {
         case 'INPUT':
             switch (el.getAttribute("type")) {
                 case 'radio': case 'checkbox': val = el.checked ? el.value : ""; break;
-                case 'date': val = new Date(Date.parse(el.value)) || ""; break;
+                case 'date': val = Date.parse(el.value);  val = val && new Date(val) || ""; break;
                 case 'calendar': val = pickers[el.id]._d || ""; break;  //only 4 nitro #calendar{}
                 default: var edit = el.contentEditable;
                     if (edit && edit === 'true') val = el.innerHTML;

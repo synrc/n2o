@@ -1,11 +1,16 @@
 
 // N2O File Transfer Protocol
 
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); });
+}
+
 var ftp = {
     queue: [],
     init: function (file) {
         var item = {
-            id: performance.now().toString(),
+            id: uuid(),
             status: 'init',
             autostart: ftp.autostart || false,
             name: ftp.filename || file.name,
@@ -50,7 +55,6 @@ var ftp = {
         this.reader.onloadend = function (e) {
             var res = e.target, data = e.target.result;
             if (res.readyState === FileReader.DONE && data.byteLength >= 0) {
-                console.log(item);
                 ftp.send(item, data);
             }
         };

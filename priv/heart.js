@@ -26,6 +26,7 @@ function next() { $conn.port = xport(); return $conn.port ? connect() : false; }
 function connect() {
     $conn.port.channel = $conn.port.creator($conn.url);
     if (!$conn.port.channel) return next();
+    $conn.port.channel.binaryType = "arraybuffer";
     $conn.port.channel.onmessage = function(e) { $conn.onmessage(e); };
     $conn.port.channel.onopen = function() {
         if ($conn.port.heart) heartbeat = setInterval(function(){$conn.port.onheartbeat();}, $conn.port.interval);
