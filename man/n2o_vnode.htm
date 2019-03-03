@@ -29,11 +29,11 @@
 <h3>INTRO</h3>
 
 <p><b><a href="https://github.com/synrc/n2o/blob/master/src/mqtt/n2o_vnode.erl">n2o_vnode</a></b>
-  is an instance of <a href="n2o_async.htm">n2o_async</a> prorocess. In N2O
+  is an instance of <a href="n2o_pi.htm">n2o_pi</a> prorocess. In N2O
 number of such instanses is usually equals to the number of cores.</p>
 
 <p>There is two styles of embedding N2O: one is to perform N2O protocol loop inside
-   connection process (as in cowboy version); second is to spawn ring of n2o_async
+   connection process (as in cowboy version); second is to spawn ring of n2o_pi
    processes and handle all requests inside these processes (as in MQTT version). n2o_vnode is
    the protocol of such virtual node processes.</p>
 
@@ -97,7 +97,7 @@ embedded as handler to that message.</p>
 
 <p>This module may refer to:
 <a href="n2o.htm"><b>n2o</b></a>,
-<a href="n2o_async.htm"><b>n2o_async</b></a>,
+<a href="n2o_pi.htm"><b>n2o_pi</b></a>,
 <a href="n2o_proto.htm"><b>n2o_proto</b></a>.
 </p>
 
