@@ -16,20 +16,26 @@
                    state    :: term(),
                    seq      :: term()}).
 
--record(cx,      { handlers  = [] :: list(#handler{}),
-                   actions   = [] :: list(tuple()),
-                   req       = [] :: [] | term(),
-                   module    = [] :: [] | atom(),
-                   lang      = [] :: [] | atom(),
-                   path      = [] :: [] | binary(),
-                   session   = [] :: [] | binary(),
-                   formatter = bert :: bert | json,
-                   params    = [] :: [] | list(tuple()),
-                   node      = [] :: [] | atom(),
-                   client_pid= [] :: [] | term(),
-                   state     = [] :: [] | term(),
-                   from      = [] :: [] | binary(),
-                   vsn       = [] :: [] | binary() }).
+-record(pi, { name     :: atom(),
+              table    :: ets:tid(),
+              sup      :: atom(),
+              module   :: atom(),
+              state    :: term()  }).
+
+-record(cx, { handlers  = [] :: list(#handler{}),
+              actions   = [] :: list(tuple()),
+              req       = [] :: [] | term(),
+              module    = [] :: [] | atom(),
+              lang      = [] :: [] | atom(),
+              path      = [] :: [] | binary(),
+              session   = [] :: [] | binary(),
+              formatter = bert :: bert | json,
+              params    = [] :: [] | list(tuple()),
+              node      = [] :: [] | atom(),
+              client_pid= [] :: [] | term(),
+              state     = [] :: [] | term(),
+              from      = [] :: [] | binary(),
+              vsn       = [] :: [] | binary() }).
 
 -define(CTX(ClientId), n2o:cache(ClientId)).
 -define(REQ(ClientId), (n2o:cache(ClientId))#cx.req).

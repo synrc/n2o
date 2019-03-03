@@ -22,7 +22,7 @@ header(Name, Value, Req) -> cowboy_req:set_resp_header(Name, Value, Req).
 response(Html,Req) -> cowboy_req:set_resp_body(Html,Req).
 reply(StatusCode,Req) -> cowboy_req:reply(StatusCode, Req).
 cookies(Req) -> element(1,cowboy_req:cookies(Req)).
-cookie(Cookie,Req) -> element(1,cowboy_req:cookie(wf:to_binary(Cookie),Req)).
+cookie(Cookie,Req) -> element(1,cowboy_req:cookie(n2o:to_binary(Cookie),Req)).
 cookie(Cookie, Value, Req) -> cookie(Cookie,Value,<<"/">>,0,Req).
 cookie(Name, Value, Path, TTL, Req) ->
     Options = [{path, Path}, {max_age, TTL}],

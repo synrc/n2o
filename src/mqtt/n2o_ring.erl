@@ -6,7 +6,7 @@
 
 send(Msg) ->
     {ring,VNode} = n2o_ring:lookup(Msg),
-    n2o_async:send(ring,VNode,Msg).
+    n2o_pi:send(ring,VNode,Msg).
 
 node_shares() ->
     Partitions = partitions(),

@@ -32,7 +32,7 @@ Kernel
 The core modules provide OTP start and N2O entry point.
 
 * [n2o](https://ws.n2o.space/man/n2o.htm) — N2O OTP Supervisor and Application
-* [n2o_async](https://ws.n2o.space/man/n2o_async.htm) — N2O Async Processes
+* [n2o_pi](https://ws.n2o.space/man/n2o_pi.htm) — N2O Processes
 * [n2o_proto](https://ws.n2o.space/man/n2o_proto.htm) — N2O Loop
 
 MQTT

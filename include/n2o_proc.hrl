@@ -3,6 +3,6 @@
 
 -include("n2o.hrl").
 
--spec proc(atom(),#handler{}) -> term().
+-spec proc(atom(),#pi{}) -> term().
 
 -endif.
