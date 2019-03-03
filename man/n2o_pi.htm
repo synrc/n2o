@@ -147,13 +147,11 @@ however it defines the type of process state, the #pi{} record.</p>
 </code></figure>
 
 <ul>
-<li>Name &mdash; process name, key in supervised chain.</li>
-<li>Module &mdash; the module name where <b>proc/2</b> is placed.</li>
-<li>Class &mdash; ETS table name where cached pids are stored.</li>
-<li>Group &mdash; the application, where supervised processes will be created.</li>
-<li>Config &mdash; any term used to start the supervised procedd.</li>
-<li>State &mdash; the state of the running supervised process.</li>
-<li>Seq &mdash; custom integer counter you can use during processing.</li>
+<li>name &mdash; process name, key in supervised chain.</li>
+<li>module &mdash; the module name where <b>proc/2</b> is placed.</li>
+<li>table &mdash; ETS table name where cached pids are stored.</li>
+<li>sup &mdash; the application, where supervised processes will be created.</li>
+<li>state &mdash; the state of the running supervised process.</li>
 </ul>
 
     </section>
