@@ -20,7 +20,7 @@
 
 <header>
     <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
-    <h1>ASYNC</h1>
+    <h1>PI</h1>
 </header>
 
 <main>
@@ -29,10 +29,10 @@
 
 <h3>INTRO</h3>
 
-<p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_async.erl">n2o_async</a>
+<p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_pi.erl">n2o_pi</a>
 module dedicated for creating and tracking supervised
 processes across all applications, using any ETS tables. Any supervised process in N2O
-is created using n2o_async, such as: ring vnodes, timers, authorization,
+is created using n2o_pi, such as: ring vnodes, timers, authorization,
 web page processes, test processes and other services. Loop process inside <b>info/2</b> protocol handlers
 should spawn new async processes <b>proc/2</b> in case of time consuming opetations,
 because protocol handler is a critical path and it should be handled as soon as possible.</p>
@@ -78,7 +78,7 @@ or its response to <b>gen_server:call/2</b> with new state included in #reply.</
 </code></figure>
 
 <figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
- > n2o_async:start(#handler{ module=n2o,
+ > n2o_pi:start(#handler{ module=n2o,
                              class=caching,
                              group=n2o,
                              state=[],
@@ -86,11 +86,11 @@ or its response to <b>gen_server:call/2</b> with new state included in #reply.</
 
 </code></figure>
 
-<p>Main purpose of <b>n2o_async</b> is to create such processes from
+<p>Main purpose of <b>n2o_pi</b> is to create such processes from
 single <b>proc/2</b> function and track pid in ETS table which is specified during
 process #handler{} initialization.</p>
 
-<figure><figcaption>Listing 2. Understaning n2o_async</figcaption><code>
+<figure><figcaption>Listing 2. Understaning n2o_pi</figcaption><code>
  1> supervisor:which_children(n2o).
  [{{ring,4},<0.1661.0>,worker,[n2o_vnode]},
   {{ring,3},<0.1655.0>,worker,[n2o_vnode]},
@@ -107,11 +107,11 @@ process #handler{} initialization.</p>
  3> ets:tab2list(caching).
  [{{caching,"timer"},infinity,<0.1604.0>}]
 
- 4> n2o_async:send(caching,"timer",{timer,ping}).
+ 4> n2o_pi:send(caching,"timer",{timer,ping}).
  n2o Timer: ping
  ok
 
- 5> n2o_async:pid(caching,"timer").
+ 5> n2o_pi:pid(caching,"timer").
  <0.1604.0>
 
 </code></figure>
@@ -122,7 +122,7 @@ process #handler{} initialization.</p>
 <h3>RECORDS</h3>
 
 <p>Each process is driven by its protocol which in fact a sum of protocol messages.
-Though n2o_async as being generic don't limit the protocol messages,
+Though n2o_pi as being generic don't limit the protocol messages,
 however it defines the type of process state, the #handler{} record.</p>
 
 <figure><figcaption>Listing 3. Erlang/OTP Records</figcaption><code>
@@ -186,18 +186,18 @@ Returns the response from <b>gen_server:call</b>.</p>
 <p>Returns pid that was stored during process initialization in Class table with Name key.</p>
 
 <figure><figcaption>Listing 5. gen_server compatibility.</figcaption><code>
- 1> n2o_async:pid(caching,"timer") 
+ 1> n2o_pi:pid(caching,"timer") 
                  ! {timer,ping}.
  n2o Timer: ping
  {timer,ping}
 
- 2> n2o_async:send(caching,"timer",
+ 2> n2o_pi:send(caching,"timer",
                    {timer,ping}).
  n2o Timer: ping
  ok
 
  3> gen_server:call(
-    n2o_async:pid(caching,"timer"),
+    n2o_pi:pid(caching,"timer"),
                   {timer,ping}).
  n2o Timer: ping
  ok
@@ -218,7 +218,7 @@ Returns the response from <b>gen_server:call</b>.</p>
 </main>
 
 <footer>
-    2005&mdash;2018 &copy; Synrc Research Center
+    2005&mdash;2019 &copy; Synrc Research Center
 </footer>
 
 </body>
