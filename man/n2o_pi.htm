@@ -138,13 +138,11 @@ however it defines the type of process state, the #pi{} record.</p>
 <p>According to N2O agreement each protocol message filed should include [] in its type as default nil.</p>
 
 <figure><figcaption>Listing 4. N2O Records</figcaption><code>
- #pi { name   = [] :: [] | term(),
-            module = [] :: [] | atom(),
-            class  = [] :: [] | atom(),
-            group  = [] :: [] | atom(),
-            config = [] :: [] | term(),
-            state  = [] :: [] | term(),
-            seq    = [] :: [] | integer() }.
+ -record(pi, { name     :: atom(),
+               table    :: ets:tid(),
+               sup      :: atom(),
+               module   :: atom(),
+               state    :: term()  }).
 
 </code></figure>
 
