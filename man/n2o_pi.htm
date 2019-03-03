@@ -79,10 +79,10 @@ or its response to <b>gen_server:call/2</b> with new state included in #reply.</
 
 <figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
  > n2o_pi:start(#pi{ module=n2o,
-                             class=caching,
-                             group=n2o,
-                             state=[],
-                             name="timer"}).
+                     table=caching,
+                     sup=n2o,
+                     state=[],
+                     name="timer"}).
 
 </code></figure>
 
