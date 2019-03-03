@@ -42,12 +42,12 @@ because protocol handler is a critical path and it should be handled as soon as 
 
 <h3>CALLBACK</h3>
 
-<h4>proc(term(),#handler{}) -> #ok{} | #reply{}.</h4>
+<h4>proc(term(),#pi{}) -> #ok{} | #reply{}.</h4>
 
 <p>The <b>proc/2</b> is a callback that will be called on each
 <b>gen_server</b>'s calls: <b>handle_call</b>,
 <b>handle_cast</b> and <b>handle_info</b>, its <b>init</b>
-and <b>terminate</b>. It returns either #ok as initial state of the process (which is the #handler{} too)
+and <b>terminate</b>. It returns either #ok as initial state of the process (which is the #pi{} too)
 or its response to <b>gen_server:call/2</b> with new state included in #reply.</p>
 
     </section>
@@ -59,14 +59,14 @@ or its response to <b>gen_server:call/2</b> with new state included in #reply.</
    the <b>caching</b> table used for session variables.</p>
 
 <figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
- proc(init,#handler{}=Async) ->
-     {ok,Async#handler{state=timer(ping())}};
+ proc(init,#pi{}=Async) ->
+     {ok,Async#pi{state=timer(ping())}};
 
- proc({timer,ping},#handler{state=Timer}=Async) ->
+ proc({timer,ping},#pi{state=Timer}=Async) ->
      erlang:cancel_timer(Timer),
      io:format("n2o Timer: ~p\r~n",[ping]),
      n2o:invalidate_cache(caching),
-     {reply,ok,Async#handler{state=timer_restart(ping())}}.
+     {reply,ok,Async#pi{state=timer_restart(ping())}}.
 
  timer(Diff) ->
      {X,Y,Z} = Diff,
@@ -78,7 +78,7 @@ or its response to <b>gen_server:call/2</b> with new state included in #reply.</
 </code></figure>
 
 <figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
- > n2o_pi:start(#handler{ module=n2o,
+ > n2o_pi:start(#pi{ module=n2o,
                              class=caching,
                              group=n2o,
                              state=[],
@@ -88,7 +88,7 @@ or its response to <b>gen_server:call/2</b> with new state included in #reply.</
 
 <p>Main purpose of <b>n2o_pi</b> is to create such processes from
 single <b>proc/2</b> function and track pid in ETS table which is specified during
-process #handler{} initialization.</p>
+process #pi{} initialization.</p>
 
 <figure><figcaption>Listing 2. Understaning n2o_pi</figcaption><code>
  1> supervisor:which_children(n2o).
@@ -123,22 +123,22 @@ process #handler{} initialization.</p>
 
 <p>Each process is driven by its protocol which in fact a sum of protocol messages.
 Though n2o_pi as being generic don't limit the protocol messages,
-however it defines the type of process state, the #handler{} record.</p>
+however it defines the type of process state, the #pi{} record.</p>
 
 <figure><figcaption>Listing 3. Erlang/OTP Records</figcaption><code>
-      #ok { code = [] :: [] | #handler{} }.
+      #ok { code = [] :: [] | #pi{} }.
 
    #error { code = [] :: [] | term() }.
 
    #reply { data = [] :: [] | term() ,
-            code = [] :: [] | #handler{} }.
+            code = [] :: [] | #pi{} }.
 
 </code></figure>
 
 <p>According to N2O agreement each protocol message filed should include [] in its type as default nil.</p>
 
 <figure><figcaption>Listing 4. N2O Records</figcaption><code>
- #handler { name   = [] :: [] | term(),
+ #pi { name   = [] :: [] | term(),
             module = [] :: [] | atom(),
             class  = [] :: [] | atom(),
             group  = [] :: [] | atom(),
@@ -163,15 +163,15 @@ however it defines the type of process state, the #handler{} record.</p>
 
 <h3>API</h3>
 
-<h4>start(#handler{}) -> {pid(),term()} | #error{}.</h4>
+<h4>start(#pi{}) -> {pid(),term()} | #error{}.</h4>
 
 <p>Spawns <b>proc/2</b> function inside a process under supervision.</p>
 
-<h4>stop(Class,Name) -> #handler{} | #error{}.</h4>
+<h4>stop(Class,Name) -> #pi{} | #error{}.</h4>
 
 <p>Kills the process and remove from supervision.</p>
 
-<h4>restart(Class,Name) -> {pid(),term()} | #error{} | #handler{}.</h4>
+<h4>restart(Class,Name) -> {pid(),term()} | #error{} | #pi{}.</h4>
 
 <p>Tries to stop the process. On success it starts the new one, else return error.</p>
 
