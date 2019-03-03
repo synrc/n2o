@@ -1,6 +1,13 @@
 -ifndef(N2O_HRL).
 -define(N2O_HRL, true).
 
+-record(pi, { name     :: atom(),
+              table    :: ets:tid(),
+              sup      :: atom(),
+              seq      :: term(),
+              module   :: atom(),
+              state    :: term()  }).
+
 -record(handler, { name     :: atom(),
                    module   :: atom(),
                    class    :: term(),
