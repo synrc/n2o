@@ -15,8 +15,14 @@ Features
 * Purpose: High performance protocol relay
 * Endpoints: WebSockets, MQTT, TCP
 * Codebase: 1K LOC (Erlang), 500 LOC (JavaScript)
-* Buildtools: REBAR, MAD
+* Buildtools: REBAR, REBAR3, MAD
 * Templates: DTL, NITRO
+* Databases [KVS, KVX]: FS, MNESIA, ROCKSDB, RIAK, REDIS
+* Business Processes: BPE (BPMN 2.0), SCM, ERP, CRM
+* Instant Messaging: ROSTER
+* HTTP API: REST (proplist/JSON)
+* Active Reloading: Linux, Windows, Mac
+* Business Forms: FORMS (HTML/CSS)
 * Hosts: COWBOY, EMQ, MOCHIWEB
 * Samples: REVIEW (1), SAMPLE (2)
 
