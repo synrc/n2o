@@ -9,4 +9,4 @@ History
 * 5.10 — Cleanup
 * 5.11 — Formatter API changes
 * 5.11.1 — Unification of WebSocket and MQTT versions
-* 6.3 — arraybuffer in JS client, n2o_pi, fixes
+* 6.3 — arraybuffer in JS client, n2o_pi, fixes, synrc/mqtt drop

@@ -32,7 +32,6 @@ If you see someone who is making an extra effort to ensure our
 community is welcoming, friendly, and encourages all participants
 to contribute to the fullest extent, we want to know.
 
-
 3. Expected Behavior
 --------------------
 
