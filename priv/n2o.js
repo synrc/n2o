@@ -58,7 +58,7 @@ var $bert = {}; $bert.protos = [$io, $file]; $bert.on = function onbert(evt, cb)
             for (var i = 0; i < $bert.protos.length; i++) {
                 var p = $bert.protos[i];
                 var ret = p.on(erlang, p.do);
-                if (ret.status == "ok") return ret;
+                if (ret != undefined && ret.status == "ok") return ret;
             }
         } catch (e) { console.error(e); }
         return { status: "ok" };
