@@ -123,17 +123,17 @@ error_page(Class,Error) ->
 
 % TIMER
 
-proc(init,#handler{}=Async) ->
+proc(init,#pi{}=Async) ->
     n2o:info(?MODULE,"Proc Init: ~p\r~n",[init]),
     Timer = timer_restart(ping()),
-    {ok,Async#handler{state=Timer}};
+    {ok,Async#pi{state=Timer}};
 
-proc({timer,ping},#handler{state=Timer}=Async) ->
+proc({timer,ping},#pi{state=Timer}=Async) ->
     erlang:cancel_timer(Timer),
     n2o:info(?MODULE,"n2o Timer: ~p\r~n",[ping]),
     n2o:invalidate_cache(caching),
     (n2o_session:storage()):invalidate_sessions(),
-    {reply,ok,Async#handler{state=timer_restart(ping())}}.
+    {reply,ok,Async#pi{state=timer_restart(ping())}}.
 
 invalidate_cache(Table) -> ets:foldl(fun(X,_) -> n2o:cache(Table,element(1,X)) end, 0, Table).
 timer_restart(Diff) -> {X,Y,Z} = Diff, erlang:send_after(1000*(Z+60*Y+60*60*X),self(),{timer,ping}).
