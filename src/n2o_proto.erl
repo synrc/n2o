@@ -7,7 +7,11 @@ protocols()        -> application:get_env(n2o,protocols,[ n2o_nitro ]).
 info(M,R,S)        -> filter(M,R,S,protocols(),[]).
 filter(M,R,S,P,A)  -> {Mod,Fun} = (application:get_env(n2o,filter,{?MODULE,push})),
                       put(context,S),
-                      Mod:Fun(M,R,S,P,A).
+                      case Fun of
+                        push -> Mod:Fun(M,R,S,P,A);
+                        info -> Mod:Fun(M,R,S);
+                        stream -> Mod:Fun(M,R,S) end.
+                      
 
 nop(R,S)                  -> {reply,{binary,<<>>},R,S}.
 reply(M,R,S)              -> {reply,M,R,S}.
