@@ -58,7 +58,7 @@ info(#direct{data=Message}, Req, State) ->
            catch E:R -> Stack = n2o:stack(E, R),
                         n2o:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
                         {stack,Stack} end,
-    {reply,{bert,{io,render_actions(nitro:actions()),Result}}, Req,State};
+    {reply,{bert,{io,render_actions(lists:reverse(nitro:actions())),Result}}, Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
 
@@ -86,7 +86,8 @@ html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{sessio
 render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
     case F of
          api_event -> M:F(P,Linked,State);
-             event -> lists:map(fun ({K,V})-> erlang:put(K,nitro:to_binary([V]))
+             event -> % io:format("Linked: ~p~n",[Linked]),
+                      lists:map(fun ({K,V})-> erlang:put(K,nitro:to_binary([V]))
                                 end,Linked),
                       M:F(P);
                  _ -> M:F(P,T,State) end.
