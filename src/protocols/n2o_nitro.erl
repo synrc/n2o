@@ -58,7 +58,7 @@ info(#direct{data=Message}, Req, State) ->
            catch E:R -> Stack = n2o:stack(E, R),
                         n2o:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
                         {stack,Stack} end,
-    {reply,{bert,{io,render_actions(lists:reverse(nitro:actions())),Result}}, Req,State};
+    {reply,{bert,{io,render_actions(nitro:actions()),Result}}, Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
 
