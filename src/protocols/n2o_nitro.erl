@@ -14,20 +14,13 @@ info(#init{token=Auth}, Req, State = #cx{module = Module}) ->
      n2o:info(?MODULE,"N2O SESSION: ~p~n",[Sid]),
      New = State#cx{session = Sid},
      put(context,New),
-     case try Elements = Module:main(),
-              nitro:render(Elements),
-              {ok,[]}
-        catch Err:Rea ->
-              StackMain = n2o:stack(Err,Rea),
-              n2o:error(?MODULE,"Catch:~p~n",[StackMain]),
-              {error,StackMain} end of
-   {ok, _} -> Actions = try Module:event(init),
-                            render_actions(nitro:actions())
-         catch Err1:Rea1 -> StackInit = n2o:stack(Err1,Rea1),
-                            n2o:error(?MODULE,"Catch:~p~n",[StackInit]),
-                            {stack,StackInit} end,
-              {reply, {bert,{io,Actions,{'Token',Token}}},Req,New};
- {error,E} -> {reply, {bert,{io,<<>>,E}},Req,State} end;
+     {Act,Tok} = try Module:event(init),
+                     A = render_actions(nitro:actions()),
+                     {A,{'Token',Token}}
+               catch Err1:Rea1 -> StackInit = n2o:stack(Err1,Rea1),
+                     n2o:error(?MODULE,"Catch:~p~n",[StackInit]),
+                     {<<>>,{stack,StackInit}} end,
+     {reply, {bert,{io,Act,Tok}},Req,New};
 
 info(#client{data=Message}, Req, State) ->
     nitro:actions([]),
