@@ -12,13 +12,8 @@
 -export([send/2,reg/1,unreg/1,reg/2]).        % mq
 -export([pickle/1,depickle/1]).               % pickle
 -export([encode/1,decode/1]).                 % format
--export([info/3,warning/3,error/3]).          % log
 -export([session/1,session/2,user/1,user/0]). % session
-
-% BUILT-IN BACKENDS
-
--export([cache/2,cache/3,cache/4,invalidate_cache/1]).               % cache
--export([erroring/0,stack/2,erroring/2,stack_trace/2,error_page/2]). % error
+-export([cache/2,cache/3,cache/4,invalidate_cache/1]). % cache
 
 % START VNODE HASH RING
 
@@ -68,12 +63,6 @@ pickler() -> application:get_env(n2o,pickler,n2o_secret).
 pickle(Data) -> (pickler()):pickle(Data).
 depickle(SerializedData) -> (pickler()):depickle(SerializedData).
 
-% ERROR
-
-erroring() -> application:get_env(n2o,erroring,n2o).
-stack(Error, Reason) -> (erroring()):stack_trace(Error, Reason).
-erroring(Class, Error) -> (erroring()):error_page(Class, Error).
-
 % SESSION
 
 session() -> application:get_env(n2o,session,n2o_session).
@@ -103,34 +92,16 @@ cache(Tab, Key) ->
                                   true ->  ets:delete(Tab,Key), [];
                                   false -> X end end.
 
-% ERROR
-
-stack_trace(Error, Reason) ->
-    Stacktrace = [case A of
-         { Module,Function,Arity,Location} ->
-             { Module,Function,Arity,proplists:get_value(line, Location) };
-         Else -> Else end
-    || A <- erlang:get_stacktrace()],
-    [Error, Reason, Stacktrace].
-
-error_page(Class,Error) ->
-    io_lib:format("ERROR:  ~w:~w\r~n\r~n",[Class,Error]) ++
-    "STACK: " ++
-    [ io_lib:format("\t~w:~w/~w:~w\n",
-        [ Module,Function,Arity,proplists:get_value(line, Location) ])
-    ||  { Module,Function,Arity,Location} <- erlang:get_stacktrace() ].
-
-
 % TIMER
 
 proc(init,#pi{}=Async) ->
-    n2o:info(?MODULE,"Proc Init: ~p\r~n",[init]),
+    ?LOG_INFO("init"),
     Timer = timer_restart(ping()),
     {ok,Async#pi{state=Timer}};
 
 proc({timer,ping},#pi{state=Timer}=Async) ->
     erlang:cancel_timer(Timer),
-    n2o:info(?MODULE,"n2o Timer: ~p\r~n",[ping]),
+    ?LOG_INFO("timer ping"),
     n2o:invalidate_cache(caching),
     (n2o_session:storage()):invalidate_sessions(),
     {reply,ok,Async#pi{state=timer_restart(ping())}}.
@@ -138,31 +109,6 @@ proc({timer,ping},#pi{state=Timer}=Async) ->
 invalidate_cache(Table) -> ets:foldl(fun(X,_) -> n2o:cache(Table,element(1,X)) end, 0, Table).
 timer_restart(Diff) -> {X,Y,Z} = Diff, erlang:send_after(1000*(Z+60*Y+60*60*X),self(),{timer,ping}).
 ping() -> application:get_env(n2o,timer,{0,1,0}).
-
-% LOG
-
-logger()       -> application:get_env(?MODULE,logger,n2o_io).
-log_modules()  -> application:get_env(?MODULE,log_modules,[]).
-log_level()    -> application:get_env(?MODULE,log_level,info).
-
-level(none)    -> 3;
-level(error)   -> 2;
-level(warning) -> 1;
-level(_)       -> 0.
-
-log(M,F,A,Fun) ->
-    case level(Fun) < level(log_level()) of
-         true  -> skip;
-         false -> case    log_modules() of
-             any       -> (logger()):Fun(M,F,A);
-             []        -> skip;
-             Allowed   -> case lists:member(M, Allowed) of
-                 true  -> (logger()):Fun(M,F,A);
-                 false -> skip end end end.
-
-info   (Module, String, Args) -> log(Module,  String, Args, info).
-warning(Module, String, Args) -> log(Module,  String, Args, warning).
-error  (Module, String, Args) -> log(Module,  String, Args, error).
 
 %%
 

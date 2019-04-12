@@ -29,11 +29,11 @@ send(C,T,M,Opts) -> emqttc:publish(C, T, M, Opts).
 
 debug(Name,Topic,BERT,Address,Return) ->
     case application:get_env(n2o,dump_loop,no) of
-         yes -> n2o:info(?MODULE,"VNODE:~p Message on topic ~tp.\r~n", [Name, Topic]),
-                n2o:info(?MODULE,"BERT: ~tp\r~nAddress: ~p\r~n",[BERT,Address]),
-                n2o:info(?MODULE,"on_message_publish: ~s.\r~n", [Topic]),
+         yes -> ?LOG_INFO("VNODE:~p Message on topic ~tp.\r~n", [Name, Topic]),
+                ?LOG_INFO("BERT: ~tp\r~nAddress: ~p\r~n",[BERT,Address]),
+                ?LOG_INFO("on_message_publish: ~s.\r~n", [Topic]),
                 case Return of
-                     {error,R} -> n2o:info(?MODULE,"ERROR: ~p~n",[R]);
+                     {error,R} -> ?LOG_ERROR("ERROR: ~p~n",[R]);
                              _ -> skip
                 end,
                 ok;
@@ -50,7 +50,7 @@ gen_name(Pos) -> n2o:to_binary([lists:flatten([io_lib:format("~2.16.0b",[X])
               || <<X:8>> <= list_to_binary(atom_to_list(node())++"_"++Pos)])]).
 
 proc(init,#pi{name=Name}=Async) ->
-    n2o:info(?MODULE,"VNode Init: ~p\r~n",[Name]),
+    ?LOG_INFO("VNode Init: ~p\r~n",[Name]),
     case catch emqttc:module_info() of
          {'EXIT',_} -> {ok,Async#pi{state=[]}};
          _ -> {ok, C} = emqttc:start_link([{host, "127.0.0.1"},
@@ -85,8 +85,7 @@ proc({publish, To, Request},
                  {reply,{Encoder,Term},_,#cx{from=X}} -> {ok,send(C,X,Encoder:encode(Term))};
                                                 Reply -> {error,{"Invalid Return",Reply}}
             end
-        catch Err:Rea ->
-            n2o:error(?MODULE,"Catch:~p~n",[n2o:stack_trace(Err,Rea)])
+        catch Err:Rea:Stack -> ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack})
         end;
         Addr -> {error,{"Unknown Address",Addr}} end,
     debug(Name,To,Bert,Addr,Return),
