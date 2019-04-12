@@ -91,13 +91,12 @@ N2O is shipped with 3 protocols, which could be omited or extended.
 Services
 --------
 
-Formatters, Loggers, Sessions, etc. Optional.
+Formatters, Sessions, etc. Optional.
 
 * [n2o_bert](https://ws.n2o.space/man/n2o_bert.htm) — BERT encoder/decoder
 * [n2o_json](https://ws.n2o.space/man/n2o_json.htm) — JSON encoder/decoder
 * [n2o_secret](https://ws.n2o.space/man/n2o_secret.htm)  — AES/CBC-128 encoder/decoder
 * [n2o_session](https://ws.n2o.space/man/n2o_session.htm) — ETS session backend
-* [n2o_io](https://ws.n2o.space/man/n2o_io.htm) — IO loger backend
 
 JavaScript
 ----------

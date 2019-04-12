@@ -42,7 +42,7 @@
         <p>The N2O itself is an embeddable protocol loop in <a href="n2o_proto.htm">n2o_proto</a>.
         However, besides that, it handles cache and sessions
         along with flexible <a href="n2o_pi.htm">n2o_pi</a> processes with no ownership restriction.
-        It also introduces the logging approach, AES/CBC—128 pickling and BERT/JSON encoder.</p>
+        It also introduces AES/CBC—128 pickling and BERT/JSON encoder.</p>
 
     </section>
     <section>
@@ -139,11 +139,7 @@
         <h3>CONFIG</h3>
         <p>Just put protocol implementation module name to <b>protocol</b> option in sys.config.</p>
         <figure><code>
-  [{n2o,[{log_modules,[n2o]},
-         {log_level,info},
-         {logging,n2o_io},
-         {cache,n2o},
-         {erroring,n2o},
+  [{n2o,[{cache,n2o},
          {upload,"priv/static"},
          {mq,n2o_syn},
          {ttl,900},
@@ -160,7 +156,7 @@
          {origin,<<"*">>},
          {timer,{0,10,0}}]}].
         </code></figure>
-        <p>N2O is the facade of the following services: cache, MQ, message formatting, logging,
+        <p>N2O is the facade of the following services: cache, MQ, message formatting,
            sessions, pickling and protocol loops. The other part of N2O is <a href="n2o_pi.htm">n2o_pi</a> module
            for spawning supervised application processes to use N2O API. In this simple
            configuration, you may set any implementation for any service.</p>
@@ -213,22 +209,6 @@
  encode(Erl) -> term_to_binary(Erl).
  decode(Bin) -> binary_to_term(Bin,[safe]).
         </code></figure>
-    </section>
-    <section>
-        <h3>LOG</h3>
-        <figure><figcaption>Listing 8. Log Framework</figcaption>
-        <code>
- [{n2o,[{log_modules,[n2o]},
-        {log_level,info}]}]
-        </code></figure>
-        <p>In your code, you should use the following trace functions
-           which are the same as callback API for n2o logging environment variable.</p>
-        <h4>info(Module, Format, Args) -> ok | skip.</h4>
-        <p>Use this function for info message.</p>
-        <h4>warning(Module, Format, Args) -> ok | skip.</h4>
-        <p>Use this function for warning messages.</p>
-        <h4>error(Module, Format, Args) -> ok | skip.</h4>
-        <p>Use this function for printing errors.</p>
     </section>
     <section>
         <h3>SESSION</h3>
