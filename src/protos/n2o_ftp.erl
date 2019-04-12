@@ -18,11 +18,7 @@ filename(#ftp{sid=_Sid,filename=FileName}) -> FileName. %filename:join(lists:con
 
 info(#ftp{status = {event, _}}=FTP, Req, State) ->
     Module = case State#cx.module of [] -> index; M -> M end,
-    Reply = try Module:event(FTP) catch E:R ->
-        Error = n2o:stack(E,R),
-        n2o:error(?MODULE,"Catch: ~p~n",[Error]),
-        Error
-    end,
+    Reply = try Module:event(FTP) catch E:R:S -> ?LOG_ERROR(#{error => E, reason => R, stack => S}), E end,
     {reply, {bert, {io,n2o_nitro:render_actions(nitro:actions()), Reply}}, Req, State};
 
 info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, Req, State) ->
@@ -35,7 +31,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
         {error, _} -> 0
     end,
 
-    n2o:info(?MODULE,"FTP INFO INIT: ~p~n",[ FTP#ftp{data = <<>>, sid = <<>>} ]),
+    ?LOG_INFO("FTP INFO INIT: ~p",[ FTP#ftp{data = <<>>, sid = <<>>} ]),
 
     Block2 = case Block of 0 -> ?STOP; _ -> ?NEXT end,
     Offset2 = case FileSize >= Offset of true -> FileSize; false -> 0 end,
@@ -47,11 +43,11 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
     {reply, {bert, FTP2}, Req, State};
 
 info(#ftp{id = Link, status = <<"send">>}=FTP, Req, State) ->
-    n2o:info(?MODULE,"FTP INFO SEND: ~p~n",[ FTP#ftp{data = <<>>, sid = <<>>} ]),
+    ?LOG_INFO("FTP SEND: ~p", [FTP#ftp{data = <<>>, sid = <<>>}]),
     Reply = try
         n2o_async:send(file, Link, FTP)
-    catch E:R ->
-        n2o:error(?MODULE,"FTP ERROR: ~p~n",[ {E,R} ]),
+    catch E:R:S ->
+        ?LOG_ERROR(#{error => E, reason => R, stack => S}),
         FTP#ftp{data = <<>>,sid = <<>>, block = ?STOP}
     end,
     {reply, {bert, Reply}, Req, State};
@@ -66,10 +62,10 @@ proc(init, #handler{name = Link, state = #ftp{sid = Sid, meta = ClientId} = FTP}
 proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = ClientId} = FTP,
      #handler{name = Link, state = #ftp{size = TotalSize, offset = Offset, filename = RelPath}} = Async)
      when Offset + Block >= TotalSize ->
-        n2o:info(?MODULE,"FTP PROC FINALE: ~p~n", [ Link ]),
+        ?LOG_INFO("FTP PROC FINALE: ~p~n", [ Link ]),
         case file:write_file(filename:join(?ROOT,RelPath), <<Data/binary>>, [append,raw]) of
             {error, Reason} ->
-                n2o:error(?MODULE,"WRITE ERROR: ~p~n", [ filename:join(?ROOT, RelPath) ]),
+                ?LOG_ERROR("WRITE ERROR: ~p~n", [ filename:join(?ROOT, RelPath) ]),
                 {reply, {error, Reason}, Async};
             ok ->
                 FTP2 = FTP#ftp{data = <<>>, sid = <<>>,offset = TotalSize, block = ?STOP},

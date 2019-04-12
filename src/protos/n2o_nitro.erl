@@ -11,33 +11,33 @@ info({text,<<"N2O,",Auth/binary>>}, Req, State) ->
 info(#init{token=Auth}, Req, State = #cx{module = Module}) ->
      {'Token', Token} = n2o_session:authenticate([], Auth),
      Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
-     n2o:info(?MODULE,"N2O SESSION: ~p~n",[Sid]),
+     ?LOG_INFO("N2O SESSION: ~p~n",[Sid]),
      New = State#cx{session = Sid},
      put(context,New),
      {Act,Tok} = try Module:event(init),
                      A = render_actions(nitro:actions()),
                      {A,{'Token',Token}}
-               catch Err1:Rea1 -> StackInit = n2o:stack(Err1,Rea1),
-                     n2o:error(?MODULE,"Catch:~p~n",[StackInit]),
-                     {<<>>,{stack,StackInit}} end,
+               catch E:R:Stack ->
+                     ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
+                     {<<>>,{stack,Stack}} end,
      {reply, {bert,{io,Act,Tok}},Req,New};
 
 info(#client{data=Message}, Req, State) ->
     nitro:actions([]),
-    n2o:info(?MODULE,"Client Message: ~p",[Message]),
+    ?LOG_INFO("Client Message: ~p",[Message]),
     Module = State#cx.module,
     Reply = try Module:event(#client{data=Message})
-          catch Err:Rea -> Stack = n2o:stack(Err,Rea),
-                           n2o:error(?MODULE,"Catch:~p~n",[Stack]),
-                           {error,Stack} end,
+          catch E:R:Stack ->
+                     ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
+                     {error,Stack} end,
     {reply,{bert,{io,render_actions(nitro:actions()),Reply}},Req,State};
 
 info(#pickle{}=Event, Req, State) ->
     nitro:actions([]),
     Result = try html_events(Event,State)
-           catch E:R -> Stack = n2o:stack(E,R),
-                        n2o:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
-                        {io,render_actions(nitro:actions()),Stack} end,
+           catch E:R:Stack ->
+                     ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
+                     {io,render_actions(nitro:actions()),Stack} end,
     {reply,{bert,Result}, Req,State};
 
 info(#flush{data=Actions}, Req, State) ->
@@ -48,9 +48,8 @@ info(#direct{data=Message}, Req, State) ->
     nitro:actions([]),
     Module = State#cx.module,
     Result = try Res = Module:event(Message), {direct,Res}
-           catch E:R -> Stack = n2o:stack(E, R),
-                        n2o:error(?MODULE,"Catch: ~p:~p~n~p", Stack),
-                        {stack,Stack} end,
+           catch E:R:Stack -> ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
+                              {stack,Stack} end,
     {reply,{bert,{io,render_actions(nitro:actions()),Result}}, Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
@@ -72,7 +71,7 @@ html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{sessio
     Res = case Ev of
           #ev{} when L =:= false -> render_ev(Ev,Source,Linked,State), <<>>;
           #ev{} -> render_ev(Ev,Source,Linked,State), n2o_session:authenticate([], Token);
-          CustomEnvelop -> n2o:error(?MODULE,"EV expected: ~p~n",[CustomEnvelop]),
+          CustomEnvelop -> ?LOG_ERROR("EV expected: ~p~n",[CustomEnvelop]),
                            {error,"EV expected"} end,
     {io,render_actions(nitro:actions()),Res}.
 

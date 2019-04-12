@@ -84,7 +84,7 @@ init(Peers) ->
         ]
     ),
     Ring = array:from_list(assemble_ring([], lists:reverse(RawRing), [], length(Peers))),
-    n2o:info(?MODULE,"RING: ~p~n", [array:sparse_size(Ring)]),
+    ?LOG_INFO("RING: ~p~n", [array:sparse_size(Ring)]),
     application:set_env(n2o,ring,Ring),
     application:set_env(n2o,nodes,Peers),
     {ok, #state{ring=Ring,nodes=Peers}}.
