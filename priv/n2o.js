@@ -27,17 +27,12 @@ function N2O_start() {
 
 var $io = {}; $io.on = function onio(r, cb) {
     if (is(r, 3, 'io')) {
-        if (r.v[2].v != undefined && r.v[2].v[1] != undefined &&
-            r.v[2].v.length == 2 && (r.v[2].v[0].v == "Token" || r.v[2].v[0].v == "Auth")) {
-            localStorage.setItem("token",utf8_arr(r.v[2].v[1].v));
-        }
-        try { eval(utf8_arr(r.v[1].v));
-              if (typeof cb == 'function') cb(r);
-              return { status: "ok" };
-
-        } catch (e)  { console.error("Eval failed:",r);
-                       console.error(e);
-                       return { status: '' }; }
+        if (r.v[2].v != undefined && r.v[2].v[1] != undefined && r.v[2].v.length == 2 &&
+           (r.v[2].v[0].v == "Token" || r.v[2].v[0].v == "Auth"))
+         { localStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
+        if (typeof cb == 'function') cb(r.v[2]);
+        try { eval(utf8_arr(r.v[1].v)); return { status: "ok" }; }
+        catch (e) { console.error("Eval failed:",e); return { status: '' }; }
     } else return { status: '' };
 }
 

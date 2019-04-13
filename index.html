@@ -160,6 +160,53 @@
     </section>
 
     <section>
+        <a name=js><h3>SPEC</h3></a>
+         <figure><figcaption>N2O:</figcaption><code>
+ -type n2o()       :: #bert{} | #json{} | #binary{} | #default{}.
+ -type cx()        :: #cx{}.
+ -type formatter() :: binary | json | bert | text | default | atom().
+ -type response()  :: { formatter(), binary() }.
+ -type memtable()  :: atom().
+
+ -record(ok,      { data     :: term() }).
+ -record(error    { data     :: term() }.
+ -record(reply,   { msg      :: n2o(), req :: term(), ctx :: cx() } ).
+ -record(unknown, { msg      :: n2o(), req :: term(), ctx :: cx() } ).
+
+ -spec start(#handler{}) -> {pid(),term()} | #error{}.
+ -spec stop(term(),atom()) -> #handler{} | #error{}.
+ -spec proc(atom(),#handler{}) -> term().
+ -spec info(term(),term()(),#cx{}) -> #reply{} | #unknown{}.
+
+ -record(handler, { name     :: atom(),
+                    module   :: atom(),
+                    class    :: term(),
+                    group    :: atom(),
+                    config   :: term(),
+                    state    :: term(),
+                    seq      :: term()}).
+
+ -record(cx,      { session   = [] :: [] | binary(),
+                    formatter = bert :: bert | json,
+                    actions   = [] :: list(tuple()),
+                    state     = [] :: [] | term(),
+                    module    = [] :: [] | atom(),
+                    lang      = [] :: [] | atom(),
+                    path      = [] :: [] | binary(),
+                    node      = [] :: [] | atom(),
+                    pid       = [] :: [] | pid(),
+                    vsn       = [] :: [] | integer() }).
+
+ -spec encode(record()) -> binary().
+ -spec decode(binary()) -> record().
+ -spec session(term(),term()) -> term().
+ -spec session(term()) -> term().
+ -spec cache(memtable(),term(),term()) -> term().
+ -spec cache(memtable(),term()) -> term().
+         </code></figure>
+    </section>
+
+    <section>
         <a name=docs><h3>ARTICLES</h3></a>
         <div>
         <ul>
