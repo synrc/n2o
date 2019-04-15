@@ -1,7 +1,7 @@
 -module(n2o_proto).
 -description('N2O Proto Loop').
 -include("n2o.hrl").
--export([info/3, stream/3, push/5, init/4, terminate/2]).
+-export([init/2, finish/2, info/3, stream/3, push/5, init/4, terminate/2]).
 
 protocols()        -> application:get_env(n2o,protocols,[ n2o_nitro ]).
 info(M,R,S)        -> filter(M,R,S,protocols(),[]).
@@ -19,7 +19,10 @@ push(M,R,S,[H|T],Acc)     ->
                         A -> push(M,R,S,T,[A|Acc]) end.
 
 cx(Req) -> #cx{actions=[], path=[], req=Req, params=[],
-               handlers= [ {routes, application:get_env(n2o,routes,routes)} ]}.
+               handlers= [ {routes, application:get_env(n2o,routes,?MODULE)} ]}.
+
+finish(State, Cx) -> {ok, State, Cx}.
+init(State, Cx)   -> {ok, State, Cx}.
 
 fold(Fun,Handlers,Ctx) ->
     lists:foldl(
