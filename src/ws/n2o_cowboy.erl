@@ -36,10 +36,16 @@ fix2({error,bad_name}) -> "deps/n2o/priv";
 fix2(X) -> case filelib:is_dir(X) of true -> X; _ -> fix2({error,bad_name}) end.
 
 static() -> { dir, fix1(code:priv_dir(application:get_env(n2o,app,review)))++"/static", mime() }.
-n2o() -> { dir, fix2(code:priv_dir(n2o)), mime() }.
-mime() -> [ { mimetypes, cow_mimetypes, all } ].
+n2o()    -> { dir, fix2(code:priv_dir(n2o)), mime() }.
+mime()   -> [ { mimetypes, cow_mimetypes, all } ].
 
 points() -> cowboy_router:compile([{'_', [
             { "/n2o/[...]", cowboy_static,  n2o()      },
             { "/app/[...]", cowboy_static,  static()   },
             { "/ws/[...]",  n2o_stream,  []            } ]}]).
+
+env(App) -> [{port,       port()},
+             {certfile,   code:priv_dir(roster)++"/ssl/fullchain.pem"},
+             {keyfile,    code:priv_dir(roster)++"/ssl/privkey.pem"},
+             {cacertfile, code:priv_dir(roster)++"/ssl/fullchain.pem"}].
+
