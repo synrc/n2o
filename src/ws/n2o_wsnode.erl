@@ -1,7 +1,5 @@
 -module(n2o_wsnode).
--include("message.hrl").
--include_lib("kvx/include/cursors.hrl").
--include_lib("n2o/include/n2o.hrl").
+-include("n2o.hrl").
 -compile(export_all).
 
 send(C,M) -> C ! M.
