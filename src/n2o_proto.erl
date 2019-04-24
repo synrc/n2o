@@ -41,8 +41,7 @@ init(_Transport, Req, _Opts, _) ->
     Req1 = cowboy_req:set_resp_header(<<"Access-Control-Allow-Origin">>, ConfigOrigin, Ctx#cx.req),
     {ok, Req1, Ctx}.
 
-upack(D)                  -> n2o:decode(D).
 stream({text,_}=M,R,S)    -> filter(M,R,S,protocols(),[]);
 stream({binary,<<>>},R,S) -> nop(R,S);
-stream({binary,D},R,S)    -> filter(upack(D),R,S,protocols(),[]);
+stream({binary,D},R,S)    -> filter(n2o:decode(D),R,S,protocols(),[]);
 stream(_,R,S)             -> nop(R,S).
