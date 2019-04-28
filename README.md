@@ -48,7 +48,6 @@ MQTT version is implemented as RPC over MQ pattern.
 N2O service worker started as ring of virtual nodes each runs N2O loop.
 
 * [n2o_mqtt](https://ws.n2o.space/man/n2o_vnode.htm) — N2O MQTT Virtual Node
-* [n2o_ws](https://ws.n2o.space/man/n2o_wsnode.htm) — N2O WenScoket Virtual Node
 * [n2o_auth](https://ws.n2o.space/man/n2o_auth.htm) — N2O Auth
 * [n2o_ring](https://ws.n2o.space/man/n2o_ring.htm) — N2O Ring
 
@@ -67,6 +66,7 @@ Usually in Erlang we use `syn` or `gproc` OTP message buses.
 As such buses are optional in MQTT setup we include bus drivers in WebSocket package.
 
 * [n2o_stream](https://ws.n2o.space/man/n2o_stream.htm) — COWBOY and XHR bridge
+* [n2o_ws](https://ws.n2o.space/man/n2o_wsnode.htm) — N2O WenScoket Virtual Node
 * [n2o_heart](https://ws.n2o.space/man/n2o_heart.htm) — PING protocol
 * [n2o_cowboy](https://ws.n2o.space/man/n2o_cowboy.htm) — COWBOY API
 * [n2o_gproc](https://ws.n2o.space/man/n2o_gproc.htm) — GPROC bus backend
