@@ -22,7 +22,7 @@
               lang      = [] :: [] | atom(),
               path      = [] :: [] | binary(),
               session   = [] :: [] | binary(),
-              formatter = bert :: bert | json,
+              formatter = bert :: bert | json | atom(),
               params    = [] :: [] | list(tuple()),
               node      = [] :: [] | atom(),
               client_pid= [] :: [] | term(),
