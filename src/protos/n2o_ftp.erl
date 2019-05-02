@@ -29,7 +29,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
         {error, _} -> 0
     end,
 
-    ?LOG_INFO("FTP INFO INIT: ~p",[ FTP#ftp{data = <<>>, sid = <<>>} ]),
+%    ?LOG_INFO("FTP INFO INIT: ~p",[ FTP#ftp{data = <<>>, sid = <<>>} ]),
 
     Block2 = case Block of 0 -> ?STOP; _ -> ?NEXT end,
     Offset2 = case FileSize >= Offset of true -> FileSize; false -> 0 end,
@@ -41,7 +41,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
     {reply, {bert, FTP2}, Req, State};
 
 info(#ftp{id = Link, status = <<"send">>}=FTP, Req, State) ->
-    ?LOG_INFO("FTP SEND: ~p", [FTP#ftp{data = <<>>, sid = <<>>}]),
+%    ?LOG_INFO("FTP SEND: ~p", [FTP#ftp{data = <<>>, sid = <<>>}]),
     Reply = try
         n2o_async:send(file, Link, FTP)
     catch E:R ->
@@ -60,7 +60,7 @@ proc(init, #handler{name = Link, state = #ftp{sid = Sid, meta = ClientId} = FTP}
 proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = ClientId} = FTP,
      #handler{name = Link, state = #ftp{size = TotalSize, offset = Offset, filename = RelPath}} = Async)
      when Offset + Block >= TotalSize ->
-        ?LOG_INFO("FTP PROC FINALE: ~p~n", [ Link ]),
+%        ?LOG_INFO("FTP PROC FINALE: ~p~n", [ Link ]),
         case file:write_file(filename:join(?ROOT,RelPath), <<Data/binary>>, [append,raw]) of
             {error, Reason} ->
                 ?LOG_ERROR("WRITE ERROR: ~p~n", [ filename:join(?ROOT, RelPath) ]),
@@ -71,7 +71,8 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
                 spawn(fun() -> catch n2o_ring:send({publish, <<"events/1//index/anon/",ClientId/binary,"/",Token/binary>>,
                                         term_to_binary(FTP3)}),
                                Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
-                               catch n2o:send(Sid,FTP3) end),
+ %                              ?LOG_INFO("NOTIFY SEND TO WEB: ~p~n", [ {Sid, FTP3} ]),
+                               catch n2o:send(Sid,{direct,FTP3}) end),
                 spawn(fun() -> n2o_async:stop(file, Link) end),
                 {stop, normal, FTP2, Async#handler{state = FTP2}}
         end;

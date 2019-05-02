@@ -11,7 +11,7 @@ info({text,<<"N2O,",Auth/binary>>}, Req, State) ->
 info(#init{token=Auth}, Req, State) ->
     {'Token', Token} = n2o_session:authenticate([], Auth),
     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
-    ?LOG_INFO("N2O SESSION: ~p~n",[Sid]),
+%    ?LOG_INFO("N2O SESSION: ~p~n",[Sid]),
     New = State#cx{session = Sid},
     put(context,New),
     {reply,{bert,case io(init, State) of
@@ -21,7 +21,7 @@ info(#init{token=Auth}, Req, State) ->
 
 info(#client{data=Message}, Req, State) ->
     nitro:actions([]),
-    ?LOG_INFO("Client Message: ~p",[Message]),
+%    ?LOG_INFO("Client Message: ~p",[Message]),
     {reply,{bert,io(#client{data=Message},State)},Req,State};
 
 info(#pickle{}=Event, Req, State) ->
