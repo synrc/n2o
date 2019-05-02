@@ -10,7 +10,7 @@ proc({publish, C, Token, Request}, State = #pi{name=Server,state=Module}) ->
     Ctx = #cx { session= n2o:to_binary(Token), node=Server,
                 client_pid=C, state=application:get_env(kvx,dba,[]) },
     put(context, Ctx),
-    Return = try case Module:info(Request,[],Ctx) of
+    Return = case n2o_proto:try_info(Module,Request,[],Ctx) of
              {reply,{_,      <<>>},_,_} -> skip;
              {reply,{text,   Text},_,_} -> {ok,send(C,{flush,Text})};
              {reply,{bert,   Term},_,_} -> {ok,send(C,n2o_bert:encode(Term))};
@@ -18,8 +18,7 @@ proc({publish, C, Token, Request}, State = #pi{name=Server,state=Module}) ->
              {reply,{binary, Term},_,_} -> {ok,send(C,Term)};
              {reply,{default,Term},_,_} -> {ok,send(C,n2o:encode(Term))};
              {reply,{Encoder,Term},_,_} -> {ok,send(C,Encoder:encode(Term))};
-                                  Reply -> {error,{"Invalid Return",Reply}} end
-    catch E:R -> io:format("Catch:~p~n",[n2o:stack(E,R)]) end,
+                                  Reply -> {error,{"Invalid Return",Reply}} end,
     {reply, Return, State};
 
 proc(Unknown,#pi{name=Name}=Async) ->
