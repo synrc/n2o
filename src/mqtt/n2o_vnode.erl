@@ -76,16 +76,14 @@ proc({publish, To, Request},
         Ctx  = #cx { module=fix(Module), session=Sid, node=Node,
                      params=Id, client_pid=C, from = From, vsn = Vsn},
         put(context, Ctx),
-        try case n2o_proto:info(Bert,[],Ctx) of
-                 {reply,{_,      <<>>},_,_}           -> skip;
-                 {reply,{bert,   Term},_,#cx{from=X}} -> {ok,send(C,X,n2o_bert:encode(Term))};
-                 {reply,{json,   Term},_,#cx{from=X}} -> {ok,send(C,X,n2o_json:encode(Term))};
-                 {reply,{binary, Term},_,#cx{from=X}} -> {ok,send(C,X,Term)};
-                 {reply,{default,Term},_,#cx{from=X}} -> {ok,send(C,X,n2o:encode(Term))};
-                 {reply,{Encoder,Term},_,#cx{from=X}} -> {ok,send(C,X,Encoder:encode(Term))};
-                                                Reply -> {error,{"Invalid Return",Reply}}
-            end
-        catch Err:Rea:Stack -> ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack})
+        case safe_proto_info(Bert,[],Ctx) of
+            {reply,{_,      <<>>},_,_}           -> skip;
+            {reply,{bert,   Term},_,#cx{from=X}} -> {ok,send(C,X,n2o_bert:encode(Term))};
+            {reply,{json,   Term},_,#cx{from=X}} -> {ok,send(C,X,n2o_json:encode(Term))};
+            {reply,{binary, Term},_,#cx{from=X}} -> {ok,send(C,X,Term)};
+            {reply,{default,Term},_,#cx{from=X}} -> {ok,send(C,X,n2o:encode(Term))};
+            {reply,{Encoder,Term},_,#cx{from=X}} -> {ok,send(C,X,Encoder:encode(Term))};
+                                           Reply -> {error,{"Invalid Return",Reply}}
         end;
         Addr -> {error,{"Unknown Address",Addr}} end,
     debug(Name,To,Bert,Addr,Return),
@@ -97,6 +95,21 @@ proc({mqttc, C, connected}, State=#pi{name=Name,state=C}) ->
 
 proc(Unknown,Async) ->
     {reply,{uknown,Unknown,0},Async}.
+
+-ifdef(OTP_RELEASE).
+safe_proto_info(M,R,S) ->
+    try n2o_proto:info(M,R,S)
+    catch Err:Rea:Stack ->
+        ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack}),
+        {error,{stack,Stack}} end.
+-else.
+safe_proto_info(M,R,S) ->
+    try n2o_proto:info(M,R,S)
+    catch Err:Rea ->
+	Stack = erlang:get_stacktrace(),
+        ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack}),
+        {error,{stack,Stack}} end.
+-endif.
 
 % MQTT HELPERS
 
