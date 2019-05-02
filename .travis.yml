@@ -2,6 +2,7 @@ language: erlang
 otp_release:
   - 19.3
   - 20.3.8
+  - 21.3
 notifications:
   email:
     - maxim@synrc.com
