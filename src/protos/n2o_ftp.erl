@@ -44,8 +44,8 @@ info(#ftp{id = Link, status = <<"send">>}=FTP, Req, State) ->
     ?LOG_INFO("FTP SEND: ~p", [FTP#ftp{data = <<>>, sid = <<>>}]),
     Reply = try
         n2o_async:send(file, Link, FTP)
-    catch E:R:S ->
-        ?LOG_ERROR(#{error => E, reason => R, stack => S}),
+    catch E:R ->
+        ?LOG_ERROR(#{error => E, reason => R, loc => ftpinfo}),
         FTP#ftp{data = <<>>,sid = <<>>, block = ?STOP}
     end,
     {reply, {bert, Reply}, Req, State};
