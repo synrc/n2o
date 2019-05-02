@@ -4,8 +4,8 @@
 -ifdef(OTP_RELEASE).
 -include_lib("kernel/include/logger.hrl").
 -else.
--define(LOG_INFO(F),   true).
--define(LOG_INFO(F,X), true).
+-define(LOG_INFO(F),   io:format(F)).
+-define(LOG_INFO(F,X), io:format(F,X)).
 -define(LOG_ERROR(F),
         case F of
             _ when is_map(F) -> io:format("{~p,~p}: ~p~n", [?MODULE,?LINE,F]);
