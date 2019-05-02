@@ -76,7 +76,7 @@ proc({publish, To, Request},
         Ctx  = #cx { module=fix(Module), session=Sid, node=Node,
                      params=Id, client_pid=C, from = From, vsn = Vsn},
         put(context, Ctx),
-        case safe_proto_info(Bert,[],Ctx) of
+        case n2o_proto:try_info(Bert,[],Ctx) of
             {reply,{_,      <<>>},_,_}           -> skip;
             {reply,{bert,   Term},_,#cx{from=X}} -> {ok,send(C,X,n2o_bert:encode(Term))};
             {reply,{json,   Term},_,#cx{from=X}} -> {ok,send(C,X,n2o_json:encode(Term))};
@@ -95,21 +95,6 @@ proc({mqttc, C, connected}, State=#pi{name=Name,state=C}) ->
 
 proc(Unknown,Async) ->
     {reply,{uknown,Unknown,0},Async}.
-
--ifdef(OTP_RELEASE).
-safe_proto_info(M,R,S) ->
-    try n2o_proto:info(M,R,S)
-    catch Err:Rea:Stack ->
-        ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack}),
-        {error,{stack,Stack}} end.
--else.
-safe_proto_info(M,R,S) ->
-    try n2o_proto:info(M,R,S)
-    catch Err:Rea ->
-	Stack = erlang:get_stacktrace(),
-        ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack}),
-        {error,{stack,Stack}} end.
--endif.
 
 % MQTT HELPERS
 
