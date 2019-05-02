@@ -17,9 +17,7 @@ filename(#ftp{sid=_Sid,filename=FileName}) -> FileName. %filename:join(lists:con
 % File Transfer Protocol
 
 info(#ftp{status = {event, _}}=FTP, Req, State) ->
-    Module = case State#cx.module of [] -> index; M -> M end,
-    Reply = try Module:event(FTP) catch E:R:S -> ?LOG_ERROR(#{error => E, reason => R, stack => S}), E end,
-    {reply, {bert, {io,n2o_nitro:render_actions(nitro:actions()), Reply}}, Req, State};
+    {reply, {bert, n2o_nitro:io(FTP, State)}, Req, State};
 
 info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, Req, State) ->
     Root=?ROOT,
