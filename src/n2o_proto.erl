@@ -53,15 +53,10 @@ try_info(M,R,S) -> try_info(?MODULE,M,R,S).
 -ifdef(OTP_RELEASE).
 try_info(Module,M,R,S) ->
     try Module:info(M,R,S)
-    catch Err:Rea:Stack ->
-        ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack}),
-        {error,{stack,Stack}} end.
+    catch Err:Rea:Stack -> ?LOG_EXCEPTION(Err, Rea, Stack), {error,{stack,Stack}} end.
 -else.
 try_info(Module,M,R,S) ->
     try Module:info(M,R,S)
-    catch Err:Rea ->
-        Stack = erlang:get_stacktrace(),
-        ?LOG_ERROR(#{error => Err, reason => Rea, stack => Stack}),
-        {error,{stack,Stack}} end.
+    catch Err:Rea -> Stack = erlang:get_stacktrace(), ?LOG_EXCEPTION(Err, Rea, Stack), {error,{stack,Stack}} end.
 -endif.
 

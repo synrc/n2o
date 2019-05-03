@@ -14,6 +14,8 @@
 -define(LOG_ERROR(F,X), io:format(F,X)).
 -endif.
 
+-define(LOG_EXCEPTION(E,R,S), ?LOG_ERROR(#{exception => E, reason => R, stack => S})).
+
 -record(handler, { name     :: atom(),
                    module   :: atom(),
                    class    :: term(),
