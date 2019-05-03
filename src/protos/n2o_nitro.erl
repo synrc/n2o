@@ -77,31 +77,21 @@ render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
 
 io(Event, #cx{module=Module}) ->
     try X = Module:event(Event), #io{code=render_actions(nitro:actions()),data=X}
-    catch E:R:Stack ->
-        ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
-        #io{data={stack,Stack}} end.
+    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
 
 io(Data) ->
     try #io{code=render_actions(nitro:actions()),data=Data}
-    catch E:R:Stack ->
-        ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
-        #io{data={stack,Stack}} end.
+    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
 
 -else.
 
 io(Event, #cx{module=Module}) ->
     try X = Module:event(Event), #io{code=render_actions(nitro:actions()),data=X}
-    catch E:R ->
-        Stack = erlang:get_stacktrace(),
-        ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
-        #io{data={stack,Stack}} end.
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
 
 io(Data) ->
     try #io{code=render_actions(nitro:actions()),data=Data}
-    catch E:R ->
-        Stack = erlang:get_stacktrace(),
-        ?LOG_ERROR("Catch: ~p:~p~n~p", [E,R,Stack]),
-        #io{data={stack,Stack}} end.
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
 
 -endif.
 
