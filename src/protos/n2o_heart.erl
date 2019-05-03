@@ -3,12 +3,10 @@
 -include("n2o.hrl").
 -export([info/3]).
 
-info({text,<<"PING">> = _Ping}=Message, Req, State) ->
-%    ?LOG_INFO("PING: ~p",[Message]),
+info({text,<<"PING">> = _Ping}, Req, State) ->
     {reply, {text, <<"PONG">>}, Req, State};
 
-info({text,<<>>}=Message, Req, State) ->
-%    ?LOG_INFO("NOP: ~p",[Message]),
+info({text,<<>>}, Req, State) ->
     {reply, {text, <<>>}, Req, State};
 
 info(Message, Req, State) -> {unknown,Message, Req, State}.

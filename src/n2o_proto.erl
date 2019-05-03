@@ -1,5 +1,6 @@
 -module(n2o_proto).
 -description('N2O Proto Loop').
+-compile(export_all).
 -include("n2o.hrl").
 -export([init/2, finish/2, info/3, stream/3, push/5, init/4, terminate/2]).
 -export([try_info/3, try_info/4]).

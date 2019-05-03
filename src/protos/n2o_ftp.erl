@@ -1,4 +1,5 @@
 -module(n2o_ftp).
+-compile(export_all).
 -description('N2O File Protocol').
 -include("n2o.hrl").
 -include_lib("kernel/include/file.hrl").
@@ -54,7 +55,7 @@ info(Message, Req, State) -> {unknown, Message, Req, State}.
 
 % n2o Handlers
 
-proc(init, #handler{name = Link, state = #ftp{sid = Sid, meta = ClientId} = FTP} = Async) ->
+proc(init, #handler{}=Async) ->
     {ok, Async};
 
 proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = ClientId} = FTP,

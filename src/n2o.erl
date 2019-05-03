@@ -1,4 +1,5 @@
 -module(n2o).
+-compile(export_all).
 -description('N2O DAS MQTT TCP WebSocket').
 -behaviour(supervisor).
 -behaviour(application).
