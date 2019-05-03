@@ -22,13 +22,13 @@
                    state    :: term(),
                    seq      :: term()}).
 
--record(pi, { name     :: atom(),
-              table    :: ets:tid(),
+-record(pi, { name     :: term(),
+              table    :: atom(),
               sup      :: atom(),
               module   :: atom(),
               state    :: term()  }).
 
--record(cx, { handlers  = [] :: list(#handler{}),
+-record(cx, { handlers  = [] :: list({atom(),atom()}),
               actions   = [] :: list(tuple()),
               req       = [] :: [] | term(),
               module    = [] :: [] | atom(),
