@@ -77,6 +77,7 @@
             <li><b><a href="man/n2o.htm">n2o</a></b> &mdash; N2O Application<div class=desk>: MQTT and WS &mdash; 10KB</div></li>
             <li><b><a href="man/n2o_pi.htm">n2o_pi</a></b> &mdash; N2O Processes<div class=desk> &mdash; 4KB</div></li>
             <li><b><a href="man/n2o_proto.htm">n2o_proto</a></b> &mdash; N2O Loop<div class=desk>: &mdash; 1KB</div></li>
+            <li><b><a href="man/n2o_ring.htm">n2o_ring</a></b> &mdash; N2O Ring<div class=desk>: Hash Ring &mdash; 1KB</div></li>
         </ul>
         </div>
         <figure>
@@ -91,7 +92,6 @@
         <ul>
             <li><b><a href="man/n2o_auth.htm">n2o_auth</a></b> &mdash; N2O MQTT Authentication<div class=desk>: MQTT auth module &mdash; 1KB</div></li>
             <li><b><a href="man/n2o_vnode.htm">n2o_vnode</a></b> &mdash; N2O Virtual Node<div class=desk>: MQTT client &mdash; 1KB</div></li>
-            <li><b><a href="man/n2o_ring.htm">n2o_ring</a></b> &mdash; N2O Ring<div class=desk>: Hash Ring &mdash; 1KB</div></li>
         </ul>
         </div>
     </section>
@@ -106,14 +106,13 @@
         <ul>
             <li><b><a href="man/n2o_stream.htm">n2o_stream</a></b> &mdash; COWBOY and XHR bridge</li>
             <li><b><a href="man/n2o_cowboy.htm">n2o_cowboy</a></b> &mdash; COWBOY API</li>
-            <li><b><a href="man/n2o_cowboy2.htm">n2o_cowboy2</a></b> &mdash; COWBOY2 API</li>
         </ul>
         <figure>
         <code>
  $ mad app web sample
  $ cd sample
  $ mad dep com pla rep
- $ open http://127.0.0.1:8001/app/index.htm
+ $ open https://127.0.0.1:8001/app/index.htm
         </code></figure>
     </section>
 
@@ -161,39 +160,41 @@
  -type cx()        :: #cx{}.
  -type formatter() :: binary | json | bert | text | default | atom().
  -type response()  :: { formatter(), binary() }.
- -type memtable()  :: atom().
 
  -record(ok,      { data     :: term() }).
  -record(error    { data     :: term() }.
  -record(reply,   { msg      :: n2o(), req :: term(), ctx :: cx() } ).
  -record(unknown, { msg      :: n2o(), req :: term(), ctx :: cx() } ).
 
- -spec start(#handler{}) -> {pid(),term()} | #error{}.
- -spec stop(term(),atom()) -> #handler{} | #error{}.
- -spec proc(atom(),#handler{}) -> term().
- -spec info(term(),term()(),#cx{}) -> #reply{} | #unknown{}.
+ -spec start(#pi{}) -> {pid(),term()} | #error{}.
+ -spec stop(term(),atom()) -> #pi{} | #error{}.
+ -spec proc(atom(),#pi{}) -> term().
+ -spec info(term(),term(),#cx{}) -> #reply{} | #unknown{}.
 
- -record(handler, { name     :: atom(),
-                    module   :: atom(),
-                    class    :: term(),
-                    group    :: atom(),
-                    config   :: term(),
-                    state    :: term(),
-                    seq      :: term()}).
+ -record(pi, { name     :: term(),
+               table    :: atom(),
+               sup      :: atom(),
+               module   :: atom(),
+               state    :: term()  }).
 
- -record(cx,      { session   = [] :: [] | binary(),
-                    formatter = bert :: bert | json,
-                    actions   = [] :: list(tuple()),
-                    state     = [] :: [] | term(),
-                    module    = [] :: [] | atom(),
-                    lang      = [] :: [] | atom(),
-                    path      = [] :: [] | binary(),
-                    node      = [] :: [] | atom(),
-                    pid       = [] :: [] | pid(),
-                    vsn       = [] :: [] | integer() }).
+ -record(cx, { handlers  = [] :: list({atom(),atom()}),
+               actions   = [] :: list(tuple()),
+               req       = [] :: [] | term(),
+               module    = [] :: [] | atom(),
+               lang      = [] :: [] | atom(),
+               path      = [] :: [] | binary(),
+               session   = [] :: [] | binary(),
+               formatter = bert :: bert | json | atom(),
+               params    = [] :: [] | list(tuple()),
+               node      = [] :: [] | atom(),
+               client_pid= [] :: [] | term(),
+               state     = [] :: [] | term(),
+               from      = [] :: [] | binary(),
+               vsn       = [] :: [] | binary() }).
 
- -spec encode(record()) -> binary().
- -spec decode(binary()) -> record().
+ -type memtable()  :: atom().
+ -spec encode(tuple()) -> binary().
+ -spec decode(binary()) -> tuple().
  -spec session(term(),term()) -> term().
  -spec session(term()) -> term().
  -spec cache(memtable(),term(),term()) -> term().
