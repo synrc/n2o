@@ -3,7 +3,9 @@
               {vsn,"6.5"},
               {license,"ISC"},
               {applications,[kernel,stdlib]},
+              {maintainers,["Maxim Sokhatsky <maxim@synrc.com>", "Vladimir Kirillov <vlad@synrc.com>"]},
               {modules,[]},
               {registered,[]},
+              {links,[{"Github","https://github.com/synrc/n2o"}]},
               {mod,{n2o,[]}},
               {env,[]}]}.

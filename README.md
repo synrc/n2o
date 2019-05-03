@@ -30,8 +30,8 @@ Protocol Extensions
 * Hosts: COWBOY, EMQ, MOCHIWEB, RING
 * Samples: REVIEW TT (8000), SAMPLE WS (8001), FORMS (8002), BANK (8003), CHAT (8042)
 
-Idea
-----
+Motivation
+----------
 
 N2O was created to bring clarity and sanity to software development.
 The distribution model is per file basis with ISC license.
@@ -44,6 +44,7 @@ The core modules provide OTP start and N2O entry point.
 * [n2o](https://ws.n2o.space/man/n2o.htm) — N2O OTP Supervisor and Application
 * [n2o_pi](https://ws.n2o.space/man/n2o_pi.htm) — N2O Processes
 * [n2o_proto](https://ws.n2o.space/man/n2o_proto.htm) — N2O Loop
+* [n2o_ring](https://ws.n2o.space/man/n2o_ring.htm) — N2O Ring
 
 MQTT
 ----
@@ -53,7 +54,6 @@ N2O service worker started as ring of virtual nodes each runs N2O loop.
 
 * [n2o_mqtt](https://ws.n2o.space/man/n2o_vnode.htm) — N2O MQTT Virtual Node
 * [n2o_auth](https://ws.n2o.space/man/n2o_auth.htm) — N2O Auth
-* [n2o_ring](https://ws.n2o.space/man/n2o_ring.htm) — N2O Ring
 
 ```
 $ mad app mqtt review
