@@ -9,13 +9,17 @@ features, such as: process management; virtual nodes ring for
 request processing; session, encoding, mq, cache and log services.
 It also includes poor man's bridges to server's endpoints.
 
-Features
---------
+Core Features
+-------------
 
 * Purpose: High performance protocol relay
 * Endpoints: WebSockets, MQTT, TCP
 * Codebase: 1K LOC (Erlang), 500 LOC (JavaScript)
-* Buildtools: REBAR, REBAR3, MAD
+* Dialyzer: REBAR, REBAR3, MAD, MIX
+
+Protocol Extensions
+-------------------
+
 * Templates: DTL, NITRO
 * Databases [KVS, KVX]: FS, MNESIA, ROCKSDB, RIAK, REDIS
 * Business Processes: BPE (BPMN 2.0), SCM, ERP, CRM
@@ -23,8 +27,8 @@ Features
 * HTTP API: REST (proplist/JSON)
 * Active Reloading: Linux, Windows, Mac
 * Business Forms: FORMS (HTML/CSS)
-* Hosts: COWBOY, EMQ, MOCHIWEB
-* Samples: REVIEW (1), SAMPLE (2)
+* Hosts: COWBOY, EMQ, MOCHIWEB, RING
+* Samples: REVIEW TT (8000), SAMPLE WS (8001), FORMS (8002), BANK (8003), CHAT (8042)
 
 Idea
 ----
