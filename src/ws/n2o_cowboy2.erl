@@ -1,5 +1,6 @@
 -module(n2o_cowboy2).
 -description('N2O Cowboy2 WebSocket Backend').
+-include("n2o.hrl").
 -compile(export_all).
 
 init(Req,_Opts) -> {cowboy_websocket, Req, Req}.
@@ -12,7 +13,7 @@ ws({reply,{bert,Rep},_,S})   -> {reply,{binary,n2o_bert:encode(Rep)},S};
 ws({reply,{text,Rep},_,S})   -> {reply,{text,Rep},S};
 ws({reply,{default,Rep},_,S})-> {reply,{binary,n2o:encode(Rep)},S};
 ws({reply,{Encoder,Rep},_,S})-> {reply,{binary,Encoder:encode(Rep)},S};
-ws(X) -> io:format("UNKNOWN: ~p~n",[X]), {shutdown,[]}.
+ws(X) -> ?LOG_ERROR(#{unknown=>X}), {shutdown,[]}.
 
 websocket_init(S)            -> ws(n2o_proto:init([],S,[],ws)).
 websocket_handle(D,S)        -> ws(n2o_proto:stream(D,[],S)).
