@@ -5,9 +5,8 @@ N2O: Distributed Application Server
 
 N2O is a embeddable message protocol loop library for
 WebSocket, HTTP, MQTT and TCP servers. It provides basic
-features, such as: process management; virtual nodes ring for
-request processing; session, encoding, mq, cache and log services.
-It also includes poor man's bridges to server's endpoints.
+features, such as process management, virtual nodes ring for
+request processing, session, frame encoding, mq and caching services.
 
 Core Features
 -------------
@@ -70,7 +69,7 @@ Usually in Erlang we use `syn` or `gproc` OTP message buses.
 As such buses are optional in MQTT setup we include bus drivers in WebSocket package.
 
 * [n2o_stream](https://ws.n2o.space/man/n2o_stream.htm) — COWBOY and XHR bridge
-* [n2o_ws](https://ws.n2o.space/man/n2o_wsnode.htm) — N2O WenScoket Virtual Node
+* [n2o_ws](https://ws.n2o.space/man/n2o_wsnode.htm) — N2O WebSocket Virtual Node
 * [n2o_heart](https://ws.n2o.space/man/n2o_heart.htm) — PING protocol
 * [n2o_cowboy](https://ws.n2o.space/man/n2o_cowboy.htm) — COWBOY API
 * [n2o_gproc](https://ws.n2o.space/man/n2o_gproc.htm) — GPROC bus backend
@@ -86,11 +85,11 @@ $ open http://127.0.0.1:8001/app/index.htm
 Protocols
 ---------
 
-N2O is shipped with 3 protocols, which could be omited or extended.
+N2O ships with 3 optional protocols.
 
 * [n2o_nitro](https://ws.n2o.space/man/n2o_nitro.htm) — N2O Nitrogen web framework protocol
 * [n2o_ftp](https://ws.n2o.space/man/n2o_ftp.htm) — N2O File protocol
-* [n2p_heart](https://ws.n2o.space/man/n2o_heart.htm) — N2O Heart protocol
+* [n2o_heart](https://ws.n2o.space/man/n2o_heart.htm) — N2O Heart protocol
 
 Services
 --------
@@ -100,7 +99,7 @@ Formatters, Sessions, etc. Optional.
 * [n2o_bert](https://ws.n2o.space/man/n2o_bert.htm) — BERT encoder/decoder
 * [n2o_json](https://ws.n2o.space/man/n2o_json.htm) — JSON encoder/decoder
 * [n2o_secret](https://ws.n2o.space/man/n2o_secret.htm)  — AES/CBC-128 encoder/decoder
-* [n2o_session](https://ws.n2o.space/man/n2o_session.htm) — ETS session backend
+* [n2o_session](https://ws.n2o.space/man/n2o_session.htm) — ETS session storage
 
 JavaScript
 ----------
@@ -111,7 +110,7 @@ JavaScript
 * [heart.js](https://ws.n2o.space/man/heart.js.htm) — HEART protocol
 * [nitro.js](https://ws.n2o.space/man/nitro.js.htm) — NITRO protocol
 * [ftp.js](https://ws.n2o.space/man/ftp.js.htm)  — FTP protocol
-* [n2o.js](https://ws.n2o.space/man/n2o.js.htm) — N2O protocol looper
+* [n2o.js](https://ws.n2o.space/man/n2o.js.htm) — N2O protocol loop
 * [mq.js](https://ws.n2o.space/man/mq.js.htm) — MQTT client
 
 Literature
