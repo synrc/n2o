@@ -76,11 +76,11 @@ render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
 -ifdef(OTP_RELEASE).
 
 io(Event, #cx{module=Module}) ->
-    try X = Module:event(Event), {io,[],render_actions(nitro:actions()),data=X}
+    try {io,render_actions(nitro:actions()),Module:event(Event)}
     catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 io(Data) ->
-    try #io{code=render_actions(nitro:actions()),data=Data}
+    try {io,render_actions(nitro:actions()),Data}
     catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 -else.
