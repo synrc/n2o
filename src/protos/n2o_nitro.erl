@@ -15,8 +15,8 @@ info(#init{token=Auth}, Req, State) ->
     New = State#cx{session = Sid},
     put(context,New),
     {reply,{bert,case io(init, State) of
-		      #io{data={stack,_}} = Io -> Io;
-		      Io -> Io#io{data={'Token',Token}} end},
+		      {io,_,{stack,_}} = Io -> Io;
+		      {io,Code,_} -> {io,Code,{'Token',Token}} end},
             Req,New};
 
 info(#client{data=Message}, Req, State) ->
@@ -35,8 +35,8 @@ info(#flush{data=Actions}, Req, State) ->
 info(#direct{data=Message}, Req, State) ->
     nitro:actions([]),
     {reply,{bert,case io(Message, State) of
-		      #io{data={stack,_}} = Io -> Io;
-		      #io{data=Res} = Io -> Io#io{data={direct,Res}} end},
+		      {io,[],{stack,_}} = Io -> Io;
+		      {io,[],Res} -> {io,[],{direct,Res}} end},
             Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
@@ -76,22 +76,22 @@ render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
 -ifdef(OTP_RELEASE).
 
 io(Event, #cx{module=Module}) ->
-    try X = Module:event(Event), #io{code=render_actions(nitro:actions()),data=X}
-    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
+    try X = Module:event(Event), {io,[],render_actions(nitro:actions()),data=X}
+    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 io(Data) ->
     try #io{code=render_actions(nitro:actions()),data=Data}
-    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
+    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 -else.
 
 io(Event, #cx{module=Module}) ->
-    try X = Module:event(Event), #io{code=render_actions(nitro:actions()),data=X}
-    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
+    try {io,render_actions(nitro:actions()),Module:event(Event)}
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 io(Data) ->
-    try #io{code=render_actions(nitro:actions()),data=Data}
-    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), #io{data={stack,S}} end.
+    try {io,render_actions(nitro:actions()),Data}
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 -endif.
 

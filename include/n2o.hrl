@@ -58,7 +58,6 @@
 
 % IO protocol
 
--record(io,      { code=[], data=[] }).
 -record(bin,     { data=[] }).
 -record(client,  { data=[] }).
 -record(server,  { data=[] }).
