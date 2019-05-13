@@ -15,6 +15,7 @@ Core Features
 * Endpoints: WebSockets, MQTT, TCP
 * Codebase: 1K LOC (Erlang), 500 LOC (JavaScript)
 * Dialyzer: REBAR, REBAR3, MAD, MIX
+* Hosts: COWBOY, EMQ, MOCHIWEB, RING, TCP, UDP
 
 Protocol Extensions
 -------------------
@@ -25,9 +26,14 @@ Protocol Extensions
 * Instant Messaging: <a href="https://chat.n2o.space">CHAT</a>
 * HTTP API: <a href="https://rest.n2o.space">REST</a> (proplist/JSON)
 * <a href="https://active.n2o.space">ACTIVE</a> Reloading: Linux, Windows, Mac
-* Business Forms: <a href="https://forms.n2o.space">FORMS</a> (HTML/CSS)
-* Hosts: COWBOY, EMQ, MOCHIWEB, RING
-* Samples: <a href="https://review.n2o.space">REVIEW TT</a> (8000), <a href="https://sample.n2o.space">SAMPLE WS</a> (8001), <a href="https://forms.n2o.space">FORMS</a> (8002), <a href="https://bank.n2o.space">BANK</a> (8003), <a href="https://chat.n2o.space">CHAT</a> (8042)
+
+Samples
+-------
+* MQTT Chat Sample: <a href="https://review.n2o.space">REVIEW TT</a> (8000)
+* WebSocket Chat Sample: <a href="https://sample.n2o.space">SAMPLE WS</a> (8001)
+* Business Forms Sample: <a href="https://forms.n2o.space">FORMS</a> (8002)
+* Online BANK Sample: <a href="https://bank.n2o.space">BANK</a> (8003)
+* Instant Messaging Sample: <a href="https://chat.n2o.space">CHAT</a> (8042)
 
 Motivation
 ----------
