@@ -19,15 +19,15 @@ Core Features
 Protocol Extensions
 -------------------
 
-* Templates: DTL, NITRO
-* Databases [KVS, KVX]: FS, MNESIA, ROCKSDB, RIAK, REDIS
-* Business Processes: BPE (BPMN 2.0), SCM, ERP, CRM
-* Instant Messaging: ROSTER
-* HTTP API: REST (proplist/JSON)
-* Active Reloading: Linux, Windows, Mac
-* Business Forms: FORMS (HTML/CSS)
+* Templates: DTL, <a href="https://nitro.n2o.space">NITRO</a>
+* Databases [KVS, <a href="https://kvx.n2o.space">KVX</a>]: FS, MNESIA, ROCKSDB, RIAK, REDIS
+* Business Processes: <a href="https://bpe.n2o.space">BPE</a> (BPMN 2.0), SCM, ERP, CRM
+* Instant Messaging: <a href="https://chat.n2o.space">CHAT</a>
+* HTTP API: <a href="https://rest.n2o.space">REST</a> (proplist/JSON)
+* <a href="https://active.n2o.space">ACTIVE</a> Reloading: Linux, Windows, Mac
+* Business Forms: <a href="https://forms.n2o.space">FORMS</a> (HTML/CSS)
 * Hosts: COWBOY, EMQ, MOCHIWEB, RING
-* Samples: REVIEW TT (8000), SAMPLE WS (8001), FORMS (8002), BANK (8003), CHAT (8042)
+* Samples: <a href="https://review.n2o.space">REVIEW TT</a> (8000), <a href="https://sample.n2o.space">SAMPLE WS</a> (8001), <a href="https://forms.n2o.space">FORMS</a> (8002), <a href="https://bank.n2o.space">BANK</a> (8003), <a href="https://chat.n2o.space">CHAT</a> (8042)
 
 Motivation
 ----------
