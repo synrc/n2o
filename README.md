@@ -29,11 +29,11 @@ Protocol Extensions
 
 Samples
 -------
-* MQTT Chat Sample: <a href="https://review.n2o.space">REVIEW TT</a> (8000)
-* WebSocket Chat Sample: <a href="https://sample.n2o.space">SAMPLE WS</a> (8001)
-* Business Forms Sample: <a href="https://forms.n2o.space">FORMS</a> (8002)
-* Online Client Bank Sample: <a href="https://bank.n2o.space">BANK</a> (8003)
-* Instant Messaging Sample: <a href="https://chat.n2o.space">CHAT</a> (8042)
+* MQTT Chat: <a href="https://review.n2o.space">REVIEW TT</a> (8000)
+* WebSocket Chat: <a href="https://sample.n2o.space">SAMPLE WS</a> (8001)
+* Business Forms: <a href="http://forms.n2o.space">FORMS</a> (8002, HTTP)
+* Online Client Bank: <a href="https://bank.n2o.space">BANK</a> (8003)
+* Instant Messaging: <a href="https://chat.n2o.space">CHAT</a> (8042)
 
 Motivation
 ----------
