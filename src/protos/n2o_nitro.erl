@@ -76,7 +76,7 @@ render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
 -ifdef(OTP_RELEASE).
 
 io(Event, #cx{module=Module}) ->
-    try {io,render_actions(nitro:actions()),Module:event(Event)}
+    try X = Module:event(Event), {io,render_actions(nitro:actions()),X}
     catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 io(Data) ->
@@ -86,12 +86,12 @@ io(Data) ->
 -else.
 
 io(Event, #cx{module=Module}) ->
-    try {io,render_actions(nitro:actions()),Module:event(Event)}
-    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
+    try X = Module:event(Event), {io,render_actions(nitro:actions()),X}
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,<<>>,{stack,S}} end.
 
 io(Data) ->
     try {io,render_actions(nitro:actions()),Data}
-    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,<<>>,{stack,S}} end.
 
 -endif.
 
