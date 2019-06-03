@@ -69,7 +69,7 @@ render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
          api_event -> M:F(P,Linked,State);
              event -> [erlang:put(K, nitro:to_binary([V])) || {K,V} <- Linked], M:F(P);
                  _ -> M:F(P,T,State) end
-    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
+    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {stack,S} end.
 
 io(Event, #cx{module=Module}) ->
     try X = Module:event(Event), {io,render_actions(nitro:actions()),X}
@@ -86,7 +86,7 @@ render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
          api_event -> M:F(P,Linked,State);
              event -> [erlang:put(K, nitro:to_binary([V])) || {K,V} <- Linked], M:F(P);
                  _ -> M:F(P,T,State) end
-    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,<<>>,{stack,S}} end.
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {stack,S} end.
 
 io(Event, #cx{module=Module}) ->
     try X = Module:event(Event), {io,render_actions(nitro:actions()),X}
