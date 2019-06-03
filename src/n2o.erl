@@ -96,13 +96,11 @@ cache(Tab, Key) ->
 % TIMER
 
 proc(init,#pi{}=Async) ->
-    ?LOG_INFO("init"),
     Timer = timer_restart(ping()),
     {ok,Async#pi{state=Timer}};
 
 proc({timer,ping},#pi{state=Timer}=Async) ->
     erlang:cancel_timer(Timer),
-    ?LOG_INFO("timer ping"),
     n2o:invalidate_cache(caching),
     (n2o_session:storage()):invalidate_sessions(),
     {reply,ok,Async#pi{state=timer_restart(ping())}}.
