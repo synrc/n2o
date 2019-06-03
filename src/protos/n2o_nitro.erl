@@ -33,8 +33,8 @@ info(#flush{data=Actions}, Req, State) ->
 info(#direct{data=Message}, Req, State) ->
     nitro:actions([]),
     {reply,{bert,case io(Message, State) of
-                      {io,[],{stack,_}} = Io -> Io;
-                      {io,[],Res} -> {io,[],{direct,Res}} end},
+                      {io,_,{stack,_}} = Io -> Io;
+                      {io,Code,Res} -> {io,Code,{direct,Res}} end},
             Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
