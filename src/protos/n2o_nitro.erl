@@ -11,17 +11,15 @@ info({text,<<"N2O,",Auth/binary>>}, Req, State) ->
 info(#init{token=Auth}, Req, State) ->
     {'Token', Token} = n2o_session:authenticate([], Auth),
     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
-%    ?LOG_INFO("N2O SESSION: ~p~n",[Sid]),
     New = State#cx{session = Sid},
     put(context,New),
     {reply,{bert,case io(init, State) of
-		      {io,_,{stack,_}} = Io -> Io;
-		      {io,Code,_} -> {io,Code,{'Token',Token}} end},
+                      {io,_,{stack,_}} = Io -> Io;
+                      {io,Code,_} -> {io,Code,{'Token',Token}} end},
             Req,New};
 
 info(#client{data=Message}, Req, State) ->
     nitro:actions([]),
-%    ?LOG_INFO("Client Message: ~p",[Message]),
     {reply,{bert,io(#client{data=Message},State)},Req,State};
 
 info(#pickle{}=Event, Req, State) ->
@@ -35,8 +33,8 @@ info(#flush{data=Actions}, Req, State) ->
 info(#direct{data=Message}, Req, State) ->
     nitro:actions([]),
     {reply,{bert,case io(Message, State) of
-		      {io,[],{stack,_}} = Io -> Io;
-		      {io,[],Res} -> {io,[],{direct,Res}} end},
+                      {io,[],{stack,_}} = Io -> Io;
+                      {io,[],Res} -> {io,[],{direct,Res}} end},
             Req,State};
 
 info(Message,Req,State) -> {unknown,Message,Req,State}.
@@ -62,18 +60,16 @@ html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{sessio
                            {error,"EV expected"} end,
     io(Res).
 
-render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
-    case F of
-         api_event -> M:F(P,Linked,State);
-             event -> % io:format("Linked: ~p~n",[Linked]),
-                      lists:map(fun ({K,V})-> erlang:put(K,nitro:to_binary([V]))
-                                end,Linked),
-                      M:F(P);
-                 _ -> M:F(P,T,State) end.
-
-% exception-safe io constructor
+% calling user code in exception-safe manner
 
 -ifdef(OTP_RELEASE).
+
+render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
+    try case F of
+         api_event -> M:F(P,Linked,State);
+             event -> [erlang:put(K, nitro:to_binary([V])) || {K,V} <- Linked], M:F(P);
+                 _ -> M:F(P,T,State) end
+    catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {io,[],{stack,S}} end.
 
 io(Event, #cx{module=Module}) ->
     try X = Module:event(Event), {io,render_actions(nitro:actions()),X}
@@ -85,6 +81,13 @@ io(Data) ->
 
 -else.
 
+render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
+    try case F of
+         api_event -> M:F(P,Linked,State);
+             event -> [erlang:put(K, nitro:to_binary([V])) || {K,V} <- Linked], M:F(P);
+                 _ -> M:F(P,T,State) end
+    catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,<<>>,{stack,S}} end.
+
 io(Event, #cx{module=Module}) ->
     try X = Module:event(Event), {io,render_actions(nitro:actions()),X}
     catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,<<>>,{stack,S}} end.
@@ -94,4 +97,5 @@ io(Data) ->
     catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {io,<<>>,{stack,S}} end.
 
 -endif.
+
 
