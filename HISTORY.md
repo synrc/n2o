@@ -10,3 +10,6 @@ History
 * 5.11 — Formatter API changes
 * 5.11.1 — Unification of WebSocket and MQTT versions
 * 6.3 — arraybuffer in JS client, n2o_pi, fixes, synrc/mqtt drop
+* 6.4 — Error handling, minimalisation
+* 6.5 — OTP 21.0, n2o.dev, WebSocket ring, /-endpoint for static/WS, Erlang logger
+
