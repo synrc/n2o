@@ -4,5 +4,6 @@ defmodule N2O do
 
   defrecord :cx, extract(:cx, from_lib: "n2o/include/n2o.hrl")
   defrecord :pi, extract(:pi, from_lib: "n2o/include/n2o.hrl")
+  defrecord :client, extract(:client, from_lib: "n2o/include/n2o.hrl")
 
 end
