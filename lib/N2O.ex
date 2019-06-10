@@ -1,5 +1,9 @@
 defmodule N2O do
-  Record.extract_all(from_lib: "n2o/include/n2o.hrl")
+  require Record
+
+  Enum.each(Record.extract_all(from_lib: "n2o/include/n2o.hrl"), fn {name, definition} ->
+    Record.defrecord(name, definition)
+  end)
 
   defmacro __using__(opts \\ []) do
     imports =
