@@ -66,6 +66,7 @@ depickle(SerializedData) -> (pickler()):depickle(SerializedData).
 
 % SESSION
 
+sid() -> #cx{session=SID}=get(context), SID.
 session() -> application:get_env(n2o,session,n2o_session).
 session(Key)        -> #cx{session=SID}=get(context), (session()):get_value(SID, Key, []).
 session(Key, Value) -> #cx{session=SID}=get(context), (session()):set_value(SID, Key, Value).
