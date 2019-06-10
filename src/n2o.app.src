@@ -1,9 +1,8 @@
 {application,n2o,
              [{description,"N2O DAS MQTT TCP WebSocket"},
               {vsn,"6.6.0"},
-              {license,"ISC"},
               {applications,[kernel,stdlib]},
-              {maintainers,["Maxim Sokhatsky <maxim@synrc.com>", "Vladimir Kirillov <vlad@synrc.com>"]},
-              {links,[{"Github","https://github.com/synrc/n2o"}]},
-              {mod,{n2o,[]}},
+              {modules, []},
+              {registered, []},
+              {mod,  {n2o, []}},
               {env,[]}]}.
