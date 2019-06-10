@@ -7,7 +7,7 @@ public class bert {
     public int t;
     public Object v;
     public bert(int t, Object v) { this.t = t; this.v = v; }
-    public static bert float_ (float o)      { return new bert(70,o);  }
+    public static bert float_ (float o)      { return new bert(70, o); }
     public static bert tuple  (ArrayList o)  { return new bert(104,o); }
     public static bert string (String o)     { return new bert(107,o); }
     public static bert list   (ArrayList o)  { return new bert(108,o); }
