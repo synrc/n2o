@@ -8,3 +8,4 @@ deps
 *.log
 *.aux
 *.pdf
+mix.lock
