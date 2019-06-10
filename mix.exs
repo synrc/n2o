@@ -2,11 +2,12 @@ defmodule N2O.Mixfile do
   use Mix.Project
   def project do
     [app: :n2o,
-     version: "6.5.0",
+     version: "6.6.6",
      description: "N2O DAS MQTT TCP WebSocket",
      package: package(),
      deps: deps()]
   end
+  def application, do: [mod: {:n2o, []}]
   defp package do
     [files: ~w(doc include man priv src test mix.exs rebar.config LICENSE),
      licenses: ["ISC"],
