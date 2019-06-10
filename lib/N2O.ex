@@ -1,4 +1,4 @@
-defmodule N2O
+defmodule N2O do
   require Record
   import  Record, only: [defrecord: 2, extract: 2]
 
