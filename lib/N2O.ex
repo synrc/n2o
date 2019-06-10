@@ -1,10 +1,5 @@
 defmodule N2O do
-  require Record
-  import Record, only: [defrecord: 2, extract: 2]
-
-  defrecord :cx, extract(:cx, from_lib: "n2o/include/n2o.hrl")
-  defrecord :pi, extract(:pi, from_lib: "n2o/include/n2o.hrl")
-  defrecord :client, extract(:client, from_lib: "n2o/include/n2o.hrl")
+  Record.extract_all(from_lib: "n2o/include/n2o.hrl")
 
   defmacro __using__(opts \\ []) do
     imports =
