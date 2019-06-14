@@ -4,7 +4,7 @@ N2O User Agreement
 ## 1. Motivation
 
 Maximal inclusion.
-We do care you sex, race, split config,
+We do care you sex, race, nationality, split config,
 be whatever you want to be and manifest
 yourself as many mindstreams as you wish.
 
