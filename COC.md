@@ -15,7 +15,7 @@ We are open.
 ## 3. Expected Behavior
 
 * Helthy contribution;
-* Respect us and will respect you;
+* Respect us and we will respect you;
 * Positive first, negative if needed next;
 * Mindfulness;
 * General socially accepted behavior.
