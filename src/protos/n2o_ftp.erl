@@ -5,7 +5,8 @@
 -include_lib("kernel/include/file.hrl").
 -export([info/3,proc/2,filename/1]).
 
--define(ROOT, filename:join(mad_utils:cwd(),application:get_env(n2o,upload,code:priv_dir(n2o)))).
+-define(ROOT, filename:join(begin {ok, Cwd} = file:get_cwd(), Cwd end,
+              application:get_env(n2o,upload,code:priv_dir(n2o)))).
 -define(NEXT, 2*1024). % 256K chunks for best 25MB/s speed
 -define(STOP, 0).
 
