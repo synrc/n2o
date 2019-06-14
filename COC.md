@@ -16,7 +16,7 @@ We are open.
 
 * Healthy contribution;
 * Respect us and we will respect you;
-* Positive first, negative if needed next;
+* Positive first, negative next (if needed);
 * Mindfulness;
 * General socially accepted behavior.
 
