@@ -5,7 +5,7 @@ N2O User Agreement
 
 Maximal inclusion.
 We do care your sex, race, nationality, split config,
-be whatever you want to be and manifest
+be whoever you want to be and manifest
 yourself as many mindstreams as you wish.
 
 ## 2. Openness
