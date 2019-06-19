@@ -38,7 +38,7 @@
               path      = [] :: [] | binary(),
               session   = [] :: [] | binary(),
               formatter = bert :: bert | json | atom(),
-              params    = [] :: [] | list(tuple()),
+              params    = [] :: [] | list(tuple()) | binary(),
               node      = [] :: [] | atom(),
               client_pid= [] :: [] | term(),
               state     = [] :: [] | term(),
