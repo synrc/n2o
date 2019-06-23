@@ -21,14 +21,20 @@
 stop(_)    -> catch n2o_vnode:unload(), ok.
 start(_,_) -> catch n2o_vnode:load([]), X = supervisor:start_link({local,n2o},n2o, []),
               n2o_pi:start(#pi{module=?MODULE,table=caching,sup=n2o,state=[],name="timer"}),
-              [ n2o_pi:start(#pi{module=n2o_vnode,table=ring,sup=n2o,state=[],name=Pos})
-                || {{_,_},Pos} <- lists:zip(ring(),lists:seq(1,length(ring()))) ],
+              case application:get_env(n2o,mqtt_ring,true) of
+                   true -> start_mqtt_ring();
+                      _ -> skip end,
                 X.
+
+start_mqtt_ring() ->
+  [ n2o_pi:start(#pi{module=n2o_vnode,table=ring,sup=n2o,state=[],name=Pos})
+ || {{_,_},Pos} <- lists:zip(ring(),lists:seq(1,length(ring()))) ].
+
 
 ring()         -> array:to_list(n2o_ring:ring()).
 rand_vnode()   -> rand:uniform(length(ring())).
 opt()          -> [ set, named_table, { keypos, 1 }, public ].
-tables()       -> application:get_env(n2o,tables,[ cookies, file, caching, ring, async ]).
+tables()       -> application:get_env(n2o,tables,[ cookies, file, caching, ring, part, async ]).
 storage_init() -> [ ets:new(X,opt()) || X <- tables() ].
 init([])       -> storage_init(),
                   n2o_ring:init([{node(),1,4}]),
