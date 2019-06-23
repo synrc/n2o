@@ -22,10 +22,10 @@
 stop(_)    -> catch n2o_vnode:unload(), ok.
 start(_,_) -> catch n2o_vnode:load([]), X = supervisor:start_link({local,n2o},n2o, []),
               n2o_pi:start(#pi{module=?MODULE,table=caching,sup=n2o,state=[],name="timer"}),
-              case application:get_env(n2o,mqtt_server,true) of
+              case application:get_env(n2o,mqtt_server,false) of
                    true -> start_mqtt_ring();
                       _ -> skip end,
-              case application:get_env(n2o,ws_server,true) of
+              case application:get_env(n2o,ws_server,false) of
                    true -> start_ws_ring();
                       _ -> skip end,
                 X.
