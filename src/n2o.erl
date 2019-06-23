@@ -40,7 +40,7 @@ start_ws_ring() ->
 ring()         -> array:to_list(n2o_ring:ring()).
 rand_vnode()   -> rand:uniform(length(ring())).
 opt()          -> [ set, named_table, { keypos, 1 }, public ].
-tables()       -> application:get_env(n2o,tables,[ cookies, file, caching, ring, part, async ]).
+tables()       -> application:get_env(n2o,tables,[ cookies, file, caching, ws, mqtt, async ]).
 storage_init() -> [ ets:new(X,opt()) || X <- tables() ].
 init([])       -> storage_init(),
                   n2o_ring:init([{node(),1,4}]),
