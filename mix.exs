@@ -10,7 +10,7 @@ defmodule N2O.Mixfile do
       deps: deps()]
   end
   def package do
-    [ files: ~w(doc include man priv src test mix.exs rebar.config LICENSE),
+    [ files: ~w(doc include man priv lib src test mix.exs rebar.config LICENSE),
       licenses: ["ISC"],
       links: %{"GitHub" => "https://github.com/synrc/n2o"}]
   end
