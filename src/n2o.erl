@@ -31,7 +31,7 @@ start(_,_) -> catch n2o_vnode:load([]), X = supervisor:start_link({local,n2o},n2
                 X.
 
 start_mqtt_ring() ->
-  [ n2o_pi:start(#pi{module=n2o_vnode,table=mqtt,sup=n2o,state=[],name=Pos})
+  [ n2o_pi:start(#pi{module=n2o_vnode,table=ring,sup=n2o,state=[],name=Pos})
  || {{_,_},Pos} <- lists:zip(ring(),lists:seq(1,length(ring()))) ].
 
 start_ws_ring() ->

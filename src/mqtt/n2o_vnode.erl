@@ -167,19 +167,19 @@ on_message_publish(#mqtt_message{topic = <<"events/", _TopicTail/binary>> = Topi
     from={ClientId,_},payload = Payload}=Message, _Env) ->
     {Module, ValidateFun} = application:get_env(n2o, validate, {?MODULE, validate}),
     case Module:ValidateFun(Payload, ClientId) of
-        ok ->
-            case emqttd_topic:words(Topic) of
-                [E, V, '', M, U, _C, T] ->
+        ok when ClientId /= <<>> ->
+            case emqttd_topic:words(Topic)++[<<>>] of
+                [E, V, '', M, U, _C, T|_] ->
                     {Mod, F} = application:get_env(n2o, vnode, {?MODULE, get_vnode}),
                     NewTopic = emqttd_topic:join([E, V, Mod:F(ClientId, Payload), M, U, ClientId, T]),
                     emqttd:publish(emqttd_message:make(ClientId, Qos, NewTopic, Payload)), skip;
                 %% @NOTE redirect to vnode
-                [_E, _V, _N, _M, _U, ClientId, _T] -> {ok, Message};
-                [E, V, N, M, U, _C, T] ->
+                [_E, _V, _N, _M, _U, ClientId|_] -> {ok, Message};
+                [E, V, N, M, U, _C, T|_] ->
                     NewTopic = emqttd_topic:join([E, V, N, M, U, ClientId, T]),
                     emqttd:publish(emqttd_message:make(ClientId, Qos, NewTopic, Payload)), skip;
                 %% @NOTE redirect to event topic with correct ClientId
-                _ -> {ok, Message}
+                _ -> skip
             end;
         _ -> skip end;
 on_message_publish(Message, _) -> {ok,Message}.
