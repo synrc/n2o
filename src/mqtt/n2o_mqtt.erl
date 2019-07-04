@@ -1,4 +1,4 @@
--module(n2o_vnode).
+-module(n2o_mqtt).
 -description('N2O MQTT Backend').
 -include("n2o.hrl").
 -include("emqttd.hrl").

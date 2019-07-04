@@ -1,4 +1,4 @@
--module(n2o_wsnode).
+-module(n2o_ws).
 -include("n2o.hrl").
 -compile(export_all).
 

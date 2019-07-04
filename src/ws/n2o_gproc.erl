@@ -3,6 +3,7 @@
 -include("n2o.hrl").
 -export(?MESSAGE_API).
 
+init() -> ok.
 send(Pool, Message) -> gproc:send({p,l,Pool},Message).
 reg(Pool) -> reg(Pool,undefined).
 reg(Pool, Value) ->

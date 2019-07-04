@@ -52,7 +52,7 @@
 
 -define(QUERING_API, [init/2, finish/2]).
 -define(SESSION_API, [init/2, finish/2, get_value/2, set_value/2, clear/0]).
--define(MESSAGE_API, [send/2, reg/1, reg/2, unreg/1]).
+-define(MESSAGE_API, [send/2, reg/1, reg/2, unreg/1, init/0]).
 
 -define(N2O_JSON, (application:get_env(n2o,json,jsone))).
 

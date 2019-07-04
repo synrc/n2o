@@ -3,6 +3,7 @@
 -include("n2o.hrl").
 -export(?MESSAGE_API).
 
+init() -> syn:init(), ok.
 send(Pool, Message) -> syn:publish(term_to_binary(Pool),Message).
 reg(Pool) -> reg(Pool,undefined).
 reg(Pool, _Value) ->

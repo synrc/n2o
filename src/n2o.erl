@@ -7,7 +7,7 @@
 -include("n2o_core.hrl").
 -include("n2o_api.hrl").
 -export([start/2, stop/1, init/1, proc/2, version/0, ring/0, to_binary/1, bench/0]).
--export([start_ws_ring/0, start_mqtt_ring/0]).
+-export([start_ws_ring/1, start_mqtt_ring/1]).
 
 % SERVICES
 
@@ -19,23 +19,21 @@
 
 % START VNODE HASH RING
 
-stop(_)    -> catch n2o_vnode:unload(), ok.
-start(_,_) -> catch n2o_vnode:load([]), X = supervisor:start_link({local,n2o},n2o, []),
+stop(_)    -> catch n2o_mqtt:unload(), ok.
+start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o, []),
               n2o_pi:start(#pi{module=?MODULE,table=caching,sup=n2o,state=[],name="timer"}),
-              case application:get_env(n2o,mqtt_server,false) of
-                   true -> start_mqtt_ring();
-                      _ -> skip end,
-              case application:get_env(n2o,ws_server,false) of
-                   true -> start_ws_ring();
-                      _ -> skip end,
-                X.
+              Default = [ "/chat", "/erp", "/crm", "/plm", "/bank" ],
+              [ start_mqtt_ring(Ring) || Ring <- application:get_env(n2o,mqtt_services,Default) ],
+              [ start_ws_ring(Ring)   || Ring <- application:get_env(n2o,ws_services,  Default) ],
+              X.
 
-start_mqtt_ring() ->
-  [ n2o_pi:start(#pi{module=n2o_vnode,table=mqtt,sup=n2o,state=[],name=Pos})
+start_mqtt_ring(Prefix) ->
+  [ n2o_pi:start(#pi{module=n2o_mqtt,table=mqtt,sup=n2o,state=[],name=Prefix ++ "/mqtt/" ++ integer_to_list(Pos)})
  || {{_,_},Pos} <- lists:zip(ring(),lists:seq(1,length(ring()))) ].
 
-start_ws_ring() ->
-  [ n2o_pi:start(#pi{module=n2o_wsnode,table=ws,sup=n2o,state=[],name=Pos})
+start_ws_ring(Prefix) ->
+  mq_init(),
+  [ n2o_pi:start(#pi{module=n2o_ws,table=ws,sup=n2o,state=[],name=Prefix ++ "/ws/" ++ integer_to_list(Pos)})
  || {{_,_},Pos} <- lists:zip(ring(),lists:seq(1,length(ring()))) ].
 
 ring()         -> array:to_list(n2o_ring:ring()).
@@ -53,7 +51,7 @@ bench() -> [bench_mqtt(),bench_otp()].
 run()   -> 10000.
 
 bench_mqtt() -> N = run(), {T,_} = timer:tc(fun() -> [ begin Y = lists:concat([X rem 16]),
-    n2o_vnode:send_reply(<<"clientId">>,n2o:to_binary(["events/1/",Y]),term_to_binary(X))
+    n2o_mqtt:send_reply(<<"clientId">>,n2o:to_binary(["events/1/",Y]),term_to_binary(X))
                                end || X <- lists:seq(1,N) ], ok end),
            {mqtt,trunc(N*1000000/T),"msgs/s"}.
 
@@ -66,6 +64,7 @@ bench_otp() -> N = run(), {T,_} = timer:tc(fun() ->
 % MQ
 
 mq()      -> application:get_env(n2o,mq,n2o_gproc).
+mq_init() -> (mq()):init().
 send(X,Y) -> (mq()):send(X,Y).
 reg(X)    -> (mq()):reg(X).
 unreg(X)  -> (mq()):unreg(X).
