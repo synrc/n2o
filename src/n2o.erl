@@ -22,7 +22,7 @@
 stop(_)    -> catch n2o_mqtt:unload(), ok.
 start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o, []),
               n2o_pi:start(#pi{module=?MODULE,table=caching,sup=n2o,state=[],name="timer"}),
-              Default = [ "/chat", "/erp", "/crm", "/plm", "/bank" ],
+              Default = [ "/chat", "/erp" ],
               [ start_mqtt_ring(Ring) || Ring <- application:get_env(n2o,mqtt_services,Default) ],
               [ start_ws_ring(Ring)   || Ring <- application:get_env(n2o,ws_services,  Default) ],
               X.
