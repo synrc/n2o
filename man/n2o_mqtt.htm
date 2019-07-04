@@ -28,13 +28,13 @@
 
 <h3>INTRO</h3>
 
-<p><b><a href="https://github.com/synrc/n2o/blob/master/src/mqtt/n2o_vnode.erl">n2o_vnode</a></b>
+<p><b><a href="https://github.com/synrc/n2o/blob/master/src/mqtt/n2o_mqtt.erl">n2o_mqtt</a></b>
   is an instance of <a href="n2o_pi.htm">n2o_pi</a> prorocess. In N2O
 number of such instanses is usually equals to the number of cores.</p>
 
 <p>There is two styles of embedding N2O: one is to perform N2O protocol loop inside
    connection process (as in cowboy version); second is to spawn ring of n2o_pi
-   processes and handle all requests inside these processes (as in MQTT version). n2o_vnode is
+   processes and handle all requests inside these processes (as in MQTT version). n2o_mqtt is
    the protocol of such virtual node processes.</p>
 
     </section>
@@ -42,7 +42,7 @@ number of such instanses is usually equals to the number of cores.</p>
 
 <h3>PROTOCOL</h3>
 
-<p>On <b>init</b> n2o_vnode makes connection to MQTT server.
+<p>On <b>init</b> n2o_mqtt makes connection to MQTT server.
 On connection established in <b>#mqttc/2</b> it subscribes to events topic.</p>
 
 <figure>
