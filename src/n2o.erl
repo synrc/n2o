@@ -1,13 +1,12 @@
 -module(n2o).
 -compile(export_all).
--description('N2O DAS MQTT TCP WebSocket').
+-description('N2O MQTT TCP WebSocket').
 -behaviour(supervisor).
 -behaviour(application).
 -include("n2o.hrl").
 -include("n2o_core.hrl").
 -include("n2o_api.hrl").
--export([start/2, stop/1, init/1, proc/2, version/0, ring/0, to_binary/1, bench/0]).
--export([start_ws_ring/1, start_mqtt_ring/1]).
+-export([start/2, stop/1, init/1, proc/2, version/0, to_binary/1, bench/0]).
 
 % SERVICES
 
@@ -19,31 +18,42 @@
 
 % START VNODE HASH RING
 
+init([])   -> storage_init(), mq_init(), { ok, { { one_for_one, 1000, 10 }, [] } }.
 stop(_)    -> catch n2o_mqtt:unload(), ok.
 start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o, []),
               n2o_pi:start(#pi{module=?MODULE,table=caching,sup=n2o,state=[],name="timer"}),
-              Default = [ "/chat", "/erp" ],
-              [ start_mqtt_ring(Ring) || Ring <- application:get_env(n2o,mqtt_services,Default) ],
-              [ start_ws_ring(Ring)   || Ring <- application:get_env(n2o,ws_services,  Default) ],
+
+              Default = [ "erp" ],
+              Partitions = 4,
+
+              MQTT = lists:flatmap(fun(A) ->
+                     lists:map(fun(Y) -> "/mqtt/" ++ A ++ "/" ++ integer_to_list(Y) end,
+                     lists:seq(1,Partitions)) end,
+                     application:get_env(n2o,mqtt_services,Default)),
+
+              WS   = lists:flatmap(fun(A) ->
+                     lists:map(fun(Y) -> "/ws/" ++ A ++ "/" ++ integer_to_list(Y) end,
+                     lists:seq(1,Partitions)) end,
+                     application:get_env(n2o,ws_services,Default)),
+
+              TCP  = lists:flatmap(fun(A) ->
+                     lists:map(fun(Y) -> "/tcp/" ++ A ++ "/" ++ integer_to_list(Y) end,
+                     lists:seq(1,Partitions)) end,
+                     application:get_env(n2o,tcp_services,Default)),
+
+              application:set_env(n2o,mqtt_ring,n2o_ring:new(Partitions,MQTT)),
+              application:set_env(n2o,ws_ring,  n2o_ring:new(Partitions,WS)),
+              application:set_env(n2o,tcp_ring, n2o_ring:new(Partitions,TCP)),
+
+              lists:map(fun start_mqtt/1, MQTT),
+              lists:map(fun start_ws/1, WS),
+              lists:map(fun start_tcp/1, TCP),
+
               X.
 
-start_mqtt_ring(Prefix) ->
-  [ n2o_pi:start(#pi{module=n2o_mqtt,table=mqtt,sup=n2o,state=[],name=Prefix ++ "/mqtt/" ++ integer_to_list(Pos)})
- || {{_,_},Pos} <- lists:zip(ring(),lists:seq(1,length(ring()))) ].
-
-start_ws_ring(Prefix) ->
-  mq_init(),
-  [ n2o_pi:start(#pi{module=n2o_ws,table=ws,sup=n2o,state=[],name=Prefix ++ "/ws/" ++ integer_to_list(Pos)})
- || {{_,_},Pos} <- lists:zip(ring(),lists:seq(1,length(ring()))) ].
-
-ring()         -> array:to_list(n2o_ring:ring()).
-rand_vnode()   -> rand:uniform(length(ring())).
-opt()          -> [ set, named_table, { keypos, 1 }, public ].
-tables()       -> application:get_env(n2o,tables,[ cookies, file, caching, ws, mqtt, async ]).
-storage_init() -> [ ets:new(X,opt()) || X <- tables() ].
-init([])       -> storage_init(),
-                  n2o_ring:init([{node(),1,4}]),
-                  { ok, { { one_for_one, 1000, 10 }, [] } }.
+start_mqtt(Node) -> n2o_pi:start(#pi{module=n2o_mqtt,table=mqtt,sup=n2o,state=[],name=Node}).
+start_ws(Node)   -> n2o_pi:start(#pi{module=n2o_ws,  table=ws,  sup=n2o,state=[],name=Node}).
+start_tcp(Node)  -> n2o_pi:start(#pi{module=n2o_ws,  table=tcp, sup=n2o,state=[],name=Node}).
 
 % MQTT vs OTP benchmarks
 
@@ -60,6 +70,12 @@ bench_otp() -> N = run(), {T,_} = timer:tc(fun() ->
               lists:concat([(X rem length(n2o:ring())) + 1]),"/index/anon/room/"]),
                       term_to_binary(X)}) || X <- lists:seq(1,N) ], ok end),
      {otp,trunc(N*1000000/T),"msgs/s"}.
+
+% ETS
+
+opt()          -> [ set, named_table, { keypos, 1 }, public ].
+tables()       -> application:get_env(n2o,tables,[ cookies, file, caching, ws, mqtt, tcp, async ]).
+storage_init() -> [ ets:new(X,opt()) || X <- tables() ].
 
 % MQ
 
