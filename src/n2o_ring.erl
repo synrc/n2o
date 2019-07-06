@@ -1,4 +1,6 @@
 -module(n2o_ring).
+-copyright('Copyright (c) 2016 Carlos Galdino').
+-license('MIT').
 -description('N2O Ring').
 -export([add/2,contains/2,lookup/2,members/1,new/1,new/2,remove/2,size/1,send/2]).
 -export_type([ring/0]).
