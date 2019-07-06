@@ -44,15 +44,13 @@ start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o
               application:set_env(n2o,ws_ring,  n2o_ring:new(Partitions,WS)),
               application:set_env(n2o,tcp_ring, n2o_ring:new(Partitions,TCP)),
 
-              mq_init(),
-
-              lists:map(fun start_mqtt/1, MQTT),
-              lists:map(fun start_ws/1, WS),
-              lists:map(fun start_tcp/1, TCP),
               start_timer(),
 
               X.
 
+start_mqtt()     -> lists:map(fun start_mqtt/1, n2o_ring:members(mqtt)).
+start_ws()       -> lists:map(fun start_ws/1,   n2o_ring:members(ws)).
+start_tcp()      -> lists:map(fun start_ws/1,   n2o_ring:members(tcp)).
 start_mqtt(Node) -> n2o_pi:start(#pi{module=n2o_mqtt,table=mqtt,   sup=n2o,state=[],name=Node}).
 start_ws(Node)   -> n2o_pi:start(#pi{module=n2o_ws,  table=ws,     sup=n2o,state=[],name=Node}).
 start_tcp(Node)  -> n2o_pi:start(#pi{module=n2o_ws,  table=tcp,    sup=n2o,state=[],name=Node}).
