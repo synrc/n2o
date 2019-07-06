@@ -8,7 +8,7 @@ proc(init,#pi{name=Name}=Async) -> n2o:reg(Name), {ok,Async#pi{state=application
 
 proc({publish, C, Token, Request}, State = #pi{name=Server,state=Module}) ->
     Ctx = #cx { session= n2o:to_binary(Token), node=Server,
-                client_pid=C, state=application:get_env(kvx,dba,[]) },
+                client_pid=C, state=application:get_env(kvs,dba,[]) },
     put(context, Ctx),
     Return = case n2o_proto:try_info(Module,Request,[],Ctx) of
              {reply,{_,      <<>>},_,_} -> skip;
