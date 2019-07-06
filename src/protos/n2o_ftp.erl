@@ -37,15 +37,15 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
     Offset2 = case FileSize >= Offset of true -> FileSize; false -> 0 end,
     FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>},
 
-    catch n2o_async:stop(file, Link),
-    n2o_async:start(#pi{module=?MODULE, table=file, sup=n2o, state=FTP2, name=Link}),
+    catch n2o_pi:stop(file, Link),
+    n2o_pi:start(#pi{module=?MODULE, table=file, sup=n2o, state=FTP2, name=Link}),
 
     {reply, {bert, FTP2}, Req, State};
 
 info(#ftp{id = Link, status = <<"send">>}=FTP, Req, State) ->
 %    ?LOG_INFO("FTP SEND: ~p", [FTP#ftp{data = <<>>, sid = <<>>}]),
     Reply = try
-        n2o_async:send(file, Link, FTP)
+        n2o_pi:send(file, Link, FTP)
     catch E:R ->
         ?LOG_ERROR(#{error => E, reason => R, loc => ftpinfo}),
         FTP#ftp{data = <<>>,sid = <<>>, block = ?STOP}
@@ -75,7 +75,7 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
                                Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
  %                              ?LOG_INFO("NOTIFY SEND TO WEB: ~p~n", [ {Sid, FTP3} ]),
                                catch n2o:send(Sid,{direct,FTP3}) end),
-                spawn(fun() -> n2o_async:stop(file, Link) end),
+                spawn(fun() -> n2o_pi:stop(file, Link) end),
                 {stop, normal, FTP2, Async#pi{state = FTP2}}
         end;
 
