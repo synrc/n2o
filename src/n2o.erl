@@ -45,6 +45,8 @@ start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o
               application:set_env(n2o,ws_ring,  n2o_ring:new(Partitions,WS)),
               application:set_env(n2o,tcp_ring, n2o_ring:new(Partitions,TCP)),
 
+              mq_init(),
+
               lists:map(fun start_mqtt/1, MQTT),
               lists:map(fun start_ws/1, WS),
               lists:map(fun start_tcp/1, TCP),
@@ -66,8 +68,8 @@ bench_mqtt() -> N = run(), {T,_} = timer:tc(fun() -> [ begin Y = lists:concat([X
            {mqtt,trunc(N*1000000/T),"msgs/s"}.
 
 bench_otp() -> N = run(), {T,_} = timer:tc(fun() ->
-     [ n2o_ring:send({publish, n2o:to_binary(["events/1/",
-              lists:concat([(X rem length(n2o:ring())) + 1]),"/index/anon/room/"]),
+     [ n2o_ring:send(mqtt,{publish, n2o:to_binary(["events/1/",
+              lists:concat([(X rem 4) + 1]),"/index/anon/room/"]),
                       term_to_binary(X)}) || X <- lists:seq(1,N) ], ok end),
      {otp,trunc(N*1000000/T),"msgs/s"}.
 

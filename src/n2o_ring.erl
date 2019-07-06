@@ -14,15 +14,13 @@
 -type ring_index() :: {num_vnodes(), inner_ring()}.
 -type ring() :: tcp | ws | mqtt.
 
+-spec ring(ring()) -> any().
 -spec add(node_entry(), ring()) -> ring_index().
 -spec contains(node_entry(), ring()) -> boolean().
 -spec lookup(key(), ring()) -> node_entry() | {error, empty_ring}.
 -spec position_node(num_vnodes(), node_entry()) -> positions().
--spec build_ring(positions(), inner_ring()) -> inner_ring().
--spec build_ring(positions()) -> inner_ring().
--spec size(Ring :: ring()) -> non_neg_integer().
 -spec members(ring()) -> nodes().
--spec new(nodes()) -> ring().
+-spec new(nodes()) -> ring_index().
 -spec new(num_vnodes(), nodes()) -> ring_index().
 -spec remove(node_entry(), ring()) -> ring_index().
 

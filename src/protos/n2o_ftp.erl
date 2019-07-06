@@ -70,7 +70,7 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
             ok ->
                 FTP2 = FTP#ftp{data = <<>>, sid = <<>>,offset = TotalSize, block = ?STOP},
                 FTP3 = FTP2#ftp{status = {event, stop}, filename = RelPath},
-                spawn(fun() -> catch n2o_ring:send({publish, <<"events/1//index/anon/",ClientId/binary,"/",Token/binary>>,
+                spawn(fun() -> catch n2o_ring:send(ws,{publish, <<"events/1//index/anon/",ClientId/binary,"/",Token/binary>>,
                                         term_to_binary(FTP3)}),
                                Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
  %                              ?LOG_INFO("NOTIFY SEND TO WEB: ~p~n", [ {Sid, FTP3} ]),

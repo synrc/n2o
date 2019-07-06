@@ -187,6 +187,6 @@ on_message_publish(Message, _) -> {ok,Message}.
 get_vnode(ClientId) -> get_vnode(ClientId, []).
 get_vnode(ClientId, _) ->
     [H|_] = binary_to_list(erlang:md5(ClientId)),
-    integer_to_binary(H rem (length(n2o:ring())) + 1).
+    integer_to_binary((H rem 4) + 1).
 
 validate(_Payload, _ClientId) -> ok.
