@@ -1,5 +1,5 @@
-N2O: Distributed Application Server
-===================================
+N2O: TCP MQTT WebSocket
+=======================
 
 [![Build Status](https://travis-ci.org/synrc/n2o.svg?branch=master)](https://travis-ci.org/synrc/n2o)
 
