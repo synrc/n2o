@@ -56,7 +56,7 @@ html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{sessio
     Res = case Ev of
           #ev{} when L =:= false -> render_ev(Ev,Source,Linked,State), <<>>;
           #ev{} -> render_ev(Ev,Source,Linked,State), n2o_session:authenticate([], Token);
-          CustomEnvelop -> ?LOG_ERROR("EV expected: ~p~n",[CustomEnvelop]),
+          _CustomEnvelop -> %?LOG_ERROR("EV expected: ~p~n",[CustomEnvelop]),
                            {error,"EV expected"} end,
     io(Res).
 

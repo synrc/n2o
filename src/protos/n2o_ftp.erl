@@ -38,7 +38,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
     FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>},
 
     catch n2o_async:stop(file, Link),
-    n2o_async:start(#handler{module=?MODULE, class=file, group=n2o, state=FTP2, name=Link}),
+    n2o_async:start(#pi{module=?MODULE, table=file, sup=n2o, state=FTP2, name=Link}),
 
     {reply, {bert, FTP2}, Req, State};
 
@@ -56,16 +56,16 @@ info(Message, Req, State) -> {unknown, Message, Req, State}.
 
 % n2o Handlers
 
-proc(init, #handler{}=Async) ->
+proc(init, #pi{}=Async) ->
     {ok, Async};
 
 proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = ClientId} = FTP,
-     #handler{name = Link, state = #ftp{size = TotalSize, offset = Offset, filename = RelPath}} = Async)
+     #pi{name = Link, state = #ftp{size = TotalSize, offset = Offset, filename = RelPath}} = Async)
      when Offset + Block >= TotalSize ->
 %        ?LOG_INFO("FTP PROC FINALE: ~p~n", [ Link ]),
         case file:write_file(filename:join(?ROOT,RelPath), <<Data/binary>>, [append,raw]) of
             {error, Reason} ->
-                ?LOG_ERROR("WRITE ERROR: ~p~n", [ filename:join(?ROOT, RelPath) ]),
+%                ?LOG_ERROR("WRITE ERROR: ~p~n", [ filename:join(?ROOT, RelPath) ]),
                 {reply, {error, Reason}, Async};
             ok ->
                 FTP2 = FTP#ftp{data = <<>>, sid = <<>>,offset = TotalSize, block = ?STOP},
@@ -76,15 +76,15 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
  %                              ?LOG_INFO("NOTIFY SEND TO WEB: ~p~n", [ {Sid, FTP3} ]),
                                catch n2o:send(Sid,{direct,FTP3}) end),
                 spawn(fun() -> n2o_async:stop(file, Link) end),
-                {stop, normal, FTP2, Async#handler{state = FTP2}}
+                {stop, normal, FTP2, Async#pi{state = FTP2}}
         end;
 
 proc(#ftp{data = Data, block = Block} = FTP,
-    #handler{state = #ftp{offset = Offset, filename = RelPath}}=Async) ->
+    #pi{state = #ftp{offset = Offset, filename = RelPath}}=Async) ->
     FTP2 = FTP#ftp{status = <<"send">>, offset = Offset + Block },
     case file:write_file(filename:join(?ROOT, RelPath), <<Data/binary>>, [append,raw]) of
         {error, Reason} -> {reply, {error, Reason}, Async};
         ok -> {reply, FTP2#ftp{data = <<>>},
-                      Async#handler{state = FTP2#ftp{data = <<>>, filename = RelPath}}} end;
+                      Async#pi{state = FTP2#ftp{data = <<>>, filename = RelPath}}} end;
 
 proc(_,Async) -> {reply, #ftpack{}, Async}.

@@ -1,28 +1,21 @@
 -ifndef(N2O_HRL).
 -define(N2O_HRL, true).
 
+-define(FORMAT(F), case F of F when is_binary(F) -> binary_to_list(F);
+                             F when is_atom(F) -> atom_to_list(F);
+                             F when is_list(F) -> F end).
+
 -ifdef(OTP_RELEASE).
 -include_lib("kernel/include/logger.hrl").
 -else.
--define(LOG_INFO(F),   io:format(F)).
--define(LOG_INFO(F,X), io:format(F,X)).
--define(LOG_ERROR(F),
-        case F of
-            _ when is_map(F) -> io:format("{~p,~p}: ~p~n", [?MODULE,?LINE,F]);
-            _ -> io:format(F)
-        end).
--define(LOG_ERROR(F,X), io:format(F,X)).
+-define(LOG_INFO(F), io:format(?FORMAT(F)) end).
+-define(LOG_INFO(F,X), io:format(?FORMAT(F),X)).
+%-define(LOG_ERROR(F), (case F of _ when is_map(F) -> io:format("{~p,~p}: ~p~n", [?MODULE,?LINE,F]) end)).
+-define(LOG_ERROR(F), io:format("{~p,~p}: ~p~n", [?MODULE,?LINE,F])).
+-define(LOG_ERROR(F,X), io:format(?FORMAT(F),X)).
 -endif.
 
 -define(LOG_EXCEPTION(E,R,S), ?LOG_ERROR(#{exception => E, reason => R, stack => S})).
-
--record(handler, { name     :: atom(),
-                   module   :: atom(),
-                   class    :: term(),
-                   group    :: atom(),
-                   config   :: term(),
-                   state    :: term(),
-                   seq      :: term()}).
 
 -record(pi, { name     :: term(),
               table    :: atom(),

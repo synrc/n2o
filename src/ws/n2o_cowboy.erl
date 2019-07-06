@@ -9,7 +9,7 @@
 
 init(_Transport, Req, _Opts) -> {ok, Req, #state{}}.
 terminate(_Reason, _Req, _State) -> ok.
-handle(Req, State) -> ?LOG_INFO("DOCUMENT~n",[]), {ok, Req, State}.
+handle(Req, State) -> {ok, Req, State}.
 
 % Cowboy Bridge Abstraction
 
