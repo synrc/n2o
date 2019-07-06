@@ -23,7 +23,6 @@ Protocol Extensions
 * Templates: DTL, <a href="https://nitro.n2o.space">NITRO</a>
 * Abstract Database Layer <a href="https://kvs.n2o.space">KVS</a>: FS, MNESIA, ROCKSDB, RIAK, REDIS
 * Business Processes: <a href="https://bpe.n2o.space">BPE</a> (BPMN 2.0), SCM, ERP, CRM
-* Instant Messaging: <a href="https://chat.n2o.space">CHAT</a>
 * HTTP API: <a href="https://rest.n2o.space">REST</a> (proplist/JSON)
 * <a href="https://active.n2o.space">ACTIVE</a> Reloading: Linux, Windows, Mac
 
