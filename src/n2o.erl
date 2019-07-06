@@ -21,7 +21,6 @@
 init([])   -> storage_init(), mq_init(), { ok, { { one_for_one, 1000, 10 }, [] } }.
 stop(_)    -> catch n2o_mqtt:unload(), ok.
 start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o, []),
-              n2o_pi:start(#pi{module=?MODULE,table=caching,sup=n2o,state=[],name="timer"}),
 
               Default = [ "erp" ],
               Partitions = 4,
@@ -50,12 +49,14 @@ start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o
               lists:map(fun start_mqtt/1, MQTT),
               lists:map(fun start_ws/1, WS),
               lists:map(fun start_tcp/1, TCP),
+              start_timer(),
 
               X.
 
-start_mqtt(Node) -> n2o_pi:start(#pi{module=n2o_mqtt,table=mqtt,sup=n2o,state=[],name=Node}).
-start_ws(Node)   -> n2o_pi:start(#pi{module=n2o_ws,  table=ws,  sup=n2o,state=[],name=Node}).
-start_tcp(Node)  -> n2o_pi:start(#pi{module=n2o_ws,  table=tcp, sup=n2o,state=[],name=Node}).
+start_mqtt(Node) -> n2o_pi:start(#pi{module=n2o_mqtt,table=mqtt,   sup=n2o,state=[],name=Node}).
+start_ws(Node)   -> n2o_pi:start(#pi{module=n2o_ws,  table=ws,     sup=n2o,state=[],name=Node}).
+start_tcp(Node)  -> n2o_pi:start(#pi{module=n2o_ws,  table=tcp,    sup=n2o,state=[],name=Node}).
+start_timer()    -> n2o_pi:start(#pi{module=n2o,     table=caching,sup=n2o,state=[],name="/timer"}).
 
 % MQTT vs OTP benchmarks
 
