@@ -1,5 +1,5 @@
-N2O: Distributed Application Server
-===================================
+N2O: TCP MQTT WebSocket
+=======================
 
 [![Build Status](https://travis-ci.org/synrc/n2o.svg?branch=master)](https://travis-ci.org/synrc/n2o)
 
@@ -21,19 +21,21 @@ Protocol Extensions
 -------------------
 
 * Templates: DTL, <a href="https://nitro.n2o.space">NITRO</a>
-* Databases [KVS, <a href="https://kvx.n2o.space">KVX</a>]: FS, MNESIA, ROCKSDB, RIAK, REDIS
+* Abstract Database Layer <a href="https://kvs.n2o.space">KVS</a>: FS, MNESIA, ROCKSDB, RIAK, REDIS
 * Business Processes: <a href="https://bpe.n2o.space">BPE</a> (BPMN 2.0), SCM, ERP, CRM
-* Instant Messaging: <a href="https://chat.n2o.space">CHAT</a>
 * HTTP API: <a href="https://rest.n2o.space">REST</a> (proplist/JSON)
 * <a href="https://active.n2o.space">ACTIVE</a> Reloading: Linux, Windows, Mac
 
-Samples
--------
+Basic Samples
+-------------
 * MQTT Chat: <a href="https://review.n2o.space">REVIEW TT</a> (8000)
 * WebSocket Chat: <a href="https://sample.n2o.space">SAMPLE WS</a> (8001)
-* Business Forms: <a href="http://forms.n2o.space">FORMS</a> (8002, HTTP)
-* Online Client Bank: <a href="https://bank.n2o.space">BANK</a> (8003)
+
+Enterprise Samples
+------------------
+* Online Client Bank: <a href="https://fin.n2o.space">BANK</a> (8041)
 * Instant Messaging: <a href="https://chat.n2o.space">CHAT</a> (8042)
+* Product Lifecycle Management: <a href="https://plm.n2o.space">PLM</a> (8043)
 
 Motivation
 ----------
