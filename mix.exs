@@ -1,10 +1,10 @@
 defmodule N2O.Mixfile do
   use Mix.Project
-  def deps, do: [ {:ex_doc, ">= 0.0.0", only: :dev}]
-  def application, do: [mod: {:n2o, []}]
+  def deps, do: [ {:ex_doc, ">= 0.0.0", only: :dev}, {:syn, "~> 1.6.3"}]
+  def application, do: [mod: {:n2o, []}, applications: [:syn]]
   def project do
     [ app: :n2o,
-      version: "6.7.3",
+      version: "6.7.4",
       description: "N2O MQTT TCP WebSocket",
       package: package(),
       deps: deps()]
