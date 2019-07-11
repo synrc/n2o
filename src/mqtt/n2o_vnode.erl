@@ -2,7 +2,7 @@
 -description('N2O MQTT Backend').
 -include("n2o.hrl").
 -include("emqttd.hrl").
--export([proc/2]).
+-export([proc/2,lst/1]).
 -export([get_vnode/1,get_vnode/2,validate/2,send_reply/3,send_reply/4,send/3,send/4]).
 -export([subscribe/3,subscribe/2,unsubscribe/3,unsubscribe/2,subscribe_cli/2,unsubscribe_cli/2]).
 -export([load/1,unload/0]).
@@ -45,6 +45,7 @@ fix('')          -> index;
 fix(<<"index">>) -> index;
 fix(Module)      -> list_to_atom(binary_to_list(Module)).
 
+lst(X) -> binary_to_list(n2o:to_binary(X)).
 gen_name(Pos) when is_integer(Pos) -> gen_name(integer_to_list(Pos));
 gen_name(Pos) -> n2o:to_binary([lists:flatten([io_lib:format("~2.16.0b",[X])
               || <<X:8>> <= list_to_binary(atom_to_list(node())++"_"++Pos)])]).
@@ -67,7 +68,7 @@ proc({publish, To, Request},
     Bert   = n2o:decode(Request),
     Return = case Addr of
         [ _Origin, Vsn, Node, Module, _Username, Id, Token | _ ] ->
-        From = n2o:to_binary(["actions/", Vsn, "/", Module, "/", Id]),
+        From = n2o:to_binary(["actions/", lst(Vsn), "/", lst(Module), "/", lst(Id)]),
         Sid  = case sid() of
                     true -> n2o:to_binary(Token);
                     false -> case n2o:depickle(n2o:to_binary(Token)) of
