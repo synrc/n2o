@@ -99,7 +99,7 @@ sid() -> #cx{session=SID}=get(context), SID.
 session() -> application:get_env(n2o,session,n2o_session).
 session(Key)        -> #cx{session=SID}=get(context), (session()):get_value(SID, Key, []).
 session(Key, Value) -> #cx{session=SID}=get(context), (session()):set_value(SID, Key, Value).
-user()              -> case session(user) of undefined -> []; E -> lists:concat([E]) end.
+user()              -> case session(user) of undefined -> []; E -> E end.
 user(User)          -> session(user,User).
 
 % FORMAT
