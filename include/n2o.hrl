@@ -9,13 +9,13 @@
                    state    :: term(),
                    seq      :: term()}).
 
--record(pi, { name     :: atom(),
-              table    :: ets:tid(),
+-record(pi, { name     :: atom() | binary() | integer(),
+              table    :: atom(),
               sup      :: atom(),
               module   :: atom(),
               state    :: term()  }).
 
--record(cx, { handlers  = [] :: list(#handler{}),
+-record(cx, { handlers  = [] :: list(#handler{} | #pi{}),
               actions   = [] :: list(tuple()),
               req       = [] :: [] | term(),
               module    = [] :: [] | atom(),
@@ -23,7 +23,7 @@
               path      = [] :: [] | binary(),
               session   = [] :: [] | binary(),
               formatter = bert :: bert | json,
-              params    = [] :: [] | list(tuple()),
+              params    = [] :: [] | binary() | list(tuple()),
               node      = [] :: [] | atom(),
               client_pid= [] :: [] | term(),
               state     = [] :: [] | term(),
