@@ -4,6 +4,6 @@
 -include("n2o_core.hrl").
 
 -spec start(#pi{}) -> {pid(),term()} | #error{}.
--spec stop(term(),atom()) -> #pi{} | #error{}.
+-spec stop(term(),atom() | integer()) -> #pi{} | #error{}.
 
 -endif.
