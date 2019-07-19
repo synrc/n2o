@@ -5,7 +5,7 @@
 -behaviour(gen_server).
 -export([start_link/1]).
 -export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
--export([start/1,stop/2,send/2,send/3,pid/2,restart/2]).
+-export([start/1,stop/2,send/2,send/3,pid/1,pid/2,restart/2]).
 
 start(#pi{table=Tab,name=Name,module=Module,sup=Sup} = Async) ->
     ChildSpec = {{Tab,Name},{?MODULE,start_link,[Async]},
@@ -28,6 +28,7 @@ stop(Tab,Name) ->
 send(Pid,Message) when is_pid(Pid) -> gen_server:call(Pid,Message).
 send(Tab,Name,Message) -> gen_server:call(n2o_pi:pid(Tab,Name),Message).
 
+pid({Tab,Name})-> pid(Tab,Name).
 pid(Tab,Name) -> n2o:cache(Tab,{Tab,Name}).
 
 restart(Tab,Name) ->
