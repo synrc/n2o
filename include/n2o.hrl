@@ -29,6 +29,7 @@
               lang      = [] :: [] | atom(),
               path      = [] :: [] | binary(),
               session   = [] :: [] | binary(),
+              token     = [] :: [] | binary(),
               formatter = bert :: bert | json | atom(),
               params    = [] :: [] | list(tuple()) | binary(),
               node      = [] :: [] | atom(),
