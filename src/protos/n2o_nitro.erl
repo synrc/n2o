@@ -11,7 +11,7 @@ info({text,<<"N2O,",Auth/binary>>}, Req, State) ->
 info(#init{token=Auth}, Req, State) ->
     {'Token', Token} = n2o_session:authenticate([], Auth),
     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
-    New = State#cx{session = Sid},
+    New = State#cx{session = Sid, token = Auth},
     put(context,New),
     {reply,{bert,case io(init, State) of
                       {io,_,{stack,_}} = Io -> Io;
@@ -50,7 +50,7 @@ render_actions(Actions) ->
 
 % n2o events
 
-html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{session = Token}) ->
+html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{token = Token}) ->
     Ev  = n2o:depickle(Pickled),
     L   = n2o_session:prolongate(),
     Res = case Ev of
