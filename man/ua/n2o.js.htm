@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>N2O.JS</title>
+    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://n2o.dev'>DEV</a>
+    <a href='https://ws.n2o.space'>N2O</a>
+    <a href='#' style="background:#ededed;">N2O.JS</a>
+</nav>
+
+<header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>N2O.JS</h1>
+</header>
+
+<main>
+    <section>
+        <h3>ВСТУП</h3>
+
+        <p>Модуль <a href="../priv/n2o.js">n2o.js</a>
+           надає протокольний цикл N2O на стороні JavaScript.
+           Розмір <b>n2o.js</b> — 2120 байт.
+           </p>
+
+    </section>
+    <section>
+        <h3>КОНФІГУРАЦІЯ</h3>
+        <p></p>
+        <figure><code>
+ active = false,
+ debug = false,
+ session = "sid",
+ protocol = window.location.protocol == 'https:' ? "wss://" : "ws://",
+ querystring = window.location.pathname + window.location.search,
+ host = window.location.hostname;
+ protos = [$bert];
+        </code></figure>
+    </section>
+    <section>
+        <h3>API</h3>
+        <h4>token()</h4>
+        <p>Повертає токен сесії, закешований в localStorage.</p>
+        <h4>N2O_start()</h4>
+        <p>Ця функція створює сире WebSocket з'єднання з N2O WS
+           і надсилає текстовий пакет &lt;&lt;"N2O,",Token/binary&gt;&gt;,
+           який викликає ініціалізацію сторінки <a href="n2o_nitro.htm">NITRO</a> протоколом.</p>
+        <figure><code>
+  N2O_start();
+        </code></figure>
+    </section>
+    <section>
+        <h3>BERT</h3>
+        <figure><code>
+ $bert.protos = [$io,$file];
+ $bert.on = function onbert(evt, cb) { }
+        </code></figure>
+    </section>
+    <section>
+        <h3>JSON</h3>
+        <figure><code>
+ $client.on = function onclient(evt, callback) { }
+        </code></figure>
+    </section>
+    <section>
+
+<p>Можливо, Ви також бажаєте почитати про:
+<b>
+<a href="utf8.js.htm">utf8.js</a></b>,
+<a href="heart.js.htm">heart.js</a></b>,
+<a href="nitro.js.htm">nitro.js</a></b>,
+<a href="bert.js.htm">bert.js</a></b>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2019 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>
