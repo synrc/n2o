@@ -36,7 +36,7 @@ module dedicated for creating and tracking supervised
 processes across all applications, using any ETS tables. Any supervised process in N2O
 is created using n2o_pi, such as: ring vnodes, timers, authorization,
 web page processes, test processes and other services. Loop process inside <b>info/2</b> protocol handlers
-should spawn new async processes <b>proc/2</b> in case of time consuming opetations,
+should spawn new async processes <b>proc/2</b> in case of time consuming operations,
 because protocol handler is a critical path and it should be handled as soon as possible.</p>
 
     </section>
@@ -92,7 +92,7 @@ or its response to <b>gen_server:call/2</b> with new state included in #reply.</
 single <b>proc/2</b> function and track pid in ETS table which is specified during
 process #pi{} initialization.</p>
 
-<figure><figcaption>Listing 2. Understaning n2o_pi</figcaption><code>
+<figure><figcaption>Listing 2. Understanding n2o_pi</figcaption><code>
  1> supervisor:which_children(n2o).
  [{{ring,4},<0.1661.0>,worker,[n2o_mqtt]},
   {{ring,3},<0.1655.0>,worker,[n2o_mqtt]},
