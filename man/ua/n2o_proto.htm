@@ -16,53 +16,53 @@
     <a href='https://n2o.dev'>DEV</a>
     <a href='https://ws.n2o.space'>N2O</a>
     <a href='#' style="background:#ededed;">PROTO</a>
-    <a href='ua/n2o_proto.htm'>UA</a>
-    <a href='#' style="background:#ededed;">EN</a>
+    <a href='#' style="background:#ededed;">UA</a>
+    <a href='../n2o_proto.htm'>EN</a>
 </nav>
 
 <header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <a href="../../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
     <h1>PROTO</h1>
 </header>
 
 <main>
     <section>
 
-<h3>INTRO</h3>
+<h3>ВСТУП</h3>
 
-<p>N2O as an embeddable framework provides two exports for loop entrance.</p>
+<p>N2O, як вбудовуваний фреймворк, надає два способи входу (API) в протокольний цикл.</p>
 
     </section>
     <section>
 
 <h3>API</h3>
 
-<p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_proto.erl">n2o_proto</a>
-   protocol loop is compatible with cowboy and emqttd versions of N2O.
-   The main purpose of this API is to embed N2O into your functional endpoint.
-   In other cases it's called automatically by configuration.</p>
+<p>Цикл протоколу <a href="https://github.com/synrc/n2o/blob/master/src/n2o_proto.erl">n2o_proto</a>
+   сумісний з cowboy та emqttd версіями N2O.
+   Головна мета цього API — вбудувати N2O у вашу функціональну кінцеву точку.
+   В інших випадках він викликається автоматично за допомогою конфігурації.</p>
 
 <a name=stream></a>
 <h4>stream({ text | binary, binary() }, term(), term()) -> #reply{}.</h4>
 
-<p>The stream function is dedicated for <b>cowboy</b> version of n2o.</p>
+<p>Функція stream призначена для <b>cowboy</b> версії n2o.</p>
 
 <a name=info></a>
 <h4>info(term(), term(), term()) -> #reply{}.</h4>
 
-<p>The info function is dedicated for <b>emqttd</b> version of n2o.</p>
+<p>Функція info призначена для <b>emqttd</b> версії n2o.</p>
 
 <h4>push(term(), term(), term(), term(), term()) -> #reply{}.</h4>
 
-<p>The raw protocol chain processing without using filtering.
-You can intercept all messages from <a href="#stream">stream/3</a> and <a href="#info">info/3</a> by
-setting filter function in sys.config.</p>
+<p>Обробка ланцюжка бінарних протоколів без фільтрації.
+Ви можете перехоплювати всі повідомлення з <a href="#stream">stream/3</a> та <a href="#info">info/3</a>,
+встановивши функцію для параметру filter в sys.config.</p>
 
     </section>
     <section>
 
 
-<h3>CONFIG</h3>
+<h3>КОНФІГУРАЦІЯ</h3>
 
 <figure>
 <code>
@@ -75,7 +75,7 @@ setting filter function in sys.config.</p>
     <section>
 
 
-<h3>IMPLEMENTATION</h3>
+<h3>РЕАЛІЗАЦІЯ</h3>
 
 <figure>
 <code>
@@ -93,7 +93,7 @@ setting filter function in sys.config.</p>
     </section>
     <section>
 
-<p>This module may refer to:
+<p>Цей модуль може бути пов'язаним з:
 <a href="n2o.htm"><b>n2o</b></a>,
 <a href="n2o_pi.htm"><b>n2o_pi</b></a>.
 </p>
