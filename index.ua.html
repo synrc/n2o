@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>N2O</title>
+    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://n2o.dev'>DEV</a>
+    <a href='#' style="background:#ededed;">N2O</a>
+</nav>
+
+<header>
+    <a href="https://github.com/synrc/n2o"><img src="https://synrc.space/images/Synrc Neo.svg?v=1"></a>
+    <h1>N2O</h1>
+</header>
+
+<aside>
+    <article>
+        <section>
+            <h3>СИНОПСИС</h3>
+            <div>N2O — це вбудовувана бібліотека протокольних циклів обробки повідомлень
+                 для WebSocket, MQTT та TCP серверів. До базового функціоналу
+                 бібліотке входять: управління процесами; кільця віртуальних вузлів для
+                 обробки запитів; сервіси сесій, кодування, mq та кешування.
+            </div>
+        </section>
+
+        <section>
+            <a name=plugin><h3>ВИКОРИСТАННЯ</h3></a>
+            <div>Ви можете завантажити залежності rebar та скомпілювати їх:</div>
+        <figure>
+        <code>
+ $ mad get n2o
+ $ cd deps/n2o
+ $ mad dep com pla rep
+        </code>
+        </figure>
+            <div>
+                MAY 2019 &copy; <a href="https://github.com/5HT">5HT</a> <a href="https://5ht.co/license.htm">ISC</a><br>
+                VER 6.5 6.4 6.3
+            </div>
+        </section>
+    </article>
+</aside>
+<main>
+    <section>
+        <a name=endpoint><h3>Endpoints</h3></a>
+        <p>
+            Перелік типів кінцевих точок, які підтримуються EMQ, та є доступними для N2O програм:
+            WebSockets, MQTT, MQTT-SN, TCP, UDP, CoAP.
+            Нормальним є використання N2O у якості Веб Фреймворка або Сервера Веб Додатків з передачею даних по WebSockets,
+            але для IoT та MQTT програм можна використовувати UDP чи SCTP протоколи,
+            для забезпечення консистентності доставки повідомлень на рівні програми.
+            Використовуючи MQTT в якості транспорту ми розширюємо підтримуваний набір протоколів кінцевих точок.
+        </p>
+    </section>
+    <section>
+
+        <a name=mqtt><h3>MQTT</h3></a>
+        <p> <a href="http://emqx.io">EMQ</a> — брокер MQTT з відкритим кодом, написаний Feng Lee.
+            N2O — це сумісний з EMQ плагін, являє собою заздалегідь визначені клієнти MQTT,
+            які у вигляді кільця віртуальних вузлів обробляють протокольні запити
+            та відповідають на клієнтські топіки, відповідно до класичної схеми "RPC через MQ".
+            Список модулів нижче утворює ядро N2O, яке є загальним для
+            MQTT та WebSocket версій:
+        </p>
+        <div>
+        <ul>
+            <li><b><a href="man/n2o.htm">n2o</a></b> &mdash; Додаток N2O<div class=desk>: MQTT and WS &mdash; 10KB</div></li>
+            <li><b><a href="man/n2o_pi.htm">n2o_pi</a></b> &mdash; Процеси N2O<div class=desk> &mdash; 4KB</div></li>
+            <li><b><a href="man/n2o_proto.htm">n2o_proto</a></b> &mdash; Цикл N2O<div class=desk>: &mdash; 1KB</div></li>
+            <li><b><a href="man/n2o_ring.htm">n2o_ring</a></b> &mdash; Кільце N2O<div class=desk>: Хеш Кільце &mdash; 1KB</div></li>
+        </ul>
+        </div>
+        <figure>
+        <code>
+ $ mad app mqtt review
+ $ cd review
+ $ mad dep com pla rep
+ $ open http://127.0.0.1:8000
+        </code></figure>
+        <div>
+        <p>Список модулів, специфічних для MQTT версії:</p>
+        <ul>
+            <li><b><a href="man/n2o_auth.htm">n2o_auth</a></b> &mdash; N2O MQTT Authentication<div class=desk>: модуль аутентифікації MQTT &mdash; 1KB</div></li>
+            <li><b><a href="man/n2o_mqtt.htm">n2o_mqtt</a></b> &mdash; MQTT DHT Virtual Node</li>
+        </ul>
+        </div>
+    </section>
+
+
+    <section>
+        <a name=ws><h3>WebSocket</h3></a>
+        <p> <a href="https://ninenines.eu">COWBOY</a> — невеликий, швидкий та сучасний HTTP сервер, написаний Loïc Hoguin.
+            У цій версії цикл N2O інтегрований як WebSocket <b>cowboy</b>
+            обробник, який пересилає всі вхідні повідомлення до N2O.
+            Список модулів, специфічних для WebSocket версії:</p>
+        <ul>
+            <li><b><a href="man/n2o_stream.htm">n2o_stream</a></b> &mdash; COWBOY та XHR міст</li>
+            <li><b><a href="man/n2o_cowboy.htm">n2o_cowboy</a></b> &mdash; COWBOY API</li>
+            <li><b><a href="man/n2o_ws.htm">n2o_ws</a></b> &mdash; WebSocket DHT Virtual Node</li>
+        </ul>
+        <figure>
+        <code>
+ $ mad app web sample
+ $ cd sample
+ $ mad dep com pla rep
+ $ open https://127.0.0.1:8001/app/index.htm
+        </code></figure>
+    </section>
+
+
+    <section>
+        <a name=protocols><h3>Протоколи</h3></a>
+        <ul>
+            <li><b><a href="man/n2o_heart.htm">n2o_heart</a></b> &mdash; PING protocol</li>
+            <li><b><a href="man/n2o_ftp.htm">n2o_ftp</a></b> &mdash; N2O File Protocol<div class=desk>: FTP &mdash; 4KB</div></li>
+            <li><b><a href="man/n2o_nitro.htm">n2o_nitro</a></b> &mdash; N2O Nitrogen Web Framework Protocol<div class=desk>:  &mdash; 3KB</div></li>
+        </ul>
+    </section>
+
+    <section>
+        <a name=services><h3>Сервіси</h3></a>
+        <ul>
+            <li><b><a href="man/n2o_session.htm">n2o_session</a></b> &mdash; бекенд ETS сесій</li>
+            <li><b><a href="man/n2o_secret.htm">n2o_secret</a></b> &mdash; кодер/декодер AES/CBC-128</li>
+            <li><b><a href="man/n2o_gproc.htm">n2o_gproc</a></b> &mdash; бекенд GPROC MQ</li>
+            <li><b><a href="man/n2o_syn.htm">n2o_syn</a></b> &mdash; бекенд SYN MQ</li>
+        </ul>
+    </section>
+
+
+    <section>
+        <a name=js><h3>JavaScript</h3></a>
+
+        <ul>
+            <li><b><a href="man/utf8.js.htm">utf8.js</a></b> &mdash; кодер/декодер UTF-8</li>
+            <li><b><a href="man/ieee754.js.htm">ieee754.js</a></b> &mdash; кодер/декодер IEEE-754</li>
+            <li><b><a href="man/bert.js.htm">bert.js</a></b> &mdash; кодер/декодер BERT</li>
+            <li><b><a href="man/n2o.js.htm">n2o.js</a></b> &mdash; протокольний цикл N2O</li>
+            <li><b><a href="man/heart.js.htm">heart.js</a></b> &mdash; протокол HEART</li>
+            <li><b><a href="man/nitro.js.htm">nitro.js</a></b> &mdash; протокол NITRO</li>
+            <li><b><a href="man/ftp.js.htm">ftp.js</a></b> &mdash; протокол FTP</li>
+            <li><b><a href="man/mq.js.htm">mq.js</a></b> &mdash; клієнт MQTT</li>
+        </ul>
+
+    </section>
+
+    <section>
+        <a name=js><h3>SPEC</h3></a>
+         <figure><figcaption>N2O:</figcaption><code>
+ -type n2o()       :: #bert{} | #json{} | #binary{} | #default{}.
+ -type cx()        :: #cx{}.
+ -type formatter() :: binary | json | bert | text | default | atom().
+ -type response()  :: { formatter(), binary() }.
+
+ -record(ok,      { data     :: term() }).
+ -record(error    { data     :: term() }.
+ -record(reply,   { msg      :: n2o(), req :: term(), ctx :: cx() } ).
+ -record(unknown, { msg      :: n2o(), req :: term(), ctx :: cx() } ).
+
+ -spec start(#pi{}) -> {pid(),term()} | #error{}.
+ -spec stop(term(),atom()) -> #pi{} | #error{}.
+ -spec proc(atom(),#pi{}) -> term().
+ -spec info(term(),term(),#cx{}) -> #reply{} | #unknown{}.
+
+ -record(pi, { name     :: term(),
+               table    :: atom(),
+               sup      :: atom(),
+               module   :: atom(),
+               state    :: term()  }).
+
+ -record(cx, { handlers  = [] :: list({atom(),atom()}),
+               actions   = [] :: list(tuple()),
+               req       = [] :: [] | term(),
+               module    = [] :: [] | atom(),
+               lang      = [] :: [] | atom(),
+               path      = [] :: [] | binary(),
+               session   = [] :: [] | binary(),
+               formatter = bert :: bert | json | atom(),
+               params    = [] :: [] | list(tuple()),
+               node      = [] :: [] | atom(),
+               client_pid= [] :: [] | term(),
+               state     = [] :: [] | term(),
+               from      = [] :: [] | binary(),
+               vsn       = [] :: [] | binary() }).
+
+ -type memtable()  :: atom().
+ -spec encode(tuple()) -> binary().
+ -spec decode(binary()) -> tuple().
+ -spec session(term(),term()) -> term().
+ -spec session(term()) -> term().
+ -spec cache(memtable(),term(),term()) -> term().
+ -spec cache(memtable(),term()) -> term().
+         </code></figure>
+         <br><br>
+    </section>
+</main>
+
+<footer>
+    Made with <span class="heart">❤</span> to Erlang
+</footer>
+
+</body>
+</html>
+
+
