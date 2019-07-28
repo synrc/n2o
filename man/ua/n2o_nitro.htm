@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="author" content="Maxim Sokhatsky" />
     <title>NITRO</title>
-    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
+    <link rel="stylesheet" href="https://tonpa.guru/blank.css?v=2" />
 </head>
 
 <body>
@@ -16,6 +16,8 @@
     <a href='https://n2o.dev'>DEV</a>
     <a href='https://ws.n2o.space'>N2O</a>
     <a href='#' style="background:#ededed;">NITRO</a>
+    <a href='#' style="background:#ededed;">UA</a>
+    <a href='../n2o_nitro.htm'>EN</a>
 </nav>
 
 <header>
@@ -25,19 +27,17 @@
 
 <main>
     <section>
+        <h3>ВСТУП</h3>
 
-
-<h3>ВСТУП</h3>
-
-<p>Модуль <a href="https://github.com/synrc/n2o/blob/master/src/protocols/n2o_nitro.erl">n2o_nitro</a>
-   надає специфікацію протоколу <a href="http://nitrogenproject.com/demos">Nitrogen Web Framework</a>
-   та імплементацію.</p>
+        <p>Модуль <a href="https://github.com/synrc/n2o/blob/master/src/protos/n2o_nitro.erl">n2o_nitro</a>
+           містить реалізацію протоколу <a href="http://nitrogenproject.com/demos">Nitrogen Web Framework</a>
+           та його специфікацію.</p>
 
     </section>
     <section>
         <h3>INIT</h3>
         <p>Повідомлення init викликає функцію event(init) модуля сторінки.
-           Існує два способи подати бінарне повідомлення INIT.
+           Існує два способи передати бінарне повідомлення INIT.
            Перший спосіб — закодований в BERT #init record з бінарним токеном,
            який, зазвичай, створюється n2o_session, передається в #io record
            як параметр даних та зберігається на клієнті в localStorage чи Key Chain.
@@ -45,21 +45,25 @@
         <figure><code>
  -record(init, { token :: binary() }).
         </code></figure>
-        <p>Другий спосіб —  TEXT версія повідомлення, &lt;&lt;"N2O,"&gt;&gt;
-           що зазвичай працює для хостів зі здатністю до бінарної передачі, таких, як WebSockets.
+        <p>Другий спосіб — бінарна текстова версія повідомлення, &lt;&lt;"N2O,"&gt;&gt;
+           що, зазвичай, працює для хостів зі здатністю до неформатованої бінарної
+           передачі, таких, як протокол WebSockets.
            </p>
         <figure><code>
  <<"N2O,",Token/binary>>
         </code></figure>
-        <p>Щоб детальніше дізнатись про протокол видачі токенів дивіться модуль <a href="n2o_session.htm">n2o_session</a>.</p>
+        <p>Щоб детальніше дізнатись про протокол видачі токенів дивіться
+           модуль <a href="n2o_session.htm">n2o_session</a>.</p>
     </section>
     <section>
         <h3>PICKLE</h3>
-        <p>Повідомлення pickle надсилає на сервер заздалегідь підготовлене (за допомогою сервера) зашифроване повідомлення.
+        <p>Повідомлення pickle надсилає на сервер заздалегідь підготовлене (за
+           допомогою сервера) зашифроване повідомлення.
            Такі повідомлення містять #ev record з інформацією викликача (зашифровані).
            Зашифровані повідомлення можуть подовжувати термін придатності токена сесії
-           за допомогою оновлення токена клієнта при кожному UI запиті (відстеження активності користувачів),
-           у випадку, коли змінна <b>nitro_prolongate</b> додатку n2o дорівнює <b>true</b>.</p>
+           за допомогою оновлення токена клієнта при кожному UI
+           запиті (відстеження активності користувачів), для включення цього режиму
+           змінна середовища <b>nitro_prolongate</b> додатку n2o повинна бути <b>true</b>.</p>
         <div>
         <figure><code>
  -record(pickle, { source  = [] :: [] | binary(),
@@ -75,7 +79,9 @@
     </section>
     <section>
         <h3>DIRECT</h3>
-        <p>Повідомлення direct надсилає дані без задіяння механізмів діалогу, сесії чи шифрування.</p>
+        <p>Повідомлення direct надсилає дані без задіяння механізмів діалогу,
+           сесії чи шифрування. Терм у полі data безпосередньо попадає в event
+           функцію модуля-контроллеру сторінки.</p>
         <div>
         <figure><code>
  -record(direct, { data = [] :: any() }).
@@ -88,7 +94,6 @@
         <div>
         <figure><code>
  -record(flush, { data = [] :: [] | list(#action{}) }).
-
         </code></figure>
         </div>
     </section>
