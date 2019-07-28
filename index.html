@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -29,7 +29,7 @@
             <div>N2O is an embeddable message protocol loop library for
                  WebSocket, MQTT and TCP servers. It provides basic
                  features, such as: process management; virtual nodes ring for
-                 request processing; session, encoding, mq and cache ervices.
+                 request processing; session, encoding, mq and cache services.
             </div>
         </section>
 
@@ -54,10 +54,10 @@
     <section>
         <a name=endpoint><h3>Endpoints</h3></a>
         <p>
-            Here is a list of types of endpoints which are supported by EMQ and accesible to N2O apps:
+            Here is a list of types of endpoints which are supported by EMQ and accessible to N2O apps:
             WebSockets, MQTT, MQTT-SN, TCP, UDP, CoAP.
             Normal use of N2O as a Web Framework or a Web Application Server is through WebSockets,
-            but for IoT and MQTT applications it could be served through UDP or SCTP protocols
+            but for IoT and MQTT applications it could be served through UDP or SCTP protocols,
             providing application level message delivery consistency.
             By using MQTT as a transport we extend the supported set of endpoint protocols.
         </p>
@@ -65,7 +65,7 @@
     <section>
 
         <a name=mqtt><h3>MQTT</h3></a>
-        <p> <a href="http://emqx.io">EMQ</a> is an open-source MQTT broker implementated by Feng Lee.
+        <p> <a href="http://emqx.io">EMQ</a> is an open-source MQTT broker implemented by Feng Lee.
             N2O is EMQ compatible plugin that acts as predefined MQTT clients that form
             a ring of virtual nodes, process all the protocol requests,
             and answer to client topics according to classical RPC over MQ schema.
@@ -99,7 +99,7 @@
 
     <section>
         <a name=ws><h3>WebSocket</h3></a>
-        <p> <a href="https://ninenines.eu">COWBOY</a> is small, fast, and modern HTTP server implementated by Loïc Hoguin.
+        <p> <a href="https://ninenines.eu">COWBOY</a> is small, fast, and modern HTTP server implemented by Loïc Hoguin.
             In this version, N2O loop is integrated as WebSocket <b>cowboy</b>
             handler that routes all incoming messages to N2O.
             The list of WebSocket specific modules:</p>
