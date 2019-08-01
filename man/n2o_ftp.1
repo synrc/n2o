@@ -1,0 +1,34 @@
+.TH n2o_ftp 1 "n2o 4.5.0" "Synrc Research Center" "N2O Modules"
+.SH NAME
+n2o_ftp \- N2O FTP: File Transfer Protocol
+.SH INTRO
+.LP
+The \fIFTP\fR\& protocol provides simple chunking message transfer
+inside message packed contained filename, size, bloc, data, metainfo, etc.
+.SH PROTOCOL
+It contains INIT, EVENT, SEND and maybe other messages. You never know.
+.SH INIT
+.LP
+This message is called very early and start the n2o_async erlang process
+.LP
+.nf
+{reply,#ftp{block=Block,offset=Offset,filename=RelPath,data= <<>>},
+       Message,State}
+.SH EVENT
+.nf
+{reply,n2o:format({io,Actions,Objects}),
+       Message,State}
+.fi
+.SH SEND
+.SH CONFIG
+.LP
+We usually store n2o configuration in root sys.config,
+but you can use it whatever you like.
+.LP
+.nf
+[{n2o,[{filename,n2o_ftp},
+       {upload,"."}]}].
+.fi
+.SH "ALSO"
+.LP
+\fB\fIn2o(1)\fR\&\fR\&, \fB\fIn2o_nitro(1)\fR\&\fR\&
