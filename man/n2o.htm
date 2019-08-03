@@ -1,27 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="Maxim Sokhatsky" />
-    <title>N2O</title>
-    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
-</head>
-<body>
-<nav>
-    <a href='https://n2o.dev'>DEV</a>
-    <a href='https://ws.n2o.space'>N2O</a>
-    <a href='#' style="background:#ededed;">N2O</a>
-    <a href='ua/n2o.htm'>UA</a>
-    <a href='#' style="background:#ededed;">EN</a>
-</nav>
-<header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" /><meta name="author" content="Maxim Sokhatsky" /><title>N2O</title><link rel="stylesheet" href="https://synrc.space/synrc.css" /></head><body><nav>
+    <a href="https://n2o.dev">DEV</a>
+    <a href="https://ws.n2o.space">N2O</a>
+    <a href="#" style="background:#ededed;">N2O</a>
+    <a href="ua/n2o.htm">UA</a>
+    <a href="#" style="background:#ededed;">EN</a>
+</nav><header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
     <h1>N2O</h1>
-</header>
-<main>
+</header><main>
     <section>
         <h3>INTRO</h3>
         <p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o.erl">n2o</a>
@@ -34,14 +20,14 @@
         web pages spawn WebSocket connections, workflow engines
         spawn business processes, and chat applications spawns roster
         and chatroom processes. With N2O everything is managed by protocols.</p>
-        <center><img src="N2O.svg" width=60%></center>
+        <center><img src="N2O.svg" width="60%" /></center>
         <p>N2O shipped to work in two modes:
         1) inside <a href="n2o_mqtt.htm">n2o_mqtt</a> workers;
         2) inside cowboy processes, implemented in <a href="n2o_stream.htm">n2o_stream</a>.
         In the first case, the MQTT server used between clients and server workers.
         In the second case, no more Erlang processes introduced except clients.
         You can create your configuration of N2O processing loop.</p>
-        <p><img src="WebSocket + MQTT.svg" width=100%></p>
+        <p><img src="WebSocket + MQTT.svg" width="100%" /></p>
         <p>The N2O itself is an embeddable protocol loop in <a href="n2o_proto.htm">n2o_proto</a>.
         However, besides that, it handles cache and sessions
         along with flexible <a href="n2o_pi.htm">n2o_pi</a> processes with no ownership restriction.
@@ -128,11 +114,11 @@
  -include("n2o.hrl").
  -export([info/3]).
 
- info({text,<<"N2O,",Pickle/binary>>}, Req, State) ->
+ info({text,&lt;&lt;"N2O,",Pickle/binary>>}, Req, State) ->
       {'Token',Token} = n2o_session:authenticate([],Pickle),
       Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
       New = State#cx{session = Sid},
-      {reply,{bert,{io,<<"console.log('connected')">>,
+      {reply,{bert,{io,&lt;&lt;"console.log('connected')">>,
              {'Token',Token}}}, Req, New};
 
  info(Message,Req,State) -> {unknown,Message,Req,State}.
@@ -156,7 +142,7 @@
          {protocols,[n2o_ftp,n2o_nitro]},
          {nitro_prolongate,false},
          {filter,{n2o_proto,push}},
-         {origin,<<"*">>},
+         {origin,&lt;&lt;"*">>},
          {timer,{0,10,0}}]}].
         </code></figure>
         <p>N2O is the facade of the following services: cache, MQ, message formatting,
@@ -201,13 +187,13 @@
         <p>You specify the formatter in the protocol return message. E.g:</p>
         <figure><code>
  info({Code}, Req, State) ->
-      {reply,{bert,{io,nitro:jse(Code),<<>>}}, Req, State};
+      {reply,{bert,{io,nitro:jse(Code),&lt;&lt;>>}}, Req, State};
         </code></figure>
         <h4>encode(record()) -> binary().</h4>
         <p>Serializes a record.</p>
         <h4>decode(binary()) -> record().</h4>
         <p>Deserializes a record.</p>
-        <p>Here is an example of <b>n2o_bert</b> formatter implementation.</P>
+        <p>Here is an example of <b>n2o_bert</b> formatter implementation.</p>
         <figure><code>
  encode(Erl) -> term_to_binary(Erl).
  decode(Bin) -> binary_to_term(Bin,[safe]).
@@ -231,7 +217,7 @@
  maxim
  4> ets:tab2list(cookies).
 [{{[],user},{63710014344,"maxim"}},
- {{<<"5842b7e749a8cf44c920">>,auth},{63710014069,[]}]
+ {{&lt;&lt;"5842b7e749a8cf44c920">>,auth},{63710014069,[]}]
         </code></figure>
         <h4>session(Key) -> term().</h4>
         <p>Gets a value of session variable.</p>
@@ -245,16 +231,13 @@
     </section>
     <section>
         <p>This module may refer to:
-        <a href="n2o_pi.htm">n2o_pi</a></b>,
-        <a href="n2o_auth.htm">n2o_auth</a></b>,
-        <a href="n2o_stream.htm">n2o_stream</a></b>,
-        <a href="n2o_mqtt.htm">n2o_mqtt</a></b>,
+        <a href="n2o_pi.htm">n2o_pi</a>,
+        <a href="n2o_auth.htm">n2o_auth</a>,
+        <a href="n2o_stream.htm">n2o_stream</a>,
+        <a href="n2o_mqtt.htm">n2o_mqtt</a>,
         <a href="n2o_proto.htm">n2o_proto</a>.
         </p>
     </section>
-</main>
-<footer>
-    2005&mdash;2019 &copy; Synrc Research Center
-</footer>
-</body>
-</html>
+</main><footer>
+    2005—2019 © Synrc Research Center
+</footer></body></html>

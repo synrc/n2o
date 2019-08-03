@@ -1,31 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="Maxim Sokhatsky" />
-    <title>PROTO</title>
-    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
-</head>
-
-<body>
-
-<nav>
-    <a href='https://n2o.dev'>DEV</a>
-    <a href='https://ws.n2o.space'>N2O</a>
-    <a href='#' style="background:#ededed;">PROTO</a>
-    <a href='ua/n2o_proto.htm'>UA</a>
-    <a href='#' style="background:#ededed;">EN</a>
-</nav>
-
-<header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" /><meta name="author" content="Maxim Sokhatsky" /><title>PROTO</title><link rel="stylesheet" href="https://synrc.space/synrc.css" /></head><body><nav>
+    <a href="https://n2o.dev">DEV</a>
+    <a href="https://ws.n2o.space">N2O</a>
+    <a href="#" style="background:#ededed;">PROTO</a>
+    <a href="ua/n2o_proto.htm">UA</a>
+    <a href="#" style="background:#ededed;">EN</a>
+</nav><header>
+    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
     <h1>PROTO</h1>
-</header>
-
-<main>
+</header><main>
     <section>
 
 <h3>INTRO</h3>
@@ -42,12 +24,12 @@
    The main purpose of this API is to embed N2O into your functional endpoint.
    In other cases it's called automatically by configuration.</p>
 
-<a name=stream></a>
+<a name="stream"></a>
 <h4>stream({ text | binary, binary() }, term(), term()) -> #reply{}.</h4>
 
 <p>The stream function is dedicated for <b>cowboy</b> version of n2o.</p>
 
-<a name=info></a>
+<a name="info"></a>
 <h4>info(term(), term(), term()) -> #reply{}.</h4>
 
 <p>The info function is dedicated for <b>emqttd</b> version of n2o.</p>
@@ -79,7 +61,7 @@ setting filter function in sys.config.</p>
 
 <figure>
 <code>
- nop(R,S)                  -> {reply,{binary,<<>>},R,S}.
+ nop(R,S)                  -> {reply,{binary,&lt;&lt;>>},R,S}.
  reply(M,R,S)              -> {reply,M,R,S}.
  push(_,R,S,[],_)          -> nop(R,S);
  push(M,R,S,[H|T],Acc)     ->
@@ -99,11 +81,6 @@ setting filter function in sys.config.</p>
 </p>
 
     </section>
-</main>
-
-<footer>
-    2005&mdash;2019 &copy; Synrc Research Center
-</footer>
-
-</body>
-</html>
+</main><footer>
+    2005&mdash;2019 © Synrc Research Center
+</footer></body></html>

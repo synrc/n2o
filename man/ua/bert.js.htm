@@ -1,31 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="Maxim Sokhatsky" />
-    <title>BERT.JS</title>
-    <link rel="stylesheet" href="https://tonpa.guru/blank.css?v=2" />
-</head>
-
-<body>
-
-<nav>
-    <a href='https://n2o.dev'>DEV</a>
-    <a href='../../index.ua.html'>N2O</a>
-    <a href='#' style="background:#ededed;">BERT.JS</a>
-    <a href='#' style="background:#ededed;">UA</a>
-    <a href='../bert.js.htm'>EN</a>
-</nav>
-
-<header>
-    <a href="../../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" /><meta name="author" content="Maxim Sokhatsky" /><title>BERT.JS</title><link rel="stylesheet" href="https://tonpa.guru/blank.css?v=2" /></head><body><nav>
+    <a href="https://n2o.dev">DEV</a>
+    <a href="../../index.ua.html">N2O</a>
+    <a href="#" style="background:#ededed;">BERT.JS</a>
+    <a href="#" style="background:#ededed;">UA</a>
+    <a href="../bert.js.htm">EN</a>
+</nav><header>
+    <a href="../../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
     <h1>BERT.JS</h1>
-</header>
-
-<main>
+</header><main>
     <section>
         <h3>ВСТУП</h3>
 
@@ -53,16 +35,16 @@
  #io{ code = login,
       data = { 'Token', 42 } }
         </code></figure>
-           <p>Цільова структура <a href="#">bert.js</a> &mdash; швидкий низькорівневий жорстко закодований парсер з BERT формату.<p>
-        <figure><code>
+           <p>Цільова структура <a href="#">bert.js</a> — швидкий низькорівневий жорстко закодований парсер з BERT формату.</p><p>
+        </p><figure><code>
  { t: 104,
    v: [ { t: 100, v: "io" },
         { t: 100, v: "login" },
         { t: 104, v: [ { t: 100, v: "Token" },
                        { t: 97,  v: 42 } ] } ] }
         </code></figure>
-           <p>Цільова структура згенерованого парсера з <a href="https://synrc.github.io/bert">BERT</a> parse transform:<p>
-        <figure><code>
+           <p>Цільова структура згенерованого парсера з <a href="https://synrc.github.io/bert">BERT</a> parse transform:</p><p>
+        </p><figure><code>
  { tup: 'io',
    code: 'login',
    data: { tup: '$',
@@ -118,7 +100,7 @@
  1    2    N
  100  N    Characters
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>104</h3>
         <p>Кодування кортежу. Поле арності (Arity) — беззнакове 1-байте ціле число N, яке визначає,
@@ -127,7 +109,7 @@
  1    1    N
  104  N    Elements
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>105</h3>
         <p>Кодування великого кортежу. Відмінність від 104 — N є беззнаковим
@@ -136,7 +118,7 @@
  1    4    N
  105  N    Elements
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>106</h3>
         <p>Nil.</p>
@@ -155,7 +137,7 @@
  1    2    N
  107  N    Characters
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>108</h3>
         <p>Кодування списків. N — кількість елементів в секції Символи (Characters).
@@ -166,7 +148,7 @@
  1    4    N
  108  N    Characters  Tail
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>109</h3>
         <p>Бінарне кодування. Бінарні строки генеруються за допомогою бітового синтаксичного виразу (bit syntax expression) або
@@ -178,7 +160,7 @@
  1    4    N
  109  N    Bytes
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>110</h3>
         <p>Кодування малого bignum. Bignum зберігається в унарній формі з байтом знаку,
@@ -190,7 +172,7 @@
  110  n    Sign d(0)...d(n-1)
         </code></figure>
         <p>
- B = 256,<br>
+ B = 256,<br />
      d<sub>0</sub>*B<sup>0</sup>
    + d<sub>1</sub>*B<sup>1</sup>
    + d<sub>2</sub>*B<sup>2</sup>
@@ -216,7 +198,7 @@
  1    1    N
  115  N    Characters
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>116</h3>
         <p>Кодування мапи (map). Поле N — беззнакове 4-байтне ціле число
@@ -230,7 +212,7 @@
  1    4    N
  116  N    K1,V1,K2,V2,...
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>118</h3>
         <p>Кодування UTF8 атома. Атом зберігається у вигляді 2-байтового беззнакового цілого числа в big-endian порядку,
@@ -240,7 +222,7 @@
  1    2    N
  118  N    Characters
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>119</h3>
         <p>Кодування малого UTF8 атома. Атом зберігається у вигляді 1-байтового беззнакового цілого числа,
@@ -251,7 +233,7 @@
  1    1    N
  119  N    Characters
         </code><figure>
-    </section>
+    </figure></figure></section>
     <section>
         <h3>API</h3>
         <h4>enc(json)</h4>
@@ -369,19 +351,14 @@
 <p>Можливо, Ви також бажаєте почитати про:
 <b>
 <a href="utf8.js.htm">utf8.js</a></b>,
-<a href="ieee754.js.htm">ieee754.js</a></b>,
-<a href="heart.js.htm">heart.js</a></b>,
-<a href="nitro.js.htm">nitro.js</a></b>,
-<a href="mq.js.htm">mq.js</a></b>,
-<a href="n2o.js.htm">n2o.js</a></b>.
+<a href="ieee754.js.htm">ieee754.js</a>,
+<a href="heart.js.htm">heart.js</a>,
+<a href="nitro.js.htm">nitro.js</a>,
+<a href="mq.js.htm">mq.js</a>,
+<a href="n2o.js.htm">n2o.js</a>.
 </p>
 
     </section>
-</main>
-
-<footer>
-    2005&mdash;2019 &copy; Synrc Research Center
-</footer>
-
-</body>
-</html>
+</main><footer>
+    2005—2019 © Synrc Research Center
+</footer></body></html>
