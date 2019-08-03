@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>BERT.JS</title>
+    <link rel="stylesheet" href="https://tonpa.guru/blank.css?v=2" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://n2o.dev'>DEV</a>
+    <a href='../../index.ua.html'>N2O</a>
+    <a href='#' style="background:#ededed;">BERT.JS</a>
+    <a href='#' style="background:#ededed;">UA</a>
+    <a href='../bert.js.htm'>EN</a>
+</nav>
+
+<header>
+    <a href="../../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>BERT.JS</h1>
+</header>
+
+<main>
+    <section>
+        <h3>ВСТУП</h3>
+
+        <p>Модуль <a href="https://github.com/synrc/n2o/blob/master/priv/bert.js">bert.js</a>
+        надає JavaScript кодер/декодер для
+        <a href="http://erlang.org/doc/apps/erts/erl_ext_dist.html">External Term Format</a>,
+        який використовується в Erlang distribution protocol.
+        Це означає, що ваші JavaScript програми надсилають повідомлення
+        в рідному форматі Erlang. Цей модуль застосовує
+        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">DataView</a>,
+        а також методи <b>getUint8</b>, <b>getUint16</b>, <b>getUint32</b>, які забезпечують
+        найшвидший варіант роботи з бінарними даними в JavaScript.
+        Ця бібліотека використовується в Erlang і Haskell версіях N2O.
+        Розмір <b>bert.js</b> — 4654 байта.</p>
+
+        <p>Зауважте, що це низькорівнева бібліотека, швидка версія
+           BERT кодера/декодера. Якщо ви хочете генерувати
+           JavaScript SDK з іменованими полями, як в файлах заголовків Erlang,
+           підключіть <a href="https://synrc.github.io/bert">BERT</a> —
+           високорівневу бібліотеку-двійника, яка генерує
+           обгортки навколо <b>bert.js</b> та забезпечує
+           більш more slick JavaScript досвід.</p>
+        <p>Erlang структура, яка компілюється в BERT формат:</p>
+        <figure><code>
+ #io{ code = login,
+      data = { 'Token', 42 } }
+        </code></figure>
+           <p>Цільова структура <a href="#">bert.js</a> &mdash; швидкий низькорівневий жорстко закодований парсер з BERT формату.<p>
+        <figure><code>
+ { t: 104,
+   v: [ { t: 100, v: "io" },
+        { t: 100, v: "login" },
+        { t: 104, v: [ { t: 100, v: "Token" },
+                       { t: 97,  v: 42 } ] } ] }
+        </code></figure>
+           <p>Цільова структура згенерованого парсера з <a href="https://synrc.github.io/bert">BERT</a> parse transform:<p>
+        <figure><code>
+ { tup: 'io',
+   code: 'login',
+   data: { tup: '$',
+           0: 'Token',
+           1: 42 } },
+        </code></figure>
+    </section>
+    <section>
+       <p>Підтримується наступна практична підмножина формату BERT:</p>
+    </section>
+    <section>
+        <h3>70</h3>
+        <p>Кодування числа з плаваючою точкою IEEE-754; зберігається у вигляді 8 байтів у big-endian IEEE форматі.
+           Цей вираз використовується в мінорній версії 1 зовнішнього формату.</p>
+        <figure><code>
+ 1    8
+ 70   IEEE-754 float
+        </code></figure>
+    </section>
+    <section>
+        <h3>97</h3>
+        <p>Кодування байтів. Беззнакове 8-бітне ціле число (integer).</p>
+        <figure><code>
+ 1    1
+ 97   Int
+        </code></figure>
+    </section>
+    <section>
+        <h3>98</h3>
+        <p>Кодування цілих чисел (Integer). 32-бітне ціле число зі знаком, в big-endian форматі.</p>
+        <figure><code>
+ 1    4
+ 98   Int
+        </code></figure>
+    </section>
+    <section>
+        <h3>99</h3>
+        <p>Кодування числа з плаваючою точкою POSIX; зберігається у вигляді строки. Формат використовується в
+           sprintf, для форматування чисел з плаваючою точкою, як "%.20e" (виділяється більше байтів, ніж необхідно).
+           Для розпакування числа з плаваючою точкою використовується sscanf з форматом "%lf".
+           </p>
+        <figure><code>
+ 1    31
+ 99   Float POSIX string.
+        </code></figure>
+    </section>
+    <section>
+        <h3>100</h3>
+        <p>Кодування атомів. Атом зберігається у вигляді 2-байтового беззнакового цілого числа в big-endian порядку,
+           яким задається довжина, за ним слідують N чисел — 8-бітних Latin-1 знаків (Characters), які є ім'ям атома.
+           Максимально дозволене значення довжини є 255.</p>
+        <figure><code>
+ 1    2    N
+ 100  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>104</h3>
+        <p>Кодування кортежу. Поле арності (Arity) — беззнакове 1-байте ціле число N, яке визначає,
+           скільки елементів знаходиться в секції Елементи (Elements).</p>
+        <figure><code>
+ 1    1    N
+ 104  N    Elements
+        </code><figure>
+    </section>
+    <section>
+        <h3>105</h3>
+        <p>Кодування великого кортежу. Відмінність від 104 — N є беззнаковим
+           4-байтним цілим числом в big-endian форматі.</p>
+        <figure><code>
+ 1    4    N
+ 105  N    Elements
+        </code><figure>
+    </section>
+    <section>
+        <h3>106</h3>
+        <p>Nil.</p>
+        <figure><code>
+ 1
+ 106
+        </code></figure>
+    </section>
+    <section>
+        <h3>107</h3>
+        <p>Кодування строки. Оскільки поле N є беззнаковим 2-байтним
+           числом (big-endian), реалізації повинні гарантувати, що списки,
+           довші за 65535 елементів, кодуються за допомогою 108.
+        </p>
+        <figure><code>
+ 1    2    N
+ 107  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>108</h3>
+        <p>Кодування списків. N — кількість елементів в секції Символи (Characters).
+           Хвіст (Tail) — остаточний хвіст списку; це 106 для правильного списку,
+           але, у випадку неправильного списку, може бути будь-якого типу (наприклад, [a|b]).
+        </p>
+        <figure><code>
+ 1    4    N
+ 108  N    Characters  Tail
+        </code><figure>
+    </section>
+    <section>
+        <h3>109</h3>
+        <p>Бінарне кодування. Бінарні строки генеруються за допомогою бітового синтаксичного виразу (bit syntax expression) або
+           erlang:list_to_binary/1, erlang:term_to_binary/1, чи як
+           вхідні дані від бінарних портів (binary ports). Поле довжини N є
+           беззнаковим 4-байтним цілим числом (big-endian).
+        </p>
+        <figure><code>
+ 1    4    N
+ 109  N    Bytes
+        </code><figure>
+    </section>
+    <section>
+        <h3>110</h3>
+        <p>Кодування малого bignum. Bignum зберігається в унарній формі з байтом знаку,
+           який дорівнює 0, якщо binum позитивний, і 1, якщо негативний.
+           При зберіганні цифр молодший байт зберігаються першим.
+           Для обчислення цілого числа можна використовувати наступну формулу:</p>
+        <figure><code>
+ 1    1    1    n
+ 110  n    Sign d(0)...d(n-1)
+        </code></figure>
+        <p>
+ B = 256,<br>
+     d<sub>0</sub>*B<sup>0</sup>
+   + d<sub>1</sub>*B<sup>1</sup>
+   + d<sub>2</sub>*B<sup>2</sup>
+   + ... d<sub>N-1</sub>*B<sup>(n-1)</sup>
+ </p>
+    </section>
+    <section>
+        <h3>111</h3>
+        <p>Кодування великого bignum.
+           Відмінність від 110 — поле довжини є беззнаковим 4-байтним цілим числом.</p>
+        <figure><code>
+ 1    4    1    n
+ 111  n    Sign d(0)...d(n-1)
+        </code></figure>
+    </section>
+    <section>
+        <h3>115</h3>
+        <p>Кодування малого атома. Атом зберігається у вигляді 1-байтового беззнакового цілого числа в big-endian порядку,
+           яким задається довжина, за ним слідують N чисел — 8-бітних Latin-1 знаків (Characters), які є ім'ям атома.
+           Максимально дозволене значення довжини є 16.
+        </p>
+        <figure><code>
+ 1    1    N
+ 115  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>116</h3>
+        <p>Кодування мапи (map). Поле N — беззнакове 4-байтне ціле число
+           в big-endian форматі, означає кількість пар "ключ-значення"
+           в map. Пари "ключ-значення" (Ki => Vi) кодуються
+           у секції Пари (Pairs) в наступному порядку: K1, V1, K2, V2,..., Kn, Vn.
+           Дублікати ключів не дозволені в одній і тій же map.
+           Вимагає OTP 17.
+        </p>
+        <figure><code>
+ 1    4    N
+ 116  N    K1,V1,K2,V2,...
+        </code><figure>
+    </section>
+    <section>
+        <h3>118</h3>
+        <p>Кодування UTF8 атома. Атом зберігається у вигляді 2-байтового беззнакового цілого числа в big-endian порядку,
+           яким задається довжина, за ним слідують N байтів — закодовані в UTF-8 символи (Characters), які є ім'ям атома.
+        </p>
+        <figure><code>
+ 1    2    N
+ 118  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>119</h3>
+        <p>Кодування малого UTF8 атома. Атом зберігається у вигляді 1-байтового беззнакового цілого числа,
+           яким задається довжина, за ним слідують N байтів — закодовані в UTF-8 символи (Characters), які є ім'ям атома.
+           Довші атоми, закодовані в UTF-8, можна представити за допомогою 118.
+        </p>
+        <figure><code>
+ 1    1    N
+ 119  N    Characters
+        </code><figure>
+    </section>
+    <section>
+        <h3>API</h3>
+        <h4>enc(json)</h4>
+        <p>Кодує внутрішній JSON в двійковий буфер.</p>
+        <figure><code>
+ > enc({t: 119, v: "日本"})
+
+ Uint8Array([131,119,6,230,151,165,230,156,172])
+         </code></figure>
+        <h4>dec(buffer)</h4>
+        <p>Декодує двійковий буфер у внутрішній JSON.</p>
+        <figure><code>
+ > dec((new Uint8Array([131,119,6,230,151,165,230,156,172])).buffer)
+
+ {t: 119, v: "日本"}
+         </code></figure>
+        <h4>bin(x)</h4>
+        <figure><code>
+ > dec(enc(bin('N2O,')).buffer))
+
+ {t: 109, v: "N2O,"}
+
+ [131,109,0,0,0,4,78,50,79,44]
+         </code></figure>
+        <p>Створює JSON для двійкового кодування.</p>
+        <h4>atom(x)</h4>
+        <p>Створює JSON для кодування Latin-1 атома.</p>
+        <figure><code>
+ > dec(enc(atom('ok')).buffer))
+
+ {t: 100, v: "ok"}
+
+ [131,100,0,2,111,107]
+         </code></figure>
+        <h4>string(x)</h4>
+        <p>Створює JSON для кодування строки.</p>
+        <figure><code>
+ > dec(enc(string('ok')).buffer))
+
+ {t: 107, v: "ok"}
+
+ [131,107,0,2,111,107]
+         </code></figure>
+        <h4>float(x)</h4>
+        <p>Створює JSON для кодування числа з плаваючою точкою IEEE-754.</p>
+        <figure><code>
+ > dec(enc(float('123.13')).buffer)
+
+ {t: 70, v: 123.13}
+
+ [131,70,64,94,200,81,235,133,30,184]
+         </code></figure>
+        <h4>number(x)</h4>
+        <p>Створює JSON для кодування цілих чисел та великих чисел GMP.</p>
+        <figure><code>
+ > dec(enc(number('1')).buffer)
+
+ {t: 97, v: 1}
+
+ [131,97,1]
+
+ > dec(enc(number('100000000')).buffer)
+ {t: 98, v: 100000000}
+
+ [131,98,5,245,225,0]
+
+ > dec(enc(number('10000000000000000000000')).buffer)
+
+ {t: 110, v: 1e+22}
+
+ [131,110,10,0,0,0,64,178,186,201,224,25,30,2]
+         </code></figure>
+        <h4>list(x,...)</h4>
+        <p>Створює JSON для кодування списку.</p>
+        <figure><code>
+ > dec(enc(list(atom('1'),number('1'),bin('1'))).buffer)
+
+ {t: 108, v: [{t: 100, v: "1"},
+              {t: 97, v: 1},
+              {t: 109, v: "1"}]}
+
+ [131,108,0,0,0,3,100,0,1,49,97,1,109,0,0,0,1,49,106]
+         </code></figure>
+        <h4>tuple(x,...)</h4>
+        <p>Створює JSON для кодування кортежу.</p>
+        <figure><code>
+ > dec(enc(tuple(atom('1'),number('1'),bin('1'))).buffer)
+
+ {t: 104, v: [{t: 100, v: "1"},
+              {t: 97, v: 1},
+              {t: 109, v: "1"}]}
+
+ [131,104,3,100,0,1,49,97,1,109,0,0,0,1,49]
+         </code></figure>
+        <h4>map(x,...)</h4>
+        <p>Створює JSON для кодування мапи.</p>
+        <figure><code>
+ > dec(enc(map(
+        {k:bin('rent'),v:float(1.2)},
+       {k:atom('ok'),  v:list(number(1),float(1.0),bin('1'))})).buffer)
+
+ {t:116, v:[{k:{t:109,v:"rent"},v:{t:70, v:1.2}},
+            {k:{t:100,v:"ok"},  v:{t:108,v:[{t:97, v:1},
+                                            {t:70, v:1},
+                                            {t:109,v:"1"}]}}]}
+
+ [131,116,0,0,0,2,109,0,0,0,4,114,101,110,
+  116,70,63,243,51,51,51,51,51,51,100,0,2,
+  111,107,108,0,0,0,3,97,1,70,63,240,0,0,0,
+  0,0,0,109,0,0,0,1,49,106]
+         </code></figure>
+    </section>
+    <section>
+
+<p>Можливо, Ви також бажаєте почитати про:
+<b>
+<a href="utf8.js.htm">utf8.js</a></b>,
+<a href="ieee754.js.htm">ieee754.js</a></b>,
+<a href="heart.js.htm">heart.js</a></b>,
+<a href="nitro.js.htm">nitro.js</a></b>,
+<a href="mq.js.htm">mq.js</a></b>,
+<a href="n2o.js.htm">n2o.js</a></b>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2019 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>

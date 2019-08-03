@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -16,6 +16,8 @@
     <a href='https://n2o.dev'>DEV</a>
     <a href='https://ws.n2o.space'>N2O</a>
     <a href='#' style="background:#ededed;">PROTO</a>
+    <a href='ua/n2o_proto.htm'>UA</a>
+    <a href='#' style="background:#ededed;">EN</a>
 </nav>
 
 <header>
@@ -28,7 +30,7 @@
 
 <h3>INTRO</h3>
 
-<p>N2O as an embaddable framework provides two exports for loop entrance.</p>
+<p>N2O as an embeddable framework provides two exports for loop entrance.</p>
 
     </section>
     <section>
@@ -37,7 +39,7 @@
 
 <p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_proto.erl">n2o_proto</a>
    protocol loop is compatible with cowboy and emqttd versions of N2O.
-   The main purpose of this API is to embedd N2O into your functional endpoint.
+   The main purpose of this API is to embed N2O into your functional endpoint.
    In other cases it's called automatically by configuration.</p>
 
 <a name=stream></a>
@@ -52,7 +54,7 @@
 
 <h4>push(term(), term(), term(), term(), term()) -> #reply{}.</h4>
 
-<p>The raw protocol chain processing without using using filtering.
+<p>The raw protocol chain processing without using filtering.
 You can intercept all messages from <a href="#stream">stream/3</a> and <a href="#info">info/3</a> by
 setting filter function in sys.config.</p>
 

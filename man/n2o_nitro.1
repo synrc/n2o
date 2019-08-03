@@ -1,0 +1,37 @@
+.TH n2o_nitro 5 "n2o 4.5.0" "Synrc Research Center" "N2O Modules"
+.SH NAME
+n2o_nitro \- N2O NITRO: Pickled Event Actions Transfer
+.SH INTRO
+.LP
+The \fINITRO\fR\& protocol provides simple actions (client code) and events (server messages).
+Actions delivered in IO messages from server to client and client or server may emit other protocol messagess.
+On one's platform actions could differ. You never know. For web actions, client code is JavaScript
+programs delivered for evalution at client.
+.SH PROTOCOL
+.LP
+Contains PICKLE, FLUSH, DIRECT, IO, INIT and maybe other messages. You never know.
+.SH INIT
+.LP
+INIT message is a part of HEART protocol. When plugged it can be triggered by sending four-byte sequence "N2O,".
+Init message is handled when {init,Cookie} is passed ass first parameter
+to n2o_nitro:info/3 function. It renders MODULE main/0 function and if ok,
+renders event(init) function. If everything is ok, then it returns:
+.LP
+.nf
+{reply,n2o:format({io,Actions,<<>>}),
+       Req,n2o:context(State,n2o_nitro,{init,UserCx})}
+.fi
+.LP
+If anything messed, it returns:
+.LP
+.nf
+{reply,n2o:format({io,<<>>,Error}),
+       Req,n2o:context(State,n2o_nitro,{init,UserCx})}
+.fi
+.SH IO
+.SH DIRECT
+.SH FLUSH
+.LP
+.SH "ALSO"
+.LP
+\fB\fIn2o(1)\fR\&\fR\&, \fB\fIn2o_async(1)\fR\&\fR\&

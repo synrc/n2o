@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -13,6 +14,8 @@
     <a href='https://n2o.dev'>DEV</a>
     <a href='https://ws.n2o.space'>N2O</a>
     <a href='#' style="background:#ededed;">SESSION</a>
+    <a href='ua/n2o_session.htm'>UA</a>
+    <a href='#' style="background:#ededed;">EN</a>
 </nav>
 <header>
     <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
@@ -34,7 +37,7 @@
         <h3>TYPES</h3>
         <p>Session token represents tuple cached in ETS.
            It consists of session id, key, expiration time and value.
-           Session token used both for auth and for session variales.</p>
+           Session token used both for auth and for session variables.</p>
         <figure><code>
  -type expires()     :: integer().
  -type session_sid() :: binary().
@@ -69,7 +72,7 @@
     <section>
         <h3>BACKEND</h3>
         <h4>clear(binary()) -> ok.</h4>
-        <p>Clears all session ovariables by session sid.</p>
+        <p>Clears all session variables by session sid.</p>
         <h4>update(session()) -> ok.</h4>
         <p>Updates session.</p>
         <h4>delete(session_key()) -> ok.</h4>

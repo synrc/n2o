@@ -1,0 +1,22 @@
+.TH n2o_format 1 "n2o 4.5.0" "Synrc Research Center" "N2O Modules"
+.SH NAME
+n2o_format \- N2O Fortmatter: JSON, BERT
+.SH INTRO
+.LP
+The formatter provides simple format/2 interface
+to protocol implementations.
+.SH format(Message, Formatter :: atom()) -> binary().
+.LP
+Encode the message according to formatter implemetation.
+.SH CONFIG
+.LP
+We usually store n2o configuration in root sys.config,
+but you can use it whatever you like.
+.LP
+.nf
+[{n2o,[{formatter,bert}]}].
+.fi
+.SH "ALSO"
+.LP
+\fB\fIn2o(1)\fR\&\fR\&,
+\fB\fIn2o_nitro(1)\fR\&\fR\&

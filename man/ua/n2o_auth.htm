@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Maxim Sokhatsky" />
+    <title>AUTH</title>
+    <link rel="stylesheet" href="https://tonpa.guru/blank.css?v=2" />
+</head>
+
+<body>
+
+<nav>
+    <a href='https://n2o.dev'>DEV</a>
+    <a href='https://ws.n2o.space/index.ua.html'>N2O</a>
+    <a href='#' style="background:#ededed;">AUTH</a>
+    <a href='#' style="background:#ededed;">UA</a>
+    <a href='../n2o_auth.htm'>EN</a>
+</nav>
+
+<header>
+    <a href="../../index.html"><img src="https://n2o.space/img/Synrc Neo.svg"></a>
+    <h1>AUTH</h1>
+</header>
+
+<main>
+    <section>
+
+
+<h3>ВСТУП</h3>
+
+<p>Модуль <a href="https://github.com/synrc/n2o/blob/master/src/mqtt/n2o_auth.erl">n2o_auth</a>
+   надає EMQ hook авторизації, який визначає
+   автопідписку клієнта на клієнтський топік.</p>
+
+    </section>
+    <section>
+
+<h3>CALLBACK</h3>
+
+<h4>check(#mqtt_client{},binary(),term()) -> ok | ignore.</h4>
+
+<p>Реалізація за замовчуванням виконує автоматичну підписку топіка клієнта на стороні сервера.</p>
+
+<figure><code>
+  check(#mqtt_client{client_id = ClientId, username  = PageModule,
+    client_pid = ClientPid,
+    ws_initial_headers = _Headers}, Password, Listeners) ->
+    ClientId = ensure_id(Client),
+    case ClientId of
+        <<"emqttd_", _/binary>> ->
+            emqttd_client:subscribe(ClientPid,
+                [{n2o:to_binary(["actions/1/",PageModule,"/",ClientId]), 2}]),
+             ignore;
+        _ -> ignore
+    end.
+
+</code></figure>
+
+    </section>
+    <section>
+
+<p>Цей модуль може бути пов'язаним з:
+<b>
+<a href="n2o.htm">n2o</a></b>,
+<a href="n2o_proto.htm">n2o_proto</a></b>,
+<a href="n2o_mqtt.htm">n2o_mqtt</a></b>.
+</p>
+
+    </section>
+</main>
+
+<footer>
+    2005&mdash;2019 &copy; Synrc Research Center
+</footer>
+
+</body>
+</html>
