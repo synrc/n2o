@@ -1,30 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="Maxim Sokhatsky" />
-    <title>N2O</title>
-    <link rel="stylesheet" href="https://synrc.space/synrc.css" />
-</head>
-
-<body>
-
-<nav>
-    <a href='https://n2o.dev'>DEV</a>
-    <a href='https://ws.n2o.space' style="background:#ededed;">N2O</a>
-    <a href='index.ua.html'>UA</a>
-    <a href='index.html' style="background:#ededed;">EN</a>
-</nav>
-
-<header>
-    <a href="https://github.com/synrc/n2o"><img src="https://synrc.space/images/Synrc Neo.svg?v=1"></a>
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" /><meta name="author" content="Maxim Sokhatsky" /><title>N2O</title><link rel="stylesheet" href="https://synrc.space/synrc.css" /></head><body><nav>
+    <a href="https://n2o.dev">DEV</a>
+    <a href="https://ws.n2o.space" style="background:#ededed;">N2O</a>
+    <a href="index.ua.html">UA</a>
+    <a href="index.html" style="background:#ededed;">EN</a>
+</nav><header>
+    <a href="https://github.com/synrc/n2o"><img src="https://synrc.space/images/Synrc Neo.svg?v=1" /></a>
     <h1>N2O</h1>
-</header>
-
-<aside>
+</header><aside>
     <article>
         <section>
             <h3>SYNOPSIS</h3>
@@ -36,7 +18,7 @@
         </section>
 
         <section>
-            <a name=plugin><h3>USAGE</h3></a>
+            <a name="plugin"></a><h3>USAGE</h3>
             <div>You can get rebar dependency and compile it:</div>
         <figure>
         <code>
@@ -46,15 +28,14 @@
         </code>
         </figure>
             <div>
-                MAY 2019 &copy; <a href="https://github.com/5HT">5HT</a> <a href="https://5ht.co/license.htm">ISC</a><br>
+                MAY 2019 © <a href="https://github.com/5HT">5HT</a> <a href="https://5ht.co/license.htm">ISC</a><br />
                 VER 6.7 6.6 6.5
             </div>
         </section>
     </article>
-</aside>
-<main>
+</aside><main>
     <section>
-        <a name=endpoint><h3>Endpoints</h3></a>
+        <a name="endpoint"></a><h3>Endpoints</h3>
         <p>
             Here is a list of types of endpoints which are supported by EMQ and accessible to N2O apps:
             WebSockets, MQTT, MQTT-SN, TCP, UDP, CoAP.
@@ -66,7 +47,7 @@
     </section>
     <section>
 
-        <a name=mqtt><h3>MQTT</h3></a>
+        <a name="mqtt"></a><h3>MQTT</h3>
         <p> <a href="http://emqx.io">EMQ</a> is an open-source MQTT broker implemented by Feng Lee.
             N2O is EMQ compatible plugin that acts as predefined MQTT clients that form
             a ring of virtual nodes, process all the protocol requests,
@@ -75,12 +56,7 @@
             both MQTT and WebSocket versions:
         </p>
         <div>
-        <ul>
-            <li><b><a href="man/n2o.htm">n2o</a></b> &mdash; N2O Application<div class=desk>: MQTT and WS &mdash; 10KB</div></li>
-            <li><b><a href="man/n2o_pi.htm">n2o_pi</a></b> &mdash; N2O Processes<div class=desk> &mdash; 4KB</div></li>
-            <li><b><a href="man/n2o_proto.htm">n2o_proto</a></b> &mdash; N2O Loop<div class=desk>: &mdash; 1KB</div></li>
-            <li><b><a href="man/n2o_ring.htm">n2o_ring</a></b> &mdash; N2O Ring<div class=desk>: Hash Ring &mdash; 1KB</div></li>
-        </ul>
+        <ul><li><b><a href="man/n2o.htm">n2o</a></b> — N2O Application<div class="desk">: MQTT and WS — 10KB</div></li><li><b><a href="man/n2o_pi.htm">n2o_pi</a></b> — N2O Processes<div class="desk"> — 4KB</div></li><li><b><a href="man/n2o_proto.htm">n2o_proto</a></b> — N2O Loop<div class="desk">: — 1KB</div></li><li><b><a href="man/n2o_ring.htm">n2o_ring</a></b> — N2O Ring<div class="desk">: Hash Ring — 1KB</div></li></ul>
         </div>
         <figure>
         <code>
@@ -91,25 +67,18 @@
         </code></figure>
         <div>
         <p>The list of MQTT specific modules:</p>
-        <ul>
-            <li><b><a href="man/n2o_auth.htm">n2o_auth</a></b> &mdash; N2O MQTT Authentication<div class=desk>: MQTT auth module &mdash; 1KB</div></li>
-            <li><b><a href="man/n2o_mqtt.htm">n2o_mqtt</a></b> &mdash; MQTT DHT Virtual Node</li>
-        </ul>
+        <ul><li><b><a href="man/n2o_auth.htm">n2o_auth</a></b> — N2O MQTT Authentication<div class="desk">: MQTT auth module — 1KB</div></li><li><b><a href="man/n2o_mqtt.htm">n2o_mqtt</a></b> — MQTT DHT Virtual Node</li></ul>
         </div>
     </section>
 
 
     <section>
-        <a name=ws><h3>WebSocket</h3></a>
+        <a name="ws"></a><h3>WebSocket</h3>
         <p> <a href="https://ninenines.eu">COWBOY</a> is small, fast, and modern HTTP server implemented by Loïc Hoguin.
             In this version, N2O loop is integrated as WebSocket <b>cowboy</b>
             handler that routes all incoming messages to N2O.
             The list of WebSocket specific modules:</p>
-        <ul>
-            <li><b><a href="man/n2o_stream.htm">n2o_stream</a></b> &mdash; COWBOY and XHR bridge</li>
-            <li><b><a href="man/n2o_cowboy.htm">n2o_cowboy</a></b> &mdash; COWBOY API</li>
-            <li><b><a href="man/n2o_ws.htm">n2o_ws</a></b> &mdash; WebSocket DHT Virtual Node</li>
-        </ul>
+        <ul><li><b><a href="man/n2o_stream.htm">n2o_stream</a></b> — COWBOY and XHR bridge</li><li><b><a href="man/n2o_cowboy.htm">n2o_cowboy</a></b> — COWBOY API</li><li><b><a href="man/n2o_ws.htm">n2o_ws</a></b> — WebSocket DHT Virtual Node</li></ul>
         <figure>
         <code>
  $ mad app web sample
@@ -121,43 +90,25 @@
 
 
     <section>
-        <a name=protocols><h3>Protocols</h3></a>
-        <ul>
-            <li><b><a href="man/n2o_heart.htm">n2o_heart</a></b> &mdash; PING protocol</li>
-            <li><b><a href="man/n2o_ftp.htm">n2o_ftp</a></b> &mdash; N2O File Protocol<div class=desk>: FTP &mdash; 4KB</div></li>
-            <li><b><a href="man/n2o_nitro.htm">n2o_nitro</a></b> &mdash; N2O Nitrogen Web Framework Protocol<div class=desk>:  &mdash; 3KB</div></li>
-        </ul>
+        <a name="protocols"></a><h3>Protocols</h3>
+        <ul><li><b><a href="man/n2o_heart.htm">n2o_heart</a></b> — PING protocol</li><li><b><a href="man/n2o_ftp.htm">n2o_ftp</a></b> — N2O File Protocol<div class="desk">: FTP — 4KB</div></li><li><b><a href="man/n2o_nitro.htm">n2o_nitro</a></b> — N2O Nitrogen Web Framework Protocol<div class="desk">:  — 3KB</div></li></ul>
     </section>
 
     <section>
-        <a name=services><h3>Services</h3></a>
-        <ul>
-            <li><b><a href="man/n2o_session.htm">n2o_session</a></b> &mdash; ETS sessions backend</li>
-            <li><b><a href="man/n2o_secret.htm">n2o_secret</a></b> &mdash; AES/CBC-128 encoder/decoder</li>
-            <li><b><a href="man/n2o_gproc.htm">n2o_gproc</a></b> &mdash; GPROC MQ backend</li>
-            <li><b><a href="man/n2o_syn.htm">n2o_syn</a></b> &mdash; SYN MQ backend</li>
-        </ul>
+        <a name="services"></a><h3>Services</h3>
+        <ul><li><b><a href="man/n2o_session.htm">n2o_session</a></b> — ETS sessions backend</li><li><b><a href="man/n2o_secret.htm">n2o_secret</a></b> — AES/CBC-128 encoder/decoder</li><li><b><a href="man/n2o_gproc.htm">n2o_gproc</a></b> — GPROC MQ backend</li><li><b><a href="man/n2o_syn.htm">n2o_syn</a></b> — SYN MQ backend</li></ul>
     </section>
 
 
     <section>
-        <a name=js><h3>JavaScript</h3></a>
+        <a name="js"></a><h3>JavaScript</h3>
 
-        <ul>
-            <li><b><a href="man/utf8.js.htm">utf8.js</a></b> &mdash; UTF-8 encoder/decoder</li>
-            <li><b><a href="man/ieee754.js.htm">ieee754.js</a></b> &mdash; IEEE-754 encoder/decoder</li>
-            <li><b><a href="man/bert.js.htm">bert.js</a></b> &mdash; BERT encoder/decoder</li>
-            <li><b><a href="man/n2o.js.htm">n2o.js</a></b> &mdash; N2O protocol looper</li>
-            <li><b><a href="man/heart.js.htm">heart.js</a></b> &mdash; HEART protocol</li>
-            <li><b><a href="man/nitro.js.htm">nitro.js</a></b> &mdash; NITRO protocol</li>
-            <li><b><a href="man/ftp.js.htm">ftp.js</a></b> &mdash; FTP protocol</li>
-            <li><b><a href="man/mq.js.htm">mq.js</a></b> &mdash; MQTT client</li>
-        </ul>
+        <ul><li><b><a href="man/utf8.js.htm">utf8.js</a></b> — UTF-8 encoder/decoder</li><li><b><a href="man/ieee754.js.htm">ieee754.js</a></b> — IEEE-754 encoder/decoder</li><li><b><a href="man/bert.js.htm">bert.js</a></b> — BERT encoder/decoder</li><li><b><a href="man/n2o.js.htm">n2o.js</a></b> — N2O protocol looper</li><li><b><a href="man/heart.js.htm">heart.js</a></b> — HEART protocol</li><li><b><a href="man/nitro.js.htm">nitro.js</a></b> — NITRO protocol</li><li><b><a href="man/ftp.js.htm">ftp.js</a></b> — FTP protocol</li><li><b><a href="man/mq.js.htm">mq.js</a></b> — MQTT client</li></ul>
 
     </section>
 
     <section>
-        <a name=js><h3>SPEC</h3></a>
+        <a name="js"></a><h3>SPEC</h3>
          <figure><figcaption>N2O:</figcaption><code>
  -type n2o()       :: #bert{} | #json{} | #binary{} | #default{}.
  -type cx()        :: #cx{}.
@@ -203,15 +154,8 @@
  -spec cache(memtable(),term(),term()) -> term().
  -spec cache(memtable(),term()) -> term().
          </code></figure>
-         <br><br>
+         <br /><br />
     </section>
-</main>
-
-<footer>
+</main><footer>
     Made with <span class="heart">❤</span> to Erlang
-</footer>
-
-</body>
-</html>
-
-
+</footer></body></html>

@@ -1,41 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="Maxim Sokhatsky" />
-    <title>N2O</title>
-    <link rel="stylesheet" href="https://tonpa.guru/blank.css?v=2" />
-</head>
-
-<body>
-
-<nav>
-    <a href='https://n2o.dev'>DEV</a>
-    <a href='#' style="background:#ededed;">N2O</a>
-    <a href='index.ua.html' style="background:#ededed;">UA</a>
-    <a href='index.html'>EN</a>
-</nav>
-
-<header>
-    <a href="https://github.com/synrc/n2o"><img src="https://synrc.space/images/Synrc Neo.svg?v=1"></a>
+<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" /><meta name="author" content="Maxim Sokhatsky" /><title>N2O</title><link rel="stylesheet" href="https://tonpa.guru/blank.css?v=2" /></head><body><nav>
+    <a href="https://n2o.dev">DEV</a>
+    <a href="#" style="background:#ededed;">N2O</a>
+    <a href="index.ua.html" style="background:#ededed;">UA</a>
+    <a href="index.html">EN</a>
+</nav><header>
+    <a href="https://github.com/synrc/n2o"><img src="https://synrc.space/images/Synrc Neo.svg?v=1" /></a>
     <h1>N2O</h1>
-</header>
-
-<aside>
+</header><aside>
     <article>
         <section>
             <h3>СИНОПСИС</h3>
             <div>N2O — це вбудовувана бібліотека протокольних циклів обробки повідомлень
                  для WebSocket, MQTT та TCP серверів. До базової функціональності
                  бібліотеки входять: управління процесами; кільця віртуальних вузлів для
-                 обробки запитів; сервіси сесій, кодування, шини та кешування.<br><br>
+                 обробки запитів; сервіси сесій, кодування, шини та кешування.<br /><br />
             </div>
         </section>
         <section>
-            <a name=plugin><h3>ВИКОРИСТАННЯ</h3></a>
+            <a name="plugin"></a><h3>ВИКОРИСТАННЯ</h3>
             <div>Ви можете сміливо використовувати з N2O ваш
                  улюблений Erlang чи Elixir менеджер пакетів:
                  mad, mix, rebar3 чи erlang.mk. MAD — наш власний менеджер
@@ -48,15 +30,14 @@
         </code>
         </figure>
             <div>
-                MAY 2019 &copy; <a href="https://github.com/5HT">5HT</a> <a href="https://5ht.co/license.htm">ISC</a><br>
+                MAY 2019 © <a href="https://github.com/5HT">5HT</a> <a href="https://5ht.co/license.htm">ISC</a><br />
                 VER 6.7 6.6 6.5
             </div>
         </section>
     </article>
-</aside>
-<main>
+</aside><main>
     <section>
-        <a name=endpoint><h3>Точки підключення протоколів</h3></a>
+        <a name="endpoint"></a><h3>Точки підключення протоколів</h3>
         <p>
             Перелік типів кінцевих точок підключення протоколів,
             які підтримуються EMQ, та є доступними для N2O програм:
@@ -71,7 +52,7 @@
     </section>
     <section>
 
-        <a name=mqtt><h3>MQTT</h3></a>
+        <a name="mqtt"></a><h3>MQTT</h3>
         <p> <a href="http://emqx.io">EMQ</a> — брокер MQTT з відкритим кодом, написаний Feng Lee.
             N2O — це сумісний з EMQ плагін, являє собою заздалегідь визначені клієнти MQTT,
             які у вигляді кільця віртуальних вузлів обробляють протокольні запити
@@ -80,12 +61,7 @@
             MQTT та WebSocket версій:
         </p>
         <div>
-        <ul>
-            <li><b><a href="man/ua/n2o.htm">n2o</a></b> &mdash; Додаток N2O<div class=desk>: MQTT and WS &mdash; 10KB</div></li>
-            <li><b><a href="man/ua/n2o_pi.htm">n2o_pi</a></b> &mdash; Процеси N2O<div class=desk> &mdash; 4KB</div></li>
-            <li><b><a href="man/ua/n2o_proto.htm">n2o_proto</a></b> &mdash; Цикл N2O<div class=desk>: &mdash; 1KB</div></li>
-            <li><b><a href="man/ua/n2o_ring.htm">n2o_ring</a></b> &mdash; Кільце N2O<div class=desk>: Хеш Кільце &mdash; 1KB</div></li>
-        </ul>
+        <ul><li><b><a href="man/ua/n2o.htm">n2o</a></b> — Додаток N2O<div class="desk">: MQTT and WS — 10KB</div></li><li><b><a href="man/ua/n2o_pi.htm">n2o_pi</a></b> — Процеси N2O<div class="desk"> — 4KB</div></li><li><b><a href="man/ua/n2o_proto.htm">n2o_proto</a></b> — Цикл N2O<div class="desk">: — 1KB</div></li><li><b><a href="man/ua/n2o_ring.htm">n2o_ring</a></b> — Кільце N2O<div class="desk">: Хеш Кільце — 1KB</div></li></ul>
         </div>
         <figure>
         <code>
@@ -96,25 +72,18 @@
         </code></figure>
         <div>
         <p>Список модулів, специфічних для MQTT версії:</p>
-        <ul>
-            <li><b><a href="man/ua/n2o_auth.htm">n2o_auth</a></b> &mdash; N2O MQTT Authentication<div class=desk>: модуль аутентифікації MQTT &mdash; 1KB</div></li>
-            <li><b><a href="man/ua/n2o_mqtt.htm">n2o_mqtt</a></b> &mdash; MQTT DHT Virtual Node</li>
-        </ul>
+        <ul><li><b><a href="man/ua/n2o_auth.htm">n2o_auth</a></b> — N2O MQTT Authentication<div class="desk">: модуль аутентифікації MQTT — 1KB</div></li><li><b><a href="man/ua/n2o_mqtt.htm">n2o_mqtt</a></b> — MQTT DHT Virtual Node</li></ul>
         </div>
     </section>
 
 
     <section>
-        <a name=ws><h3>WebSocket</h3></a>
+        <a name="ws"></a><h3>WebSocket</h3>
         <p> <a href="https://ninenines.eu">COWBOY</a> — невеликий, швидкий та сучасний HTTP сервер, написаний Loïc Hoguin.
             У цій версії цикл N2O інтегрований як WebSocket <b>cowboy</b>
             обробник, який пересилає всі вхідні повідомлення до N2O.
             Список модулів, специфічних для WebSocket версії:</p>
-        <ul>
-            <li><b><a href="man/ua/n2o_stream.htm">n2o_stream</a></b> &mdash; COWBOY та XHR міст</li>
-            <li><b><a href="man/ua/n2o_cowboy.htm">n2o_cowboy</a></b> &mdash; COWBOY API</li>
-            <li><b><a href="man/ua/n2o_ws.htm">n2o_ws</a></b> &mdash; WebSocket DHT Virtual Node</li>
-        </ul>
+        <ul><li><b><a href="man/ua/n2o_stream.htm">n2o_stream</a></b> — COWBOY та XHR міст</li><li><b><a href="man/ua/n2o_cowboy.htm">n2o_cowboy</a></b> — COWBOY API</li><li><b><a href="man/ua/n2o_ws.htm">n2o_ws</a></b> — WebSocket DHT Virtual Node</li></ul>
         <figure>
         <code>
  $ mad app web sample
@@ -126,43 +95,25 @@
 
 
     <section>
-        <a name=protocols><h3>Протоколи</h3></a>
-        <ul>
-            <li><b><a href="man/ua/n2o_heart.htm">n2o_heart</a></b> &mdash; PING protocol</li>
-            <li><b><a href="man/ua/n2o_ftp.htm">n2o_ftp</a></b> &mdash; N2O File Protocol<div class=desk>: FTP &mdash; 4KB</div></li>
-            <li><b><a href="man/ua/n2o_nitro.htm">n2o_nitro</a></b> &mdash; N2O Nitrogen Web Framework Protocol<div class=desk>:  &mdash; 3KB</div></li>
-        </ul>
+        <a name="protocols"></a><h3>Протоколи</h3>
+        <ul><li><b><a href="man/ua/n2o_heart.htm">n2o_heart</a></b> — PING protocol</li><li><b><a href="man/ua/n2o_ftp.htm">n2o_ftp</a></b> — N2O File Protocol<div class="desk">: FTP — 4KB</div></li><li><b><a href="man/ua/n2o_nitro.htm">n2o_nitro</a></b> — N2O Nitrogen Web Framework Protocol<div class="desk">:  — 3KB</div></li></ul>
     </section>
 
     <section>
-        <a name=services><h3>Сервіси</h3></a>
-        <ul>
-            <li><b><a href="man/ua/n2o_session.htm">n2o_session</a></b> &mdash; бекенд ETS сесій</li>
-            <li><b><a href="man/ua/n2o_secret.htm">n2o_secret</a></b> &mdash; кодер/декодер AES/CBC-128</li>
-            <li><b><a href="man/ua/n2o_gproc.htm">n2o_gproc</a></b> &mdash; бекенд GPROC MQ</li>
-            <li><b><a href="man/ua/n2o_syn.htm">n2o_syn</a></b> &mdash; бекенд SYN MQ</li>
-        </ul>
+        <a name="services"></a><h3>Сервіси</h3>
+        <ul><li><b><a href="man/ua/n2o_session.htm">n2o_session</a></b> — бекенд ETS сесій</li><li><b><a href="man/ua/n2o_secret.htm">n2o_secret</a></b> — кодер/декодер AES/CBC-128</li><li><b><a href="man/ua/n2o_gproc.htm">n2o_gproc</a></b> — бекенд GPROC MQ</li><li><b><a href="man/ua/n2o_syn.htm">n2o_syn</a></b> — бекенд SYN MQ</li></ul>
     </section>
 
 
     <section>
-        <a name=js><h3>JavaScript</h3></a>
+        <a name="js"></a><h3>JavaScript</h3>
 
-        <ul>
-            <li><b><a href="man/ua/utf8.js.htm">utf8.js</a></b> &mdash; кодер/декодер UTF-8</li>
-            <li><b><a href="man/ua/ieee754.js.htm">ieee754.js</a></b> &mdash; кодер/декодер IEEE-754</li>
-            <li><b><a href="man/ua/bert.js.htm">bert.js</a></b> &mdash; кодер/декодер BERT</li>
-            <li><b><a href="man/ua/n2o.js.htm">n2o.js</a></b> &mdash; протокольний цикл N2O</li>
-            <li><b><a href="man/ua/heart.js.htm">heart.js</a></b> &mdash; протокол HEART</li>
-            <li><b><a href="man/ua/nitro.js.htm">nitro.js</a></b> &mdash; протокол NITRO</li>
-            <li><b><a href="man/ua/ftp.js.htm">ftp.js</a></b> &mdash; протокол FTP</li>
-            <li><b><a href="man/ua/mq.js.htm">mq.js</a></b> &mdash; клієнт MQTT</li>
-        </ul>
+        <ul><li><b><a href="man/ua/utf8.js.htm">utf8.js</a></b> — кодер/декодер UTF-8</li><li><b><a href="man/ua/ieee754.js.htm">ieee754.js</a></b> — кодер/декодер IEEE-754</li><li><b><a href="man/ua/bert.js.htm">bert.js</a></b> — кодер/декодер BERT</li><li><b><a href="man/ua/n2o.js.htm">n2o.js</a></b> — протокольний цикл N2O</li><li><b><a href="man/ua/heart.js.htm">heart.js</a></b> — протокол HEART</li><li><b><a href="man/ua/nitro.js.htm">nitro.js</a></b> — протокол NITRO</li><li><b><a href="man/ua/ftp.js.htm">ftp.js</a></b> — протокол FTP</li><li><b><a href="man/ua/mq.js.htm">mq.js</a></b> — клієнт MQTT</li></ul>
 
     </section>
 
     <section>
-        <a name=js><h3>Типова специфікація</h3></a>
+        <a name="js"></a><h3>Типова специфікація</h3>
          <figure><figcaption>N2O:</figcaption><code>
  -type n2o()       :: #bert{} | #json{} | #binary{} | #default{}.
  -type cx()        :: #cx{}.
@@ -208,15 +159,8 @@
  -spec cache(memtable(),term(),term()) -> term().
  -spec cache(memtable(),term()) -> term().
          </code></figure>
-         <br><br>
+         <br /><br />
     </section>
-</main>
-
-<footer>
+</main><footer>
     Made with <span class="heart">❤</span> to Erlang
-</footer>
-
-</body>
-</html>
-
-
+</footer></body></html>

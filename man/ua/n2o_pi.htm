@@ -76,29 +76,28 @@
 
 <figure><figcaption>Лістинг 2. Розуміння n2o_pi</figcaption><code>
  1> supervisor:which_children(n2o).
- [{{ring,4},<0.1661.0>,worker,[n2o_mqtt]},
-  {{ring,3},<0.1655.0>,worker,[n2o_mqtt]},
-  {{ring,2},<0.1653.0>,worker,[n2o_mqtt]},
-  {{ring,1},<0.1651.0>,worker,[n2o_mqtt]},
-  {{caching,"timer"},<0.1604.0>,worker,[n2o]}]
+ [{{ring,4},&#60;0.1661.0&#62;,worker,[n2o_mqtt]},
+  {{ring,3},&#60;0.1655.0&#62;,worker,[n2o_mqtt]},
+  {{ring,2},&#60;0.1653.0&#62;,worker,[n2o_mqtt]},
+  {{ring,1},&#60;0.1651.0v,worker,[n2o_mqtt]},
+  {{caching,"timer"},&#60;0.1604.0&#62;,worker,[n2o]}]
 
  2> ets:tab2list(ring).
- [{{ring,4},infinity,<0.1661.0>},
- {{ring,1},infinity,<0.1651.0>},
- {{ring,2},infinity,<0.1653.0>},
- {{ring,3},infinity,<0.1655.0>}]
+ [{{ring,4},infinity,&#60;0.1661.0&#62;},
+ {{ring,1},infinity,&#60;0.1651.0&#62;},
+ {{ring,2},infinity,&#60;0.1653.0&#62;},
+ {{ring,3},infinity,&#60;0.1655.0&#62;}]
 
  3> ets:tab2list(caching).
- [{{caching,"timer"},infinity,<0.1604.0>}]
+ [{{caching,"timer"},infinity,&#60;0.1604.0&#62;}]
 
  4> n2o_pi:send(caching,"timer",{timer,ping}).
  n2o Timer: ping
  ok
 
  5> n2o_pi:pid(caching,"timer").
- <0.1604.0>
-
-</0.1604.0></0.1604.0></0.1655.0></0.1653.0></0.1651.0></0.1661.0></0.1604.0></0.1651.0></0.1653.0></0.1655.0></0.1661.0></code></figure>
+ &#60;0.1604.0&#62;
+</code></figure>
 
     </section>
     <section>
