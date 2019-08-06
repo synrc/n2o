@@ -64,16 +64,21 @@ new(NumVNodes, Nodes) ->
 
 remove_index(Node, {NumVNodes, InnerRing}) ->
     Positions = position_node(NumVNodes, Node),
-    NewInnerRing = lists:foldl(fun({Pos, _}, Tree) -> gb_trees:delete_any(Pos, Tree) end, InnerRing, Positions),
+    NewInnerRing = lists:foldl(fun({Pos, _}, Tree) ->
+      gb_trees:delete_any(Pos, Tree) end, InnerRing, Positions),
     {NumVNodes, NewInnerRing}.
 
 size_index({_NumVNodes, InnerRing}) -> gb_trees:size(InnerRing).
 build_ring(Nodes) -> gb_trees:from_orddict(lists:keysort(1, Nodes)).
-build_ring(Nodes, Ring) -> lists:foldl(fun({Pos, Node}, Tree) -> gb_trees:insert(Pos, Node, Tree) end, Ring, Nodes).
+build_ring(Nodes, Ring) -> lists:foldl(fun({Pos, Node}, Tree) ->
+  gb_trees:insert(Pos, Node, Tree) end, Ring, Nodes).
+
 members_index({_NumVNodes, InnerRing}) -> lists:usort(gb_trees:values(InnerRing)).
 new(Nodes) -> new(1, Nodes).
 chash(X) -> crypto:hash(?HASH, term_to_binary(X)).
-chash(X, Y) -> XBin = term_to_binary(X), YBin = term_to_binary(Y), crypto:hash(?HASH, <<XBin/binary, YBin/binary>>).
+chash(X, Y) -> XBin = term_to_binary(X), YBin = term_to_binary(Y),
+  crypto:hash(?HASH, <<XBin/binary, YBin/binary>>).
+
 position_node(Node) -> {chash(Node), Node}.
 position_node(1, Node) -> [position_node(Node)];
 position_node(NumVNodes, Node) ->
