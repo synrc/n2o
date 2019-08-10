@@ -6,6 +6,8 @@ send(C,M) -> C ! M.
 
 proc(init,#pi{name=Name}=Async) -> n2o:reg(Name), {ok,Async#pi{state=application:get_env(n2o,proto,n2o_proto)}};
 
+proc({ring, Topic, Publish}, State) -> proc(Publish, State);
+
 proc({publish, C, Token, Request}, State = #pi{name=Server,state=Module}) ->
     Ctx = #cx { session= n2o:to_binary(Token), node=Server,
                 client_pid=C, state=application:get_env(kvs,dba,[]) },
