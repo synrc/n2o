@@ -47,7 +47,7 @@ set_value(Session, Key, Value) ->
     (storage()):update({{Session,Key},{expire(),Value}}), Value.
 
 move(Sid) ->
-    [ (storage()):update({{Sid,Key},{expire(),Val}}) || {{Sid,Key},{Exp,Val}} <- ets:select(cookies,
+    [ (storage()):update({{Sid,Key},{expire(),Val}}) || {{_,Key},{_,Val}} <- ets:select(cookies,
         ets:fun2ms(fun(A) when (element(1,element(1,A)) == Sid) -> A end)) ], ok.
 
 clear(Session) ->

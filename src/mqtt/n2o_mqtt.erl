@@ -24,8 +24,8 @@ proc({disconnected, shutdown, tcp_closed}, State) ->
 proc({ring, Topic, Request}, State) ->
     proc({publish, #{payload => Request, topic => Topic}}, State);
 
-proc({publish, #{payload := Request, topic := <<"/",Address/binary>>}}, State=#pi{name=Name,state=C}) ->
-    [Proto,App,Node|Path] = string:tokens(binary_to_list(Address),"/"),
+proc({publish, #{payload := Request, topic := <<"/",Address/binary>>}}, State=#pi{state=C}) ->
+    [Proto,App,Node|_] = string:tokens(binary_to_list(Address),"/"),
     put(context,Cx=#cx{module=App,node=Node,params=Proto,client_pid=C,from= <<"/response/",Address/binary>>}),
     Return = case  n2o_proto:try_info(Request,[],Cx) of
         {reply,{_,      <<>>},_,_}           -> skip;
