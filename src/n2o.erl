@@ -10,67 +10,44 @@
 
 % SERVICES
 
--export([send/2,reg/1,unreg/1,reg/2]).        % mq
--export([pickle/1,depickle/1]).               % pickle
--export([encode/1,decode/1]).                 % format
--export([session/1,session/2,user/1,user/0]). % session
+-export([send/2,reg/1,unreg/1,reg/2]).                 % pubsub
+-export([pickle/1,depickle/1]).                        % pickle
+-export([encode/1,decode/1]).                          % format
+-export([session/1,session/2,user/1,user/0]).          % session
 -export([cache/2,cache/3,cache/4,invalidate_cache/1]). % cache
 
 % START VNODE HASH RING
 
 init([])   -> storage_init(), mq_init(), { ok, { { one_for_one, 1000, 10 }, [] } }.
-stop(_)    -> catch n2o_mqtt:unload(), ok.
-start(_,_) -> catch n2o_mqtt:load([]), X = supervisor:start_link({local,n2o},n2o, []),
-
-              Default = [ "erp" ],
-              Partitions = 4,
-
-              MQTT = lists:flatmap(fun(A) ->
-                     lists:map(fun(Y) -> "/mqtt/" ++ A ++ "/" ++ integer_to_list(Y) end,
-                     lists:seq(1,Partitions)) end,
-                     application:get_env(n2o,mqtt_services,Default)),
-
-              WS   = lists:flatmap(fun(A) ->
-                     lists:map(fun(Y) -> "/ws/" ++ A ++ "/" ++ integer_to_list(Y) end,
-                     lists:seq(1,Partitions)) end,
-                     application:get_env(n2o,ws_services,Default)),
-
-              TCP  = lists:flatmap(fun(A) ->
-                     lists:map(fun(Y) -> "/tcp/" ++ A ++ "/" ++ integer_to_list(Y) end,
-                     lists:seq(1,Partitions)) end,
-                     application:get_env(n2o,tcp_services,Default)),
-
-              application:set_env(n2o,mqtt_ring,n2o_ring:new(Partitions,MQTT)),
-              application:set_env(n2o,ws_ring,  n2o_ring:new(Partitions,WS)),
-              application:set_env(n2o,tcp_ring, n2o_ring:new(Partitions,TCP)),
+stop(_)    -> ok.
+bench()    -> ok.
+start(_,_) -> S = supervisor:start_link({local,n2o},n2o,[]),
 
               start_timer(),
+              Space      = 4,                 % ring partitions
+              Default    = [ erp ],           % applications
+              Protocols  = [ mqtt, ws, tcp ], % protocols
 
-              X.
+              % Generic loop for applications, its rings and exposed protocols
+
+            [ begin
+                lists:flatmap(fun(B) ->
+                  Key = fun(I) -> lists:concat(["/",P,"/",B,"/",I]) end,
+                  X = lists:map(fun(I) -> Key(I) end, lists:seq(1,Space)),
+                  application:set_env(B,n2o_ring:tab2ring(P),n2o_ring:new(Space,X)),
+                  X end, application:get_env(n2o,n2o_ring:tab2srv(P),Default))
+              end || P <- Protocols ],
+
+              S.
 
 start_mqtt()     -> lists:map(fun start_mqtt/1, n2o_ring:members(mqtt)).
 start_ws()       -> lists:map(fun start_ws/1,   n2o_ring:members(ws)).
-start_tcp()      -> lists:map(fun start_ws/1,   n2o_ring:members(tcp)).
+start_tcp()      -> lists:map(fun start_tcp/1,  n2o_ring:members(tcp)).
+
 start_mqtt(Node) -> n2o_pi:start(#pi{module=n2o_mqtt,table=mqtt,   sup=n2o,state=[],name=Node}).
 start_ws(Node)   -> n2o_pi:start(#pi{module=n2o_ws,  table=ws,     sup=n2o,state=[],name=Node}).
-start_tcp(Node)  -> n2o_pi:start(#pi{module=n2o_ws,  table=tcp,    sup=n2o,state=[],name=Node}).
+start_tcp(Node)  -> n2o_pi:start(#pi{module=n2o_tcp, table=tcp,    sup=n2o,state=[],name=Node}).
 start_timer()    -> n2o_pi:start(#pi{module=n2o,     table=caching,sup=n2o,state=[],name="/timer"}).
-
-% MQTT vs OTP benchmarks
-
-bench() -> [bench_mqtt(),bench_otp()].
-run()   -> 10000.
-
-bench_mqtt() -> N = run(), {T,_} = timer:tc(fun() -> [ begin Y = lists:concat([X rem 16]),
-    n2o_mqtt:send_reply(<<"clientId">>,n2o:to_binary(["events/1/",Y]),term_to_binary(X))
-                               end || X <- lists:seq(1,N) ], ok end),
-           {mqtt,trunc(N*1000000/T),"msgs/s"}.
-
-bench_otp() -> N = run(), {T,_} = timer:tc(fun() ->
-     [ n2o_ring:send(mqtt,{publish, n2o:to_binary(["events/1/",
-              lists:concat([(X rem 4) + 1]),"/index/anon/room/"]),
-                      term_to_binary(X)}) || X <- lists:seq(1,N) ], ok end),
-     {otp,trunc(N*1000000/T),"msgs/s"}.
 
 % ETS
 
@@ -104,7 +81,7 @@ user(User)          -> session(user,User).
 
 % FORMAT
 
-formatter() -> application:get_env(n2o,formatter,n2o_bert).
+formatter()  -> application:get_env(n2o,formatter,n2o_bert).
 encode(Term) -> (formatter()):encode(Term).
 decode(Term) -> (formatter()):decode(Term).
 

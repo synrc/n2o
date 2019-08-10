@@ -9,4 +9,5 @@ info({text,<<"PING">> = _Ping}, Req, State) ->
 info({text,<<>>}, Req, State) ->
     {reply, {text, <<>>}, Req, State};
 
-info(Message, Req, State) -> {unknown,Message, Req, State}.
+info(Message, Req, State) ->
+    {unknown,Message, Req, State}.

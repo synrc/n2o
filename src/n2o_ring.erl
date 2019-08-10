@@ -1,40 +1,26 @@
 -module(n2o_ring).
--copyright('Copyright (c) 2016 Carlos Galdino').
--license('MIT').
--export([add/2,contains/2,lookup/2,members/1,new/1,new/2,remove/2,size/1,send/2]).
--define(HASH, sha256).
+-export([add/3,contains/3,lookup/3,members/1,new/1,new/2,remove/3,size/1,send/2,send/3]).
+-export([ring/2,tab2srv/1,tab2ring/1]).
+-define(HASH, sha).
 
--type num_vnodes() :: pos_integer().
--type node_entry() :: term().
--type key() :: term().
--type position() :: binary().
--type positions() :: [{position(), node_entry()}].
--type nodes() :: [node_entry()].
--type inner_ring() :: gb_trees:tree(position(), node_entry()).
--type ring_index() :: {num_vnodes(), inner_ring()}.
--type ring() :: tcp | ws | mqtt.
+tab2ring(ws)   -> ws_ring;
+tab2ring(mqtt) -> mqtt_ring;
+tab2ring(tcp)  -> tcp_ring.
+tab2srv(ws)    -> ws_services;
+tab2srv(mqtt)  -> mqtt_services;
+tab2srv(tcp)   -> tcp_services.
+ring(App,Tab)  -> application:get_env(App,tab2ring(Tab),n2o_ring:new(1,[1])).
 
--spec ring(ring()) -> any().
--spec add(node_entry(), ring()) -> ring_index().
--spec contains(node_entry(), ring()) -> boolean().
--spec lookup(key(), ring()) -> node_entry() | {error, empty_ring}.
--spec position_node(num_vnodes(), node_entry()) -> positions().
--spec members(ring()) -> nodes().
--spec new(nodes()) -> ring_index().
--spec new(num_vnodes(), nodes()) -> ring_index().
--spec remove(node_entry(), ring()) -> ring_index().
-
-tab2ring(ws)       -> ws_ring;
-tab2ring(mqtt)     -> mqtt_ring;
-tab2ring(tcp)      -> tcp_ring.
-ring(Tab)          -> application:get_env(n2o,tab2ring(Tab),n2o_ring:new(1,[1])).
-lookup(Tab,Term)   -> lookup_index(Term, ring(Tab)).
-contains(Tab,Term) -> contains_index(Term, ring(Tab)).
-add(Tab,Node)      -> add_index(Node, ring(Tab)).
-remove(Tab,Node)   -> remove_index(Node, ring(Tab)).
+lookup(Tab,App,Term)   -> lookup_index(Term, ring(App,Tab)).
+contains(Tab,App,Term) -> contains_index(Term, ring(App,Tab)).
+add(Tab,App,Node)      -> add_index(Node, ring(App,Tab)).
+remove(Tab,App,Node)   -> remove_index(Node, ring(App,Tab)).
 size(Tab)          -> size_index(Tab).
-send(Tab,Msg)      -> n2o_pi:send(Tab,lookup_index(Msg, ring(Tab)),Msg).
-members(Tab)       -> members_index(ring(Tab)).
+send(Tab,Msg)      -> n2o_pi:send(Tab,lookup_index(Msg, ring(n2o,Tab)),Msg).
+send(Tab,App,Msg)  -> Topic = lookup_index(Msg, ring(App,Tab)),
+                      n2o_pi:send(Tab,Topic,{ring,list_to_binary(Topic),Msg}).
+members(Tab)       -> [ Z || {Z} <- lists:flatten([ lists:map(fun(X)->{X}end, members_index(ring(App,Tab)))
+                          || App <- application:get_env(n2o,tab2srv(Tab),[]) ]) ].
 
 add_index(Node, {NumVNodes, InnerRing}) ->
     NewInnerRing = build_ring(position_node(NumVNodes, Node), InnerRing),
