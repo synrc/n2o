@@ -6,7 +6,7 @@ send(C,T,M) ->
     emqtt:publish(C,T,M).
 
 xio(Name) ->
-  [ {host,"xio-2.n2o.space"},
+  [ {host,"xio-2.n2o.space"}, %% http://xio.n2o.space:18083 — dashboard
     {port,1883},
     {force_ping,true},
     {proto_ver,v5},
