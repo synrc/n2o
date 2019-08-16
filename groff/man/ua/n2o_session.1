@@ -1,0 +1,95 @@
+.TH n2o_session 1 "n2o_session" "Synrc Research Center" "SESSION"
+.SH NAME
+n2o_session
+
+.SH ВСТУП
+.LP
+Модуль
+\fIn2o_session\fR\& надає механізм сесій — змінні сесій, захищені токеном авторизації.
+.nf
+> ets:tab2list(cookies).
+[{{
+.fi
+<
+<"05dcf467c79071008bc4">>,user},{63710034516,"maxim"}},
+{{
+<
+<"05dcf467c79071008bc4">>,room},{63710034516,"n2o"}},
+{{
+<
+<"05dcf467c79071008bc4">>,auth},{63710033891,[]}}]
+
+.SH ТИПИ
+.LP
+Токен сесії представляє собою кортеж, кешований в ETS.
+Він складається з ідентифікатора сесії, терміну придатності, ключа та значення.
+Токен сесії використовується як для змінних авторизації, так і для змінних сесії.
+.nf
+-type expires()     :: integer().
+-type session_sid() :: binary().
+-type session_key() :: { session_sid() , term()        }.
+-type session_val() :: { expires()     , term()        }.
+-type session()     :: { session_key() , session_val() }.
+.fi
+.LP
+Токен сесії виглядає як значення, зашифроване pickler, в кортежі з ключем
+'Token'
+.
+.nf
+-type token() :: { 'Token', binary() }.
+.fi
+
+.SH API
+authenticate([],binary()) -> token().
+.LP
+Протокол виглядає наступним чином. Якщо термін придатності сесії закінчився, або
+токен сесії недійсний — створюється новий токен сесії.
+У випадку, коли термін придатності ще не закінчився,
+і токен сесії є валідним, можливі два варіанти:
+1) якщо параметр n2o
+nitro_prolongate
+дорівнює true,
+то оновлюється значення терміну придатності для поточної сесії
+(поки sid сесії залишається незмінним);
+2) якщо
+nitro_prolongate
+дорівнює false — токен сесії повністю залишається незмінним.
+get_value(binary(),term(),term()) -> term().
+.LP
+Повертає значення змінної сесії зі storage сесій.
+set_value(binary(),term(),term()) -> term().
+.LP
+Зберігає значення змінної сесії в storage сесій.
+storage() -> atom().
+.LP
+Повертає поточний бекенд сесій. По замовчуванню
+n2o_session
+.
+prolongate() -> boolean().
+.LP
+Повертає n2o параметр
+nitro_prolongate
+. По замовчуванню
+false
+.
+
+.SH BACKEND
+clear(binary()) -> ok.
+.LP
+Очищає всі змінні сесії по sid.
+update(session()) -> ok.
+.LP
+Оновлює сесію.
+delete(session_key()) -> ok.
+.LP
+Видаляє сесію по ключу.
+lookup(session_key()) -> ok.
+.LP
+Пошук сесії по ключу.
+invalidate_sessions() -> ok.
+.LP
+Видаляє всі змінні, для яких закінчився термін придатності, для всіх сесій.
+
+.SH ALSO
+.LP
+\fB\fIn2o_nitro(1)\fR\&\fR\&, \fB\fIn2o(1)\fR\&\fR\&

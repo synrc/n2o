@@ -39,7 +39,7 @@ data = { 'Token', 42 } }
 .fi
 .LP
 Target structure of
-\fIbert.js\fR\& â fast low-level handcoded parser from BERT format.
+\fIbert.js\fR\& — fast low-level handcoded parser from BERT format.
 .LP
 .nf
 { t: 104,
@@ -250,7 +250,7 @@ enc(json)
 .LP
 Encodes internal JSON to binary buffer.
 .nf
-> enc({t: 119, v: "æ¥æ¬"})
+> enc({t: 119, v: "日本"})
 Uint8Array([131,119,6,230,151,165,230,156,172])
 .fi
 dec(buffer)
@@ -258,7 +258,7 @@ dec(buffer)
 Decodes binary buffer to internal JSON.
 .nf
 > dec((new Uint8Array([131,119,6,230,151,165,230,156,172])).buffer)
-{t: 119, v: "æ¥æ¬"}
+{t: 119, v: "日本"}
 .fi
 bin(x)
 .nf
@@ -345,4 +345,4 @@ Creates JSON for map encoding.
 
 .SH ALSO
 .LP
-\fB\fIutf8.js(1)\fR\&\fR\&, \fB\fIieee754.js(1)\fR\&\fR\&, \fB\fIheart.js(1)\fR\&\fR\&, \fB\fInitro.js(1)\fR\&\fR\&, \fB\fImq.js(1)\fR\&\fR\&, \fB\fIn2o.js(1)\fR\&\fR\&,
+\fB\fIutf8.js(1)\fR\&\fR\&, \fB\fIieee754.js(1)\fR\&\fR\&, \fB\fIheart.js(1)\fR\&\fR\&, \fB\fInitro.js(1)\fR\&\fR\&, \fB\fImq.js(1)\fR\&\fR\&, \fB\fIn2o.js(1)\fR\&\fR\&

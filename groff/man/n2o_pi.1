@@ -134,13 +134,13 @@ sup      :: atom(),
 module   :: atom(),
 state    :: term()  }).
 .fi
-name â process name, key in supervised chain.
-module â the module name where
+name — process name, key in supervised chain.
+module — the module name where
 proc/2
 is placed.
-table â ETS table name where cached pids are stored.
-sup â the application, where supervised processes will be created.
-state â the state of the running supervised process.
+table — ETS table name where cached pids are stored.
+sup — the application, where supervised processes will be created.
+state — the state of the running supervised process.
 
 .SH API
 start(#pi{}) -> {pid(),term()} | #error{}.
@@ -183,4 +183,4 @@ ok
 
 .SH ALSO
 .LP
-\fB\fIn2o(1)\fR\&\fR\&, \fB\fIn2o_proto(1)\fR\&\fR\&, \fB\fIn2o_mqtt(1)\fR\&\fR\&,
+\fB\fIn2o(1)\fR\&\fR\&, \fB\fIn2o_proto(1)\fR\&\fR\&, \fB\fIn2o_mqtt(1)\fR\&\fR\&

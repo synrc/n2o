@@ -2,16 +2,16 @@
 .SH NAME
 n2o_auth
 
-.SH INTRO
+.SH ВСТУП
 .LP
-The
-\fIn2o_auth\fR\& module provides EMQ auth hook that perform
-client's autisubscribe to client topic.
+Модуль
+\fIn2o_auth\fR\& надає EMQ hook авторизації, який визначає
+автопідписку клієнта на клієнтський топік.
 
 .SH CALLBACK
 check(#mqtt_client{},binary(),term()) -> ok | ignore.
 .LP
-The default implementation performs client topic autosubscribe at server side.
+Реалізація за замовчуванням виконує автоматичну підписку топіка клієнта на стороні сервера.
 .nf
 check(#mqtt_client{client_id = ClientId, username  = PageModule,
 client_pid = ClientPid,

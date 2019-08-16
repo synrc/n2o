@@ -2,24 +2,16 @@
 .SH NAME
 n2o.js
 
-.SH INTRO
+.SH ВСТУП
 .LP
-The
-\fIn2o.js\fR\& module provides N2O protocol loop at JavaScript side.
-The size of
+Модуль
+\fIn2o.js\fR\& надає протокольний цикл N2O на стороні JavaScript.
+Розмір
 n2o.js
-is 2120 bytes.
+— 2120 байт.
 
-.SH CONFIG
+.SH КОНФІГУРАЦІЯ
 .LP
-This function creates a WebSocket raw connection to N2O WS and
-sends
-<
-<"N2O,",Token/binary
->
-> text packet
-which invokes
-\fINITRO\fR\& protocol page initialization.
 .nf
 active = false,
 debug = false,
@@ -33,19 +25,19 @@ protos = [$bert];
 .SH API
 token()
 .LP
-Token returns chached in localStorage session token.
+Повертає токен сесії, закешований в localStorage.
 N2O_start()
 .LP
-This function creates a WebSocket raw connection to N2O WS and
-sends
+Ця функція створює сире WebSocket з'єднання з N2O WS
+і надсилає текстовий пакет
 <
 <"N2O,",Token/binary
 >
-> text packet
-which invokes
-\fINITRO\fR\& protocol page initialization.
+>,
+який викликає ініціалізацію сторінки
+\fINITRO\fR\& протоколом.
 .nf
-function N2O_start() { }
+N2O_start();
 .fi
 
 .SH BERT
