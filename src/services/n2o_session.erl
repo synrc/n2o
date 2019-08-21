@@ -18,7 +18,11 @@ storage()     -> application:get_env(n2o,session_storage,n2o_session).
 token(A)      -> (storage()):update(A), {'Token',n2o:pickle(A)}.
 token(A,P)    -> (storage()):update(A), {'Token',P}.
 ttl()         -> application:get_env(n2o,ttl,60*15).
-till(Now,TTL) -> from(to(Now)+TTL).
+till(Now,TTL) -> 
+    case is_atom(TTL) of
+        true -> TTL;
+        false -> from(to(Now)+TTL)
+    end.
 prolongate()  -> application:get_env(n2o,nitro_prolongate,false).
 sid(Seed)     -> n2o_secret:sid(Seed).
 
