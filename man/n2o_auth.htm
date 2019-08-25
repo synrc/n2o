@@ -1,63 +1,74 @@
-<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="" /><meta name="author" content="Maxim Sokhatsky" />
 <title>AUTH</title>
 <link rel="stylesheet" href="https://n2o.dev/blank.css?x=12"/>
 <link rel="stylesheet" href="https://n2o.dev/zima.css?x=12"/>
-</head><body><nav>
-    <a href="https://n2o.dev">DEV</a>
-    <a href="https://ws.n2o.space">N2O</a>
-    <a href="#" style="background:#ededed;">AUTH</a>
-    <a href="https://n2o.dev/deps/n2o/man/ua/n2o_auth.htm">UA</a>
-    <a href="#" style="background:#ededed;">EN</a>
-</nav><header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
-    <h1>AUTH</h1>
-</header><main>
-    <section>
-
-
-<h3>INTRO</h3>
-
-<p>The <a href="https://github.com/synrc/n2o/blob/master/src/mqtt/n2o_auth.erl">n2o_auth</a>
-   module provides EMQ auth hook that perform
-   client's autisubscribe to client topic.</p>
-
-    </section>
-    <section>
-
-<h3>CALLBACK</h3>
-
-<h4>check(#mqtt_client{},binary(),term()) -> ok | ignore.</h4>
-
-<p>The default implementation performs client topic autosubscribe at server side.</p>
-
-<figure><code>
-  check(#mqtt_client{client_id = ClientId, username  = PageModule,
-    client_pid = ClientPid,
-    ws_initial_headers = _Headers}, Password, Listeners) ->
+</head>
+<body>
+<nav>
+  <a href="https://n2o.dev">DEV</a>
+  <a href="https://ws.n2o.space">N2O</a>
+  <a href="#" style="background:#ededed;">AUTH</a>
+  <div class="dropdown">
+    <a onclick="drop()" class="dropbtn">EN</a>
+    <div id="dropdown" class="dropdown-content">
+      <a href="https://n2o.dev/deps/n2o/man/ua/n2o_auth.htm">UA</a>
+      <a href="n2o_auth.htm">EN</a>
+    </div>
+  </div>
+</nav>
+<header>
+  <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
+  <h1>AUTH</h1>
+</header>
+<main>
+<article>
+  <section>
+    <h3>INTRO</h3>
+    <p>The <a href="https://github.com/synrc/n2o/blob/master/src/mqtt/n2o_auth.erl">n2o_auth</a>
+      module provides EMQ auth hook that perform
+      client's autisubscribe to client topic.</p>
+  </section>
+  <section>
+    <h3>CALLBACK</h3>
+    <figure>
+      <code>
+  check(#mqtt_client{},binary(),term()) -&#62; ok | ignore.
+      </code>
+    </figure>
+    <p>The default implementation performs client topic autosubscribe at server side.</p>
+    <figure>
+      <code>
+  check(#mqtt_client{client_id  = ClientId, username  = PageModule,
+                     client_pid = ClientPid,
+                     ws_initial_headers = _Headers},
+                     Password, Listeners) -&#62;
     ClientId = ensure_id(Client),
     case ClientId of
-        &lt;&lt;"emqttd_", _/binary>> ->
-            emqttd_client:subscribe(ClientPid,
-                [{n2o:to_binary(["actions/1/",PageModule,"/",ClientId]), 2}]),
-             ignore;
-        _ -> ignore
+      &#60;&#60;"emqttd_", _/binary&#62;&#62; -&#62;
+        emqttd_client:subscribe(ClientPid,
+          [{n2o:to_binary(["actions/1/",PageModule,"/",ClientId]), 2}]),
+         ignore;
+      _ -&#62; ignore
     end.
-
-</code></figure>
-
-    </section>
-    <section>
-
-<p>This module may refer to:
-<b>
-<a href="n2o.htm">n2o</a></b>,
-<a href="n2o_proto.htm">n2o_proto</a>,
-<a href="n2o_mqtt.htm">n2o_mqtt</a>.
-</p>
-
-    </section>
-</main><footer>
-    2005—2019 © Synrc Research Center
-</footer></body></html>
+      </code>
+    </figure>
+  </section>
+  <section>
+    <p>This module may refer to:
+      <b><a href="n2o.htm">n2o</a></b>,
+      <a href="n2o_proto.htm">n2o_proto</a>,
+      <a href="n2o_mqtt.htm">n2o_mqtt</a>.
+    </p>
+  </section>
+</article>
+</main>
+<footer>2005—2019 © Synrc Research Center</footer>
+<script>function drop(){document.getElementById("dropdown").classList.toggle("show");}</script>
+</body>
+</html>
