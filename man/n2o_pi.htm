@@ -1,198 +1,221 @@
-<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="" /><meta name="author" content="Maxim Sokhatsky" /><title>PI</title>
+<meta name="description" content="" />
+<meta name="author" content="Maxim Sokhatsky" />
+<title>PI</title>
 <link rel="stylesheet" href="https://n2o.dev/blank.css?x=12"/>
 <link rel="stylesheet" href="https://n2o.dev/zima.css?x=12"/>
-</head><body><nav>
-    <a href="https://n2o.dev">DEV</a>
-    <a href="https://ws.n2o.space">N2O</a>
-    <a href="#" style="background:#ededed;">PI</a>
-    <a href="https://n2o.dev/deps/n2o/man/ua/n2o_pi.htm">UA</a>
-    <a href="#" style="background:#ededed;">EN</a>
-</nav><header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
-    <h1>PI</h1>
-</header><main>
-    <section>
+</head>
+<body>
+<nav>
+  <a href="https://n2o.dev">DEV</a>
+  <a href="https://ws.n2o.space">N2O</a>
+  <a href="#" style="background:#ededed;">PI</a>
+  <div class="dropdown">
+    <a onclick="drop()" class="dropbtn">EN</a>
+    <div id="dropdown" class="dropdown-content">
+      <a href="https://n2o.dev/deps/n2o/man/ua/n2o_pi.htm">UA</a>
+      <a href="n2o_pi.htm">EN</a>
+    </div>
+  </div>
+</nav>
+<header>
+  <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
+  <h1>PI</h1>
+</header>
+<main>
+<article>
+  <section>
+    <h3>INTRO</h3>
+    <p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_pi.erl">n2o_pi</a>
+      module dedicated for creating and tracking supervised
+      processes across all applications, using any ETS tables. Any supervised process in N2O
+      is created using n2o_pi, such as: ring vnodes, timers, authorization,
+      web page processes, test processes and other services. Loop process inside <b>info/2</b> protocol handlers
+      should spawn new async processes <b>proc/2</b> in case of time consuming operations,
+      because protocol handler is a critical path and it should be handled as soon as possible.</p>
+  </section>
+  <section>
+    <h3>CALLBACK</h3>
+    <figure>
+      <code>
+  proc(term(),#pi{}) -&#62; #ok{} | #reply{}.
+      </code>
+    </figure>
+    <p>The <b>proc/2</b> is a callback that will be called on each
+      <b>gen_server</b>'s calls: <b>handle_call</b>,
+      <b>handle_cast</b> and <b>handle_info</b>, its <b>init</b>
+      and <b>terminate</b>. It returns either #ok as initial state of the process (which is the #pi{} too)
+      or its response to <b>gen_server:call/2</b> with new state included in #reply.</p>
+  </section>
+  <section>
+    <h3>EXAMPLE</h3>
+    <p>Here is literal implementation of N2O Timer which invalidates
+      the <b>caching</b> table used for session variables.</p>
+    <figure>
+      <figcaption>Listing 1. Invalidate Cache by Timer</figcaption>
+      <code>
+  proc(init,#pi{}=Async) -&#62;
+      {ok,Async#pi{state=timer(ping())}};
 
+  proc({timer,ping},#pi{state=Timer}=Async) -&#62;
+      erlang:cancel_timer(Timer),
+      io:format("n2o Timer: ~p\r~n",[ping]),
+      n2o:invalidate_cache(caching),
+      {reply,ok,Async#pi{state=timer_restart(ping())}}.
 
-<h3>INTRO</h3>
+  timer(Diff) -&#62;
+      {X,Y,Z} = Diff,
+      erlang:send_after(1000*(Z+60*Y+60*60*X),self(),{timer,ping}).
 
-<p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_pi.erl">n2o_pi</a>
-module dedicated for creating and tracking supervised
-processes across all applications, using any ETS tables. Any supervised process in N2O
-is created using n2o_pi, such as: ring vnodes, timers, authorization,
-web page processes, test processes and other services. Loop process inside <b>info/2</b> protocol handlers
-should spawn new async processes <b>proc/2</b> in case of time consuming operations,
-because protocol handler is a critical path and it should be handled as soon as possible.</p>
+  ping() -&#62;
+      application:get_env(n2o,timer,{0,1,0}).
+      </code>
+    </figure>
+    <figure>
+      <figcaption>Listing 1. Invalidate Cache by Timer</figcaption>
+      <code>
+  &#62; n2o_pi:start(#pi{ module = n2o,
+                          table  = caching,
+                          sup    = n2o,
+                          state  = [],
+                          name   = "timer"}).
+      </code>
+    </figure>
+    <p>Main purpose of <b>n2o_pi</b> is to create such processes from
+      single <b>proc/2</b> function and track pid in ETS table which is specified during
+      process #pi{} initialization.</p>
+    <figure>
+      <figcaption>Listing 2. Understanding n2o_pi</figcaption>
+      <code>
+  1&#62; supervisor:which_children(n2o).
+  [{{ring,4},&#60;0.1661.0&#62;,worker,[n2o_mqtt]},
+   {{ring,3},&#60;0.1655.0&#62;,worker,[n2o_mqtt]},
+   {{ring,2},&#60;0.1653.0&#62;,worker,[n2o_mqtt]},
+   {{ring,1},&#60;0.1651.0v,worker,[n2o_mqtt]},
+   {{caching,"timer"},&#60;0.1604.0&#62;,worker,[n2o]}]
 
-    </section>
-    <section>
+  2&#62; ets:tab2list(ring).
+  [{{ring,4},infinity,&#60;0.1661.0&#62;},
+   {{ring,1},infinity,&#60;0.1651.0&#62;},
+   {{ring,2},infinity,&#60;0.1653.0&#62;},
+   {{ring,3},infinity,&#60;0.1655.0&#62;}]
 
-<h3>CALLBACK</h3>
+  3&#62; ets:tab2list(caching).
+  [{{caching,"timer"},infinity,&#60;0.1604.0&#62;}]
 
-<h4>proc(term(),#pi{}) -> #ok{} | #reply{}.</h4>
+  4&#62; n2o_pi:send(caching,"timer",{timer,ping}).
+  n2o Timer: ping
+  ok
 
-<p>The <b>proc/2</b> is a callback that will be called on each
-<b>gen_server</b>'s calls: <b>handle_call</b>,
-<b>handle_cast</b> and <b>handle_info</b>, its <b>init</b>
-and <b>terminate</b>. It returns either #ok as initial state of the process (which is the #pi{} too)
-or its response to <b>gen_server:call/2</b> with new state included in #reply.</p>
+  5&#62; n2o_pi:pid(caching,"timer").
+  &#60;0.1604.0&#62;
+      </code>
+    </figure>
+  </section>
+  <section>
+    <h3>RECORDS</h3>
+    <p>Each process is driven by its protocol which in fact a sum of protocol messages.
+      Though n2o_pi as being generic don't limit the protocol messages,
+      however it defines the type of process state, the #pi{} record.</p>
+    <figure>
+      <figcaption>Listing 3. Erlang/OTP Records</figcaption>
+      <code>
+     #ok { code = [] :: [] | #pi{} }.
 
-    </section>
-    <section>
+  #error { code = [] :: [] | term() }.
 
-<h3>EXAMPLE</h3>
+  #reply { data = [] :: [] | term() ,
+           code = [] :: [] | #pi{} }.
+      </code>
+    </figure>
+    <p>According to N2O agreement each protocol message filed should include [] in its type as default nil.</p>
+    <figure>
+      <figcaption>Listing 4. N2O Records</figcaption>
+      <code>
+  -record(pi, { name   :: atom(),
+                table  :: ets:tid(),
+                sup    :: atom(),
+                module :: atom(),
+                state  :: term()  }).
+      </code>
+    </figure>
+    <ul>
+      <li>name — process name, key in supervised chain.</li>
+      <li>module — the module name where <b>proc/2</b> is placed.</li>
+      <li>table — ETS table name where cached pids are stored.</li>
+      <li>sup — the application, where supervised processes will be created.</li>
+      <li>state — the state of the running supervised process.</li>
+    </ul>
+  </section>
+  <section>
+    <h3>API</h3>
+    <figure>
+      <code>
+  start(#pi{}) -> {pid(),term()} | #error{}.
+      </code>
+    </figure>
+    <p>Spawns <b>proc/2</b> function inside a process under supervision.</p>
+    <figure>
+      <code>
+  stop(Class,Name) -> #pi{} | #error{}.
+      </code>
+    </figure>
+    <p>Kills the process and remove from supervision.</p>
+    <figure>
+      <code>
+  restart(Class,Name) -> {pid(),term()} | #error{} | #pi{}.
+      </code>
+    </figure>
+    <p>Tries to stop the process. On success it starts the new one, else return error.</p>
+    <figure>
+      <code>
+  send(Class,Name,term()) -> term().
+      </code>
+    </figure>
+    <p>Sends <b>gen_call</b> message to process, taken from Class table with Name key.
+      Returns the response from <b>gen_server:call</b>.</p>
+    <figure>
+      <code>
+  pid(Class,Name) -> pid().
+      </code>
+    </figure>
+    <p>Returns pid that was stored during process initialization in Class table with Name key.</p>
+    <figure>
+      <figcaption>Listing 5. gen_server compatibility.</figcaption>
+      <code>
+  1&#62; n2o_pi:pid(caching,"timer") 
+            ! {timer,ping}.
+  n2o Timer: ping
+  {timer,ping}
 
-<p>Here is literal implementation of N2O Timer which invalidates
-   the <b>caching</b> table used for session variables.</p>
+  2&#62; n2o_pi:send(caching,"timer",
+                 {timer,ping}).
+  n2o Timer: ping
+  ok
 
-<figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
- proc(init,#pi{}=Async) ->
-     {ok,Async#pi{state=timer(ping())}};
-
- proc({timer,ping},#pi{state=Timer}=Async) ->
-     erlang:cancel_timer(Timer),
-     io:format("n2o Timer: ~p\r~n",[ping]),
-     n2o:invalidate_cache(caching),
-     {reply,ok,Async#pi{state=timer_restart(ping())}}.
-
- timer(Diff) ->
-     {X,Y,Z} = Diff,
-     erlang:send_after(1000*(Z+60*Y+60*60*X),self(),{timer,ping}).
-
- ping() ->
-     application:get_env(n2o,timer,{0,1,0}).
-
-</code></figure>
-
-<figure><figcaption>Listing 1. Invalidate Cache by Timer</figcaption><code>
- > n2o_pi:start(#pi{ module=n2o,
-                     table=caching,
-                     sup=n2o,
-                     state=[],
-                     name="timer"}).
-
-</code></figure>
-
-<p>Main purpose of <b>n2o_pi</b> is to create such processes from
-single <b>proc/2</b> function and track pid in ETS table which is specified during
-process #pi{} initialization.</p>
-
-<figure><figcaption>Listing 2. Understanding n2o_pi</figcaption><code>
- 1> supervisor:which_children(n2o).
- [{{ring,4},&#60;0.1661.0&#62;,worker,[n2o_mqtt]},
-  {{ring,3},&#60;0.1655.0&#62;,worker,[n2o_mqtt]},
-  {{ring,2},&#60;0.1653.0&#62;,worker,[n2o_mqtt]},
-  {{ring,1},&#60;0.1651.0v,worker,[n2o_mqtt]},
-  {{caching,"timer"},&#60;0.1604.0&#62;,worker,[n2o]}]
-
- 2> ets:tab2list(ring).
- [{{ring,4},infinity,&#60;0.1661.0&#62;},
- {{ring,1},infinity,&#60;0.1651.0&#62;},
- {{ring,2},infinity,&#60;0.1653.0&#62;},
- {{ring,3},infinity,&#60;0.1655.0&#62;}]
-
- 3> ets:tab2list(caching).
- [{{caching,"timer"},infinity,&#60;0.1604.0&#62;}]
-
- 4> n2o_pi:send(caching,"timer",{timer,ping}).
- n2o Timer: ping
- ok
-
- 5> n2o_pi:pid(caching,"timer").
- &#60;0.1604.0&#62;
-</code></figure>
-
-    </section>
-    <section>
-
-<h3>RECORDS</h3>
-
-<p>Each process is driven by its protocol which in fact a sum of protocol messages.
-Though n2o_pi as being generic don't limit the protocol messages,
-however it defines the type of process state, the #pi{} record.</p>
-
-<figure><figcaption>Listing 3. Erlang/OTP Records</figcaption><code>
-      #ok { code = [] :: [] | #pi{} }.
-
-   #error { code = [] :: [] | term() }.
-
-   #reply { data = [] :: [] | term() ,
-            code = [] :: [] | #pi{} }.
-
-</code></figure>
-
-<p>According to N2O agreement each protocol message filed should include [] in its type as default nil.</p>
-
-<figure><figcaption>Listing 4. N2O Records</figcaption><code>
- -record(pi, { name     :: atom(),
-               table    :: ets:tid(),
-               sup      :: atom(),
-               module   :: atom(),
-               state    :: term()  }).
-
-</code></figure>
-
-<ul><li>name — process name, key in supervised chain.</li><li>module — the module name where <b>proc/2</b> is placed.</li><li>table — ETS table name where cached pids are stored.</li><li>sup — the application, where supervised processes will be created.</li><li>state — the state of the running supervised process.</li></ul>
-
-    </section>
-    <section>
-
-<h3>API</h3>
-
-<h4>start(#pi{}) -> {pid(),term()} | #error{}.</h4>
-
-<p>Spawns <b>proc/2</b> function inside a process under supervision.</p>
-
-<h4>stop(Class,Name) -> #pi{} | #error{}.</h4>
-
-<p>Kills the process and remove from supervision.</p>
-
-<h4>restart(Class,Name) -> {pid(),term()} | #error{} | #pi{}.</h4>
-
-<p>Tries to stop the process. On success it starts the new one, else return error.</p>
-
-<h4>send(Class,Name,term()) -> term(). </h4>
-
-<p>Sends <b>gen_call</b> message to process, taken from Class table with Name key.
-Returns the response from <b>gen_server:call</b>.</p>
-
-
-<h4>pid(Class,Name) -> pid(). </h4>
-
-<p>Returns pid that was stored during process initialization in Class table with Name key.</p>
-
-<figure><figcaption>Listing 5. gen_server compatibility.</figcaption><code>
- 1> n2o_pi:pid(caching,"timer") 
-                 ! {timer,ping}.
- n2o Timer: ping
- {timer,ping}
-
- 2> n2o_pi:send(caching,"timer",
-                   {timer,ping}).
- n2o Timer: ping
- ok
-
- 3> gen_server:call(
-    n2o_pi:pid(caching,"timer"),
+  3&#62; gen_server:call(
+       n2o_pi:pid(caching,"timer"),
                   {timer,ping}).
- n2o Timer: ping
- ok
-
-</code></figure>
-
-    </section>
-    <section>
-
-<p>This module may refer to:
-<b>
-<a href="n2o.htm">n2o</a></b>,
-<a href="n2o_proto.htm">n2o_proto</a>,
-<a href="n2o_mqtt.htm">n2o_mqtt</a>.
-</p>
-
-    </section>
-</main><footer>
-    2005—2019 © Synrc Research Center
-</footer></body></html>
+  n2o Timer: ping
+  ok
+      </code>
+    </figure>
+  </section>
+  <section>
+    <p>This module may refer to:
+      <b><a href="n2o.htm">n2o</a></b>,
+      <a href="n2o_proto.htm">n2o_proto</a>,
+      <a href="n2o_mqtt.htm">n2o_mqtt</a>.
+    </p>
+  </section>
+</article>
+</main>
+<footer>2005—2019 © Synrc Research Center</footer>
+<script>function drop(){document.getElementById("dropdown").classList.toggle("show");}</script>
+</body>
+</html>
