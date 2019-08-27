@@ -1,84 +1,159 @@
-<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" />
-<meta name="author" content="Maxim Sokhatsky" /><title>SESSION</title>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="Maxim Sokhatsky" />
+<title>SESSION</title>
 <link rel="stylesheet" href="https://n2o.dev/blank.css?x=12"/>
 <link rel="stylesheet" href="https://n2o.dev/zima.css?x=12"/>
-</head><body><nav>
-    <a href="https://n2o.dev">DEV</a>
-    <a href="https://ws.n2o.space">N2O</a>
-    <a href="#" style="background:#ededed;">SESSION</a>
-    <a href="https://n2o.dev/deps/n2o/man/ua/n2o_session.htm">UA</a>
-    <a href="#" style="background:#ededed;">EN</a>
-</nav><header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
-    <h1>SESSION</h1>
-</header><main>
-    <section>
-        <h3>INTRO</h3>
-        <p>The <a href="https://github.com/synrc/n2o/blob/master/src/services/n2o_session.erl">n2o_session</a>
-        module provides session variables protected by authorization token.</p>
-        <figure><code>
- > ets:tab2list(cookies).
- [{{&lt;&lt;"05dcf467c79071008bc4">>,user},{63710034516,"maxim"}},
-  {{&lt;&lt;"05dcf467c79071008bc4">>,room},{63710034516,"n2o"}},
-  {{&lt;&lt;"05dcf467c79071008bc4">>,auth},{63710033891,[]}}]
-        </code></figure>
-    </section>
-    <section>
-        <h3>TYPES</h3>
-        <p>Session token represents tuple cached in ETS.
-           It consists of session id, key, expiration time and value.
-           Session token used both for auth and for session variables.</p>
-        <figure><code>
- -type expires()     :: integer().
- -type session_sid() :: binary().
- -type session_key() :: { session_sid() , term()        }.
- -type session_val() :: { expires()     , term()        }.
- -type session()     :: { session_key() , session_val() }.
-        </code></figure>
-        <p>Session token encoded with pickler tagged as <b>'Token'</b> tuple.</p>
-        <figure><code>
- -type token() :: { 'Token', binary() }.
-        </code></figure>
-    </section>
-    <section>
-        <h3>API</h3>
-        <h4>authenticate([],binary()) -> token().</h4>
-        <p>The protocol is following. If session is expired or session
-           token is invalid then new session token issued. If session token
-           is not expired and valid then two cases could happen:
-           1) if <b>nitro_prolongate</b> n2o parameter is true,
-              then new expiration value is updated for current session, while
-              session sid remains unchanged;
-           2) if <b>nitro_prolongate</b> is false then full session token remains unchanged.</p>
-        <h4>get_value(binary(),term(),term()) -> term().</h4>
-        <p>Gets session variable from session storage.</p>
-        <h4>set_value(binary(),term(),term()) -> term().</h4>
-        <p>Sets session variable to session storage.</p>
-        <h4>storage() -> atom().</h4>
-        <p>Returns current sessions backend. <b>n2o_session</b> by default.</p>
-        <h4>prolongate() -> boolean().</h4>
-        <p>Returns <b>nitro_prolongate</b> n2o parameter. <b>false</b> by default.</p>
-    </section>
-    <section>
-        <h3>BACKEND</h3>
-        <h4>clear(binary()) -> ok.</h4>
-        <p>Clears all session variables by session sid.</p>
-        <h4>update(session()) -> ok.</h4>
-        <p>Updates session.</p>
-        <h4>delete(session_key()) -> ok.</h4>
-        <p>Removes session by key.</p>
-        <h4>lookup(session_key()) -> ok.</h4>
-        <p>Lookups session by key.</p>
-        <h4>invalidate_sessions() -> ok.</h4>
-        <p>Removes all expired variables across all sessions.</p>
-    </section>
-    <section>
-        <p>You may also want to read:
-        <b><a href="n2o_nitro.htm">n2o_nitro</a></b>,
-        <b><a href="n2o.htm">n2o</a></b>.
-        </p>
-    </section>
-</main><footer>
-    2005—2019 © Synrc Research Center
-</footer></body></html>
+<style>
+figcaption > b {text-transform:lowercase}
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://n2o.dev">DEV</a>
+  <a href="https://ws.n2o.space">N2O</a>
+  <a href="#" style="background:#ededed;">SESSION</a>
+  <div class="dropdown">
+    <a onclick="drop()" class="dropbtn">EN</a>
+    <div id="dropdown" class="dropdown-content">
+      <a href="https://n2o.dev/deps/n2o/man/ua/n2o_session.htm">UA</a>
+      <a href="n2o_session.htm">EN</a>
+    </div>
+  </div>
+</nav>
+<header>
+  <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
+  <h1>SESSION</h1>
+</header>
+<main>
+<article>
+  <section>
+    <h3>INTRO</h3>
+    <p>The <a href="https://github.com/synrc/n2o/blob/master/src/services/n2o_session.erl">n2o_session</a>
+      module provides session variables protected by authorization token.</p>
+    <figure>
+      <code>
+  > ets:tab2list(cookies).
+  [{{&#60;&#60;"05dcf467c79071008bc4"&#62;&#62;,user},{63710034516,"maxim"}},
+   {{&#60;&#60;"05dcf467c79071008bc4"&#62;&#62;,room},{63710034516,"n2o"}},
+   {{&#60;&#60;"05dcf467c79071008bc4"&#62;&#62;,auth},{63710033891,[]}}]
+      </code>
+    </figure>
+  </section>
+  <section>
+    <h3>TYPES</h3>
+    <p>Session token represents tuple cached in ETS.
+       It consists of session id, key, expiration time and value.
+       Session token used both for auth and for session variables.</p>
+    <figure>
+      <code>
+  -type expires()     :: integer().
+  -type session_sid() :: binary().
+  -type session_key() :: { session_sid() , term() }.
+  -type session_val() :: { expires()     , term() }.
+  -type session()     :: { session_key() , session_val() }.
+      </code>
+    </figure>
+    <p>Session token encoded with pickler tagged as <b>'Token'</b> tuple.</p>
+    <figure>
+      <code>
+  -type token() :: { 'Token', binary() }.
+      </code>
+    </figure>
+  </section>
+  <section>
+    <h3>API</h3>
+    <figure>
+      <code>
+  authenticate([], binary()) -&#62; token().
+      </code>
+    </figure>
+    <p>The protocol is following. If session is expired or session
+       token is invalid then new session token issued. If session token
+       is not expired and valid then two cases could happen:
+       1) if <b>nitro_prolongate</b> n2o parameter is true,
+        then new expiration value is updated for current session, while
+        session sid remains unchanged;
+       2) if <b>nitro_prolongate</b> is false then full session token remains unchanged.</p>
+    <figure>
+      <figcaption>Get session variable from session storage</figcaption>
+      <code>
+  get_value(binary(), term(), term()) -&#62; term().
+      </code>
+    </figure>
+    
+    <figure>
+      <figcaption>Set session variable to session storage</figcaption>
+      <code>
+  set_value(binary(), term(), term()) -&#62; term().
+      </code>
+    </figure>
+    
+    <figure>
+      <figcaption>Get current sessions backend. <b>n2o_session</b> by default</figcaption>
+      <code>
+  storage() -&#62; atom().
+      </code>
+    </figure>
+    
+    <figure>
+      <figcaption>Get <b>nitro_prolongate</b> n2o parameter. <b>false</b> by default</figcaption>
+      <code>
+  prolongate() -&#62; boolean().
+      </code>
+    </figure>
+  </section>
+  <section>
+    <h3>BACKEND</h3>
+    <figure>
+      <figcaption>Clear all session variables by session sid</figcaption>
+      <code>
+  clear(binary()) -&#62; ok.
+      </code>
+    </figure>
+
+    <figure>
+      <figcaption>Update session</figcaption>
+      <code>
+  update(session()) -&#62; ok.
+      </code>
+    </figure>
+
+    <figure>
+      <figcaption>Remove session by key</figcaption>
+      <code>
+  delete(session_key()) -&#62; ok.
+      </code>
+    </figure>
+
+    <figure>
+      <figcaption>Lookup session by key</figcaption>
+      <code>
+  lookup(session_key()) -&#62; ok.
+      </code>
+    </figure>
+
+    <figure>
+      <figcaption>Remove all expired variables across all sessions</figcaption>
+      <code>
+  invalidate_sessions() -&#62; ok.
+      </code>
+    </figure>
+  </section>
+  <section>
+    <p>You may also want to read:
+      <b><a href="n2o_nitro.htm">n2o_nitro</a></b>,
+      <b><a href="n2o.htm">n2o</a></b>.
+    </p>
+  </section>
+</article>
+</main>
+<footer>2005—2019 © Synrc Research Center</footer>
+<script>function drop(){document.getElementById("dropdown").classList.toggle("show");}</script>
+</body>
+</html>
