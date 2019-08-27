@@ -38,9 +38,13 @@ restart(Tab,Name) ->
 start_link (Parameters)    -> gen_server:start_link(?MODULE, Parameters, []).
 code_change(_,State,_)     -> {ok, State}.
 handle_call({get},_,Async) -> {reply,Async,Async};
+handle_call(Message,_,#pi{module=undefined}=Async) -> {noreply,[]};
 handle_call(Message,_,#pi{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_cast(Message,  #pi{module=undefined}=Async) -> {noreply,[]};
 handle_cast(Message,  #pi{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_info(timeout,  #pi{module=undefined}=Async) -> {noreply,[]};
 handle_info(timeout,  #pi{module=Mod}=Async) -> Mod:proc(timeout,Async);
+handle_info(Message,  #pi{module=undefined}=Async) -> {noreply,[]};
 handle_info(Message,  #pi{module=Mod}=Async) ->
     {noreply,case Mod:proc(Message,Async) of
                   {_,_,S} -> S;
@@ -54,5 +58,5 @@ init(#pi{module=Mod,table=Tab,name=Name}=Handler) ->
 terminate(_Reason, #pi{name=Name,sup=Sup,table=Tab}) ->
     spawn(fun() -> supervisor:delete_child(Sup,{Tab,Name}) end),
     io:format("n2o_pi:terminate~n"),
-    n2o:cache(Tab,{Tab,Name},undefined), ok.
+    catch n2o:cache(Tab,{Tab,Name},undefined), ok.
 
