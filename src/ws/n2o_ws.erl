@@ -24,5 +24,5 @@ proc({publish, C, Token, Request}, State = #pi{name=Server,state=Module}) ->
     {reply, Return, State};
 
 proc(Unknown,#pi{name=Name}=Async) ->
-    io:format("UNKNOWN ~p: ~p~n",[Name,Unknown]),
+    io:format("WS ~p: ~p~n",[Name,Unknown]),
     {reply,{uknown,Unknown,0},Async}.
