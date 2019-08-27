@@ -1,91 +1,100 @@
-<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" />
-<meta name="author" content="Maxim Sokhatsky" /><title>PROTO</title>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="Maxim Sokhatsky" />
+<title>PROTO</title>
 <link rel="stylesheet" href="https://n2o.dev/blank.css?x=12"/>
 <link rel="stylesheet" href="https://n2o.dev/zima.css?x=12"/>
-</head><body><nav>
-    <a href="https://n2o.dev">DEV</a>
-    <a href="https://ws.n2o.space">N2O</a>
-    <a href="#" style="background:#ededed;">PROTO</a>
-    <a href="https://n2o.dev/deps/n2o/man/ua/n2o_proto.htm">UA</a>
-    <a href="#" style="background:#ededed;">EN</a>
-</nav><header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
-    <h1>PROTO</h1>
-</header><main>
-    <section>
-
-<h3>INTRO</h3>
-
-<p>N2O as an embeddable framework provides two exports for loop entrance.</p>
-
-    </section>
-    <section>
-
-<h3>API</h3>
-
-<p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_proto.erl">n2o_proto</a>
-   protocol loop is compatible with cowboy and emqttd versions of N2O.
-   The main purpose of this API is to embed N2O into your functional endpoint.
-   In other cases it's called automatically by configuration.</p>
-
-<a name="stream"></a>
-<h4>stream({ text | binary, binary() }, term(), term()) -> #reply{}.</h4>
-
-<p>The stream function is dedicated for <b>cowboy</b> version of n2o.</p>
-
-<a name="info"></a>
-<h4>info(term(), term(), term()) -> #reply{}.</h4>
-
-<p>The info function is dedicated for <b>emqttd</b> version of n2o.</p>
-
-<h4>push(term(), term(), term(), term(), term()) -> #reply{}.</h4>
-
-<p>The raw protocol chain processing without using filtering.
-You can intercept all messages from <a href="#stream">stream/3</a> and <a href="#info">info/3</a> by
-setting filter function in sys.config.</p>
-
-    </section>
-    <section>
-
-
-<h3>CONFIG</h3>
-
-<figure>
-<code>
+</head>
+<body>
+<nav>
+  <a href="https://n2o.dev">DEV</a>
+  <a href="https://ws.n2o.space">N2O</a>
+  <a href="#" style="background:#ededed;">PROTO</a>
+  <div class="dropdown">
+    <a onclick="drop()" class="dropbtn">EN</a>
+    <div id="dropdown" class="dropdown-content">
+      <a href="https://n2o.dev/deps/n2o/man/ua/n2o_proto.htm">UA</a>
+      <a href="n2o_proto.htm">EN</a>
+    </div>
+  </div>
+</nav>
+<header>
+  <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
+  <h1>PROTO</h1>
+</header>
+<main>
+<article>
+  <section>
+    <h3>INTRO</h3>
+    <p>N2O as an embeddable framework provides two exports for loop entrance.</p>
+  </section>
+  <section>
+    <h3>API</h3>
+    <p>The <a href="https://github.com/synrc/n2o/blob/master/src/n2o_proto.erl">n2o_proto</a>
+      protocol loop is compatible with cowboy and emqttd versions of N2O.
+      The main purpose of this API is to embed N2O into your functional endpoint.
+      In other cases it's called automatically by configuration.</p>
+    <a name="stream"></a>
+    <figure>
+      <code>
+  stream({ text | binary, binary() }, term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
+    <p>The stream function is dedicated for <b>cowboy</b> version of n2o.</p>
+    <a name="info"></a>
+    <figure>
+      <code>
+  info(term(), term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
+    <p>The info function is dedicated for <b>emqttd</b> version of n2o.</p>
+    <figure>
+      <code>
+  push(term(), term(), term(), term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
+    <p>The raw protocol chain processing without using filtering.
+      You can intercept all messages from <a href="#stream">stream/3</a> and <a href="#info">info/3</a> by
+      setting filter function in sys.config.</p>
+  </section>
+  <section>
+    <h3>CONFIG</h3>
+    <figure>
+      <code>
   [{n2o,[{protocols,[n2o_nitro]},
          {filter,{n2o_proto,push}}]}].
-
-</code></figure>
-
-    </section>
-    <section>
-
-
-<h3>IMPLEMENTATION</h3>
-
-<figure>
-<code>
- nop(R,S)                  -> {reply,{binary,&lt;&lt;>>},R,S}.
- reply(M,R,S)              -> {reply,M,R,S}.
- push(_,R,S,[],_)          -> nop(R,S);
- push(M,R,S,[H|T],Acc)     ->
-     case H:info(M,R,S) of
-          {unknown,_,_,_}  -> push(M,R,S,T,Acc);
-          {reply,M1,R1,S1} -> reply(M1,R1,S1);
-                         A -> push(M,R,S,T,[A|Acc]) end.
-
-</code></figure>
-
-    </section>
-    <section>
-
-<p>This module may refer to:
-<a href="n2o.htm"><b>n2o</b></a>,
-<a href="n2o_pi.htm"><b>n2o_pi</b></a>.
-</p>
-
-    </section>
-</main><footer>
-    2005—2019 © Synrc Research Center
-</footer></body></html>
+      </code>
+    </figure>
+  </section>
+  <section>
+    <h3>IMPLEMENTATION</h3>
+    <figure>
+      <code>
+  nop(R,S)              -&#62; {reply,{binary,&#60;&#60;&#62;&#62;},R,S}.
+  reply(M,R,S)          -&#62; {reply,M,R,S}.
+  push(_,R,S,[],_)      -&#62; nop(R,S);
+  push(M,R,S,[H|T],Acc) -&#62;
+    case H:info(M,R,S) of
+      {unknown,_,_,_}  -&#62; push(M,R,S,T,Acc);
+      {reply,M1,R1,S1} -&#62; reply(M1,R1,S1);
+                     A -&#62; push(M,R,S,T,[A|Acc]) end.
+      </code>
+    </figure>
+  </section>
+  <section>
+    <p>This module may refer to:
+      <a href="n2o.htm"><b>n2o</b></a>,
+      <a href="n2o_pi.htm"><b>n2o_pi</b></a>.
+    </p>
+  </section>
+</article>
+</main>
+<footer>2005—2019 © Synrc Research Center</footer>
+<script>function drop(){document.getElementById("dropdown").classList.toggle("show");}</script>
+</body>
+</html>
