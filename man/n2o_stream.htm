@@ -1,81 +1,103 @@
-<!DOCTYPE html><html><head><meta charset="utf-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="" />
-<meta name="author" content="Maxim Sokhatsky" /><title>STREAM</title>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="Maxim Sokhatsky" />
+<title>STREAM</title>
 <link rel="stylesheet" href="https://n2o.dev/blank.css?x=12"/>
 <link rel="stylesheet" href="https://n2o.dev/zima.css?x=12"/>
-</head><body><nav>
-    <a href="https://n2o.dev">DEV</a>
-    <a href="https://ws.n2o.space">N2O</a>
-    <a href="#" style="background:#ededed;">STREAM</a>
-    <a href="https://n2o.dev/deps/n2o/man/ua/n2o_stream.htm">UA</a>
-    <a href="#" style="background:#ededed;">EN</a>
-</nav><header>
-    <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
-    <h1>STREAM</h1>
-</header><main>
-    <section>
+<style>
+figcaption > b {text-transform:lowercase}
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://n2o.dev">DEV</a>
+  <a href="https://ws.n2o.space">N2O</a>
+  <a href="#" style="background:#ededed;">STREAM</a>
+  <div class="dropdown">
+    <a onclick="drop()" class="dropbtn">EN</a>
+    <div id="dropdown" class="dropdown-content">
+      <a href="https://n2o.dev/deps/n2o/man/ua/n2o_stream.htm">UA</a>
+      <a href="n2o_stream.htm">EN</a>
+    </div>
+  </div>
+</nav>
+<header>
+  <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
+  <h1>STREAM</h1>
+</header>
+<main>
+<article>
+  <section>
+    <h3>INTRO</h3>
+    <p>WebSocket <a href="https://github.com/synrc/n2o/blob/master/src/ws/n2o_stream.erl">n2o_stream</a>
+      is implemented <b>cowboy_websocket_handler</b> behaviour for WS protocol
+      and <b>cowboy_http_handler</b> handler for XHR protocol. Both protocols are supported in single file.
+      This module is only for using N2O with <b>cowboy</b> web server.</p>
+  </section>
+  <section>
+    <h3>API</h3>
+    <p>The n2o_proto protocol loop is compatible with cowboy and emqttd versions of N2O.
+      The main purpose of this API is to embed N2O into your functional endpoint.
+      In other cases it's called automatically by configuration.</p>
+    <a name="stream"></a>
+    <figure>
+      <figcaption>The stream function is dedicated for <b>cowboy</b> version of <b>n2o</b></figcaption>
+      <code>
+  websocket_info({ text | binary, binary() }, term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
 
-<h3>INTRO</h3>
+    <figure>
+      <figcaption>This function is called on message arrival</figcaption>
+      <code>
+  websocket_handle({ text | binary, binary() }, term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
 
-<p>WebSocket <a href="https://github.com/synrc/n2o/blob/master/src/ws/n2o_stream.erl">n2o_stream</a>
-   is implemented
-   <b>cowboy_websocket_handler</b> behaviour for WS protocol
-   and <b>cowboy_http_handler</b> handler for XHR protocol. Both protocols are supported in single file.
-   This module is only for using N2O with <b>cowboy</b> web server.</p>
+    <figure>
+      <figcaption>This function is called on init</figcaption>
+      <code>
+  websocket_init(term(), term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
 
-    </section>
-    <section>
-
-<h3>API</h3>
-
-<p>The n2o_proto protocol loop is compatible with cowboy and emqttd versions of N2O.
-The main purpose of this API is to embed N2O into your functional endpoint.
-In other cases it's called automatically by configuration.</p>
-
-<a name="stream"></a>
-<h4>websocket_info({ text | binary, binary() }, term(), term()) -> #reply{}.</h4>
-
-<p>The stream function is dedicated for <b>cowboy</b> version of n2o.</p>
-
-<h4>websocket_handle({ text | binary, binary() }, term(), term()) -> #reply{}.</h4>
-
-<p>This function is called on message arrival.</p>
-
-<h4>websocket_init(term(), term(), term()) -> #reply{}.</h4>
-
-<p>This function is called on init.</p>
-
-<h4>websocket_terminate(term(), term(), term()) -> #reply{}.</h4>
-
-<p>This function is called on terminate.</p>
-
-<a name="info"></a>
-<h4>info(term(), term(), term()) -> #reply{}.</h4>
-
-<p>The info function is dedicated for <b>HTTP XHR</b> fallback.</p>
-
-    </section>
-    <section>
-
-
-<h3>CONFIG</h3>
-
-<figure>
-<code>
+    <figure>
+      <figcaption>This function is called on terminate</figcaption>
+      <code>
+  websocket_terminate(term(), term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
+    <a name="info"></a>
+    <figure>
+      <figcaption>The info function is dedicated for <i>HTTP XHR</i> fallback</figcaption>
+      <code>
+  info(term(), term(), term()) -&#62; #reply{}.
+      </code>
+    </figure>
+  </section>
+  <section>
+    <h3>CONFIG</h3>
+    <figure>
+      <code>
   [{n2o,[{protocols,[n2o_nitro]},
          {filter,{n2o_proto,push}}]}].
-
-</code></figure>
-
-    </section>
-    <section>
-
-<p>This module may refer to:
-<a href="n2o.htm"><b>n2o</b></a>,
-<a href="n2o_pi.htm"><b>n2o_pi</b></a>.
-</p>
-
-    </section>
-</main><footer>
-    2005—2019 © Synrc Research Center
-</footer></body></html>
+      </code>
+    </figure>
+  </section>
+  <section>
+    <p>This module may refer to:
+      <a href="n2o.htm"><b>n2o</b></a>,
+      <a href="n2o_pi.htm"><b>n2o_pi</b></a>.
+    </p>
+  </section>
+</article>
+</main>
+<footer>2005—2019 © Synrc Research Center</footer>
+<script>function drop(){document.getElementById("dropdown").classList.toggle("show");}</script>
+</body>
+</html>
