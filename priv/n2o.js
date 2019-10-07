@@ -31,7 +31,9 @@ var $io = {}; $io.on = function onio(r, cb) {
            (r.v[2].v[0].v == "Token" || r.v[2].v[0].v == "Auth"))
          { localStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
         if (typeof cb == 'function') cb(r.v[2]);
-        try { eval(utf8_arr(r.v[1].v)); return { status: "ok" }; }
+        var evalex = utf8_arr(r.v[1].v);
+        if (debug) console.log(evalex);
+        try { eval(evalex); return { status: "ok" }; }
         catch (e) { console.error("Eval failed:",e); return { status: '' }; }
     } else return { status: '' };
 }
