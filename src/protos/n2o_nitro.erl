@@ -1,6 +1,6 @@
 -module(n2o_nitro).
 -description('N2O Nitrogen Web Framework Protocol').
--include("n2o.hrl").
+-include_lib("n2o/include/n2o.hrl").
 -export([info/3,render_actions/1,io/1,io/2]).
 
 % Nitrogen pickle handler
@@ -67,7 +67,7 @@ html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{token 
 render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
     try case F of
          api_event -> M:F(P,Linked,State);
-             event -> [erlang:put(K, nitro:to_binary([V])) || {K,V} <- Linked], M:F(P);
+             event -> [erlang:put(K,V) || {K,V} <- Linked], M:F(P);
                  _ -> M:F(P,T,State) end
     catch E:R:S -> ?LOG_EXCEPTION(E,R,S), {stack,S} end.
 
@@ -84,7 +84,7 @@ io(Data) ->
 render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
     try case F of
          api_event -> M:F(P,Linked,State);
-             event -> [erlang:put(K, nitro:to_binary([V])) || {K,V} <- Linked], M:F(P);
+             event -> [erlang:put(K,V) || {K,V} <- Linked], M:F(P);
                  _ -> M:F(P,T,State) end
     catch E:R -> S = erlang:get_stacktrace(), ?LOG_EXCEPTION(E,R,S), {stack,S} end.
 
