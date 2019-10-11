@@ -42,61 +42,17 @@
     </p>
   </section>
   <section>
-    <h3>CONFIG</h3>
+    <h3>API</h3>
+    <h4> N2O_start()</h4>
     <p>This function creates a WebSocket raw connection to N2O WS and
        sends &lt;&lt;"N2O,",Token/binary&gt;&gt; text packet
        which invokes <a href="n2o_nitro.htm">NITRO</a> protocol page initialization.</p>
-    <figure>
-      <code>
-  active = false,
-  debug = false,
-  session = "sid",
-  protocol = window.location.protocol == 'https:' ? "wss://" : "ws://",
-  querystring = window.location.pathname + window.location.search,
-  host = window.location.hostname;
-  protos = [$bert];
-      </code>
-    </figure>
-  </section>
-  <section>
-    <h3>API</h3>
-    <figure>
-      <figcaption>Token returns chached in localStorage session token.</figcaption>
-      <code>
-  token()
-      </code>
-    </figure>
-    
-    <figure>
-      <code>
-  N2O_start()
-      </code>
-    </figure>
-    <p>This function creates a WebSocket raw connection to N2O WS and
-       sends &#60;&#60;"N2O,",Token/binary&#62;&#62; text packet
-       which invokes <a href="n2o_nitro.htm">NITRO</a> protocol page initialization.</p>
-    <figure>
-      <code>
-  function N2O_start() { }
-      </code>
-    </figure>
-  </section>
-  <section>
-    <h3>BERT</h3>
-    <figure>
-      <code>
-  $bert.protos = [$io,$file];
-  $bert.on = function onbert(evt, cb) { }
-      </code>
-    </figure>
-  </section>
-  <section>
-    <h3>JSON</h3>
-    <figure>
-      <code>
-  $client.on = function onclient(evt, callback) { }
-      </code>
-    </figure>
+    <h4>token()</h4>
+    <p>Returns current encrypted AES/CBC-128 session token.</p>
+    <h4>ws.send(bert)</h4>
+    <p>Sends raw binary to WebSocket. Use <a href="bert.js.htm">bert.js</a> JavaScript encoder.</p>
+    <h4>$bert.protos</h4>
+    <p>List of supported client loopers for particular BERT messages.</p>
   </section>
   <section>
     <p>You may also want to read:
