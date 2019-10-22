@@ -1,7 +1,7 @@
 // Nitrogen Compatibility Layer
 
+function direct(term) { ws.send(enc(tuple(atom('direct'),term))); }
 function validateSources() { return true; }
-
 function querySourceRaw(Id) {
     var val, el = document.getElementById(Id);
     if (!el) return "";
