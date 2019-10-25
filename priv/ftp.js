@@ -64,8 +64,12 @@ var ftp = {
     next: function () { return ftp.queue.find(function (next) { return next && next.autostart }); }
 };
 
+$file.progress = function onprogress(offset,total) {
+    var x = qi('ftp_status'); if (x) x.innerHTML = offset;
+};
+
 $file.do = function (rsp) {
-    var offset = rsp.v[6].v, block = rsp.v[7].v, status = utf8_arr(rsp.v[9].v);
+    var total = rsp.v[5].v, offset = rsp.v[6].v, block = rsp.v[7].v, status = utf8_arr(rsp.v[9].v);
     switch (status) {
         case 'init':
             if(block == 1) return;
@@ -77,7 +81,7 @@ $file.do = function (rsp) {
             if (item.autostart) ftp.start(item.id);
             break;
         case 'send':
-            var x = qi('ftp_status'); if (x) x.innerHTML = offset;
+            $file.progress(offset,total);
             var item = ftp.item(utf8_arr(rsp.v[1].v));
             item.offset = offset;
             item.block = block;
