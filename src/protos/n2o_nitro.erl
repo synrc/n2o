@@ -64,7 +64,7 @@ html_events(#pickle{source=Source,pickled=Pickled,args=Linked}, State=#cx{token 
 
 -ifdef(OTP_RELEASE).
 
-render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
+render_ev(#ev{module=M,name=F,msg=P,trigger=T},_Source,Linked,State) ->
     try case F of
          api_event -> M:F(P,Linked,State);
              event -> [erlang:put(K,V) || {K,V} <- Linked], M:F(P);
@@ -81,7 +81,7 @@ io(Data) ->
 
 -else.
 
-render_ev(#ev{name=F,msg=P,trigger=T},_Source,Linked,State=#cx{module=M}) ->
+render_ev(#ev{module=M,name=F,msg=P,trigger=T},_Source,Linked,State) ->
     try case F of
          api_event -> M:F(P,Linked,State);
              event -> [erlang:put(K,V) || {K,V} <- Linked], M:F(P);
