@@ -63,7 +63,7 @@ function en_116(o) {
   return o.v.length == 0 ? x : [x,r];
 }
 function en_110(o) {
-  var s=int_to_bytes(o.v); return [110,s.length,(o.v<0)?1:0,...s];
+  var s=int_to_bytes(o.v); return [110,s.length,(o.v<0)?1:0].concat(s);
 }
 
 // DECODER
