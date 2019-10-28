@@ -9,7 +9,7 @@ var active = false,
     host = window.location.hostname;
 
 function client() { return ''; }
-function token()  { return localStorage.getItem("token")  || ''; };
+function token()  { return sessionStorage.getItem("token")  || ''; };
 function qi(name) { return document.getElementById(name); }
 function qs(name) { return document.querySelector(name); }
 function qn(name) { return document.createElement(name); }
@@ -29,7 +29,7 @@ var $io = {}; $io.on = function onio(r, cb) {
     if (is(r, 3, 'io')) {
         if (r.v[2].v != undefined && r.v[2].v[1] != undefined && r.v[2].v.length == 2 &&
            (r.v[2].v[0].v == "Token" || r.v[2].v[0].v == "Auth"))
-         { localStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
+         { sessionStorage.clear(); sessionStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
         if (typeof cb == 'function') cb(r.v[2]);
         var evalex = utf8_arr(r.v[1].v);
         if (debug) console.log(evalex);
