@@ -29,7 +29,7 @@ var $io = {}; $io.on = function onio(r, cb) {
     if (is(r, 3, 'io')) {
         if (r.v[2].v != undefined && r.v[2].v[1] != undefined && r.v[2].v.length == 2 &&
            (r.v[2].v[0].v == "Token" || r.v[2].v[0].v == "Auth"))
-         { sessionStorage.clear(); sessionStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
+         { sessionStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
         if (typeof cb == 'function') cb(r.v[2]);
         var evalex = utf8_arr(r.v[1].v);
         if (debug) console.log(evalex);
