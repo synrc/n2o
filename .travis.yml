@@ -12,3 +12,4 @@ script:
   - "curl -fsSL https://raw.github.com/synrc/mad/master/mad > mad"
   - "chmod +x mad"
   - "./mad dep com"
+  - "rebar3 dialyzer"
