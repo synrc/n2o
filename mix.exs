@@ -6,7 +6,7 @@ defmodule N2O.Mixfile do
   def application, do: [mod: {:n2o, []}, applications: [:syn]]
   def project do
     [ app: :n2o,
-      version: "6.10.2",
+      version: "6.10.3",
       description: "N2O MQTT TCP WebSocket",
       package: package(),
       deps: deps()]
