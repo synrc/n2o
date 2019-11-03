@@ -26,10 +26,10 @@ parse_transform(Forms, _Options) ->
                      undefined -> put(N,F), F;
                              _ -> [] end  end;
               ({_,_,module,_}) -> [];
-              ({_,_,export,[{N,A}]}) when N==Name; A==Arity -> [];
+              ({_,_,export,[{N,A}]}) when N==Name, A==Arity -> [];
               ({A,B,export,List}) -> {A,B,export,List--[{Name,Arity}]};
               ({_,_,description,_}) -> [];
-              ({function,_,N,A,F}) when Name==N; Arity==A -> case get(igor) of
+              ({function,_,N,A,F}) when Name==N, Arity==A -> case get(igor) of
                    [] -> put(igor,F);
                    Saved -> put(igor,Saved ++ F) end, [];
               ({eof,_}) -> [];
