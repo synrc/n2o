@@ -7,9 +7,9 @@ parse_transform(Forms, _Options) ->
     put(igor,[]),
 
     {_,_,_,{Name,Arity}} = lists:keyfind(entry,3,Forms),
-    File = [ F || F={attribute,_,file,_} <- Forms],
-    Module = [ M || M={attribute,_,module,_} <- Forms],
-    Modules = [ M || {attribute,_,proto,M} <- Forms],
+    File    = [ F || F={attribute,_,file,_}   <- Forms],
+    Module  = [ M || M={attribute,_,module,_} <- Forms],
+    Modules = [ M ||   {attribute,_,proto,M}  <- Forms],
 
     X = lists:flatten([
      begin
