@@ -1,7 +1,7 @@
 -module(n2o_pi).
 -description('N2O Process').
--include("n2o.hrl").
--include("n2o_pi.hrl").
+-include_lib("n2o/include/n2o.hrl").
+-include_lib("n2o/include/n2o_pi.hrl").
 -behaviour(gen_server).
 -export([start_link/1]).
 -export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
@@ -38,13 +38,13 @@ restart(Tab,Name) ->
 start_link (Parameters)    -> gen_server:start_link(?MODULE, Parameters, []).
 code_change(_,State,_)     -> {ok, State}.
 handle_call({get},_,Async) -> {reply,Async,Async};
-handle_call(Message,_,#pi{module=undefined}=Async) -> {noreply,[]};
+handle_call(_,_,#pi{module=undefined}) -> {noreply,[]};
 handle_call(Message,_,#pi{module=Mod}=Async) -> Mod:proc(Message,Async).
-handle_cast(Message,  #pi{module=undefined}=Async) -> {noreply,[]};
+handle_cast(_,  #pi{module=undefined}) -> {noreply,[]};
 handle_cast(Message,  #pi{module=Mod}=Async) -> Mod:proc(Message,Async).
-handle_info(timeout,  #pi{module=undefined}=Async) -> {noreply,[]};
+handle_info(timeout,  #pi{module=undefined}) -> {noreply,[]};
 handle_info(timeout,  #pi{module=Mod}=Async) -> Mod:proc(timeout,Async);
-handle_info(Message,  #pi{module=undefined}=Async) -> {noreply,[]};
+handle_info(_,  #pi{module=undefined}) -> {noreply,[]};
 handle_info(Message,  #pi{module=Mod}=Async) ->
     {noreply,case Mod:proc(Message,Async) of
                   {_,_,S} -> S;

@@ -1,5 +1,5 @@
 -module(n2o_cowboy).
--include("n2o.hrl").
+-include_lib("n2o/include/n2o.hrl").
 -description('N2O Cowboy HTTP Backend').
 -export([init/3, handle/2, terminate/3]).
 -compile(export_all).

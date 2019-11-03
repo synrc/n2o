@@ -1,6 +1,6 @@
 -module(n2o_cowboy2).
 -description('N2O Cowboy2 WebSocket Backend').
--include("n2o.hrl").
+-include_lib("n2o/include/n2o.hrl").
 -compile(export_all).
 
 init(Req,_Opts) -> {cowboy_websocket, Req, Req}.

@@ -1,9 +1,8 @@
 -module(n2o_ftp).
--compile(export_all).
 -description('N2O File Protocol').
 -include_lib("n2o/include/n2o.hrl").
 -include_lib("kernel/include/file.hrl").
--export([info/3,proc/2,filename/1]).
+-export([info/3,proc/2,filename/1,root/0]).
 
 -define(ROOT, filename:join(begin {ok, Cwd} = file:get_cwd(), Cwd end,
               application:get_env(n2o,upload,code:priv_dir(n2o)))).

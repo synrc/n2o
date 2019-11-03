@@ -1,11 +1,10 @@
 -module(n2o).
--compile(export_all).
 -description('N2O MQTT TCP WebSocket').
 -behaviour(supervisor).
 -behaviour(application).
--include("n2o.hrl").
--include("n2o_core.hrl").
--include("n2o_api.hrl").
+-include_lib("n2o/include/n2o.hrl").
+-include_lib("n2o/include/n2o_core.hrl").
+-include_lib("n2o/include/n2o_api.hrl").
 -export([start/2, stop/1, init/1, proc/2, version/0, to_binary/1, bench/0]).
 
 % SERVICES
@@ -15,6 +14,7 @@
 -export([encode/1,decode/1]).                          % format
 -export([session/1,session/2,user/1,user/0]).          % session
 -export([cache/2,cache/3,cache/4,invalidate_cache/1]). % cache
+-export([start_mqtt/0,start_ws/0,start_tcp/0,sid/0]).          % session
 
 % START VNODE HASH RING
 
