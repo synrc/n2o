@@ -6,7 +6,7 @@ parse_transform(Forms, _Options) ->
     SearchPath = "src/protos",
     put(igor,[]),
 
-    {_,_,n2o,{Name,Arity}} = lists:keyfind(n2o,3,Forms),
+    {_,_,_,{Name,Arity}} = lists:keyfind(entry,3,Forms),
     File = [ F || F={attribute,_,file,_} <- Forms],
     Module = [ M || M={attribute,_,module,_} <- Forms],
     Modules = [ M || {attribute,_,proto,M} <- Forms],
