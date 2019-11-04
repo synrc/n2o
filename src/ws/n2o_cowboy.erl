@@ -3,7 +3,7 @@
 -description('N2O Cowboy HTTP Backend').
 -export([init/3, handle/2, terminate/3, params/1, form/1, path/1, request_body/1, headers/1, header/3,
          response/2, reply/2, cookies/1, cookie/2, cookie/3, cookie/5, delete_cookie/2,
-         peer/1, env/1, points/0]).
+         peer/1, env/1, points/0, fix2/1, fix1/1]).
 -record(state, {headers, body}).
 
 % Cowboy HTTP Handler
