@@ -7,7 +7,6 @@
 init(Req,_Opts) -> {cowboy_websocket, Req, Req}.
 
 ws({ok,_,S})                 -> {ok,S};
-ws({shutdown,_,S})           -> {shutdown,S};
 ws({reply,{binary,Rep},_,S}) -> {reply,{binary,Rep},S};
 ws({reply,{json,Rep},_,S})   -> {reply,{binary,n2o_json:encode(Rep)},S};
 ws({reply,{bert,Rep},_,S})   -> {reply,{binary,n2o_bert:encode(Rep)},S};
