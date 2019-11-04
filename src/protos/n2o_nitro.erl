@@ -1,7 +1,7 @@
 -module(n2o_nitro).
 -description('N2O Nitrogen Web Framework Protocol').
 -include_lib("n2o/include/n2o.hrl").
--export([info/3,render_actions/1,io/1,io/2]).
+-export([info/3,render_actions/1,io/1,io/2,event/1]).
 
 % Nitrogen pickle handler
 
@@ -98,4 +98,7 @@ io(Data) ->
 
 -endif.
 
+% event Nitrogen Web Framework protocol
+
+event(_) -> [].
 

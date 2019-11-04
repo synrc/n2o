@@ -1,12 +1,12 @@
 -module(n2o_ws).
--include("n2o.hrl").
--compile(export_all).
+-include_lib("n2o/include/n2o.hrl").
+-export([send/2, proc/2]).
 
 send(C,M) -> C ! M.
 
 proc(init,#pi{name=Name}=Async) -> n2o:reg(Name), {ok,Async#pi{state=application:get_env(n2o,proto,n2o_proto)}};
 
-proc({ring, Topic, Publish}, State) -> proc(Publish, State);
+proc({ring, _Topic, Publish}, State) -> proc(Publish, State);
 
 proc({publish, C, Token, Request}, State = #pi{name=Server,state=Module}) ->
     Ctx = #cx { session= n2o:to_binary(Token), node=Server,

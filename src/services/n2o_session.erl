@@ -1,5 +1,5 @@
 -module(n2o_session).
--compile(export_all).
+-compile([nowarn_unused_function]).
 -include_lib("stdlib/include/ms_transform.hrl").
 -description('N2O Session').
 -export([authenticate/2, get_value/3, set_value/3, storage/0, prolongate/0, from/1, ttl/0, till/2]).
