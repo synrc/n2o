@@ -3,7 +3,7 @@
 -export([parse_transform/2]).
 
 parse_transform(Forms, _Options) ->
-    SearchPath = "src/protos",
+    SearchPath = application:get_env(n2o,igor,"src/protos"),
     put(igor,[]),
 
     {_,_,_,{Name,Arity}} = lists:keyfind(entry,3,Forms),
