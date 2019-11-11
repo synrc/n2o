@@ -36,8 +36,8 @@ Basic Samples
 Enterprise Samples
 ------------------
 * Online Client Bank: <a href="https://fin.n2o.space">BANK</a> (8041)
-* Instant Messaging: <a href="https://chat.n2o.space">CHAT</a> (8042)
-* Product Lifecycle Management: <a href="https://plm.n2o.space">PLM</a> (8043)
+* Instant Messaging: <a href="https://chat.n2o.dev">CHAT</a> (8042)
+* Product Lifecycle Management: <a href="https://plm.erp.uno">PLM</a> (8043)
 
 Motivation
 ----------
