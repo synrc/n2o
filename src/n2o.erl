@@ -95,8 +95,8 @@ cache(Tab, Key) ->
     Res = ets:lookup(Tab,Key),
     Val = case Res of [] -> []; [Value] -> Value; Values -> Values end,
     case Val of [] -> [];
-                {_,infinity,X} -> X;
-                {_,Expire,X} -> case Expire < calendar:local_time() of
+                {_,{infinity,X}} -> X;
+                {_,{Expire,X}} -> case Expire < calendar:local_time() of
                                   true ->  ets:delete(Tab,Key), [];
                                   false -> X end end.
 
