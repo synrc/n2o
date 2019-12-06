@@ -87,10 +87,10 @@ decode(Term) -> (formatter()):decode(Term).
 
 % CACHE
 
-cache(Tab, Key, Value, Till) -> ets:insert(Tab,{Key,Till,Value}), Value.
+cache(Tab, Key, Value, Till) -> ets:insert(Tab,{Key,{Till,Value}}), Value.
 cache(Tab, Key, undefined)   -> ets:delete(Tab,Key);
-cache(Tab, Key, Value)       -> ets:insert(Tab,{Key,n2o_session:till(calendar:local_time(),
-                                                    n2o_session:ttl()),Value}), Value.
+cache(Tab, Key, Value)       -> ets:insert(Tab,{Key,{n2o_session:till(calendar:local_time(),
+                                                    n2o_session:ttl()),Value}}), Value.
 cache(Tab, Key) ->
     Res = ets:lookup(Tab,Key),
     Val = case Res of [] -> []; [Value] -> Value; Values -> Values end,
