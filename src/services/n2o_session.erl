@@ -28,6 +28,8 @@ sid(Seed)     -> n2o_secret:sid(Seed).
 
 % API
 
+new() -> token(auth(sid(os:timestamp()),expire())).
+
 authenticate([], Pickle) ->
     case n2o:depickle(Pickle) of
         <<>> -> token(auth(sid(os:timestamp()),expire()));
@@ -35,10 +37,10 @@ authenticate([], Pickle) ->
             case {expired(Till), prolongate()} of
                  {false,false} -> token(Auth,Pickle);
                   {false,true} -> move(Sid), token(auth(Sid,expire()));
-                      {true,_} -> (storage()):delete({Sid,auth}),
-                                  token(auth(sid(os:timestamp()),expire()))
+                  {true,false} -> (storage()):delete({Sid,auth}), new();
+                   {true,true} -> move(Sid), (storage()):delete({Sid,auth}), new()
             end;
-       _ -> token(auth(sid(os:timestamp()),expire()))
+       _ -> new()
     end.
 
 get_value(Session, Key, Default) ->
