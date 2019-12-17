@@ -19,8 +19,15 @@ function querySourceRaw(Id) {
             }
             break;
         default: var edit = el.contentEditable;
-            if (edit && edit === 'true') val = el.innerHTML;
-            else val = el.value;
+            if (edit && edit === 'true') {
+                val = el.innerHTML;
+            } else {
+                val = el.value;
+                switch (val) {
+                    case "true": val = new Boolean(true); break;
+                    case "false": val = new Boolean(false); break;
+                }
+            }
     }
     return val;
 }
@@ -31,6 +38,8 @@ function querySource(Id) {
        return tuple(number(qs.getFullYear()),
                     number(qs.getMonth() + 1),
                     number(qs.getDate())); }
+    else if (qs instanceof Boolean) {
+        return atom(qs.valueOf()); }
     else { return bin(qs); }
 }
 
