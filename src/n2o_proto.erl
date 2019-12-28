@@ -17,9 +17,10 @@ push(M,R,S,[H|T],Acc)     ->
                         A -> push(M,R,S,T,[A|Acc]) end.
 
 cx(Req) ->
-  SidKeyName = iolist_to_binary(application:get_env(n2o,sid_key,<<"sid">>)),
-  Sid = case cowboy_req:header(SidKeyName, Req, <<"*">>) of {O,_} -> O; X -> X end,
-  #cx{actions=[], path=[], req=Req, params=[], session=Sid,
+  Cookies = cowboy_req:parse_cookies(Req),
+  Token = case lists:keyfind(<<"X-Authorization">>, 1, Cookies) of {_,V} -> V; false -> <<>> end,
+  Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> <<>> end,
+  #cx{actions=[], path=[], req=Req, params=[], session=Sid, token=Token,
       handlers= [ {routes, application:get_env(n2o,routes,?MODULE)} ]}.
 
 finish(State, Cx) -> {ok, State, Cx}.
@@ -36,6 +37,7 @@ terminate(_,#cx{module=Module}) -> catch Module:event(terminate).
 init(_Transport, Req, _Opts, _) ->
     {Module,CxInit} = application:get_env(n2o,cx,{n2o_proto,cx}),
     Zero = Module:CxInit(Req),
+    put(context,Zero),
     Ctx  = fold(init,Zero#cx.handlers,Zero),
     put(context,Ctx),
     Origin = case cowboy_req:header(<<"origin">>, Req, <<"*">>) of {O,_} -> O; X -> X end,
