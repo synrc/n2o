@@ -1,7 +1,7 @@
 -module(n2o_proto).
 -description('N2O Proto Loop').
 -include_lib("n2o/include/n2o.hrl").
--export([init/2, finish/2, info/3, stream/3, push/5, init/4, terminate/2]).
+-export([init/2, finish/2, info/3, stream/3, push/5, init/4, terminate/2, cx/1]).
 -export([try_info/3, try_info/4]).
 
 protocols()        -> application:get_env(n2o,protocols,[ n2o_heart ]).
@@ -34,7 +34,8 @@ fold(Fun,Handlers,Ctx) ->
 
 terminate(_,#cx{module=Module}) -> catch Module:event(terminate).
 init(_Transport, Req, _Opts, _) ->
-    Zero = cx(Req),
+    {Module,CxInit} = application:get_env(n2o,cx,{n2o_proto,cx}),
+    Zero = Module:CxInit(Req),
     Ctx  = fold(init,Zero#cx.handlers,Zero),
     put(context,Ctx),
     Origin = case cowboy_req:header(<<"origin">>, Req, <<"*">>) of {O,_} -> O; X -> X end,
