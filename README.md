@@ -119,7 +119,6 @@ JavaScript
 * [utf8.js](https://ws.n2o.dev/man/utf8.js.htm) — UTF8 encoder/decoder
 * [ieee754.js](https://ws.n2o.dev/man/ieee754.js.htm) — IEEE754 encoder/decoder
 * [heart.js](https://ws.n2o.dev/man/heart.js.htm) — HEART protocol
-* [nitro.js](https://ws.n2o.dev/man/nitro.js.htm) — NITRO protocol
 * [ftp.js](https://ws.n2o.dev/man/ftp.js.htm)  — FTP protocol
 * [n2o.js](https://ws.n2o.dev/man/n2o.js.htm) — N2O protocol loop
 * [mq.js](https://ws.n2o.dev/man/mq.js.htm) — MQTT client
