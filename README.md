@@ -15,7 +15,7 @@ Core Features
 
 * Purpose: High performance protocol relay
 * Endpoints: WebSockets, MQTT, TCP
-* Codebase: 1K LOC (Erlang), 500 LOC (JavaScript)
+* Codebase: 700 LOC (Erlang), 500 LOC (JavaScript)
 * Dialyzer: REBAR, REBAR3, MAD, MIX
 * Hosts: COWBOY, EMQ, MOCHIWEB, RING, TCP, UDP
 
@@ -97,9 +97,10 @@ Protocols
 
 N2O ships with 3 optional protocols.
 
-* [n2o_nitro](https://ws.n2o.dev/man/n2o_nitro.htm) — N2O Nitrogen web framework protocol
 * [n2o_ftp](https://ws.n2o.dev/man/n2o_ftp.htm) — N2O File protocol
 * [n2o_heart](https://ws.n2o.dev/man/n2o_heart.htm) — N2O Heart protocol
+* [nitro_n2o](https://nitro.n2o.dev/man/nitro_n2o.htm) — Nitrogen Web Framework protocol
+* [bpe_n2o](https://bpe.n2o.dev) — Business Process Engine protocol
 
 Services
 --------
