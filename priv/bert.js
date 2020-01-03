@@ -46,8 +46,13 @@ function en_104(o) {
   for (var i = 0; i < l; i++)r[i] = ein(o.v[i]);
   return [104, l, r];
 }
+function unilen(o) {
+  return (o.v instanceof ArrayBuffer || o.v instanceof Uint8Array) ? o.v.byteLength :
+         (new TextEncoder().encode(o.v)).byteLength;
+}
+
 function en_109(o) {
-  var l = o.v instanceof ArrayBuffer ? o.v.byteLength : o.v.length;
+  var l = unilen(o);
   return [109, l >>> 24, (l >>> 16) & 255, (l >>> 8) & 255, l & 255, ar(o)];
 }
 function en_108(o) {
