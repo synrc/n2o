@@ -10,7 +10,7 @@ info(M,R,S)        -> push(M,R,S,protocols(),[]).
 nop(R,S)                  -> {reply,{binary,<<>>},R,S}.
 reply(M,R,S)              -> {reply,M,R,S}.
 push(_,R,S,[],_)          -> nop(R,S);
-push(M,R,S,[H],Acc)       ->
+push(M,R,S,[H],_)         ->
     case H:info(M,R,S) of
          {reply,M1,R1,S1} -> reply(M1,R1,S1);
          {unknown,_,_,_}  -> nop(R,S)
@@ -24,7 +24,7 @@ push(M,R,S,[H|T],Acc)     ->
 cx(Req) ->
   Cookies = cowboy_req:parse_cookies(Req),
   Token = case lists:keyfind(<<"X-Authorization">>, 1, Cookies) of {_,V} -> V; false -> <<>> end,
-  Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> <<>> end,
+  Sid = case n2o:depickle(Token) of {{S,_},_} -> S; _ -> <<>> end,
   #cx{actions=[], path=[], req=Req, params=[], session=Sid, token=Token,
       handlers= [ {routes, application:get_env(n2o,routes,?MODULE)} ]}.
 
