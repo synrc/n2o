@@ -10,6 +10,10 @@ info(M,R,S)        -> push(M,R,S,protocols(),[]).
 nop(R,S)                  -> {reply,{binary,<<>>},R,S}.
 reply(M,R,S)              -> {reply,M,R,S}.
 push(_,R,S,[],_)          -> nop(R,S);
+push(M,R,S,[H],Acc)       ->
+    case H:info(M,R,S) of
+         {reply,M1,R1,S1} -> reply(M1,R1,S1);
+         {unknown,_,_,_}  -> nop(R,S);
 push(M,R,S,[H|T],Acc)     ->
     case H:info(M,R,S) of
          {unknown,_,_,_}  -> push(M,R,S,T,Acc);
