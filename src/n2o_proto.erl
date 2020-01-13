@@ -13,7 +13,8 @@ push(_,R,S,[],_)          -> nop(R,S);
 push(M,R,S,[H],Acc)       ->
     case H:info(M,R,S) of
          {reply,M1,R1,S1} -> reply(M1,R1,S1);
-         {unknown,_,_,_}  -> nop(R,S);
+         {unknown,_,_,_}  -> nop(R,S)
+    end;
 push(M,R,S,[H|T],Acc)     ->
     case H:info(M,R,S) of
          {unknown,_,_,_}  -> push(M,R,S,T,Acc);
