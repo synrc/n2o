@@ -109,8 +109,7 @@ Formatters, Sessions, etc. Optional.
 
 * [n2o_bert](https://ws.n2o.dev/man/n2o_bert.htm) — BERT encoder/decoder
 * [n2o_json](https://ws.n2o.dev/man/n2o_json.htm) — JSON encoder/decoder
-* [n2o_secret](https://ws.n2o.dev/man/n2o_secret.htm)  — AES/CBC-128 encoder/decoder
-* AES.GCM — AES/GCM-256 encoder/decoder
+* [n2o_secret](https://ws.n2o.dev/man/n2o_secret.htm)  — AES/GCM-256 encoder/decoder
 * [n2o_session](https://ws.n2o.dev/man/n2o_session.htm) — ETS session storage
 
 JavaScript
