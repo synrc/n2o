@@ -34,7 +34,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
 
     Block2 = case Block of 0 -> ?STOP; _ -> ?NEXT end,
     Offset2 = case FileSize >= Offset of true -> FileSize; false -> 0 end,
-    FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>},
+    FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>, filename=FilePath},
 
     catch n2o_pi:stop(file, Link),
     n2o_pi:start(#pi{module=?MODULE, table=file, sup=n2o, state=FTP2, name=Link}),

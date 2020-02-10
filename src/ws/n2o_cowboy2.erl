@@ -18,7 +18,7 @@ ws(X) -> ?LOG_ERROR(#{unknown=>X}), {shutdown,[]}.
 websocket_init(S)            -> ws(n2o_proto:init([],S,[],ws)).
 websocket_handle(D,S)        -> ws(n2o_proto:stream(D,[],S)).
 websocket_info(D,S)          -> ws(n2o_proto:info(D,[],S)).
-terminate(M,R,S)             -> ws(n2o_proto:info(#direct{data={exit,M}},R,S)).
+terminate(M,R,S)             -> ws(n2o_proto:info({direct,{exit,M}},R,S)).
 
 points() -> cowboy_router:compile([{'_', [
 	    {"/ws/[...]", n2o_cowboy2, []},

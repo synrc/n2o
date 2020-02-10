@@ -55,14 +55,6 @@
 -record(client,  { data=[] }).
 -record(server,  { data=[] }).
 
-% Nitrogen Protocol
-
--record(init,    { token=[] }).
--record(pickle,  { source=[], pickled=[], args=[] }).
--record(flush,   { data=[] }).
--record(direct,  { data=[] }).
--record(ev,      { module=[], msg=[], trigger=[], name=[] }).
-
 % File Transfer Protocol
 
 -record(ftp,     { id=[], sid=[], filename=[], meta=[], size=[], offset=[], block=[], data=[], status=[] }).
