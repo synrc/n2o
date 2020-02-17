@@ -71,7 +71,7 @@
       erlang:cancel_timer(Timer),
       io:format("n2o Timer: ~p\r~n",[ping]),
       n2o:invalidate_cache(caching),
-      {reply,ok,Async#pi{state=timer_restart(ping())}}.
+      {reply,ok,Async#pi{state=timer(ping())}}.
 
   timer(Diff) -&#62;
       {X,Y,Z} = Diff,
