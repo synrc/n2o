@@ -70,7 +70,7 @@ try_info(Module,M,R,S) ->
 
 pid(Ctx) when is_tuple(Ctx) -> maps:get(pid, element(4, Ctx)).
 save_context(Ctx) ->
-    case ets:info(table_name) of
+    case ets:info(web_context) of
         undefined -> ets:new(web_context, [public, named_table]);
         _ -> skip
     end,
