@@ -37,8 +37,8 @@ var $io = {}; $io.on = function onio(r, cb) {
         if (debug) console.log(evalex);
         try { eval(evalex); return { status: "ok" }; }
         catch (e) { console.log(evalex);
-            console.error("Eval failed:",e); 
-            return { status: '' }; }
+                    console.error("Eval failed:",e); 
+                    return { status: '' }; }
     } else return { status: '' };
 }
 
