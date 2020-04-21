@@ -6,7 +6,7 @@
 
 -define(ROOT, filename:join(begin {ok, Cwd} = file:get_cwd(), Cwd end,
               application:get_env(n2o,upload,code:priv_dir(n2o)))).
--define(NEXT, 2*1024). % 256K chunks for best 25MB/s speed
+-define(NEXT, 256*1024). % 256K chunks for best 25MB/s speed
 -define(STOP, 0).
 
 root() -> ?ROOT.
