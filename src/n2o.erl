@@ -74,7 +74,12 @@ depickle(SerializedData) -> (pickler()):depickle(SerializedData).
 
 sid() -> #cx{session=SID}=get(context), SID.
 session() -> application:get_env(n2o,session,n2o_session).
-session(Key)        -> #cx{session=SID}=get(context), (session()):get_value(SID, Key, []).
+session(Key) ->
+    Context = get(context),
+    case Context of
+        #cx{session=SID} -> (session()):get_value(SID, Key, []);
+        _ -> []
+    end.
 session(Key, Value) -> #cx{session=SID}=get(context), (session()):set_value(SID, Key, Value).
 user()              -> case session(user) of undefined -> []; E -> E end.
 user(User)          -> session(user,User).

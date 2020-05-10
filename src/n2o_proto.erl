@@ -45,6 +45,7 @@ init(_Transport, Req, _Opts, _) ->
     put(context,Zero),
     Ctx  = fold(init,Zero#cx.handlers,Zero),
     put(context,Ctx),
+    save_context(Ctx),
     Origin = case cowboy_req:header(<<"origin">>, Req, <<"*">>) of {O,_} -> O; X -> X end,
     ConfigOrigin = iolist_to_binary(application:get_env(n2o,origin,Origin)),
     Req1 = cowboy_req:set_resp_header(<<"Access-Control-Allow-Origin">>, ConfigOrigin, Ctx#cx.req),
@@ -67,3 +68,12 @@ try_info(Module,M,R,S) ->
     catch Err:Rea -> Stack = erlang:get_stacktrace(), ?LOG_EXCEPTION(Err, Rea, Stack), {error,{stack,Stack}} end.
 -endif.
 
+pid(Ctx) when is_tuple(Ctx) -> maps:get(pid, element(4, Ctx)).
+save_context(Ctx) ->
+    case ets:info(web_context) of
+        undefined -> ets:new(web_context, [public, named_table]);
+        _ -> skip
+    end,
+    Pid = pid(Ctx),
+    io:format("saved web context for a pid ~p~n", [Pid]),
+    ets:insert(web_context, {Pid, Ctx}).

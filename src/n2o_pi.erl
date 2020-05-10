@@ -49,7 +49,8 @@ handle_info(Message,  #pi{module=Mod}=Async) ->
     {noreply,case Mod:proc(Message,Async) of
                   {_,_,S} -> S;
                     {_,S} -> S;
-                        S -> S end}.
+                        S -> S end};
+handle_info(_,  _) -> {noreply,[]}.
 
 init(#pi{module=Mod,table=Tab,name=Name}=Handler) ->
     n2o:cache(Tab,{Tab,Name},self(),infinity),
