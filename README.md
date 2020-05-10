@@ -65,7 +65,7 @@ N2O service worker started as ring of virtual nodes each runs N2O loop.
 * [n2o_auth](https://ws.n2o.dev/man/n2o_auth.htm) — N2O Auth
 
 ```
-$ mad app mqtt review
+$ mad app zero review
 $ cd review
 $ mad dep com pla rep
 $ open http://127.0.0.1:8000
@@ -86,7 +86,7 @@ As such buses are optional in MQTT setup we include bus drivers in WebSocket pac
 * [n2o_syn](https://ws.n2o.dev/man/n2o_syn.htm) — SYN bus backend
 
 ```
-$ mad app web sample
+$ mad app nitro sample
 $ cd sample
 $ mad dep com pla rep
 $ open https://127.0.0.1:8001/app/index.htm
