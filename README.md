@@ -126,5 +126,5 @@ JavaScript
 Literature
 ----------
 
-* N2O Book [PDF](https://n2o.dev/books/n2o.pdf)
+* N2O Book [PDF](https://n2o.dev/books/n2o.pdf) (outdated)
 
