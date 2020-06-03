@@ -25,14 +25,14 @@
 -record(cx, { handlers  = [] :: list({atom(),atom()}),
               actions   = [] :: list(tuple()),
               req       = [] :: [] | term(),
-              module    = [] :: [] | atom(),
+              module    = [] :: [] | atom() | list(),
               lang      = [] :: [] | atom(),
               path      = [] :: [] | binary(),
               session   = [] :: [] | binary(),
               token     = [] :: [] | binary(),
               formatter = bert :: bert | json | atom(),
-              params    = [] :: [] | list(tuple()) | binary(),
-              node      = [] :: [] | atom(),
+              params    = [] :: [] | list(tuple()) | binary() | list(),
+              node      = [] :: [] | atom() | list(),
               client_pid= [] :: [] | term(),
               state     = [] :: [] | term(),
               from      = [] :: [] | binary(),
@@ -54,14 +54,6 @@
 -record(bin,     { data=[] }).
 -record(client,  { data=[] }).
 -record(server,  { data=[] }).
-
-% Nitrogen Protocol
-
--record(init,    { token=[] }).
--record(pickle,  { source=[], pickled=[], args=[] }).
--record(flush,   { data=[] }).
--record(direct,  { data=[] }).
--record(ev,      { module=[], msg=[], trigger=[], name=[] }).
 
 % File Transfer Protocol
 

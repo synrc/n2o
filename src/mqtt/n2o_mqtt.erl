@@ -1,5 +1,5 @@
 -module(n2o_mqtt).
--compile(export_all).
+-export([proc/2,xio/1,send/3]).
 -include_lib("n2o/include/n2o.hrl").
 
 send(C,T,M) ->

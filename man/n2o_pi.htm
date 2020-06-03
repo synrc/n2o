@@ -18,7 +18,7 @@
 <body>
 <nav>
   <a href="https://n2o.dev">DEV</a>
-  <a href="https://ws.n2o.space">N2O</a>
+  <a href="https://ws.n2o.dev">N2O</a>
   <a href="#" style="background:#ededed;">PI</a>
   <div class="dropdown">
     <a onclick="drop()" class="dropbtn">EN</a>
@@ -29,7 +29,7 @@
   </div>
 </nav>
 <header>
-  <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
+  <a href="../index.html"><img src="https://openmoji.org/data/color/svg/2B55.svg" /></a>
   <h1>PI</h1>
 </header>
 <main>
@@ -71,7 +71,7 @@
       erlang:cancel_timer(Timer),
       io:format("n2o Timer: ~p\r~n",[ping]),
       n2o:invalidate_cache(caching),
-      {reply,ok,Async#pi{state=timer_restart(ping())}}.
+      {reply,ok,Async#pi{state=timer(ping())}}.
 
   timer(Diff) -&#62;
       {X,Y,Z} = Diff,
@@ -138,7 +138,7 @@
            code = [] :: [] | #pi{} }.
       </code>
     </figure>
-    <p>According to N2O agreement each protocol message filed should include [] in its type as default nil.</p>
+    <p>According to N2O agreement each protocol message field should include [] in its type as default nil.</p>
     <figure>
       <figcaption>Listing 4. N2O Records</figcaption>
       <code>
@@ -220,7 +220,7 @@
   </section>
 </article>
 </main>
-<footer>2005—2019 © Synrc Research Center</footer>
+<footer>2005—2020 © Synrc Research Center</footer>
 <script>function drop(){document.getElementById("dropdown").classList.toggle("show");}</script>
 </body>
 </html>

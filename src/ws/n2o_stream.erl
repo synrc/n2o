@@ -26,7 +26,6 @@ info(M,R,S) -> xhr(n2o_proto:info(M,R,S)).
 reply(D,R,Code)     -> {ok,R2}=cowboy_req:reply(Code,[],D,R), R2.
 
 xhr({ok,R,S})       -> {ok,R,S};
-xhr({shutdown,R,S}) -> {shutdown,R,S};
 xhr({reply,D,R,S})  -> {ok,reply(D,R,200),S}.
 
 % Cowboy WebSocket
@@ -40,7 +39,6 @@ websocket_init(T,R,_)        -> ws(n2o_proto:init(T,R,[],ws)).
 websocket_terminate(_,R,S)   -> n2o_proto:terminate(R,S).
 
 ws({ok,R,S})                 -> {ok,R,S,hibernate};
-ws({shutdown,R,S})           -> {shutdown,R,S};
 ws({reply,{binary,Rep},R,S}) -> {reply,{binary,Rep},R,S,hibernate};
 ws({reply,{json,Rep},R,S})   -> {reply,{binary,n2o_json:encode(Rep)},R,S,hibernate};
 ws({reply,{bert,Rep},R,S})   -> {reply,{binary,n2o_bert:encode(Rep)},R,S,hibernate};

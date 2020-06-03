@@ -1,5 +1,7 @@
 -module(n2o_static).
--compile(export_all).
+-export([init/2,endpoints/2, index/0, websocket_info/2, websocket_init/1, websocket_handle/2,
+         malformed_request/2, forbidden/2, content_types_provided/2, ranges_provided/2,
+         resource_exists/2, last_modified/2, generate_etag/2, get_file/2]).
 
 malformed_request(R,S)      -> cowboy_static:malformed_request(R,S).
 forbidden(R,S)              -> cowboy_static:forbidden(R,S).

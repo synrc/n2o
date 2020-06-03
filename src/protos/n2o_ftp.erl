@@ -1,13 +1,12 @@
 -module(n2o_ftp).
--compile(export_all).
 -description('N2O File Protocol').
--include("n2o.hrl").
+-include_lib("n2o/include/n2o.hrl").
 -include_lib("kernel/include/file.hrl").
--export([info/3,proc/2,filename/1]).
+-export([info/3,proc/2,filename/1,root/0]).
 
 -define(ROOT, filename:join(begin {ok, Cwd} = file:get_cwd(), Cwd end,
               application:get_env(n2o,upload,code:priv_dir(n2o)))).
--define(NEXT, 2*1024). % 256K chunks for best 25MB/s speed
+-define(NEXT, 256*1024). % 256K chunks for best 25MB/s speed
 -define(STOP, 0).
 
 root() -> ?ROOT.
@@ -35,7 +34,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
 
     Block2 = case Block of 0 -> ?STOP; _ -> ?NEXT end,
     Offset2 = case FileSize >= Offset of true -> FileSize; false -> 0 end,
-    FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>},
+    FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>, filename=FilePath},
 
     catch n2o_pi:stop(file, Link),
     n2o_pi:start(#pi{module=?MODULE, table=file, sup=n2o, state=FTP2, name=Link}),

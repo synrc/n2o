@@ -1,5 +1,5 @@
 -module(n2o_session).
--compile(export_all).
+-compile([nowarn_unused_function]).
 -include_lib("stdlib/include/ms_transform.hrl").
 -description('N2O Session').
 -export([authenticate/2, get_value/3, set_value/3, storage/0, prolongate/0, from/1, ttl/0, till/2]).
@@ -28,6 +28,8 @@ sid(Seed)     -> n2o_secret:sid(Seed).
 
 % API
 
+new() -> token(auth(sid(os:timestamp()),expire())).
+
 authenticate([], Pickle) ->
     case n2o:depickle(Pickle) of
         <<>> -> token(auth(sid(os:timestamp()),expire()));
@@ -35,9 +37,10 @@ authenticate([], Pickle) ->
             case {expired(Till), prolongate()} of
                  {false,false} -> token(Auth,Pickle);
                   {false,true} -> move(Sid), token(auth(Sid,expire()));
-                      {true,_} -> (storage()):delete({Sid,auth}),
-                                  token(auth(sid(os:timestamp()),expire()))
-            end
+                  {true,false} -> (storage()):delete({Sid,auth}), new();
+                   {true,true} -> move(Sid), (storage()):delete({Sid,auth}), new()
+            end;
+       _ -> new()
     end.
 
 get_value(Session, Key, Default) ->

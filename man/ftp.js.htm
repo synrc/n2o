@@ -18,7 +18,7 @@
 <body>
 <nav>
   <a href="https://n2o.dev">DEV</a>
-  <a href="https://ws.n2o.space">N2O</a>
+  <a href="https://ws.n2o.dev">N2O</a>
   <a href="#" style="background:#ededed;">FTP.JS</a>
   <div class="dropdown">
     <a onclick="drop()" class="dropbtn">EN</a>
@@ -29,7 +29,7 @@
   </div>
 </nav>
 <header>
-  <a href="../index.html"><img src="https://n2o.space/img/Synrc Neo.svg" /></a>
+  <a href="../index.html"><img src="https://openmoji.org/data/color/svg/2B55.svg" /></a>
   <h1>FTP.JS</h1>
 </header>
 <main>
@@ -42,8 +42,10 @@
   </section>
   <section>
     <h3>API</h3>
-    <h4>$file.do</h4>
+    <h4>$file.do(response)</h4>
     <p>The event handler interceptor of the incoming FTP message.</p>
+    <h4>$file.progress(offset,total)</h4>
+    <p>The event handler interceptor of the file upload progree.</p>
     <h4>ftp.init(file)</h4>
     <p>Initialization of File transfer, returns unique id generated for it.</p>
     <h4>ftp.start(id)</h4>
@@ -64,7 +66,7 @@
   </section>
 </article>
 </main>
-<footer>2005—2019 © Synrc Research Center</footer>
+<footer>2005—2020 © Synrc Research Center</footer>
 <script>function drop(){document.getElementById("dropdown").classList.toggle("show");}</script>
 </body>
 </html>

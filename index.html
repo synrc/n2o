@@ -18,7 +18,7 @@
 <body>
 <nav>
   <a href="https://n2o.dev">DEV</a>
-  <a href="https://ws.n2o.space" style="background:#ededed;">N2O</a>
+  <a href="https://ws.n2o.dev" style="background:#ededed;">N2O</a>
   <div class="dropdown">
     <a onclick="drop()" class="dropbtn">EN</a>
     <div id="dropdown" class="dropdown-content">
@@ -28,7 +28,7 @@
   </div>
 </nav>
 <header>
-  <a href="https://github.com/synrc/n2o"><img src="https://synrc.space/images/Synrc Neo.svg" /></a>
+  <a href="https://github.com/synrc/n2o"><img src="https://openmoji.org/data/color/svg/2B55.svg" /></a>
   <h1>N2O</h1>
 </header>
 <aside>
@@ -41,8 +41,8 @@
          request processing; session, encoding, mq and cache services.
       </div><br/>
       <div>
-        MAY 2019 © <a href="https://github.com/5HT">5HT</a> <a href="https://5ht.co/license.htm">ISC</a><br />
-        VER 6.7 6.6 6.5
+        JAN 2020 © <a href="https://github.com/5HT">5HT</a> <a href="https://5ht.co/license.htm">ISC</a><br />
+        VER 7.1 6.11 6.7
       </div>
     </section>
 
@@ -91,7 +91,7 @@
     </div>
     <figure>
       <code>
-  $ mad app mqtt review
+  $ mad app zero review
   $ cd review
   $ mad dep com pla rep
   $ open http://127.0.0.1:8000
@@ -118,7 +118,7 @@
     </ul>
     <figure>
       <code>
-  $ mad app web sample
+  $ mad app nitro sample
   $ cd sample
   $ mad dep com pla rep
   $ open https://127.0.0.1:8001/app/index.htm
@@ -130,14 +130,14 @@
     <ul>
       <li><b><a href="man/n2o_heart.htm">n2o_heart</a></b> — PING protocol</li>
       <li><b><a href="man/n2o_ftp.htm">n2o_ftp</a></b> — N2O File Protocol<div class="desk">: FTP — 4KB</div></li>
-      <li><b><a href="man/n2o_nitro.htm">n2o_nitro</a></b> — N2O Nitrogen Web Framework Protocol<div class="desk">:  — 3KB</div></li>
+      <li><b><a href="https://nitro.n2o.dev/man/nitro_n2o.htm">n2o_nitro</a></b> — N2O Nitrogen Web Framework Protocol<div class="desk">:  — 3KB</div></li>
     </ul>
   </section>
   <section>
     <a name="services"></a><h3>Services</h3>
     <ul>
       <li><b><a href="man/n2o_session.htm">n2o_session</a></b> — ETS sessions backend</li>
-      <li><b><a href="man/n2o_secret.htm">n2o_secret</a></b> — AES/CBC-128 encoder/decoder</li>
+      <li><b><a href="man/n2o_secret.htm">n2o_secret</a></b> — AES/GCM-256 encoder/decoder</li>
       <li><b><a href="man/n2o_gproc.htm">n2o_gproc</a></b> — GPROC MQ backend</li>
       <li><b><a href="man/n2o_syn.htm">n2o_syn</a></b> — SYN MQ backend</li>
     </ul>

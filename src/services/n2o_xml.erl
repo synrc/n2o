@@ -2,7 +2,6 @@
 -description('N2O XML Formatter').
 -include("n2o.hrl").
 -include_lib("xmerl/include/xmerl.hrl").
--compile(export_all).
 -export([encode/1,decode/1]).
 
 str(Data) -> lists:flatten(xmerl:export_simple(Data, xmerl_xml)).

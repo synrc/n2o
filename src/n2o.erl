@@ -1,11 +1,10 @@
 -module(n2o).
--compile(export_all).
 -description('N2O MQTT TCP WebSocket').
 -behaviour(supervisor).
 -behaviour(application).
--include("n2o.hrl").
--include("n2o_core.hrl").
--include("n2o_api.hrl").
+-include_lib("n2o/include/n2o.hrl").
+-include_lib("n2o/include/n2o_core.hrl").
+-include_lib("n2o/include/n2o_api.hrl").
 -export([start/2, stop/1, init/1, proc/2, version/0, to_binary/1, bench/0]).
 
 % SERVICES
@@ -15,6 +14,7 @@
 -export([encode/1,decode/1]).                          % format
 -export([session/1,session/2,user/1,user/0]).          % session
 -export([cache/2,cache/3,cache/4,invalidate_cache/1]). % cache
+-export([start_mqtt/0,start_ws/0,start_tcp/0,sid/0]).  % session
 
 % START VNODE HASH RING
 
@@ -74,7 +74,12 @@ depickle(SerializedData) -> (pickler()):depickle(SerializedData).
 
 sid() -> #cx{session=SID}=get(context), SID.
 session() -> application:get_env(n2o,session,n2o_session).
-session(Key)        -> #cx{session=SID}=get(context), (session()):get_value(SID, Key, []).
+session(Key) ->
+    Context = get(context),
+    case Context of
+        #cx{session=SID} -> (session()):get_value(SID, Key, []);
+        _ -> []
+    end.
 session(Key, Value) -> #cx{session=SID}=get(context), (session()):set_value(SID, Key, Value).
 user()              -> case session(user) of undefined -> []; E -> E end.
 user(User)          -> session(user,User).
@@ -87,16 +92,16 @@ decode(Term) -> (formatter()):decode(Term).
 
 % CACHE
 
-cache(Tab, Key, Value, Till) -> ets:insert(Tab,{Key,Till,Value}), Value.
+cache(Tab, Key, Value, Till) -> ets:insert(Tab,{Key,{Till,Value}}), Value.
 cache(Tab, Key, undefined)   -> ets:delete(Tab,Key);
-cache(Tab, Key, Value)       -> ets:insert(Tab,{Key,n2o_session:till(calendar:local_time(),
-                                                    n2o_session:ttl()),Value}), Value.
+cache(Tab, Key, Value)       -> ets:insert(Tab,{Key,{n2o_session:till(calendar:local_time(),
+                                                    n2o_session:ttl()),Value}}), Value.
 cache(Tab, Key) ->
     Res = ets:lookup(Tab,Key),
     Val = case Res of [] -> []; [Value] -> Value; Values -> Values end,
     case Val of [] -> [];
-                {_,infinity,X} -> X;
-                {_,Expire,X} -> case Expire < calendar:local_time() of
+                {_,{infinity,X}} -> X;
+                {_,{Expire,X}} -> case Expire < calendar:local_time() of
                                   true ->  ets:delete(Tab,Key), [];
                                   false -> X end end.
 
