@@ -51,13 +51,10 @@
 
 % IO protocol
 
--record(bin,     { data=[] }).
--record(client,  { data=[] }).
--record(server,  { data=[] }).
+-include_lib("n2o/include/io.hrl").
 
 % File Transfer Protocol
 
--record(ftp,     { id=[], sid=[], filename=[], meta=[], size=[], offset=[], block=[], data=[], status=[] }).
--record(ftpack,  { id=[], sid=[], filename=[], meta=[], size=[], offset=[], block=[], data=[], status=[] }).
+-include_lib("n2o/include/ftp.hrl").
 
 -endif.
