@@ -75,5 +75,4 @@ save_context(Ctx) ->
         _ -> skip
     end,
     Pid = pid(Ctx),
-    io:format("saved web context for a pid ~p~n", [Pid]),
     ets:insert(web_context, {Pid, Ctx}).
