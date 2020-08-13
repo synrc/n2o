@@ -35,21 +35,28 @@ restart(Tab,Name) ->
           #pi{}=Async -> start(Async);
                      Error -> Error end.
 
+handle(Mod,Message,Async) ->
+  case Mod:proc(Message,Async) of
+          {stop,X,Y,S} -> {stop,X,Y,S};
+            {stop,X,S} -> {stop,X,S};
+         {reply,X,S,T} -> {reply,X,S,T};
+           {reply,X,S} -> {noreply,S};
+         {noreply,X,S} -> {noreply,X,S};
+           {noreply,S} -> {noreply,S};
+                 {_,S} -> {noreply,S};
+                     S -> {noreply,S} end.
+
 start_link (Parameters)    -> gen_server:start_link(?MODULE, Parameters, []).
 code_change(_,State,_)     -> {ok, State}.
 handle_call({get},_,Async) -> {reply,Async,Async};
 handle_call(_,_,#pi{module=undefined}) -> {noreply,[]};
-handle_call(Message,_,#pi{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_call(Message,_,#pi{module=Mod}=Async) -> handle(Mod,Message,Async).
 handle_cast(_,  #pi{module=undefined}) -> {noreply,[]};
-handle_cast(Message,  #pi{module=Mod}=Async) -> Mod:proc(Message,Async).
+handle_cast(Message,  #pi{module=Mod}=Async) -> handle(Mod,Message,Async).
 handle_info(timeout,  #pi{module=undefined}) -> {noreply,[]};
-handle_info(timeout,  #pi{module=Mod}=Async) -> Mod:proc(timeout,Async);
+handle_info(timeout,  #pi{module=Mod}=Async) -> handle(Mod,timeout,Async);
 handle_info(_,  #pi{module=undefined}) -> {noreply,[]};
-handle_info(Message,  #pi{module=Mod}=Async) ->
-    {noreply,case Mod:proc(Message,Async) of
-                  {_,_,S} -> S;
-                    {_,S} -> S;
-                        S -> S end};
+handle_info(Message,  #pi{module=Mod}=Async) -> handle(Mod,Message,Async);
 handle_info(_,  _) -> {noreply,[]}.
 
 init(#pi{module=Mod,table=Tab,name=Name}=Handler) ->
