@@ -23,7 +23,6 @@ push(M,R,S,[H|T],Acc)     ->
          {reply,M1,R1,S1} -> reply(M1,R1,S1);
                         A -> push(M,R,S,T,[A|Acc]) end.
 
-pid(Ctx) when is_tuple(Ctx) -> maps:get(pid, element(4, Ctx)).
 cx(Cookies,Req) ->
   Token = case lists:keyfind(<<"X-Authorization">>, 1, Cookies) of {_,V} -> V; false -> <<>> end,
   Sid = case n2o:depickle(Token) of {{S,_},_} -> S; _ -> <<>> end,
