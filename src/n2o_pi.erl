@@ -40,7 +40,7 @@ handle(Mod,Message,Async) ->
           {stop,X,Y,S} -> {stop,X,Y,S};
             {stop,X,S} -> {stop,X,S};
          {reply,X,S,T} -> {reply,X,S,T};
-           {reply,X,S} -> {noreply,S};
+           {reply,X,S} -> {reply,X,S};
          {noreply,X,S} -> {noreply,X,S};
            {noreply,S} -> {noreply,S};
                  {_,S} -> {noreply,S};
