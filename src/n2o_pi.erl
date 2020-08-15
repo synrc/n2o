@@ -65,6 +65,5 @@ init(#pi{module=Mod,table=Tab,name=Name}=Handler) ->
 
 terminate(_Reason, #pi{name=Name,sup=Sup,table=Tab}) ->
     spawn(fun() -> supervisor:delete_child(Sup,{Tab,Name}) end),
-    io:format("n2o_pi:terminate~n"),
     catch n2o:cache(Tab,{Tab,Name},undefined), ok.
 

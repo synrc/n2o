@@ -115,7 +115,7 @@ proc({timer,ping},#pi{state=Timer}=Async) ->
     erlang:cancel_timer(Timer),
     n2o:invalidate_cache(caching),
     (n2o_session:storage()):invalidate_sessions(),
-    {reply,ok,Async#pi{state=timer_restart(ping())}}.
+    {noreply,Async#pi{state=timer_restart(ping())}}.
 
 invalidate_cache(Table) -> ets:foldl(fun(X,_) -> n2o:cache(Table,element(1,X)) end, 0, Table).
 timer_restart(Diff) -> {X,Y,Z} = Diff, erlang:send_after(1000*(Z+60*Y+60*60*X),self(),{timer,ping}).
