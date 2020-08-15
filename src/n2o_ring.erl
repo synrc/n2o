@@ -1,4 +1,5 @@
 -module(n2o_ring).
+-description('N2O Ring').
 -export([add/3,contains/3,lookup/3,members/1,new/1,new/2,remove/3,size/1,send/2,send/3]).
 -export([ring/2,tab2srv/1,tab2ring/1]).
 -define(HASH, sha).

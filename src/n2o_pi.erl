@@ -1,11 +1,11 @@
 -module(n2o_pi).
--description('N2O Process').
+-description('N2O Process Instance'). % gen_server replacement
 -include_lib("n2o/include/n2o.hrl").
 -include_lib("n2o/include/n2o_pi.hrl").
 -behaviour(gen_server).
 -export([start_link/1]).
 -export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
--export([start/1,stop/2,send/2,send/3,pid/2,restart/2]).
+-export([start/1,stop/2,send/2,send/3,cast/2,cast/3,pid/2,restart/2]).
 
 start(#pi{table=Tab,name=Name,module=Module,sup=Sup} = Async) ->
     ChildSpec = {{Tab,Name},{?MODULE,start_link,[Async]},
@@ -27,6 +27,9 @@ stop(Tab,Name) ->
 
 send(Pid,Message) when is_pid(Pid) -> gen_server:call(Pid,Message).
 send(Tab,Name,Message) -> gen_server:call(n2o_pi:pid(Tab,Name),Message).
+
+cast(Pid,Message) when is_pid(Pid) -> gen_server:cast(Pid,Message).
+cast(Tab,Name,Message) -> gen_server:cast(n2o_pi:pid(Tab,Name),Message).
 
 pid(Tab,Name) -> n2o:cache(Tab,{Tab,Name}).
 

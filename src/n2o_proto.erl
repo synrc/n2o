@@ -1,5 +1,5 @@
 -module(n2o_proto).
--description('N2O Proto Loop').
+-description('N2O WebSocket').
 -include_lib("n2o/include/n2o.hrl").
 -export([init/2, finish/2, info/3, stream/3, push/5, init/4, terminate/2, cx/1]).
 -export([try_info/3, try_info/4]).

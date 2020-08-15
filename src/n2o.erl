@@ -1,5 +1,5 @@
 -module(n2o).
--description('N2O MQTT TCP WebSocket').
+-description('N2O Application Server').
 -behaviour(supervisor).
 -behaviour(application).
 -include_lib("n2o/include/n2o.hrl").

@@ -71,7 +71,7 @@
       erlang:cancel_timer(Timer),
       io:format("n2o Timer: ~p\r~n",[ping]),
       n2o:invalidate_cache(caching),
-      {reply,ok,Async#pi{state=timer(ping())}}.
+      {noreply,Async#pi{state=timer(ping())}}.
 
   timer(Diff) -&#62;
       {X,Y,Z} = Diff,
@@ -113,11 +113,11 @@
   3&#62; ets:tab2list(caching).
   [{{caching,"timer"},infinity,&#60;0.1604.0&#62;}]
 
-  4&#62; n2o_pi:send(caching,"timer",{timer,ping}).
+  4&#62; n2o_pi:cast(caching,"/timer",{timer,ping}).
   n2o Timer: ping
   ok
 
-  5&#62; n2o_pi:pid(caching,"timer").
+  5&#62; n2o_pi:pid(caching,"/timer").
   &#60;0.1604.0&#62;
       </code>
     </figure>
@@ -186,6 +186,12 @@
       Returns the response from <b>gen_server:call</b>.</p>
     <figure>
       <code>
+  cast(Class,Name,term()) -> term().
+      </code>
+    </figure>
+    <p>Sends <b>gen_cast</b> message to process, taken from Class table with Name key.</p>
+    <figure>
+      <code>
   pid(Class,Name) -> pid().
       </code>
     </figure>
@@ -193,19 +199,14 @@
     <figure>
       <figcaption>Listing 5. gen_server compatibility.</figcaption>
       <code>
-  1&#62; n2o_pi:pid(caching,"timer") 
+  1&#62; n2o_pi:pid(caching,"/timer") 
             ! {timer,ping}.
   n2o Timer: ping
   {timer,ping}
 
-  2&#62; n2o_pi:send(caching,"timer",
-                 {timer,ping}).
-  n2o Timer: ping
-  ok
-
-  3&#62; gen_server:call(
-       n2o_pi:pid(caching,"timer"),
-                  {timer,ping}).
+  2&#62; gen_server:cast(
+         n2o_pi:pid(caching,"/timer"),
+              {timer,ping}).
   n2o Timer: ping
   ok
       </code>
