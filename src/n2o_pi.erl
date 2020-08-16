@@ -40,6 +40,8 @@ restart(Tab,Name) ->
 
 handle(Mod,Message,Async) ->
   case Mod:proc(Message,Async) of
+                {ok,S} -> {ok,S};
+              {ok,S,T} -> {ok,S,T};
           {stop,X,Y,S} -> {stop,X,Y,S};
             {stop,X,S} -> {stop,X,S};
          {reply,X,S,T} -> {reply,X,S,T};
