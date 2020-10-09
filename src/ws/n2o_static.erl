@@ -11,9 +11,9 @@ resource_exists(R,S)        -> cowboy_static:resource_exists(R,S).
 last_modified(R,S)          -> cowboy_static:last_modified(R,S).
 generate_etag(R,S)          -> cowboy_static:generate_etag(R,S).
 get_file(R,S)               -> cowboy_static:get_file(R,S).
-websocket_init(S)           -> n2o_cowboy2:websocket_init(S).
-websocket_handle(D,S)       -> n2o_cowboy2:websocket_handle(D,S).
-websocket_info(D,S)         -> n2o_cowboy2:websocket_info(D,S).
+websocket_init(S)           -> n2o_cowboy:websocket_init(S).
+websocket_handle(D,S)       -> n2o_cowboy:websocket_handle(D,S).
+websocket_info(D,S)         -> n2o_cowboy:websocket_info(D,S).
 
 index() -> [n2o_cowboy:fix1(code:priv_dir(?MODULE)), "/static/index.html"].
 
