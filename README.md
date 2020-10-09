@@ -78,7 +78,6 @@ N2O Loop is directly connected and runned inside context of WebSocket handler.
 Usually in Erlang we use `syn` or `gproc` OTP message buses.
 As such buses are optional in MQTT setup we include bus drivers in WebSocket package.
 
-* [n2o_stream](https://ws.n2o.dev/man/n2o_stream.htm) — COWBOY and XHR bridge
 * [n2o_ws](https://ws.n2o.dev/man/n2o_ws.htm) — N2O WebSocket Virtual Node
 * [n2o_heart](https://ws.n2o.dev/man/n2o_heart.htm) — PING protocol
 * [n2o_cowboy](https://ws.n2o.dev/man/n2o_cowboy.htm) — COWBOY API

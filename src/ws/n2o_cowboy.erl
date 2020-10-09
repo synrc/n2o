@@ -1,16 +1,28 @@
 -module(n2o_cowboy).
 -include_lib("n2o/include/n2o.hrl").
 -description('N2O Cowboy HTTP Backend').
--export([init/3, handle/2, terminate/3, params/1, form/1, path/1, request_body/1, headers/1, header/3,
+-export([init/2, websocket_init/1, websocket_handle/2, websocket_info/2, terminate/3, points/0]).
+-export([params/1, form/1, path/1, request_body/1, headers/1, header/3,
          response/2, reply/2, cookies/1, cookie/2, cookie/3, cookie/5, delete_cookie/2,
-         peer/1, env/1, points/0, fix2/1, fix1/1]).
--record(state, {headers, body}).
+         peer/1, env/1, fix2/1, fix1/1]).
 
-% Cowboy HTTP Handler
+% Cowboy 2 WebSocket API
 
-init(_Transport, Req, _Opts) -> {ok, Req, #state{}}.
-terminate(_Reason, _Req, _State) -> ok.
-handle(Req, State) -> {ok, Req, State}.
+init(Req,_Opts) -> {cowboy_websocket, Req, Req}.
+
+ws({ok,_,S})                 -> {ok,S};
+ws({reply,{binary,Rep},_,S}) -> {reply,{binary,Rep},S};
+ws({reply,{json,Rep},_,S})   -> {reply,{binary,n2o_json:encode(Rep)},S};
+ws({reply,{bert,Rep},_,S})   -> {reply,{binary,n2o_bert:encode(Rep)},S};
+ws({reply,{text,Rep},_,S})   -> {reply,{text,Rep},S};
+ws({reply,{default,Rep},_,S})-> {reply,{binary,n2o:encode(Rep)},S};
+ws({reply,{Encoder,Rep},_,S})-> {reply,{binary,Encoder:encode(Rep)},S};
+ws(X) -> ?LOG_ERROR(#{unknown=>X}), {shutdown,[]}.
+
+websocket_init(S)            -> ws(n2o_proto:init([],S,[],ws)).
+websocket_handle(D,S)        -> ws(n2o_proto:stream(D,[],S)).
+websocket_info(D,S)          -> ws(n2o_proto:info(D,[],S)).
+terminate(M,R,S)             -> ws(n2o_proto:info({direct,{exit,M}},R,S)).
 
 % Cowboy Bridge Abstraction
 
@@ -40,10 +52,11 @@ static() -> { dir, fix1(code:priv_dir(application:get_env(n2o,app,review)))++"/s
 n2o()    -> { dir, fix2(code:priv_dir(n2o)), mime() }.
 mime()   -> [ { mimetypes, cow_mimetypes, all } ].
 port()   -> application:get_env(n2o,port,8000).
+
 points() -> cowboy_router:compile([{'_', [
             { "/n2o/[...]", cowboy_static,  n2o()      },
             { "/app/[...]", cowboy_static,  static()   },
-            { "/ws/[...]",  n2o_stream,  []            } ]}]).
+            { "/ws/[...]",  n2o_cowboy,  []            } ]}]).
 
 env(App) -> [{port,       port()},
              {certfile,   code:priv_dir(App)++"/ssl/fullchain.pem"},
