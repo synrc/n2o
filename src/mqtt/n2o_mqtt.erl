@@ -8,9 +8,11 @@ send(C,T,M) ->
 proc(init,#pi{name=Name}=Async) ->
     case emqtt:start_link(#{owner => self(), client_id => Name}) of
         {ok, Conn} ->
+            ["mqtt", M, Node] = string:tokens(Name, "/"),
+            Topic  = iolist_to_binary(["/events/1/",Node,"/", M,"/#"]),
             emqtt:connect(Conn),
-            emqtt:subscribe(Conn, {list_to_binary(Name),2}),
-            io:format("MQTT worker on ~p initalized. ~n", [Name]),
+            emqtt:subscribe(Conn, {Topic, 2}),
+            io:format("MQTT worker on ~p initalized. ~n", [Topic]),
             {ok,Async#pi{state=Conn}};
         ignore -> ignore;
         {error, Error} -> {error, Error}
@@ -24,16 +26,23 @@ proc({ring, Topic, Request}, State) ->
     proc({publish, #{payload => Request, topic => Topic}}, State);
 
 proc({publish, #{payload := Request, topic := <<"/",Address/binary>>}}, State=#pi{state=C}) ->
-    [Proto,App,Node|_] = string:tokens(binary_to_list(Address),"/"),
-    put(context,Cx=#cx{module=App,node=Node,params=Proto,client_pid=C,from= <<"/response/",Address/binary>>}),
+    [Pre,Vsn,Node,M,_Urs,Cid|_] = string:tokens(binary_to_list(Address),"/"),
+    io:format("MQTT Message to {Mod: ~p, Node: ~p,  Cid ~p}.~n", [M, Node, Cid]),
     
-    io:format("MQTTv5 [~p]: Req: ~p~n",[App,Request]),
-    case  n2o_proto:try_info(Request,[],Cx) of
+    Ctx = #cx{module=list_to_atom(M),node=Node,vsn=Vsn,client_pid=C, params=Cid, from=Address},
+    put(context, Ctx),
+
+    case  n2o_proto:try_info(Request,[],Ctx) of
         {reply,{_,      <<>>},_,_}           -> {noreply, State};
-        {reply,{bert,   Term},_,#cx{from=X}} -> {reply, {ok,send(C,X,n2o_bert:encode(Term))}, State};
+        {reply,{bert,   Term},_,#cx{from=X}} -> case send(C,X,n2o_bert:encode(Term)) of 
+                                                    ok -> {noreply, State};
+                                                    {ok, _Pkid} -> {noreply, State};
+                                                    {error, Error} -> {reply, {error, Error}, State} end;
         {reply,{json,   Term},_,#cx{from=X}} -> {reply, {ok,send(C,X,n2o_json:encode(Term))}, State};
         {reply,{text,   Term},_,#cx{from=X}} -> {reply, {ok,send(C,X,Term)}, State};
-        {reply,{binary, Term},_,#cx{from=X}} -> {reply, {ok,send(C,X,Term)}, State};
+        {reply,{binary, Term},_,#cx{from=X}} ->
+
+            {reply, {ok,send(C,X,Term)}, State};
         {reply,{default,Term},_,#cx{from=X}} -> {reply, {ok,send(C,X,n2o:encode(Term))}, State};
         {reply,{Encoder,Term},_,#cx{from=X}} -> {reply, {ok,send(C,X,Encoder:encode(Term))}, State};
                                        Reply -> {reply, {error,{"Invalid Return",Reply}}, State}

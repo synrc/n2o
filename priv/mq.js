@@ -8,15 +8,13 @@ var l = location.pathname,
     ll = x.lastIndexOf("."),
     module = x == "" ? "index" : (ll > 0 ? x.substring(0, ll) : x);
 var ws = { send: function (payload, qos) {
-        var message = new Paho.MQTT.Message(payload);
-        message.destinationName = topic("events");
-        message.qos = qos || 2;
-        mqtt.send(message); } };
+        mqtt.send(topic("/events"), payload, qos || 2, false);
+    }};
 
 var subscribeOptions = {
     qos: 2,  // QoS
     invocationContext: { foo: true },  // Passed to success / failure callback
-    onSuccess: function (x) { console.log("MQTT Subscribe"); },
+    onSuccess: function (x) { console.log("Subscribed to ", x); },
     onFailure: function (m) { console.log("MQTT Subscription failed: " + m.errorMessage); },
     timeout: 2 };
 
@@ -26,9 +24,11 @@ var options = {
     password: token(),
     cleanSession: false,
     onFailure: function (m) { console.log("MQTT Connection failed: " + m.errorMessage); },
-    onSuccess: function ()  { console.log("MQTT Connect");
-                              ws.send(enc(tuple(atom('init'),bin(token()))));
-                            } };
+    onSuccess: function ()  {
+        console.log("MQTT Connect");
+        mqtt.subscribe("/actions/1/index/#", subscribeOptions);
+        ws.send(enc(tuple(atom('init'),bin(token())))); //<<"N2o/Token">>
+    } };
 
 function gen_client()  { return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36); }
 function pageModule()  { return module || 'api'; }
@@ -39,18 +39,18 @@ function token()       { return localStorage.getItem("token")  || ''; };
 function topic(prefix) { return prefix + "/1/" + rnd() + "/" + pageModule() + "/anon/" + client() + "/" + token(); }
 function rnd()         { return Math.floor((Math.random() * nodes)+1); }
 
-  mqtt = new Paho.MQTT.Client(host, 8083, client());
-  mqtt.onConnectionLost = function (o) { console.log("connection lost: " + o.errorMessage); };
-  mqtt.onMessageArrived = function (m) {
-        var BERT = m.payloadBytes.buffer.slice(m.payloadBytes.byteOffset,
-            m.payloadBytes.byteOffset + m.payloadBytes.length);
-        try {
-            erlang = dec(BERT);
-            for (var i = 0; i < $bert.protos.length; i++) {
-                p = $bert.protos[i]; if (p.on(erlang, p.do).status == "ok") return;
-            }
-        } catch (e) { console.log(e); }
-  };
+mqtt = new Paho.MQTT.Client(host, 8083, client());
+mqtt.onConnectionLost = function (o) { console.log("connection lost: " + o.errorMessage); };
+mqtt.onMessageArrived = function (m) {
+    var BERT = m.payloadBytes.buffer.slice(m.payloadBytes.byteOffset,
+        m.payloadBytes.byteOffset + m.payloadBytes.length);
+    try {
+        erlang = dec(BERT);
+        for (var i = 0; i < $bert.protos.length; i++) {
+            p = $bert.protos[i]; 
+            if (p.on(erlang, p.do).status == "ok") return;
+        }
+    } catch (e) { console.log(e); }
+};
 
 mqtt.connect(options);
-
