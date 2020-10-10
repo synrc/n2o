@@ -49,6 +49,12 @@
 
 -define(N2O_JSON, (application:get_env(n2o,json,jsone))).
 
+% MQTT topics
+
+-define(VSN, "1").
+-define(SRV_TOPIC(Node, M), iolist_to_binary([application:get_env(n2o,server_topic,"/events"), "/",?VSN,"/",Node,"/",M,"/#"])).
+-define(CLI_TOPIC(M,Cid),   iolist_to_binary([application:get_env(n2o,client_topic,"/actions"),"/",?VSN,"/",M,"/",Cid])).
+
 % IO protocol
 
 -include_lib("n2o/include/io.hrl").
