@@ -22,8 +22,8 @@ add(Tab,App,Node)      -> add_index(Node, ring(App,Tab)).
 remove(Tab,App,Node)   -> remove_index(Node, ring(App,Tab)).
 size(Tab)          -> size_index(Tab).
 send(Tab,Msg)      -> n2o_pi:send(Tab,lookup_index(Msg, ring(n2o,Tab)),Msg).
-send(Tab,App,Msg)  -> Topic = lookup_index(Msg, ring(App,Tab)),
-                      n2o_pi:send(Tab,Topic,{ring,list_to_binary(Topic),Msg}).
+send(Tab,App,Msg)  -> Name = lookup_index(Msg, ring(App,Tab)),
+                      n2o_pi:send(n2o_pi:pid(Tab,Name),{ring, App, Msg}).
 members(Tab)       -> [ Z || {Z} <- lists:flatten([ lists:map(fun(X)->{X}end, members_index(ring(App,Tab)))
                           || App <- application:get_env(n2o,tab2srv(Tab),[]) ]) ].
 
