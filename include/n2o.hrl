@@ -52,8 +52,10 @@
 % MQTT topics
 
 -define(VSN, "1").
--define(SRV_TOPIC(Node, M), iolist_to_binary([application:get_env(n2o,server_topic,"/events"), "/",?VSN,"/",Node,"/",M,"/#"])).
--define(CLI_TOPIC(M,Cid),   iolist_to_binary([application:get_env(n2o,client_topic,"/actions"),"/",?VSN,"/",M,"/",Cid])).
+-define(SRV_TOPIC(Cid), ?SRV_TOPIC("+","+",Cid)).
+-define(SRV_TOPIC(Node,M), ?SRV_TOPIC(Node,M, "+")).
+-define(SRV_TOPIC(Node, M, Cid), iolist_to_binary([application:get_env(n2o,server_topic,"/events"), "/",?VSN,"/",Node,"/",M,"/", Cid])).
+-define(CLI_TOPIC(M,Cid), iolist_to_binary([application:get_env(n2o,client_topic,"/actions"),"/",?VSN,"/",M,"/",Cid])).
 
 % IO protocol
 
