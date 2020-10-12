@@ -20,7 +20,7 @@ proc({disconnected, shutdown, tcp_closed}, State) ->
     proc(init,State);
 
 proc({ring, App, {publish, #{topic:=T} = Request}}, State) ->
-    io:format("MQTT Ring message ~p. App:~p~n.", [Topic, App]),
+    io:format("MQTT Ring message ~p. App:~p~n.", [T, App]),
 
     [Ch,Vsn,Node,_,Usr,Cid|_] = string:tokens(binary_to_list(T), "/"),
     T2 = lists:join("/", ["",Ch,Vsn,Node,atom_to_list(App),Usr,Cid]),
