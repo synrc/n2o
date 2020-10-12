@@ -24,11 +24,9 @@ proc({ring, Topic, Request}, State) ->
     proc({publish, #{payload => Request, topic => Topic}}, State);
 
 proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=C}) ->
-    [_Ch,Vsn,Node,M,_Usr,Cid|_] = string:tokens(binary_to_list(Topic), "/"),
-    put(context,Cx=#cx{module=list_to_atom(M),node=Node,params=Cid,vsn=Vsn,client_pid=C,from=?CLI_TOPIC(M,Cid)}),
+    [_Ch,_,Node,M,_Usr,Cid|_] = string:tokens(binary_to_list(Topic), "/"),
+    put(context,Cx=#cx{module=list_to_atom(M),node=Node,params=Cid,client_pid=C,from=?CLI_TOPIC(M,Cid)}),
 
-    io:format("MQTTv5 [~p]: Message: ~p~n",[M,Request]),
-    
     % handle_info may initiate the proc
     % so valid response are {noreply,_,_} variations and {stop,_,_}
     case  n2o_proto:try_info(n2o:decode(Request),[],Cx) of
