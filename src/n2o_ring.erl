@@ -10,7 +10,11 @@ tab2ring(tcp)  -> tcp_ring.
 tab2srv(ws)    -> ws_services;
 tab2srv(mqtt)  -> mqtt_services;
 tab2srv(tcp)   -> tcp_services.
-ring(App,Tab)  -> application:get_env(App,tab2ring(Tab),n2o_ring:new(1,[1])).
+ring(App,Tab)  -> 
+    case application:get_env(App,tab2ring(Tab)) of
+        {ok, R} -> R;
+        undefined  -> n2o_ring:new(1,[1])
+    end.
 
 lookup(Tab,App,Term)   -> lookup_index(Term, ring(App,Tab)).
 contains(Tab,App,Term) -> contains_index(Term, ring(App,Tab)).
