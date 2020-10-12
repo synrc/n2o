@@ -19,9 +19,13 @@ proc({disconnected, shutdown, tcp_closed}, State) ->
     io:format("MQTT disconnected ~p~n", [State]),
     proc(init,State);
 
-proc({ring, Topic, Request}, State) ->
-    io:format("MQTT Ring message ~p~n.", [Request]),
-    proc({publish, #{payload => Request, topic => Topic}}, State);
+proc({ring, App, {publish, #{topic:=T} = Request}}, State) ->
+    io:format("MQTT Ring message ~p. App:~p~n.", [Topic, App]),
+
+    [Ch,Vsn,Node,_,Usr,Cid|_] = string:tokens(binary_to_list(T), "/"),
+    T2 = lists:join("/", ["",Ch,Vsn,Node,atom_to_list(App),Usr,Cid]),
+
+    proc({publish, Request#{topic := iolist_to_binary(T2)}}, State);
 
 proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=C}) ->
     [_Ch,_,Node,M,_Usr,Cid|_] = string:tokens(binary_to_list(Topic), "/"),
@@ -30,7 +34,7 @@ proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=C}) ->
     % handle_info may initiate the proc
     % so valid response are {noreply,_,_} variations and {stop,_,_}
     case  n2o_proto:try_info(n2o:decode(Request),[],Cx) of
-        {reply,{_,      <<>>},_,_}               -> {noreply, State};
+        {reply,{_,      <<>>},_,_}           -> {noreply, State};
         {reply,{bert,   Term},_,#cx{from=X}} -> send(C,X,n2o_bert:encode(Term)), {noreply, State};
         {reply,{json,   Term},_,#cx{from=X}} -> send(C,X,n2o_json:encode(Term)), {noreply,State};
         {reply,{text,   Term},_,#cx{from=X}} -> send(C,X,Term), {noreply, State};
