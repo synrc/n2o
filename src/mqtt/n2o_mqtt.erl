@@ -33,7 +33,9 @@ proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=C}) ->
 
     % handle_info may initiate the proc
     % so valid response are {noreply,_,_} variations and {stop,_,_}
-    case  n2o_proto:try_info(n2o:decode(Request),[],Cx) of
+    Req = try n2o:decode(Request) catch error:badarg -> {error, badarg} end,
+
+    case  n2o_proto:try_info(Req,[],Cx) of
         {reply,{_,      <<>>},_,_}           -> {noreply, State};
         {reply,{bert,   Term},_,#cx{from=X}} -> send(C,X,n2o_bert:encode(Term)), {noreply, State};
         {reply,{json,   Term},_,#cx{from=X}} -> send(C,X,n2o_json:encode(Term)), {noreply,State};
@@ -41,7 +43,7 @@ proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=C}) ->
         {reply,{binary, Term},_,#cx{from=X}} -> send(C,X,Term), {noreply,State};
         {reply,{default,Term},_,#cx{from=X}} -> send(C,X,n2o:encode(Term)), {noreply,State};
         {reply,{Encoder,Term},_,#cx{from=X}} -> send(C,X,Encoder:encode(Term)), {noreply, State};
-                                       Reply -> {stop, {error,{"Invalid Return", Reply}}, State}
+                                       Reply -> ?LOG_ERROR({"Invalid Return", Reply}), {noreply, State}
     end;
 
 proc(Unknown,Async=#pi{name=Name}) ->
