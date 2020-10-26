@@ -6,6 +6,7 @@ send(C,T,M) ->
     emqtt:publish(C,T,M).
 
 proc(init,#pi{name=Name}=Async) ->
+    process_flag(trap_exit, true),
     case emqtt:start_link(#{owner => self(), client_id => Name}) of
         {ok, Conn} ->
             [_,M,Node|_] = string:tokens(Name, "/"),
@@ -15,9 +16,14 @@ proc(init,#pi{name=Name}=Async) ->
         ignore -> ignore;
         {error, Error} -> {error, Error}
     end;
+
+proc({'EXIT', _Pid, {shutdown, Reason}}, State) ->
+    io:format("MQTT disconnected ~p.~n State: ~p~n", [Reason, State]),
+    % transient pi will be restarted if terminated abnormally
+    {stop, tcp_closed, State};
 proc({disconnected, shutdown, tcp_closed}, State) ->
     io:format("MQTT disconnected ~p~n", [State]),
-    proc(init,State);
+    {stop, tcp_closed, State};
 
 proc({ring, App, {publish, #{topic:=T} = Request}}, State) ->
     io:format("MQTT Ring message ~p. App:~p~n.", [T, App]),
