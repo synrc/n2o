@@ -9,8 +9,8 @@ proc(init,#pi{name=Name}=Async) ->
     process_flag(trap_exit, true),
     case emqtt:start_link(#{owner => self(),
                             client_id => Name,
-                            host => application:get_env(n2o, mqtt_brocker, {127,0,0,1}),
-                            port => application:get_env(n2o, mqtt_port, 1883)}) of
+                            host => application:get_env(n2o, mqtt_host, {127,0,0,1}),
+                            port => application:get_env(n2o, mqtt_tcp_port, 1883)}) of
         {ok, Conn} ->
             [_,M,Node|_] = string:tokens(Name, "/"),
             {ok,_}   = emqtt:connect(Conn),
