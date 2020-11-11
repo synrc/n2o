@@ -7,11 +7,14 @@ send(C,T,M) ->
 
 proc(init,#pi{name=Name}=Async) ->
     process_flag(trap_exit, true),
-    case emqtt:start_link(#{owner => self(), client_id => Name}) of
+    case emqtt:start_link(#{owner => self(),
+                            client_id => Name,
+                            host => application:get_env(n2o, mqtt_brocker, {127,0,0,1}),
+                            port => application:get_env(n2o, mqtt_port, 1883)}) of
         {ok, Conn} ->
             [_,M,Node|_] = string:tokens(Name, "/"),
-            emqtt:connect(Conn),
-            emqtt:subscribe(Conn, {?SRV_TOPIC(Node,M),2}),
+            {ok,_}   = emqtt:connect(Conn),
+            {ok,_,_} = emqtt:subscribe(Conn, {?SRV_TOPIC(Node,M),2}),
             {ok,Async#pi{state=Conn}};
         ignore -> ignore;
         {error, Error} -> {error, Error}
