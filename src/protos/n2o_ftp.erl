@@ -68,13 +68,10 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
                 {reply, {error, Reason}, Async};
             ok ->
                 FTP2 = FTP#ftp{data = <<>>, sid = <<>>,offset = TotalSize, block = ?STOP},
-                %FTP3 = FTP2#ftp{status = {event, stop}, filename = RelPath},
-                % spawn(fun() ->
-                %     catch [n2o_ring:send(mqtt, S, {publish, #{payload => term_to_binary(FTP3),
-                %         topic => ?SRV_TOPIC(ClientId)}})
-                %         || S <- application:get_env(n2o, mqtt_services, [])],
-                %     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
-                %     catch n2o:send(Sid, {direct, FTP3}) end),
+                FTP3 = FTP2#ftp{status = {event, stop}, filename = RelPath},
+                spawn(fun() ->
+                     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
+                     catch n2o:send(Sid, {direct, FTP3}) end),
 
                 spawn(fun() -> n2o_pi:stop(file, Link) end),
                 {stop, normal, FTP2, Async#pi{state = FTP2}}
