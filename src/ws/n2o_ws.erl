@@ -12,7 +12,7 @@ proc({publish, C, Token, Request}, State = #pi{name=Server,state=Module}) ->
     Ctx = #cx { session= n2o:to_binary(Token), node=Server,
                 client_pid=C, state=application:get_env(kvs,dba,[]) },
     put(context, Ctx),
-    Return = case n2o_proto:try_info(Module,Request,[],Ctx) of
+    Return = case n2o_proto:try_info(Module,Request,[],Ctx,n2o_proto:protocols()) of
              {reply,{_,      <<>>},_,_} -> skip;
              {reply,{text,   Text},_,_} -> {ok,send(C,{flush,Text})};
              {reply,{bert,   Term},_,_} -> {ok,send(C,n2o_bert:encode(Term))};

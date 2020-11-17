@@ -49,15 +49,6 @@
 
 -define(N2O_JSON, (application:get_env(n2o,json,jsone))).
 
-% MQTT topics
-
--define(VSN, "1").
--define(SRV_TOPIC(Cid), ?SRV_TOPIC("+","+",Cid)).
--define(SRV_TOPIC(Node, M), ?SRV_TOPIC(Node,M, "#")).
--define(SRV_TOPIC(Node, M, Cid), ?SRV_TOPIC(Node, M, Cid, "+")).
--define(SRV_TOPIC(Node, M, Cid, Usr), iolist_to_binary([application:get_env(n2o,server_topic,"/events"),"/",?VSN,"/",Node,"/",M,"/",Usr,"/",Cid])).
--define(CLI_TOPIC(M,Cid), iolist_to_binary([application:get_env(n2o,client_topic,"/actions"),"/",?VSN,"/",M,"/",Cid])).
-
 % IO protocol
 
 -include_lib("n2o/include/io.hrl").
@@ -65,5 +56,9 @@
 % File Transfer Protocol
 
 -include_lib("n2o/include/ftp.hrl").
+
+% MQTT Services
+
+-include_lib("n2o/include/mqtt.hrl").
 
 -endif.

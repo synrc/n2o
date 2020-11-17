@@ -58,7 +58,7 @@ info(Message, Req, State) -> {unknown, Message, Req, State}.
 proc(init, #pi{}=Async) ->
     {ok, Async};
 
-proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = ClientId} = FTP,
+proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = Cid} = FTP,
      #pi{name = Link, state = #ftp{size = TotalSize, offset = Offset, filename = RelPath}} = Async)
      when Offset + Block >= TotalSize ->
 %        ?LOG_INFO("FTP PROC FINALE: ~p~n", [ Link ]),
@@ -70,10 +70,19 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
                 FTP2 = FTP#ftp{data = <<>>, sid = <<>>,offset = TotalSize, block = ?STOP},
                 FTP3 = FTP2#ftp{status = {event, stop}, filename = RelPath},
                 spawn(fun() ->
-                    catch [n2o_ring:send(mqtt, S, {publish, #{payload => term_to_binary(FTP3), topic => ?SRV_TOPIC(ClientId)}})
-                        || S <- application:get_env(n2o, mqtt_services, [])],
+                    [begin
+                        Ev = application:get_env(n2o,events_topic,"/events"),
+                        S1 = atom_to_list(S),
+                        Node = integer_to_list(rand:uniform(4)),
+                        Topic = iolist_to_binary([Ev,"/",?VSN, "/", S1, "/", Node,"/", S1, "/", Cid]),
+                        Msg = {publish, #{payload => term_to_binary(FTP3), topic => Topic}},
+                        n2o_ring:send(mqtt, S, Msg)
+                    end || {S,_} <- lists:filter(fun({_,L}) -> lists:member(n2o_ftp,L) end,
+                        application:get_env(n2o, mqtt_services, []))],
+
                     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
                     catch n2o:send(Sid, {direct, FTP3}) end),
+
                 spawn(fun() -> n2o_pi:stop(file, Link) end),
                 {stop, normal, FTP2, Async#pi{state = FTP2}}
         end;

@@ -31,11 +31,12 @@ start(_,_) -> S = supervisor:start_link({local,n2o},n2o,[]),
               % Generic loop for applications, its rings and exposed protocols
 
             [ begin
-                lists:flatmap(fun(B) ->
-                  Key = fun(I) -> lists:concat(["/",P,"/",B,"/",I]) end,
-                  X = lists:map(fun(I) -> Key(I) end, lists:seq(1,Space)),
-                  application:set_env(B,n2o_ring:tab2ring(P),n2o_ring:new(Space,X)),
-                  X end, application:get_env(n2o,n2o_ring:tab2srv(P),Default))
+                lists:flatmap(fun Rng({B,_}) -> Rng(B);
+                  Rng(B) ->
+                    Key = fun(I) -> lists:concat(["/",P,"/",B,"/",I]) end,
+                    X = lists:map(fun(I) -> Key(I) end, lists:seq(1,Space)),
+                    application:set_env(B,n2o_ring:tab2ring(P),n2o_ring:new(Space,X)),
+                    X end, application:get_env(n2o,n2o_ring:tab2srv(P),Default))
               end || P <- Protocols ],
 
               S.
