@@ -39,7 +39,7 @@ proc({ring, Srv, {publish, #{topic:=T} = Request}}, State) ->
     io:format("MQTT Ring message ~p. App:~p~n.", [T, Srv]),
 
     [Ch,Vsn,_,Node,P,Cid|_] = string:tokens(binary_to_list(T), "/"),
-    T2 = lists:join("/", ["",Ch,Vsn,Srv,Node,P,Cid]),
+    T2 = lists:join("/", ["",Ch,Vsn,atom_to_list(Srv),Node,P,Cid]),
 
     proc({publish, Request#{topic := iolist_to_binary(T2)}}, State);
 
@@ -69,4 +69,4 @@ proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=#mqcn{con
 
 proc(Unknown,Async=#pi{name=Name}) ->
     io:format("MQTTv5 [~s]: ~p~n",[Name,Unknown]),
-    {reply,{uknown,Unknown,0},Async}.
+    {noreply, Async}.
