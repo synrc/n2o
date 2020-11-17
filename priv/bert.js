@@ -118,8 +118,14 @@ function arr(b) {
   var dv, sz = sx.getUint16(ix); ix += b;
   return new Uint8Array(sx.buffer.slice(ix, ix += sz));
 }
+function ref(cr) {
+  var adj = sx.getUint8(ix++); adj += sx.getUint8(ix++);
+  din(); ix += cr+adj*4;
+}
+
 function din() {
-  var c = sx.getUint8(ix++), x; switch (c) {
+  var c = sx.getUint8(ix++), x;
+  switch (c) {
     case  97: x = [int, 1]; break; case  98: x = [int, 4]; break;
     case  99: x = [flo, 0]; break; case  70: x = [iee, 0]; break;
     case 100: x = [str, 2]; break; case 104: x = [run, 1]; break;
@@ -128,6 +134,7 @@ function din() {
     case 111: x = [big, 4]; break; case 115: x = [str, 1]; break;
     case 118: x = [str, 2]; break; case 119: x = [str, 1]; break;
     case 105: x = [run, 4]; break; case 116: x = [dic, 4]; break;
+     case 90: x = [ref, 4]; break; case 114: x = [ref, 1]; break;
     default:  x = [nop, 0];
   } return { t: c, v: x[0](x[1]) };
 }
