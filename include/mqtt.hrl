@@ -14,7 +14,7 @@
 -define(E(P,T), application:get_env(n2o,P,T)).
 -define(VSN, "1").
 
--define(ACT_TOPIC(P,Cid),   ?B([?E(action_topic,"/actions"),?VSN,"/",P,"/",Cid])).
+-define(ACT_TOPIC(P,Cid),   ?B([?E(action_topic,"/actions"),"/",?VSN,"/",P,"/",Cid])).
 -define(EV_TOPIC(S,N),      ?EV_TOPIC(S,N,"#")).
 -define(EV_TOPIC(S,N,P),    ?B([?E(events_topic,"/events"),"/",?VSN,"/",S,"/",N,"/",P])).
 

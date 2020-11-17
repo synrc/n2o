@@ -56,7 +56,8 @@ var mqtt = mqtt || {};
         return c && c.subscribe(topic, sopt); 
     }
     function send(payload, service, qos) {
-        let et = events("/events", service);
+        let s = service || page,
+            et = events("/events", s);
         c && c.send(et, payload, qos || 2, false);
     }
     function receive(m) {
