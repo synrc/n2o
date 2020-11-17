@@ -1,13 +1,14 @@
 -module(n2o_proto).
 -description('N2O WebSocket Protocol').
 -include_lib("n2o/include/n2o.hrl").
--export([init/2, finish/2, info/3, stream/3, push/5, init/4, terminate/2, cx/2]).
--export([try_info/3, try_info/4]).
+-export([init/2, finish/2, info/3, info/4, stream/3, push/5, init/4, terminate/2, cx/2]).
+-export([try_info/4, try_info/5]).
 
 % Common protocol for MQTT, TCP and WebSocket
 
 protocols()        -> application:get_env(n2o,protocols,[ n2o_heart ]).
 info(M,R,S)        -> push(M,R,S,protocols(),[]).
+info(M,R,S,Ps)     -> push(M,R,S,Ps,[]).
 
 nop(R,S)                  -> {reply,{binary,<<>>},R,S}.
 reply(M,R,S)              -> {reply,M,R,S}.
@@ -59,15 +60,15 @@ stream({binary,<<>>},R,S) -> nop(R,S);
 stream({binary,D},R,S)    -> push(n2o:decode(D),R,S,protocols(),[]);
 stream(_,R,S)             -> nop(R,S).
 
-try_info(M,R,S) -> try_info(?MODULE,M,R,S).
+try_info(M,R,S,Ps)        -> try_info(?MODULE,M,R,S,Ps).
 
 -ifdef(OTP_RELEASE).
-try_info(Module,M,R,S) ->
-    try Module:info(M,R,S)
+try_info(Module,M,R,S,Ps) ->
+    try Module:info(M,R,S,Ps)
     catch Err:Rea:Stack -> ?LOG_EXCEPTION(Err, Rea, Stack), {error,{stack,Stack}} end.
 -else.
-try_info(Module,M,R,S) ->
-    try Module:info(M,R,S)
+try_info(Module,M,R,S,Ps) ->
+    try Module:info(M,R,S,Ps)
     catch Err:Rea -> Stack = erlang:get_stacktrace(), ?LOG_EXCEPTION(Err, Rea, Stack), {error,{stack,Stack}} end.
 -endif.
 

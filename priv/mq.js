@@ -10,17 +10,17 @@ var l = location.pathname,
 
 var mqtt = mqtt || {};
 
-(function(cl,module) {
+(function(cl,page) {
     function gen_client() { return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36); }
-    function pageModule() { return module || 'api'; }
     function client()     { var c = localStorage.getItem("client"), a;
                              if (null == c) { c = 'emqttd_' + gen_client(); }
                              localStorage.setItem("client", c); return c; }
     function token()      { return localStorage.getItem("token")  || ''; };
-    function actions(pre) { return pre + "/1/" + pageModule() + "/" + client();}
-    function events(pre)  {
-        let t = token(), tk = t ? "/"+t : '';
-        return pre + "/1/" + rnd() + "/" + pageModule() + "/anon/" + client() + tk; }
+    function actions(pre) { return pre + "/1/" + page + "/" + client();}
+    function events(pre,srv)  {
+        let s = srv ? "/"+ srv : '/none',
+            t = token(), tk = t ? "/"+t : '';
+        return pre + "/1" + s + "/" + rnd() + "/" + page + "/" + client() + tk; }
     function rnd()        { return Math.floor((Math.random() * nodes)+1); }
     function base()       { let d = {host: host, ws_port: 8083 },
                             b = sessionStorage.base || JSON.stringify(d);
@@ -29,7 +29,7 @@ var mqtt = mqtt || {};
         b = {},
         opt = {
             timeout: 2,
-            userName: module,
+            userName: page,
             password: token(),
             cleanSession: false,
             onFailure: failc,
@@ -46,16 +46,19 @@ var mqtt = mqtt || {};
         };
 
     function fails(m){ console.log("MQTT Subscription error:", m.errorMessage);}
-    function failc(m){ console.log("MQTT Connection error: ", m.errorMessage); } 
-    function init(x) { send(enc(tuple(atom('init'), bin(token()))));  }
+    function failc(m){ console.log("MQTT Disconnected: ", m.errorMessage); } 
+    function init(x) { send(enc(tuple(atom('init'), bin(token()))), page); }
 
     function connect()          { return c && c.connect(opt); }
     function disconnect()       { return c && c.disconnect(); }
     function subscribe(topic)   {
-        console.log("MQTT Subscribe: ", topic);
+        console.log("MQTT Subscribe:", topic);
         return c && c.subscribe(topic, sopt); 
     }
-    function send(payload, qos) { let et = events("/events"); c && c.send(et, payload, qos || 2, false); }
+    function send(payload, service, qos) {
+        let et = events("/events", service);
+        c && c.send(et, payload, qos || 2, false);
+    }
     function receive(m) {
         var BERT = m.payloadBytes.buffer.slice(m.payloadBytes.byteOffset,
         m.payloadBytes.byteOffset + m.payloadBytes.length);
@@ -70,7 +73,7 @@ var mqtt = mqtt || {};
     }
 
     function boot() {
-        try { disconnect();} catch(e){ console.log(e);};
+        try { disconnect();} catch(e){};
         b = base();
         c = new Paho.MQTT.Client(b.host, b.ws_port, client());
         c.onConnectionLost = failc;

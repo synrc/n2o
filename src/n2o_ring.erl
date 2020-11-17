@@ -10,6 +10,7 @@ tab2ring(tcp)  -> tcp_ring.
 tab2srv(ws)    -> ws_services;
 tab2srv(mqtt)  -> mqtt_services;
 tab2srv(tcp)   -> tcp_services.
+ring({App,_},Tab) -> ring(App,Tab);
 ring(App,Tab)  -> 
     case application:get_env(App,tab2ring(Tab)) of
         {ok, R} -> R;

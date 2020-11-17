@@ -2,6 +2,7 @@ ebin
 .DS_Store
 .applist
 Mnesia.nonode@nohost
+_build
 log
 deps
 *.toc

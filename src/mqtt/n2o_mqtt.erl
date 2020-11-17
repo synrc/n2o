@@ -7,15 +7,22 @@ send(C,T,M) ->
 
 proc(init,#pi{name=Name}=Async) ->
     process_flag(trap_exit, true),
+
+    [_,Srv,Node|_] = string:tokens(Name, "/"),
+    Topic = {?EV_TOPIC(Srv,Node),2},
+    Ps = proplists:get_value(list_to_atom(Srv), application:get_env(n2o, mqtt_services, []), []),
+
     case emqtt:start_link(#{owner => self(),
                             client_id => Name,
                             host => application:get_env(n2o, mqtt_host, {127,0,0,1}),
                             port => application:get_env(n2o, mqtt_tcp_port, 1883)}) of
         {ok, Conn} ->
-            [_,M,Node|_] = string:tokens(Name, "/"),
-            {ok,_}   = emqtt:connect(Conn),
-            {ok,_,_} = emqtt:subscribe(Conn, {?SRV_TOPIC(Node,M),2}),
-            {ok,Async#pi{state=Conn}};
+            case emqtt:connect(Conn) of {ok,_} ->
+            case emqtt:subscribe(Conn, Topic) of {ok,_,_} ->
+                {ok,Async#pi{state=#mqcn{conn=Conn, proto=Ps}}};
+
+                {error, Error} -> {error,Error} end;
+                {error, Error} -> {error, Error} end;
         ignore -> ignore;
         {error, Error} -> {error, Error}
     end;
@@ -28,23 +35,28 @@ proc({disconnected, shutdown, tcp_closed}, State) ->
     io:format("MQTT disconnected ~p~n", [State]),
     {stop, tcp_closed, State};
 
-proc({ring, App, {publish, #{topic:=T} = Request}}, State) ->
-    io:format("MQTT Ring message ~p. App:~p~n.", [T, App]),
+proc({ring, Srv, {publish, #{topic:=T} = Request}}, State) ->
+    io:format("MQTT Ring message ~p. App:~p~n.", [T, Srv]),
 
-    [Ch,Vsn,Node,_,Usr,Cid|_] = string:tokens(binary_to_list(T), "/"),
-    T2 = lists:join("/", ["",Ch,Vsn,Node,atom_to_list(App),Usr,Cid]),
+    [Ch,Vsn,_,Node,P,Cid|_] = string:tokens(binary_to_list(T), "/"),
+    T2 = lists:join("/", ["",Ch,Vsn,Srv,Node,P,Cid]),
 
     proc({publish, Request#{topic := iolist_to_binary(T2)}}, State);
 
-proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=C}) ->
-    [_Ch,_,Node,M,_Usr,Cid|_] = string:tokens(binary_to_list(Topic), "/"),
-    put(context,Cx=#cx{module=list_to_atom(M),node=Node,params=Cid,client_pid=C,from=?CLI_TOPIC(M,Cid)}),
+proc({publish, _}, State=#pi{state=#mqcn{proto=[]}}) ->
+    {stop, not_handled, State};
+
+proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=#mqcn{conn=C,proto=Ps}}) ->
+    [_,_,_Srv,Node,P,Cid|_] = string:tokens(binary_to_list(Topic), "/"),
+
+    Ctx=#cx{module=list_to_atom(P),node=Node,params=Cid,client_pid=C,from=?ACT_TOPIC(P,Cid)},
+    put(context,Ctx),
 
     % handle_info may initiate the proc
     % so valid response are {noreply,_,_} variations and {stop,_,_}
     Req = try n2o:decode(Request) catch error:badarg -> {error, badarg} end,
 
-    case  n2o_proto:try_info(Req,[],Cx) of
+    case n2o_proto:try_info(Req,[],Ctx,Ps) of
         {reply,{_,      <<>>},_,_}           -> {noreply, State};
         {reply,{bert,   Term},_,#cx{from=X}} -> send(C,X,n2o_bert:encode(Term)), {noreply, State};
         {reply,{json,   Term},_,#cx{from=X}} -> send(C,X,n2o_json:encode(Term)), {noreply,State};
