@@ -119,8 +119,8 @@ function arr(b) {
   return new Uint8Array(sx.buffer.slice(ix, ix += sz));
 }
 function ref(cr) {
-  var adj = sx.getUint8(ix++); adj += sx.getUint8(ix++);
-  din(); ix += cr+adj*4;
+  var adj = sx.getUint8(ix++), d; adj += sx.getUint8(ix++);
+  d = din(); ix += cr+adj*4; return d;
 }
 
 function din() {
