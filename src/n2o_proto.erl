@@ -26,7 +26,7 @@ push(M,R,S,[H|T],Acc)     ->
                         A -> push(M,R,S,T,[A|Acc]) end.
 
 cx(Cookies,Req) ->
-  Token = case lists:keyfind(<<"X-Authorization">>, 1, Cookies) of {_,V} -> V; false -> <<>> end,
+  Token = case lists:keyfind(<<"X-Auth-Token">>, 1, Cookies) of {_,V} -> V; false -> <<>> end,
   Sid = case n2o:depickle(Token) of {{S,_},_} -> S; _ -> <<>> end,
   #cx{actions=[], path=[], req=Req, params=[], session=Sid, token=Token,
       handlers= [ {routes, application:get_env(n2o,routes,?MODULE)} ]}.
