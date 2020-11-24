@@ -8,14 +8,14 @@ var l = location.pathname,
     ll = x.lastIndexOf("."),
     module = x == "" ? "index" : (ll > 0 ? x.substring(0, ll) : x);
 
+function gen_client() { return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36); }
 function client() { var c = localStorage.getItem("client"), a;
                     if (null == c) { c = 'emqttd_' + gen_client(); }
                     localStorage.setItem("client", c); return c; }
 
 var mqtt = mqtt || {};
 
-(function(cl,page) {
-    function gen_client() { return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36); }
+(function(cl,page) {    
     function token()      { return localStorage.getItem("token")  || ''; };
     function actions(pre) { return pre + "/1/" + page + "/" + client();}
     function events(pre,srv)  {
