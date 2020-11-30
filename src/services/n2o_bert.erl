@@ -5,5 +5,5 @@
 
 encode(#ftp{}=FTP) -> term_to_binary(setelement(1,FTP,ftpack));
 encode(Term)       -> term_to_binary(Term).
-decode(Bin)        -> binary_to_term(Bin,[safe]).
+decode(Bin)        -> binary_to_term(Bin).
 
