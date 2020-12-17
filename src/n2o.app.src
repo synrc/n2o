@@ -1,6 +1,6 @@
 {application,n2o,
              [{description,"N2O MQTT TCP WebSocket"},
-              {vsn,"7.11.5"},
+              {vsn,"7.12.0"},
               {registered,[]},
               {applications,[kernel,stdlib]},
               {mod, {n2o, []}}]}.

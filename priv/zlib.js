@@ -1,32 +1,3 @@
-var HUFFMAN_LENGTH_CODE_TABLE = new Uint16Array([
-        0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000a, 0x000b,
-        0x000d, 0x000f, 0x0011, 0x0013, 0x0017, 0x001b, 0x001f, 0x0023, 0x002b,
-        0x0033, 0x003b, 0x0043, 0x0053, 0x0063, 0x0073, 0x0083, 0x00a3, 0x00c3,
-        0x00e3, 0x0102, 0x0102, 0x0102
-    ]);
-var HUFFMAN_DIST_CODE_TABLE = new Uint16Array([
-        0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0007, 0x0009, 0x000d, 0x0011,
-        0x0019, 0x0021, 0x0031, 0x0041, 0x0061, 0x0081, 0x00c1, 0x0101, 0x0181,
-        0x0201, 0x0301, 0x0401, 0x0601, 0x0801, 0x0c01, 0x1001, 0x1801, 0x2001,
-        0x3001, 0x4001, 0x6001
-    ]);
-var HUFFMAN_ORDER = new Uint16Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
-var HUFFMAN_LENGTH_EXTRA_BITS_TABLE = new Uint8Array([
-  0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0
-]);
-var HUFFMAN_DIST_EXTRA_BITS_TABLE = new Uint8Array([
-  0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
-]);
-var FIXED_HUFFMAN_LENGTH_CODE_TABLE = (() => {
-  let lengths = new Uint8Array(288).map((el, i) => (i <= 143) ? 8 : (i <= 255) ? 9 : (i <= 279) ? 7 : 8);
-  return Huffman(lengths);
-})();
-var FIXED_HUFFMAN_DISTANCE_CODE_TABLE = (() => new Huffman(new Uint8Array(30).fill(5)))();
-var BTYPE_UNCOMPRESSED    = 0;
-var BTYPE_FIXED_HUFFMAN   = 1;
-var BTYPE_DYNAMIC_HUFFMAN = 2;
-var BTYPE_UNKNOWN         = 3;
-
 function ZLib_inflate(source, options = {}) {
   let result = null;
   [firstByte, source] = source[0] == 131 && source[1] == 80 ? [source[0], source.slice(6)] : [null, source];
@@ -227,3 +198,32 @@ function _decodeDynamicHuffman(that, loop, table, lengths) {
   that._lastRLE = rle;
   return lengths;
 }
+
+var HUFFMAN_LENGTH_CODE_TABLE = new Uint16Array([
+        0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000a, 0x000b,
+        0x000d, 0x000f, 0x0011, 0x0013, 0x0017, 0x001b, 0x001f, 0x0023, 0x002b,
+        0x0033, 0x003b, 0x0043, 0x0053, 0x0063, 0x0073, 0x0083, 0x00a3, 0x00c3,
+        0x00e3, 0x0102, 0x0102, 0x0102
+    ]);
+var HUFFMAN_DIST_CODE_TABLE = new Uint16Array([
+        0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0007, 0x0009, 0x000d, 0x0011,
+        0x0019, 0x0021, 0x0031, 0x0041, 0x0061, 0x0081, 0x00c1, 0x0101, 0x0181,
+        0x0201, 0x0301, 0x0401, 0x0601, 0x0801, 0x0c01, 0x1001, 0x1801, 0x2001,
+        0x3001, 0x4001, 0x6001
+    ]);
+var HUFFMAN_ORDER = new Uint16Array([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
+var HUFFMAN_LENGTH_EXTRA_BITS_TABLE = new Uint8Array([
+  0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0
+]);
+var HUFFMAN_DIST_EXTRA_BITS_TABLE = new Uint8Array([
+  0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
+]);
+var FIXED_HUFFMAN_LENGTH_CODE_TABLE = (() => {
+  let lengths = new Uint8Array(288).map((el, i) => (i <= 143) ? 8 : (i <= 255) ? 9 : (i <= 279) ? 7 : 8);
+  return Huffman(lengths);
+})();
+var FIXED_HUFFMAN_DISTANCE_CODE_TABLE = (() => new Huffman(new Uint8Array(30).fill(5)))();
+var BTYPE_UNCOMPRESSED    = 0;
+var BTYPE_FIXED_HUFFMAN   = 1;
+var BTYPE_DYNAMIC_HUFFMAN = 2;
+var BTYPE_UNKNOWN         = 3;
