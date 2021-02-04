@@ -2,13 +2,13 @@ name: mix
 on: push
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-elixir@v1.0.0
       with:
         otp-version: 23.x
-        elixir-version: 1.9.x
+        elixir-version: 1.11.x
     - name: Dependencies
       run: |
         mix local.rebar --force
