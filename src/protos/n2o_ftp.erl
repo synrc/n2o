@@ -71,13 +71,16 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
                 FTP3 = FTP2#ftp{status = {event, stop}, filename = RelPath},
                 spawn(fun() ->
                     [begin
+                        Owner = n2o:to_binary(proplists:get_value(owner, Opt, none)),
                         Ev = application:get_env(n2o,events_topic,"/events"),
                         S1 = atom_to_list(S),
                         Node = integer_to_list(rand:uniform(4)),
-                        Topic = iolist_to_binary([Ev,"/",?VSN, "/", S1, "/", Node,"/", S1, "/", Cid]),
+                        Module = atom_to_list(S), %fix: service name not always match module
+                        Topic = iolist_to_binary([Ev,"/",Owner,"/", S1, "/", Module, "/",?VSN, "/",Node, "/", Cid]),
                         Msg = {publish, #{payload => term_to_binary(FTP3), topic => Topic}},
                         n2o_ring:send(mqtt, S, Msg)
-                    end || {S,_} <- lists:filter(fun({_,L}) -> lists:member(n2o_ftp,L) end,
+                    end || {S,Opt} <- lists:filter(fun({_,O}) ->
+                            lists:member(n2o_ftp,proplists:get_value(protocols, O, [])) end,
                         application:get_env(n2o, mqtt_services, []))],
 
                     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,

@@ -12,16 +12,24 @@ function gen_client() { return Math.random().toString(36).substring(2) + (new Da
 function client() { var c = localStorage.getItem("client"), a;
                     if (null == c) { c = 'emqttd_' + gen_client(); }
                     localStorage.setItem("client", c); return c; }
+function owner() { return '34239034'; }
 
 var mqtt = mqtt || {};
 
-(function(cl,page) {    
+(function(cl,page) {
     function token()      { return localStorage.getItem("token")  || ''; };
-    function actions(pre) { return pre + "/1/" + page + "/" + client();}
+    function actions(pre) {
+        let cl = '#' || client();
+        return pre + "/" + page + "/" + cl;}
     function events(pre,srv)  {
-        let s = srv ? "/"+ srv : '/none',
-            t = token(), tk = t ? "/"+t : '';
-        return pre + "/1" + s + "/" + rnd() + "/" + page + "/" + client() + tk; }
+        let owner = owner(),
+            cl = "" || "/" + client(),
+            version = "1",
+            s = srv || 'none',
+            t = token(),
+            tk = t ? "/"+t :'';
+        return pre + "/" + owner + "/"+ s + "/" + page + "/" + version +"/" + rnd() + cl; }
+        
     function rnd()        { return Math.floor((Math.random() * nodes)+1); }
     function base()       { let d = {host: host, ws_port: 8083 },
                             b = sessionStorage.base || JSON.stringify(d);

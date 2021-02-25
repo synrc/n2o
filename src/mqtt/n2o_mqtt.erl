@@ -9,8 +9,13 @@ proc(init,#pi{name=Name}=Async) ->
     process_flag(trap_exit, true),
 
     [_,Srv,Node|_] = string:tokens(Name, "/"),
-    Topic = {?EV_TOPIC(Srv,Node),2},
-    Ps = proplists:get_value(list_to_atom(Srv), application:get_env(n2o, mqtt_services, []), []),
+
+    Opt = proplists:get_value(list_to_atom(Srv), application:get_env(n2o, mqtt_services, []), []),
+    Own = proplists:get_value(owner, Opt, none),
+    Ps  = proplists:get_value(protocols, Opt, []),
+    QoS = proplists:get_value(qos, Opt, 2),
+
+    Topic = {?EV_TOPIC(Own,Srv,Node),QoS},
 
     case emqtt:start_link(#{owner => self(),
                             client_id => Name,
@@ -38,8 +43,9 @@ proc({disconnected, shutdown, tcp_closed}, State) ->
 proc({ring, Srv, {publish, #{topic:=T} = Request}}, State) ->
     io:format("MQTT Ring message ~p. App:~p~n.", [T, Srv]),
 
-    [Ch,Vsn,_,Node,P,Cid|_] = string:tokens(binary_to_list(T), "/"),
-    T2 = lists:join("/", ["",Ch,Vsn,atom_to_list(Srv),Node,P,Cid]),
+    [Ch,Own,_,P,Vsn,Node|Ci] = string:tokens(binary_to_list(T), "/"),
+    Cid = case Ci of [] -> ""; [Id|_] -> Id end,
+    T2 = lists:join("/", ["",Ch,Own,atom_to_list(Srv),P,Vsn,Node,Cid]),
 
     proc({publish, Request#{topic := iolist_to_binary(T2)}}, State);
 
@@ -47,9 +53,11 @@ proc({publish, _}, State=#pi{state=#mqcn{proto=[]}}) ->
     {stop, not_handled, State};
 
 proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=#mqcn{conn=C,proto=Ps}}) ->
-    [_,_,_Srv,Node,P,Cid|_] = string:tokens(binary_to_list(Topic), "/"),
+    [_,_Own,_Srv,P,_Vsn,Node|Ci] = string:tokens(binary_to_list(Topic), "/"),
 
-    Ctx=#cx{module=list_to_atom(P),node=Node,params=Cid,client_pid=C,from=?ACT_TOPIC(P,Cid)},
+    From = case Ci of [] -> ?ACT_TOPIC(P); [Cid|_] -> ?ACT_TOPIC(P,Cid) end,
+
+    Ctx=#cx{module=list_to_atom(P),node=Node,params=Ci,client_pid=C,from=From},
     put(context,Ctx),
 
     % handle_info may initiate the proc
