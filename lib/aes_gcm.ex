@@ -1,5 +1,4 @@
 defmodule AES.GCM do
-
   @moduledoc """
   Provides AES/GCM-256 encoder/decoder
   """
@@ -25,11 +24,12 @@ defmodule AES.GCM do
 
   def depickle(hex) do
     try do
-    cipher = :n2o_secret.unhex hex
-    <<iv::binary-16, tag::binary-16, bin::binary>> = cipher
-    term = :crypto.block_decrypt(:aes_gcm, secret_key(), iv, {@aad, bin, tag})
-    :erlang.binary_to_term(term, [:safe])
-    rescue _ -> ""
+      cipher = :n2o_secret.unhex(hex)
+      <<iv::binary-16, tag::binary-16, bin::binary>> = cipher
+      term = :crypto.block_decrypt(:aes_gcm, secret_key(), iv, {@aad, bin, tag})
+      :erlang.binary_to_term(term, [:safe])
+    rescue
+      _ -> ""
     end
   end
 
@@ -43,11 +43,10 @@ defmodule AES.GCM do
   """
 
   def pickle(term) do
-    bin = :erlang.term_to_binary term
+    bin = :erlang.term_to_binary(term)
     iv = :crypto.strong_rand_bytes(16)
     {cipher, tag} = :crypto.block_encrypt(:aes_gcm, secret_key(), iv, {@aad, bin})
     bin = iv <> tag <> cipher
-    :n2o_secret.hex bin
+    :n2o_secret.hex(bin)
   end
-
 end
