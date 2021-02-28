@@ -1,4 +1,8 @@
 defmodule N2O do
+  @moduledoc """
+  Provides namespace N2O
+  todo: list of exported functions should be here
+  """
   require Record
 
   Enum.each(Record.extract_all(from_lib: "n2o/include/n2o.hrl"), fn {name, definition} ->

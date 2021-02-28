@@ -1,8 +1,27 @@
 defmodule AES.GCM do
 
+  @moduledoc """
+  Provides AES/GCM-256 encoder/decoder
+  """
+
   @aad "AES256GCM"
 
-  def secret_key(), do: :application.get_env(:n2o,:secret,"ThisIsClassified")
+  @doc """
+  `secret_key`
+  returns secret key used for encode/decode operations, will get one from env or use stub if missing
+  do not forget to store uniq private key in production env
+  """
+
+  def secret_key(), do: :application.get_env(:n2o, :secret, "ThisIsClassified")
+
+  @doc """
+  Decode tht term
+
+  ## Examples
+
+      iex> n2o:depickle(binary()) -> term().
+
+  """
 
   def depickle(hex) do
     try do
@@ -13,6 +32,15 @@ defmodule AES.GCM do
     rescue _ -> ""
     end
   end
+
+  @doc """
+  Encode tht term
+
+  ## Examples
+
+      iex> n2o:pickle(term()) -> binary().
+
+  """
 
   def pickle(term) do
     bin = :erlang.term_to_binary term
