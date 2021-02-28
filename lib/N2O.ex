@@ -1,7 +1,8 @@
 defmodule N2O do
   require Record
 
-  Enum.each(Record.extract_all(from_lib: "n2o/include/n2o.hrl"), fn {name, definition} ->
+  Enum.each(Record.extract_all(from_lib: "n2o/include/n2o.hrl"), fn {name,
+                                                                     definition} ->
     Record.defrecord(name, definition)
   end)
 
@@ -20,7 +21,9 @@ defmodule N2O do
           alias unquote(mod), as: unquote(upcased)
         end
       else
-        IO.warn("🚨 Unknown module #{mod} was requested to be used by :n2o. Skipping.")
+        IO.warn(
+          "🚨 Unknown module #{mod} was requested to be used by :n2o. Skipping."
+        )
       end
     end)
   end
