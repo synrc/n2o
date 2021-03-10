@@ -22,13 +22,13 @@ var mqtt = mqtt || {};
         let cl = '#' || client();
         return pre + "/" + page + "/" + cl;}
     function events(pre,srv)  {
-        let owner = owner(),
+        let o = owner(),
             cl = "" || "/" + client(),
             version = "1",
             s = srv || 'none',
             t = token(),
             tk = t ? "/"+t :'';
-        return pre + "/" + owner + "/"+ s + "/" + page + "/" + version +"/" + rnd() + cl; }
+        return pre + "/" + o + "/"+ s + "/" + page + "/" + version +"/" + rnd() + cl; }
         
     function rnd()        { return Math.floor((Math.random() * nodes)+1); }
     function base()       { let d = {host: host, ws_port: 8083 },
