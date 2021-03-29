@@ -20,6 +20,7 @@
               table    :: atom(),
               sup      :: atom(),
               module   :: atom(),
+              timeout   = 5000 :: integer(),
               state    :: term()  }).
 
 -record(cx, { handlers  = [] :: list({atom(),atom()}),
