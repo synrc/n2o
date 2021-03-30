@@ -22,6 +22,6 @@
 -define(ACT_TOPIC(P,Cid),  ?B([?E(action_topic,"/actions"),"/",P,"/",Cid])).
 
 -define(EV_TOPIC(O,S,N),     ?EV_TOPIC(O,S,"+",N)).
--define(EV_TOPIC(O,S,M,N),   ?B([?E(events_topic,"/events"),"/",?B(O),"/",S,"/",M,"/",?VSN,"/",N,"/#"])).
+-define(EV_TOPIC(O,S,M,N),   ?B([?E(events_topic,"/events"),"/",?B(O),"/",S,"/",M,"/",N,"/",?VSN,"/#"])).
 
 -endif.

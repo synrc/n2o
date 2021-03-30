@@ -43,9 +43,9 @@ proc({disconnected, shutdown, tcp_closed}, State) ->
 proc({ring, Srv, {publish, #{topic:=T} = Request}}, State) ->
     io:format("MQTT Ring message ~p. App:~p~n.", [T, Srv]),
 
-    [Ch,Own,_,P,Vsn,Node|Ci] = string:tokens(binary_to_list(T), "/"),
+    [Ch,Own,_,P,Node,Vsn|Ci] = string:tokens(binary_to_list(T), "/"),
     Cid = case Ci of [] -> ""; [Id|_] -> Id end,
-    T2 = lists:join("/", ["",Ch,Own,atom_to_list(Srv),P,Vsn,Node,Cid]),
+    T2 = lists:join("/", ["",Ch,Own,atom_to_list(Srv),P,Node,Vsn,Cid]),
 
     proc({publish, Request#{topic := iolist_to_binary(T2)}}, State);
 
@@ -53,7 +53,7 @@ proc({publish, _}, State=#pi{state=#mqcn{proto=[]}}) ->
     {stop, not_handled, State};
 
 proc({publish, #{payload := Request, topic := Topic}}, State=#pi{state=#mqcn{conn=C,proto=Ps}}) ->
-    [_,_Own,_Srv,P,_Vsn,Node|Ci] = string:tokens(binary_to_list(Topic), "/"),
+    [_,_Own,_Srv,P,Node,_Vsn|Ci] = string:tokens(binary_to_list(Topic), "/"),
 
     From = case Ci of [] -> ?ACT_TOPIC(P); [Cid|_] -> ?ACT_TOPIC(P,Cid) end,
 
