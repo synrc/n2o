@@ -7,9 +7,8 @@
 -export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
 -export([start/1,stop/2,send/2,send/3,cast/2,cast/3,pid/2,restart/2]).
 
-start(#pi{table=Tab,name=Name,module=Module,sup=Sup,timeout=Timeout} = Async) ->
-    ChildSpec = {{Tab,Name},{?MODULE,start_link,[Async]},
-                 transient,Timeout,worker,[Module]},
+start(#pi{table=Tab,name=Name,module=Module,sup=Sup,timeout=Timeout,restart=Restart} = Async) ->
+    ChildSpec = {{Tab,Name},{?MODULE,start_link,[Async]},Restart,Timeout,worker,[Module]},
     case supervisor:start_child(Sup,ChildSpec) of
                {ok,Pid} -> {Pid,Async#pi.name};
              {ok,Pid,_} -> {Pid,Async#pi.name};

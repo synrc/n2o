@@ -21,6 +21,7 @@
               sup      :: atom(),
               module   :: atom(),
               timeout   = 5000 :: integer(),
+              restart   = transient :: atom(),
               state    :: term()  }).
 
 -record(cx, { handlers  = [] :: list({atom(),atom()}),
