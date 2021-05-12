@@ -7,7 +7,8 @@ defmodule AES.GCM do
     try do
       cipher = :n2o_secret.unhex(hex)
       <<iv::binary-16, tag::binary-16, bin::binary>> = cipher
-      term = :crypto.crypto_one_time(:aes_gcm, secret_key(), iv, {@aad, bin, tag}, [{:encrypt,false}], [:safe])
+      term = :crypto.crypto_one_time_aead(:aes_256_gcm,
+         secret_key(), iv, bin, @aad, tag, [{:encrypt,false}])
       :erlang.binary_to_term(term, [:safe])
     rescue
       _ -> ""
@@ -19,7 +20,8 @@ defmodule AES.GCM do
     iv = :crypto.strong_rand_bytes(16)
 
     {cipher, tag} =
-      :crypto.crypto_one_time(:aes_gcm, secret_key(), iv, {@aad, bin}, [{:encrypt,true}])
+      :crypto.crypto_one_time_aead(:aes_256_gcm,
+         secret_key(), iv, bin, @aad, [{:encrypt,true}])
 
     bin = iv <> tag <> cipher
     :n2o_secret.hex(bin)
