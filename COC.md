@@ -24,6 +24,7 @@ We are open.
 
 * Violence;
 * Discriminatory jokes and language;
+* Jokes about body;
 * Doxing;
 * Sexual misconduct;
 * Annoing behavior;
