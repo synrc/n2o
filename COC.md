@@ -25,6 +25,7 @@ We are open.
 * Violence;
 * Discriminatory jokes and language;
 * Jokes about body;
+* Familiarity nicknames
 * Doxing;
 * Sexual misconduct;
 * Annoing behavior;
