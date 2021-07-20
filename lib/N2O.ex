@@ -13,7 +13,7 @@ defmodule N2O do
       |> Keyword.get(:with, [:n2o])
 
     Enum.map(imports, fn mod ->
-      if Code.ensure_compiled?(mod) do
+      if Code.ensure_compiled(mod) do
         upcased = Module.concat([String.upcase(to_string(mod))])
 
         quote do

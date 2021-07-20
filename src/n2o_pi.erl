@@ -43,6 +43,7 @@ handle(Mod,Message,Async) ->
               {ok,S,T} -> {ok,S,T};
           {stop,X,Y,S} -> {stop,X,Y,S};
             {stop,X,S} -> {stop,X,S};
+              {stop,S} -> {stop,S};
          {reply,X,S,T} -> {reply,X,S,T};
            {reply,X,S} -> {reply,X,S};
          {noreply,X,S} -> {noreply,X,S};
