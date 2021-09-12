@@ -25,8 +25,6 @@ proc(init,#pi{name=Name}=Async) ->
             case emqtt:connect(Conn) of {ok,_} ->
             case emqtt:subscribe(Conn, Topic) of {ok,_,_} ->
                 {ok,Async#pi{state=#mqcn{conn=Conn, proto=Ps}}};
-
-                {error, Error} -> {error,Error} end;
                 {error, Error} -> {error, Error} end;
         ignore -> ignore;
         {error, Error} -> {error, Error}
