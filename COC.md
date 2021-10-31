@@ -24,6 +24,7 @@ We are open.
 
 * Violence;
 * Discriminatory jokes and language;
+* Discrimination by programming language;
 * Jokes about body;
 * Familiarity nicknames;
 * Doxing;
