@@ -22,31 +22,20 @@
 
 % SERVICES
 
--export([send/2,
-         reg/1,
-         unreg/1,
-         reg/2]).                 % pubsub
+-export([send/2, reg/1, unreg/1, reg/2]).
 
--export([pickle/1,
-         depickle/1]).                        % pickle
+-export([pickle/1, depickle/1]).
 
--export([encode/1,
-         decode/1]).                          % format
+-export([encode/1, decode/1]).
 
--export([session/1,
-         session/2,
-         user/1,
-         user/0]).          % session
+-export([session/1, session/2, user/1, user/0]).
+
+-export([start_mqtt/0, start_ws/0, start_tcp/0, sid/0]).
 
 -export([cache/2,
          cache/3,
          cache/4,
-         invalidate_cache/1]). % cache
-
--export([start_mqtt/0,
-         start_ws/0,
-         start_tcp/0,
-         sid/0]).  % session
+         invalidate_cache/1]).
 
 % START VNODE HASH RING
 
