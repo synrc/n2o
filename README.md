@@ -19,8 +19,8 @@ Core Features
 * Codebase: 700 LOC (Erlang), 500 LOC (JavaScript)
 * Dialyzer: REBAR, REBAR3, MAD, MIX
 * Hosts: COWBOY, EMQ, MOCHIWEB, RING, TCP, UDP
-* PubSub: GPROC/SYN/PG2
-* Formatter: JSON/BERT/ASN.1
+* PubSub: GPROC, SYN, PG2
+* Formatters: JSON, BERT, ASN.1
 
 Protocol Extensions
 -------------------
