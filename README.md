@@ -20,7 +20,7 @@ Core Features
 * Dialyzer: REBAR, REBAR3, MAD, MIX
 * Hosts: COWBOY, EMQ, MOCHIWEB, RING, TCP, UDP
 * PubSub: GPROC/SYN/PG2
-* Formatter: JSON/BERT
+* Formatter: JSON/BERT/ASN.1
 
 Protocol Extensions
 -------------------
