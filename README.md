@@ -128,5 +128,6 @@ JavaScript
 Literature
 ----------
 
-* N2O Book [PDF](https://n2o.dev/books/n2o.pdf) (outdated)
+* "N2O: no bullshit sane framework for wild web [PDF](https://n2o.dev/books/n2o.pdf) (outdated legacy, prior to 4.5)
+* "Erlang/N2O: enterprise frameworks" [MARKDOWN](https://github.com/synrc/n2o.dev/blob/master/books/n2o/md/01.PROLOGUE.md) (upcoming version after 4.5)
 
