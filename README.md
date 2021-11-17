@@ -127,6 +127,6 @@ JavaScript
 
 Literature
 ----------
-* "N2O: no bullshit sane framework for wild web [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
+* "N2O: no bullshit sane framework for wild web" [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
 * "N2O BOOK Vol.2 Green Book" [HTML](https://n2o.dev/books/vol.2/index.html) (versions 4.5—8.11)
 
