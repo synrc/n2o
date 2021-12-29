@@ -22,11 +22,10 @@ proc(init,#pi{name=Name}=Async) ->
                             host => application:get_env(n2o, mqtt_host, {127,0,0,1}),
                             port => application:get_env(n2o, mqtt_tcp_port, 1883)}) of
         {ok, Conn} ->
-            case emqtt:connect(Conn) of {ok,_} ->
-            case emqtt:subscribe(Conn, Topic) of {ok,_,_} ->
-                {ok,Async#pi{state=#mqcn{conn=Conn, proto=Ps}}};
-
-                {error, Error} -> {error,Error} end;
+            case emqtt:connect(Conn) of
+                {ok,_} -> case emqtt:subscribe(Conn, Topic) of {ok,_,_} ->
+                               {ok,Async#pi{state=#mqcn{conn=Conn, proto=Ps}}};
+                               {error, Error} -> {error, Error} end;
                 {error, Error} -> {error, Error} end;
         ignore -> ignore;
         {error, Error} -> {error, Error}

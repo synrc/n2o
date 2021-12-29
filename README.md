@@ -9,7 +9,7 @@ N2O: TCP MQTT WebSocket
 N2O is an embeddable message protocol loop library for
 WebSocket, HTTP, MQTT and TCP servers. It provides basic
 features, such as process management, virtual nodes ring for
-request processing, session, frame encoding, mq and caching services.
+request processing, sessions, frame encoding, and unified API for external mq and caching services.
 
 Core Features
 -------------
@@ -19,6 +19,8 @@ Core Features
 * Codebase: 700 LOC (Erlang), 500 LOC (JavaScript)
 * Dialyzer: REBAR, REBAR3, MAD, MIX
 * Hosts: COWBOY, EMQ, MOCHIWEB, RING, TCP, UDP
+* PubSub: GPROC, SYN, PG2
+* Formatters: JSON, BERT, ASN.1
 
 Protocol Extensions
 -------------------
@@ -36,7 +38,7 @@ Basic Samples
 
 Enterprise Samples
 ------------------
-* Online Client Bank: <a href="https://fin.n2o.space">BANK</a> (8041)
+* Online Client Bank: <a href="https://fin.erp.uno">BANK</a> (8041)
 * Instant Messaging: <a href="https://chat.n2o.dev">CHAT</a> (8042)
 * Product Lifecycle Management: <a href="https://plm.erp.uno">PLM</a> (8043)
 
@@ -125,6 +127,6 @@ JavaScript
 
 Literature
 ----------
-
-* N2O Book [PDF](https://n2o.dev/books/n2o.pdf) (outdated)
+* "N2O: no bullshit sane framework for wild web" [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
+* "N2O BOOK Vol.2 Green Book" [HTML](https://n2o.dev/ua/books/vol.2/index.html) (versions 4.5—8.11)
 
