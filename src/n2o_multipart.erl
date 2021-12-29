@@ -1,8 +1,7 @@
 -module(n2o_multipart).
 -export([init/2,terminate/3]).
 
-% test multipart
-% curl -F file=@/Users/5HT/Desktop/40.tiff http://localhost:8000/multipart
+% curl -F file=@./Image.tiff http://localhost:50111/multipart
 
 acc_multipart(Req0, Acc) ->
     case cowboy_req:read_part(Req0) of
@@ -12,18 +11,20 @@ acc_multipart(Req0, Acc) ->
 
 stream_body(Req0, Acc) ->
     case cowboy_req:read_part_body(Req0) of
-        {more, Data, Req} ->
-            io:format("Received chunk ~p.~n", [erlang:size(Data)]),
-            stream_body(Req, << Acc/binary, Data/binary >>);
+        {more, Data, Req} -> stream_body(Req, << Acc/binary, Data/binary >>);
         {ok, Data, Req} -> {ok, << Acc/binary, Data/binary >>, Req}
     end.
 
 init(Req, Opts) ->
     {ok, Body, Req2} = acc_multipart(Req, []),
     {Headers, Data} = hd(Body),
-    {file, <<"file">>, Filename, ContentType} = cow_multipart:form_data(Headers),
-    io:format("Received file ~p of content-type ~p size ~p.~n", [Filename, ContentType, erlang:size(Data)]),
-    {ok, Req2, Opts}.
+    {file, _, Filename, ContentType} = cow_multipart:form_data(Headers),
+    GUID = erp:guid(),
+    Size = erlang:integer_to_list(erlang:size(Data)),
+    file:write_file(GUID, Data, [raw, binary]),
+    Req3 = cowboy_req:reply(200, #{<<"content-type">> => <<"text/plain">>, <<"guid">> => GUID, <<"size">> => Size },
+                                 io_lib:format("File ~s uploaded with size ~s.~n",[GUID,Size]), Req2),
+    {ok, Req3, Opts}.
 
 terminate(_Reason, _Req, _State) ->
     ok.
