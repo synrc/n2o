@@ -118,8 +118,9 @@ init(#pi{module = Mod, table = Tab, name = Name} =
     n2o:cache(Tab, {Tab, Name}, self(), infinity),
     Mod:proc(init, Handler).
 
-terminate(_Reason,
-          #pi{name = Name, sup = Sup, table = Tab}) ->
+terminate(Reason,
+          #pi{name = Name, sup = Sup, table = Tab, module = Mod} = Pi) ->
+    case erlang:function_exported(Mod, terminate, 2) of true -> Mod:terminate(Reason, Pi); false -> false end,
     spawn(fun () ->
                   supervisor:delete_child(Sup, {Tab, Name})
           end),
