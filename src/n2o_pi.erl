@@ -53,10 +53,16 @@ stop(Tab, Name) ->
     end.
 
 send(Pid, Message) when is_pid(Pid) ->
-    gen_server:call(Pid, Message).
+    try gen_server:call(Pid, Message) catch
+      exit:{normal, _}:_Z -> {exit, normal};
+      _X:_Y:Z -> {error, Z}
+    end.
 
 send(Tab, Name, Message) ->
-    gen_server:call(n2o_pi:pid(Tab, Name), Message).
+    try gen_server:call(n2o_pi:pid(Tab, Name), Message) catch
+      exit:{normal, _}:_Z -> {exit, normal};
+      _X:_Y:Z -> {error, Z}
+    end.
 
 cast(Pid, Message) when is_pid(Pid) ->
     gen_server:cast(Pid, Message).

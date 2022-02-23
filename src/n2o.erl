@@ -202,6 +202,13 @@ cache(Tab, Key) ->
                     [];
                 false -> X
             end
+        {_, {{{_, _, _}, {_, _, _}} = Expire, X}} ->
+            case Expire < calendar:local_time() of
+                true ->
+                    ets:delete(Tab, Key),
+                    [];
+                false -> X
+            end
     end.
 
 % TIMER
