@@ -3,7 +3,7 @@
 
 var active = false,
     debug = false,
-    persistent = true,
+    persistent = false,
     tokenStorage = persistent ? window.localStorage : window.sessionStorage,
     protocol = window.location.protocol == 'https:' ? "wss://" : "ws://",
     querystring = window.location.pathname + window.location.search,
