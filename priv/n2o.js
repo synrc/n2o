@@ -3,13 +3,14 @@
 
 var active = false,
     debug = false,
-    session = "site-sid",
+    persistent = true,
+    tokenStorage = persistent ? window.localStorage : window.sessionStorage,
     protocol = window.location.protocol == 'https:' ? "wss://" : "ws://",
     querystring = window.location.pathname + window.location.search,
     host = window.location.hostname;
 
 function client() { return ''; }
-function token()  { return sessionStorage.getItem("token")  || ''; };
+function token()  { return tokenStorage.getItem("token")  || ''; };
 function qi(name) { return document.getElementById(name); }
 function qs(name) { return document.querySelector(name); }
 function qa(name) { return document.querySelectorAll(name); }
@@ -31,7 +32,7 @@ var $io = {}; $io.on = function onio(r, cb) {
     if (is(r, 3, 'io')) {
         if (r.v[2].v != undefined && r.v[2].v[1] != undefined && r.v[2].v.length == 2 &&
            (r.v[2].v[0].v == "Token" || r.v[2].v[0].v == "Auth"))
-         { sessionStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
+         { tokenStorage.setItem("token",utf8_arr(r.v[2].v[1].v)); }
         if (typeof cb == 'function') cb(r.v[2]);
         var evalex = utf8_arr(r.v[1].v);
         if (debug) console.log(evalex);
