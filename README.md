@@ -1,17 +1,15 @@
-N2O: TCP MQTT WebSocket
-=======================
+# N2O: TCP MQTT WebSocket
 
 [![Actions Status](https://github.com/synrc/n2o/workflows/mix/badge.svg)](https://github.com/synrc/n2o/actions)
 [![Build Status](https://travis-ci.com/synrc/n2o.svg?branch=master)](https://travis-ci.com/synrc/n2o)
 [![Hex pm](http://img.shields.io/hexpm/v/n2o.svg?style=flat)](https://hex.pm/packages/n2o)
 
-N2O is an embeddable message protocol loop library for
-WebSocket, HTTP, MQTT and TCP servers. It provides basic
-features, such as process management, virtual nodes ring for
-request processing, sessions, frame encoding, and unified API for external mq and caching services.
+N2O is an embeddable message protocol loop library for WebSocket, HTTP, MQTT
+and TCP servers. It provides basic features, such as process management,
+virtual nodes ring for request processing, sessions, frame encoding, and
+unified API for external mq and caching services.
 
-Core Features
--------------
+## Core Features
 
 * Purpose: High performance protocol relay
 * Endpoints: WebSockets, MQTT, TCP
@@ -21,34 +19,32 @@ Core Features
 * PubSub: GPROC, SYN, PG2
 * Formatters: JSON, BERT, ASN.1
 
-Protocol Extensions
--------------------
+## Protocol Extensions
 
-* Templates: DTL, <a href="https://nitro.n2o.dev">NITRO</a>
-* Abstract Database Layer <a href="https://kvs.n2o.dev">KVS</a>: FS, MNESIA, ROCKSDB, RIAK, REDIS
-* Business Processes: <a href="https://bpe.n2o.dev">BPE</a> (BPMN 2.0), SCM, ERP, CRM
-* HTTP API: <a href="https://rest.n2o.dev">REST</a> (proplist/JSON)
-* <a href="https://active.n2o.dev">ACTIVE</a> Reloading: Linux, Windows, Mac
+* Templates: DTL, [NITRO](https://nitro.n2o.dev)
+* Abstract Database Layer [KVS](https://kvs.n2o.dev"): FS, MNESIA, ROCKSDB,
+  RIAK, REDIS
+* Business Processes: [BPE](https://bpe.n2o.dev) (BPMN 2.0), SCM, ERP, CRM
+* HTTP API: [REST](https://rest.n2o.dev) (proplist/JSON)
+* [ACTIVE](https://active.n2o.dev) Reloading: GNU/Linux, Windows, macOS
 
-Basic Samples
--------------
-* MQTT Chat: <a href="https://review.n2o.dev">REVIEW TT</a> (8000)
-* WebSocket Chat: <a href="https://sample.n2o.dev">SAMPLE WS</a> (8001)
+## Basic Samples
 
-Enterprise Samples
-------------------
-* Online Client Bank: <a href="https://fin.erp.uno">BANK</a> (8041)
-* Instant Messaging: <a href="https://chat.n2o.dev">CHAT</a> (8042)
-* Product Lifecycle Management: <a href="https://plm.erp.uno">PLM</a> (8043)
+* MQTT Chat: [REVIEW TT](https://review.n2o.dev) (8000)
+* WebSocket Chat: [SAMPLE WS](https://sample.n2o.dev) (8001)
 
-Motivation
-----------
+## Enterprise Samples
+
+* Online Client Bank: [BANK](https://fin.erp.uno) (8041)
+* Instant Messaging: [CHAT](https://chat.n2o.dev) (8042)
+* Product Lifecycle Management: [PLM](https://plm.erp.uno) (8043)
+
+## Motivation
 
 N2O was created to bring clarity and sanity to software development.
 The distribution model is per file basis with ISC license.
 
-Kernel
-------
+## Kernel
 
 The core modules provide OTP start and N2O entry point.
 
@@ -57,8 +53,7 @@ The core modules provide OTP start and N2O entry point.
 * [n2o_proto](https://ws.n2o.dev/man/n2o_proto.htm) — N2O Loop
 * [n2o_ring](https://ws.n2o.dev/man/n2o_ring.htm) — N2O Ring
 
-MQTT
-----
+## MQTT
 
 MQTT version is implemented as RPC over MQ pattern.
 N2O service worker started as ring of virtual nodes each runs N2O loop.
@@ -66,15 +61,14 @@ N2O service worker started as ring of virtual nodes each runs N2O loop.
 * [n2o_mqtt](https://ws.n2o.dev/man/n2o_mqtt.htm) — N2O MQTT Virtual Node
 * [n2o_auth](https://ws.n2o.dev/man/n2o_auth.htm) — N2O Auth
 
-```
-$ mad app zero review
-$ cd review
-$ mad dep com pla rep
-$ open http://127.0.0.1:8000
+```sh
+mad app zero review
+cd review
+mad dep com pla rep
+open http://127.0.0.1:8000
 ```
 
-WebSocket
----------
+## WebSocket
 
 N2O Loop is directly connected and runned inside context of WebSocket handler.
 Usually in Erlang we use `syn` or `gproc` OTP message buses.
@@ -86,15 +80,14 @@ As such buses are optional in MQTT setup we include bus drivers in WebSocket pac
 * [n2o_gproc](https://ws.n2o.dev/man/n2o_gproc.htm) — GPROC bus backend
 * [n2o_syn](https://ws.n2o.dev/man/n2o_syn.htm) — SYN bus backend
 
-```
-$ mad app nitro sample
-$ cd sample
-$ mad dep com pla rep
-$ open https://127.0.0.1:8001/app/index.htm
+```sh
+mad app nitro sample
+cd sample
+mad dep com pla rep
+open https://127.0.0.1:8001/app/index.htm
 ```
 
-Protocols
----------
+## Protocols
 
 N2O ships with 3 optional protocols.
 
@@ -103,8 +96,7 @@ N2O ships with 3 optional protocols.
 * [nitro_n2o](https://nitro.n2o.dev/man/nitro_n2o.htm) — Nitrogen Web Framework protocol
 * [bpe_n2o](https://bpe.n2o.dev) — Business Process Engine protocol
 
-Services
---------
+## Services
 
 Formatters, Sessions, etc. Optional.
 
@@ -113,8 +105,7 @@ Formatters, Sessions, etc. Optional.
 * [n2o_secret](https://ws.n2o.dev/man/n2o_secret.htm)  — AES/GCM-256 encoder/decoder
 * [n2o_session](https://ws.n2o.dev/man/n2o_session.htm) — ETS session storage
 
-JavaScript
-----------
+## JavaScript
 
 * [bert.js](https://ws.n2o.dev/man/bert.js.htm) — BERT encoder/decoder
 * [utf8.js](https://ws.n2o.dev/man/utf8.js.htm) — UTF8 encoder/decoder
@@ -124,8 +115,9 @@ JavaScript
 * [n2o.js](https://ws.n2o.dev/man/n2o.js.htm) — N2O protocol loop
 * [mq.js](https://ws.n2o.dev/man/mq.js.htm) — MQTT client
 
-Literature
-----------
-* "N2O: no bullshit sane framework for wild web" [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
-* "N2O BOOK Vol.2 Green Book" [HTML](https://n2o.dev/ua/books/vol.2/index.html) (versions 4.5—8.11)
+## Literature
 
+* "N2O: no bullshit sane framework for wild web"
+  [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
+* "N2O BOOK Vol.2 Green Book" [HTML](https://n2o.dev/ua/books/vol.2/index.html)
+  (versions 4.5—8.11)

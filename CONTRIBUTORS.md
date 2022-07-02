@@ -1,5 +1,4 @@
-Credits
--------
+# Credits
 
 * Maxim Sokhatsky — core, shen, windows
 * Dmitry Bushmelev — yaws, cowboy
@@ -13,4 +12,3 @@ Credits
 * Yuri Maslovsky — mqtt
 * Igor Kharin — k8s, ekka
 * Rusty Klophaus — original author
-
