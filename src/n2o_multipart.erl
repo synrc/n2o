@@ -18,7 +18,7 @@ stream_body(Req0, Acc) ->
 init(Req, Opts) ->
     {ok, Body, Req2} = acc_multipart(Req, []),
     {Headers, Data} = hd(Body),
-    {file, _, Filename, ContentType} = cow_multipart:form_data(Headers),
+    {file, _, _Filename, _ContentType} = cow_multipart:form_data(Headers),
     GUID = erp:guid(),
     Size = erlang:integer_to_list(erlang:size(Data)),
     file:write_file(GUID, Data, [raw, binary]),
