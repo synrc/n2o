@@ -1,5 +1,4 @@
-N2O User Agreement
-==================
+# N2O User Agreement
 
 ## 1. Motivation
 
