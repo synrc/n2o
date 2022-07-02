@@ -76,7 +76,7 @@ $ open http://127.0.0.1:8000
 WebSocket
 ---------
 
-N2O Loop is directly connected and runned inside context of WebSocket handler.
+N2O Loop is directly connected and ran inside context of WebSocket handler.
 Usually in Erlang we use `syn` or `gproc` OTP message buses.
 As such buses are optional in MQTT setup we include bus drivers in WebSocket package.
 
