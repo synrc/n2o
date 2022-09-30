@@ -26,6 +26,9 @@
          pid/2,
          restart/2]).
 
+-define(CALL_TIMEOUT,
+        application:get_env(n2o, pi_call_timeout, 5000)).
+
 start(#pi{table = Tab, name = Name, module = Module,
           sup = Sup, timeout = Timeout, restart = Restart} =
           Async) ->
@@ -53,13 +56,13 @@ stop(Tab, Name) ->
     end.
 
 send(Pid, Message) when is_pid(Pid) ->
-    try gen_server:call(Pid, Message) catch
+    try gen_server:call(Pid, Message, ?CALL_TIMEOUT) catch
       exit:{normal, _}:_Z -> {exit, normal};
       _X:_Y:Z -> {error, Z}
     end.
 
 send(Tab, Name, Message) ->
-    try gen_server:call(n2o_pi:pid(Tab, Name), Message) catch
+    try gen_server:call(n2o_pi:pid(Tab, Name), Message, ?CALL_TIMEOUT) catch
       exit:{normal, _}:_Z -> {exit, normal};
       _X:_Y:Z -> {error, Z}
     end.
