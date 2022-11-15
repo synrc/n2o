@@ -1,6 +1,7 @@
 
 // API
 
+function nil() { return { t: 106, v: [] }; }
 function tuple() { return { t: 104, v: Array.apply(null, arguments) }; }
 function list() { return { t: 108, v: Array.apply(null, arguments) }; }
 function map() { return { t: 116, v: Array.apply(null, arguments) }; }
