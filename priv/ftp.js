@@ -47,7 +47,8 @@ var ftp = {
             number(item.offset),
             number(item.block || data.byteLength),
             bin(data),
-            bin(item.status || 'send')
+            bin(item.status || 'send'),
+            list()
         )));
     },
     send_slice: function (item) {

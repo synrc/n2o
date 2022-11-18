@@ -19,7 +19,7 @@ function is(x, num, name) { return x == undefined ? false : (x.t == 106 ? false 
 function co(name) { match = document.cookie.match(new RegExp(name + '=([^;]+)')); return match ? match[1] : undefined; }
 
 function N2O_start() {
-    document.cookie = 'X-Auth-Token=' + token() + '; SameSite=Lax; path=/';
+    document.cookie = 'X-Auth-Token=' + token() + '; path=/';
     ws = new bullet(protocol + host + (port==""?"":":"+port) + "/ws" + querystring);
     ws.onmessage = function (evt) { // formatters loop
     for (var i=0;i<protos.length;i++) { p = protos[i]; if (p.on(evt, p.do).status == "ok") return; } };
@@ -44,7 +44,7 @@ var $io = {}; $io.on = function onio(r, cb) {
 }
 
 var $file = {}; $file.on = function onfile(r, cb) {
-    if (is(r, 10, 'ftpack')) {
+    if (is(r, 11, 'ftpack')) {
         if (typeof cb == 'function') cb(r); return { status: "ok" };
     } else return { status: '' };
 }

@@ -55,7 +55,9 @@ info(Message, Req, State) -> {unknown, Message, Req, State}.
 
 % n2o Handlers
 
-proc(init, #pi{}=Async) ->
+proc(init, #pi{state=#ftp{sid = Token} = FTP}=Async) ->
+    Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
+    catch n2o:send(Sid, {direct, FTP}),
     {ok, Async};
 
 proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = Cid} = FTP,
