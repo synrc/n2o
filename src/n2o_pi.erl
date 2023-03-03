@@ -47,11 +47,15 @@ start(#pi{table = Tab, name = Name, module = Module,
 stop(Tab, Name) ->
     case n2o_pi:pid(Tab, Name) of
         Pid when is_pid(Pid) ->
-            #pi{sup = Sup} = Async = send(Pid, {get}),
-            [supervisor:F(Sup, {Tab, Name})
-             || F <- [terminate_child, delete_child]],
-            n2o:cache(Tab, {Tab, Name}, undefined),
-            Async;
+            try
+              #pi{sup = Sup} = Async = send(Pid, {get}),
+              [supervisor:F(Sup, {Tab, Name})
+               || F <- [terminate_child, delete_child]],
+              n2o:cache(Tab, {Tab, Name}, undefined),
+              Async
+            catch
+              _X:_Y:_Z -> error
+            end;
         Data -> {error, {not_pid, Data}}
     end.
 

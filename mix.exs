@@ -6,7 +6,7 @@ defmodule N2O.Mixfile do
   def project do
     [
       app: :n2o,
-      version: "9.11.1",
+      version: "10.3.0",
       description: "N2O MQTT TCP WebSocket",
       package: package(),
       deps: deps()
