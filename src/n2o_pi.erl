@@ -41,7 +41,13 @@ start(#pi{table = Tab, name = Name, module = Module,
     case supervisor:start_child(Sup, ChildSpec) of
         {ok, Pid} -> {Pid, Async#pi.name};
         {ok, Pid, _} -> {Pid, Async#pi.name};
-        {error, already_present} -> supervisor:restart_child(Sup, {Tab, Name}), {pid(Tab, Name), Async#pi.name};
+        {error, already_present} ->
+            case supervisor:restart_child(Sup, {Tab, Name}) of
+                {ok, Pid} -> {Pid, Async#pi.name};
+                {ok, Pid, _} -> {Pid, Async#pi.name};
+                {error, running} -> {pid(Tab, Name), Async#pi.name};
+                {error, _} = X -> X
+            end;
         {error, Reason} -> {error, Reason}
     end.
 
@@ -63,13 +69,13 @@ stop(Tab, Name) ->
 send(Pid, Message) when is_pid(Pid) ->
     try gen_server:call(Pid, Message, ?CALL_TIMEOUT) catch
       exit:{normal, _}:_Z -> {exit, normal};
-      _X:_Y:Z -> {error, Z}
+      X:Y:Z -> {error, {X, Y, Z}}
     end.
 
 send(Tab, Name, Message) ->
     try gen_server:call(n2o_pi:pid(Tab, Name), Message, ?CALL_TIMEOUT) catch
       exit:{normal, _}:_Z -> {exit, normal};
-      _X:_Y:Z -> {error, Z}
+      X:Y:Z -> {error, {X, Y, Z}}
     end.
 
 cast(Pid, Message) when is_pid(Pid) ->
