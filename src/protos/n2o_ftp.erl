@@ -36,7 +36,7 @@ info(#ftp{id = Link, status = <<"init">>, block = Block, offset = Offset}=FTP, R
     Offset2 = case FileSize >= Offset of true -> FileSize; false -> 0 end,
     FTP2 = FTP#ftp{block = Block2, offset = Offset2, data = <<>>, filename=FilePath},
 
-    catch n2o_pi:stop(file, Link),
+    try n2o_pi:stop(file, Link) catch _X:_Y:_Z -> ok end,
     n2o_pi:start(#pi{module=?MODULE, table=file, sup=n2o, state=FTP2, name=Link}),
 
     {reply, {bert, FTP2}, Req, State};
@@ -55,7 +55,9 @@ info(Message, Req, State) -> {unknown, Message, Req, State}.
 
 % n2o Handlers
 
-proc(init, #pi{}=Async) ->
+proc(init, #pi{state=#ftp{sid = Token} = FTP}=Async) ->
+    Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
+    catch n2o:send(Sid, {direct, FTP}),
     {ok, Async};
 
 proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = Cid} = FTP,
@@ -86,7 +88,7 @@ proc(#ftp{sid = Token, data = Data, status = <<"send">>, block = Block, meta = C
                     Sid = case n2o:depickle(Token) of {{S,_},_} -> S; X -> X end,
                     catch n2o:send(Sid, {direct, FTP3}) end),
 
-                spawn(fun() -> n2o_pi:stop(file, Link) end),
+                spawn(fun() -> try n2o_pi:stop(file, Link) catch _X:_Y:_Z -> ok end end),
                 {stop, normal, FTP2, Async#pi{state = FTP2}}
         end;
 

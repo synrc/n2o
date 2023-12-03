@@ -19,23 +19,29 @@ var ftp = {
             offset: ftp.offset || 0,
             block: 1,
             total: file.size,
-            file: file
+            file: file,
+            active: false
         };
         ftp.queue.push(item);
         ftp.send(item, '', 1);
         return item.id;
     },
     start: function (id) {
-        if (ftp.active) { id && (ftp.item(id).autostart = true); return false; }
         var item = id ? ftp.item(id) : ftp.next();
-        if (item) { ftp.active = true; ftp.send_slice(item); }
+        if (item) {
+            if (item.active) { id && (item.autostart = true); return false; }
+            else {item.active = true; ftp.send_slice(item);}
+        }
     },
     stop: function (id) {
+        var item = id ? ftp.item(id) : ftp.next();
+        if (item) item.active = false;
+    },
+    abort:  function(id) {
         var item = ftp.item(id);
         var index = ftp.queue.indexOf(item);
         ftp.queue.splice(index, 1);
-        ftp.active = false;
-        ftp.start();
+        if (item) item.active = false;
     },
     send: function (item, data) {
         ws.send(enc(tuple(atom('ftp'),
@@ -47,7 +53,8 @@ var ftp = {
             number(item.offset),
             number(item.block || data.byteLength),
             bin(data),
-            bin(item.status || 'send')
+            bin(item.status || 'send'),
+            list()
         )));
     },
     send_slice: function (item) {
@@ -83,9 +90,9 @@ $file.do = function (rsp) {
         case 'send':
             $file.progress(offset,total);
             var item = ftp.item(utf8_arr(rsp.v[1].v));
-            item.offset = offset;
-            item.block = block;
-            (block > 0 && ftp.active) ? ftp.send_slice(item) : ftp.stop(item.id)
+            if (item) item.offset = offset;
+            if (item) item.block = block;
+            (block > 0 && (item && item.active)) ? ftp.send_slice(item) : ftp.stop(item.id)
             break;
         case 'relay': debugger; if (typeof ftp.relay === 'function') ftp.relay(rsp); break;
     }

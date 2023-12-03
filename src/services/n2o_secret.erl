@@ -25,7 +25,7 @@ depickle(PickledData) ->
         Decoded = unhex(iolist_to_binary(PickledData)),
         <<IV:16/binary,Signature:32/binary,Cipher/binary>> = Decoded,
         Signature = mac([application:get_env(n2o,hmac,sha256),Key,<<Cipher/binary,IV/binary>>]),
-        Decipher = case erlang:list_to_integer(erlang:system_info(otp_release)) of
+        _Decipher = case erlang:list_to_integer(erlang:system_info(otp_release)) of
            X when X =< 22 -> binary_to_term(erlang:apply(crypto,block_decrypt,[aes_cbc128,Key,IV,Cipher]),[safe]) ;
            _ -> binary_to_term(erlang:apply(crypto,crypto_one_time,[aes_128_cbc,Key,IV,Cipher,[{encrypt,false}]]),[safe])
        end

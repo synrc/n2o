@@ -1,5 +1,4 @@
-History
--------
+# History
 
 * 4.5 — Basic Messaging with single topic and Echo
 * 4.6 — Echo eliminated Basic Filter with req/rep topics
@@ -12,4 +11,3 @@ History
 * 6.3 — arraybuffer in JS client, n2o_pi, fixes, synrc/mqtt drop
 * 6.4 — Error handling, minimalisation
 * 6.5 — OTP 21.0, n2o.dev, WebSocket ring, /-endpoint for static/WS, Erlang logger
-

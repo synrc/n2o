@@ -50,13 +50,15 @@ fix2(X) -> case filelib:is_dir(X) of true -> X; _ -> fix2({error,bad_name}) end.
 
 static() -> { dir, fix1(code:priv_dir(application:get_env(n2o,app,review)))++"/static", mime() }.
 n2o()    -> { dir, fix2(code:priv_dir(n2o)), mime() }.
+favico() -> { file, code:priv_dir(application:get_env(n2o,app,review))++"/static/favicon.ico", mime() }.
 mime()   -> [ { mimetypes, cow_mimetypes, all } ].
 port()   -> application:get_env(n2o,port,8000).
 
 points() -> cowboy_router:compile([{'_', [
-            { "/n2o/[...]", cowboy_static,  n2o()      },
-            { "/app/[...]", cowboy_static,  static()   },
-            { "/ws/[...]",  n2o_cowboy,  []            } ]}]).
+            { "/favicon.ico", cowboy_static, favico() },
+            { "/n2o/[...]",   cowboy_static, n2o()    },
+            { "/app/[...]",   cowboy_static, static() },
+            { "/ws/[...]",    n2o_cowboy,    []       } ]}]).
 
 env(App) -> [{port,       port()},
              {certfile,   code:priv_dir(App)++"/ssl/fullchain.pem"},

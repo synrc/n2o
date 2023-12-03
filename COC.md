@@ -1,5 +1,4 @@
-N2O User Agreement
-==================
+# N2O User Agreement
 
 ## 1. Motivation
 
@@ -42,7 +41,7 @@ Talk to @5HT.
 
 ## 8. Addressing Grievances
 
-N2O board commitee is higher that @5HT.
+N2O board committee is higher that @5HT.
 
 ## 9. Scope
 

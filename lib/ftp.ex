@@ -17,10 +17,7 @@ defmodule N2O.FTP do
     :filelib.ensure_dir(filePath)
     Supervisor.start_link([], strategy: :one_for_one, name: FTP)
 
-    try do
-      :n2o_pi.stop(:ftp, guid)
-    catch e -> IO.inspect(e, label: "N2O PI STOP ERROR")
-    end
+    try do :n2o_pi.stop(:ftp, guid) catch _,_ -> [] end
     initFtp = N2O.ftp(ftp, block: chunk(), offset: 0, data: <<>>)
     N2O.pi(
       module: FTP,
@@ -65,7 +62,7 @@ defmodule N2O.FTP do
     case :file.write_file(filePath, :erlang.iolist_to_binary(data), [:append, :raw]) do
       :ok ->
         spawn(fn -> :erlang.send(web_pid, {:direct, {:ftp_finish, finishFtp}}) end)
-        spawn(fn -> :n2o_pi.stop(:ftp, guid) end)
+        spawn(fn -> try do :n2o_pi.stop(:ftp, guid) catch _,_ -> [] end end)
         {:stop, :normal, finishFtp, N2O.pi(pi, state: {finishFtp, timer})}
       {:error, _} = x -> {:reply, x, pi}
     end

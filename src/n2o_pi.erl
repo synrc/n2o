@@ -26,6 +26,9 @@
          pid/2,
          restart/2]).
 
+-define(CALL_TIMEOUT,
+        application:get_env(n2o, pi_call_timeout, 5000)).
+
 start(#pi{table = Tab, name = Name, module = Module,
           sup = Sup, timeout = Timeout, restart = Restart} =
           Async) ->
@@ -38,30 +41,41 @@ start(#pi{table = Tab, name = Name, module = Module,
     case supervisor:start_child(Sup, ChildSpec) of
         {ok, Pid} -> {Pid, Async#pi.name};
         {ok, Pid, _} -> {Pid, Async#pi.name};
+        {error, already_present} ->
+            case supervisor:restart_child(Sup, {Tab, Name}) of
+                {ok, Pid} -> {Pid, Async#pi.name};
+                {ok, Pid, _} -> {Pid, Async#pi.name};
+                {error, running} -> {pid(Tab, Name), Async#pi.name};
+                {error, _} = X -> X
+            end;
         {error, Reason} -> {error, Reason}
     end.
 
 stop(Tab, Name) ->
     case n2o_pi:pid(Tab, Name) of
         Pid when is_pid(Pid) ->
-            #pi{sup = Sup} = Async = send(Pid, {get}),
-            [supervisor:F(Sup, {Tab, Name})
-             || F <- [terminate_child, delete_child]],
-            n2o:cache(Tab, {Tab, Name}, undefined),
-            Async;
+            try
+              #pi{sup = Sup} = Async = send(Pid, {get}),
+              [supervisor:F(Sup, {Tab, Name})
+               || F <- [terminate_child, delete_child]],
+              n2o:cache(Tab, {Tab, Name}, undefined),
+              Async
+            catch
+              _X:_Y:_Z -> error
+            end;
         Data -> {error, {not_pid, Data}}
     end.
 
 send(Pid, Message) when is_pid(Pid) ->
-    try gen_server:call(Pid, Message) catch
+    try gen_server:call(Pid, Message, ?CALL_TIMEOUT) catch
       exit:{normal, _}:_Z -> {exit, normal};
-      _X:_Y:Z -> {error, Z}
+      X:Y:Z -> {error, {X, Y, Z}}
     end.
 
 send(Tab, Name, Message) ->
-    try gen_server:call(n2o_pi:pid(Tab, Name), Message) catch
+    try gen_server:call(n2o_pi:pid(Tab, Name), Message, ?CALL_TIMEOUT) catch
       exit:{normal, _}:_Z -> {exit, normal};
-      _X:_Y:Z -> {error, Z}
+      X:Y:Z -> {error, {X, Y, Z}}
     end.
 
 cast(Pid, Message) when is_pid(Pid) ->
@@ -124,11 +138,7 @@ init(#pi{module = Mod, table = Tab, name = Name} =
     n2o:cache(Tab, {Tab, Name}, self(), infinity),
     Mod:proc(init, Handler).
 
-terminate(Reason,
-          #pi{name = Name, sup = Sup, table = Tab, module = Mod} = Pi) ->
+terminate(Reason, #pi{name = Name, table = Tab, module = Mod} = Pi) ->
     case erlang:function_exported(Mod, terminate, 2) of true -> Mod:terminate(Reason, Pi); false -> false end,
-    spawn(fun () ->
-                  supervisor:delete_child(Sup, {Tab, Name})
-          end),
-    catch n2o:cache(Tab, {Tab, Name}, undefined),
+    n2o:cache(Tab, {Tab, Name}, undefined),
     ok.
