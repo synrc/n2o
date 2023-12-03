@@ -1,7 +1,7 @@
 defmodule N2O.Mixfile do
   use Mix.Project
   def deps, do: [{:ex_doc, ">= 0.0.0", only: :dev}]
-  def application, do: [mod: {:n2o, []}, applications: [], extra_applications: [:crypto]]
+  def application, do: [mod: {:n2o, []}, applications: [], extra_applications: [:crypto,:xmerl]]
 
   def project do
     [
