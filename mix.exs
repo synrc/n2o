@@ -4,7 +4,6 @@ defmodule N2O.Mixfile do
   def application(), do:
     [
       mod: {:n2o, []},
-      applications: [:xmerl, :ex_doc],
       extra_applications: [:crypto, :xmerl]
     ]
 
