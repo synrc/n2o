@@ -4,14 +4,14 @@ defmodule N2O.Mixfile do
   def application(), do:
     [
       mod: {:n2o, []},
-      applications: [:xmerl,:ex_doc],
-      extra_applications: [:crypto]
+      applications: [:xmerl, :ex_doc],
+      extra_applications: [:crypto, :xmerl]
     ]
 
   def project do
     [
       app: :n2o,
-      version: "10.12.3",
+      version: "10.12.4",
       description: "N2O MQTT TCP WebSocket",
       package: package(),
       deps: deps()
