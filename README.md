@@ -15,15 +15,14 @@ unified API for external mq and caching services.
 * Endpoints: WebSockets, MQTT, TCP
 * Codebase: 700 LOC (Erlang), 500 LOC (JavaScript)
 * Dialyzer: REBAR, REBAR3, MAD, MIX
-* Hosts: COWBOY, EMQ, MOCHIWEB, RING, TCP, UDP
+* Hosts: BANDIT, COWBOY, EMQ, MOCHIWEB, RING, TCP, UDP
 * PubSub: GPROC, SYN, PG2
 * Formatters: JSON, BERT, ASN.1
 
 ## Protocol Extensions
 
 * Templates: DTL, [NITRO](https://nitro.n2o.dev)
-* Abstract Database Layer [KVS](https://kvs.n2o.dev"): FS, MNESIA, ROCKSDB,
-  RIAK, REDIS
+* Abstract Database Layer [KVS](https://kvs.n2o.dev"): FS, MNESIA, ROCKSDB, RIAK, REDIS
 * Business Processes: [BPE](https://bpe.n2o.dev) (BPMN 2.0), SCM, ERP, CRM
 * HTTP API: [REST](https://rest.n2o.dev) (proplist/JSON)
 * [ACTIVE](https://active.n2o.dev) Reloading: GNU/Linux, Windows, macOS
@@ -117,7 +116,5 @@ Formatters, Sessions, etc. Optional.
 
 ## Literature
 
-* "N2O: no bullshit sane framework for wild web"
-  [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
-* "N2O BOOK Vol.2 Green Book" [HTML](https://n2o.dev/ua/books/vol.2/index.html)
-  (versions 4.5—9.11)
+* "N2O: no bullshit sane framework for wild web" [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
+* "N2O BOOK Vol.2 Green Book" [HTML](https://n2o.dev/ua/books/vol.2/index.html) (versions 4.5—9.11)
