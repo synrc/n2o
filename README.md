@@ -1,7 +1,6 @@
 # N2O: TCP MQTT WebSocket
 
 [![Actions Status](https://github.com/synrc/n2o/workflows/mix/badge.svg)](https://github.com/synrc/n2o/actions)
-[![Build Status](https://travis-ci.com/synrc/n2o.svg?branch=master)](https://travis-ci.com/synrc/n2o)
 [![Hex pm](http://img.shields.io/hexpm/v/n2o.svg?style=flat)](https://hex.pm/packages/n2o)
 
 N2O is an embeddable message protocol loop library for WebSocket, HTTP, MQTT
