@@ -8,7 +8,7 @@ jobs:
     - uses: erlef/setup-elixir@v1
       with:
         otp-version: 24.x
-        elixir-version: 1.11.x
+        elixir-version: 1.13.x
     - name: Dependencies
       run: |
         mix local.rebar --force
