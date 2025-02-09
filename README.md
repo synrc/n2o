@@ -51,21 +51,6 @@ The core modules provide OTP start and N2O entry point.
 * [n2o_proto](https://ws.n2o.dev/man/n2o_proto.htm) — N2O Loop
 * [n2o_ring](https://ws.n2o.dev/man/n2o_ring.htm) — N2O Ring
 
-## MQTT
-
-MQTT version is implemented as RPC over MQ pattern.
-N2O service worker started as ring of virtual nodes each runs N2O loop.
-
-* [n2o_mqtt](https://ws.n2o.dev/man/n2o_mqtt.htm) — N2O MQTT Virtual Node
-* [n2o_auth](https://ws.n2o.dev/man/n2o_auth.htm) — N2O Auth
-
-```sh
-mad app zero review
-cd review
-mad dep com pla rep
-open http://127.0.0.1:8000
-```
-
 ## WebSocket
 
 N2O Loop is directly connected and ran inside context of WebSocket handler.
@@ -79,10 +64,9 @@ As such buses are optional in MQTT setup we include bus drivers in WebSocket pac
 * [n2o_syn](https://ws.n2o.dev/man/n2o_syn.htm) — SYN bus backend
 
 ```sh
-mad app nitro sample
-cd sample
-mad dep com pla rep
-open https://127.0.0.1:8001/app/index.htm
+git clone git@github.com:synrc/sample && cd sample
+rebar3 shell
+open open http://localhost:8001/app/login.htm
 ```
 
 ## Protocols
