@@ -66,7 +66,7 @@ As such buses are optional in MQTT setup we include bus drivers in WebSocket pac
 ```sh
 git clone git@github.com:synrc/sample && cd sample
 rebar3 shell
-open open http://localhost:8001/app/login.htm
+open http://localhost:8001/app/login.htm
 ```
 
 ## Protocols
