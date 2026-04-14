@@ -1,6 +1,6 @@
 defmodule N2O.Mixfile do
   use Mix.Project
-  def deps, do: [{:ex_doc, ">= 0.0.0", only: :dev}]
+  def deps, do: [{:ex_doc, ">= 0.0.0", only: :dev, runtime: false}]
   def application(), do:
     [
       mod: {:n2o, []},
