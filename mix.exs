@@ -19,7 +19,7 @@ defmodule N2O.Mixfile do
 
   def package do
     [
-      files: ~w(doc include man priv lib src test mix.exs rebar.config LICENSE),
+      files: ~w(include man priv lib src mix.exs LICENSE README.md),
       licenses: ["ISC"],
       links: %{"GitHub" => "https://github.com/synrc/n2o"}
     ]
