@@ -1,7 +1,7 @@
 # N2O: TCP MQTT WebSocket
 
 [![Actions Status](https://github.com/synrc/n2o/workflows/mix/badge.svg)](https://github.com/synrc/n2o/actions)
-[![Hex pm](http://img.shields.io/hexpm/v/n2o.svg?style=flat)](https://hex.pm/packages/n2o)
+[![Hex pm](https://img.shields.io/hexpm/v/n2o.svg?style=flat)](https://hex.pm/packages/n2o)
 
 N2O is an embeddable message protocol loop library for WebSocket, HTTP, MQTT
 and TCP servers. It provides basic features, such as process management,
@@ -21,7 +21,7 @@ unified API for external mq and caching services.
 ## Protocol Extensions
 
 * Templates: DTL, [NITRO](https://nitro.n2o.dev)
-* Abstract Database Layer [KVS](https://kvs.n2o.dev"): FS, MNESIA, ROCKSDB, RIAK, REDIS
+* Abstract Database Layer [KVS](https://kvs.n2o.dev): FS, MNESIA, ROCKSDB, RIAK, REDIS
 * Business Processes: [BPE](https://bpe.n2o.dev) (BPMN 2.0), SCM, ERP, CRM
 * HTTP API: [REST](https://rest.n2o.dev) (proplist/JSON)
 * [ACTIVE](https://active.n2o.dev) Reloading: GNU/Linux, Windows, macOS
@@ -99,5 +99,5 @@ Formatters, Sessions, etc. Optional.
 
 ## Literature
 
-* "N2O: no bullshit sane framework for wild web" [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
-* "N2O BOOK Vol.2 Green Book" [HTML](https://n2o.dev/ua/books/vol.2/index.html) (versions 4.5—9.11)
+* [PDF](https://n2o.dev/books/n2o.pdf) (versions 0.11—4.4)
+* [HTML](https://n2o.dev/ua/books/vol.2/index.html) (versions 4.5—9.11)
