@@ -8,5 +8,4 @@ deps
 *.toc
 *.log
 *.aux
-*.pdf
 *.lock
